@@ -131,7 +131,7 @@ const vendors = vendorNames.map((name) => {
 // ---------- Ghép catalog ----------
 const appItems = config.sections.filter((s) => s.kind === 'app').map((s) => ({
   id: s.id, section: s.id, kind: 'external', title: s.title, src: s.src, repo: s.repo,
-  desc: s.desc, tags: s.tags || [], icon: s.icon, app: true,
+  desc: s.desc, tags: s.tags || [], icon: s.icon, app: true, persist: s.persist,
 }));
 const items = [...config.items, ...appItems, ...saleDocs];
 const ids = new Set();

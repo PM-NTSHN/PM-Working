@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-27T17:31:47.795Z",
+ "generatedAt": "2026-10-27T17:54:57.748Z",
  "sections": [
   {
    "id": "bom",
@@ -12,6 +12,10 @@
   },
   {
    "id": "dealreg",
+   "persist": {
+    "input": "#file-input",
+    "mode": "append"
+   },
    "group": "Tổng hợp & Báo cáo",
    "title": "Tổng hợp Dealreg",
    "short": "Dealreg",
@@ -27,6 +31,10 @@
   },
   {
    "id": "po",
+   "persist": {
+    "input": "#fileInput",
+    "mode": "replace"
+   },
    "group": "Tổng hợp & Báo cáo",
    "title": "Tổng hợp yêu cầu đặt hàng",
    "short": "Đặt hàng (PO)",
@@ -42,6 +50,10 @@
   },
   {
    "id": "crm",
+   "persist": {
+    "input": "#fileInput",
+    "mode": "replace"
+   },
    "group": "Tổng hợp & Báo cáo",
    "title": "Tổng hợp CRM",
    "short": "CRM",
@@ -58,6 +70,10 @@
   },
   {
    "id": "kpi",
+   "persist": {
+    "input": "#fileInput",
+    "mode": "append"
+   },
    "group": "Tổng hợp & Báo cáo",
    "title": "Tổng hợp KPI (HR)",
    "short": "KPI",
@@ -159,16 +175,17 @@
   {
    "id": "bom-gtb",
    "section": "bom",
-   "title": "BOM GTB",
+   "title": "BOM GTB DLP",
    "kind": "bom",
-   "status": "soon",
+   "src": "content/bom/gtb.bin",
    "vendor": "GTB",
    "product": "gtb",
    "icon": "lock",
-   "desc": "Lên cấu hình & báo giá GTB DLP.",
+   "desc": "Lên cấu hình & báo giá GTB DLP (Data Loss Prevention).",
    "tags": [
     "GTB",
     "DLP",
+    "Chống thất thoát dữ liệu",
     "BOM"
    ]
   },
@@ -258,7 +275,11 @@
     "Đăng ký cơ hội"
    ],
    "icon": "handshake",
-   "app": true
+   "app": true,
+   "persist": {
+    "input": "#file-input",
+    "mode": "append"
+   }
   },
   {
    "id": "po",
@@ -275,7 +296,11 @@
     "Đơn hàng"
    ],
    "icon": "cart",
-   "app": true
+   "app": true,
+   "persist": {
+    "input": "#fileInput",
+    "mode": "replace"
+   }
   },
   {
    "id": "crm",
@@ -293,7 +318,11 @@
     "Khách hàng"
    ],
    "icon": "chart",
-   "app": true
+   "app": true,
+   "persist": {
+    "input": "#fileInput",
+    "mode": "replace"
+   }
   },
   {
    "id": "kpi",
@@ -311,7 +340,11 @@
     "Đánh giá"
    ],
    "icon": "target",
-   "app": true
+   "app": true,
+   "persist": {
+    "input": "#fileInput",
+    "mode": "append"
+   }
   },
   {
    "id": "sg-delinea-delinea-secret-server-sale-playbook",

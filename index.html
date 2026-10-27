@@ -51,7 +51,7 @@
       <div class="sb-brand"><b>PM Hub</b><span>NTS Hà Nội</span></div>
       <button class="sb-icon-btn" id="btnCollapse" title="Thu gọn menu" data-ic="sidebar"></button>
     </div>
-    <button class="sb-search" id="sbSearch"><span data-ic="search"></span><span class="lbl">Tìm kiếm…</span><kbd>Ctrl K</kbd></button>
+    <label class="sb-search"><span data-ic="search"></span><input class="lbl search-input" id="sbSearch" placeholder="Tìm kiếm…" autocomplete="off" spellcheck="false"></label>
     <nav class="nav" id="nav" aria-label="Điều hướng"></nav>
     <div class="sb-foot">
       <div class="avatar">PM</div>
@@ -66,6 +66,7 @@
       <button class="icon-btn only-mobile" id="btnMenu" aria-label="Mở menu" data-ic="menu"></button>
       <div class="crumbs" id="crumbs"></div>
       <div class="top-actions" id="itemActions" hidden>
+        <button class="saved-chip" id="actSaved" hidden></button>
         <button class="icon-btn" id="actFav" title="Ghim / bỏ ghim" data-ic="star"></button>
         <button class="icon-btn" id="actRelated" title="Nội dung liên quan" data-ic="layers"></button>
         <button class="icon-btn hide-sm" id="actReload" title="Tải lại" data-ic="refresh"></button>
@@ -73,7 +74,7 @@
         <button class="icon-btn" id="actFocus" title="Toàn màn hình (Esc để thoát)" data-ic="maximize"></button>
         <span class="divider-v"></span>
       </div>
-      <button class="top-search" id="topSearch"><span data-ic="search"></span><span class="lbl">Tìm công cụ, tài liệu…</span><kbd>Ctrl K</kbd></button>
+      <label class="top-search"><span data-ic="search"></span><input class="lbl search-input" id="topSearch" placeholder="Tìm công cụ, hãng, tài liệu…" autocomplete="off" spellcheck="false"><kbd>Ctrl K</kbd></label>
     </header>
     <main class="view" id="view"></main>
     <section class="frame-view" id="frameView" hidden><div class="frame-host" id="frameHost"></div></section>
@@ -81,9 +82,8 @@
 </div>
 
 <!-- ============ COMMAND PALETTE ============ -->
-<div class="palette" id="palette" hidden>
+<div class="search-pop" id="palette" hidden>
   <div class="pal" role="dialog" aria-label="Tìm kiếm">
-    <div class="pal-input"><span data-ic="search"></span><input id="palInput" placeholder="Tìm công cụ, hãng, giải pháp, nội dung tài liệu…" autocomplete="off" spellcheck="false"><kbd>Esc</kbd></div>
     <div class="pal-sugg" id="palSugg"></div>
     <div class="pal-body" id="palBody"></div>
     <div class="pal-foot">

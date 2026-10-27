@@ -172,7 +172,6 @@ function bindShell() {
     syncThemeIcon();
   };
   $('#btnLogout').onclick = logout;
-  $('#sbSearch').onclick = $('#topSearch').onclick = () => openPalette();
   $('#actFav').onclick = () => current && toggleFav(current.id);
   $('#actRelated').onclick = () => toggleDrawer();
   $('#drawerClose').onclick = () => toggleDrawer(false);
@@ -183,14 +182,16 @@ function bindShell() {
     openItem(ITEM[id]);
   };
   $('#actFocus').onclick = toggleFocus;
+  $('#actSaved').onclick = clearSaved;
+  $('.sb-search').addEventListener('click', () => $('#app').classList.contains('sb-collapsed') && focusSearch());
   document.addEventListener('fullscreenchange', () => {
     $('#actFocus').innerHTML = icon(document.fullscreenElement ? 'minimize' : 'maximize');
   });
 
   document.addEventListener('keydown', (e) => {
     const typing = /input|textarea|select/i.test(e.target.tagName) || e.target.isContentEditable;
-    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); $('#palette').hidden ? openPalette() : closePalette(); }
-    else if (e.key === '/' && !typing && $('#palette').hidden) { e.preventDefault(); openPalette(); }
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); focusSearch(); }
+    else if (e.key === '/' && !typing) { e.preventDefault(); focusSearch(); }
     else if (e.key === 'Escape') {
       if (!$('#palette').hidden) closePalette();
       else if ($('#drawer').classList.contains('open')) toggleDrawer(false);
@@ -328,6 +329,7 @@ function showPage(html, crumbs, activeKey, parentSec) {
   const view = $('#view');
   view.hidden = false;
   view.innerHTML = html;
+  view.querySelectorAll('.search-input').forEach(bindSearchInput);
   view.scrollTop = 0;
   setCrumbs(crumbs);
   setActive(activeKey, parentSec);
@@ -362,6 +364,7 @@ async function openItem(it, q) {
   setActive(`item:${it.id}`, sec.id);
   document.title = `${it.title} · PM Hub`;
   syncFav();
+  syncSaved();
   const open = $('#actOpen');
   open.hidden = it.kind === 'bom';
   if (it.kind !== 'bom') open.href = it.src;
@@ -375,6 +378,7 @@ async function openItem(it, q) {
     f.el.allow = 'clipboard-read; clipboard-write; fullscreen';
     f.el.addEventListener('load', () => {
       f.loaded = true;
+      if (it.persist) hookPersist(it, f);
       if (current?.id === it.id) $('#frameLoading')?.remove();
       if (f.q) { highlightIn(f.el, f.q); f.q = null; }
     });
@@ -402,7 +406,12 @@ async function openItem(it, q) {
   if (!f.loaded) $('#frameHost').insertAdjacentHTML('beforeend', `<div class="frame-loading" id="frameLoading"><span class="spinner"></span>Đang tải ${esc(it.title)}…</div>`);
   if (q) f.loaded ? highlightIn(f.el, q) : (f.q = q);
 
-  while (frames.size > MAX_FRAMES) dropFrame(frames.keys().next().value);
+  // Giữ lại các tool Tổng hợp (không bao giờ đóng); chỉ đóng bớt tài liệu cũ nhất.
+  while (frames.size > MAX_FRAMES) {
+    const old = [...frames.keys()].find((id) => id !== it.id && !ITEM[id]?.app);
+    if (!old) break;
+    dropFrame(old);
+  }
 }
 
 function dropFrame(id) {
@@ -411,6 +420,115 @@ function dropFrame(id) {
   f.el.remove();
   if (f.blob) URL.revokeObjectURL(f.blob);
   frames.delete(id);
+}
+
+// ---------------------------------------------------------------- lưu file Excel đã nạp vào tool (IndexedDB)
+// Hub bắt sự kiện chọn / kéo-thả file trong tool (cùng origin), lưu file vào IndexedDB của trình duyệt,
+// và tự nạp lại khi tool được mở lại hoặc khi tải lại trang — không cần sửa code của từng tool.
+const idb = (() => {
+  let dbp;
+  const open = () => (dbp ||= new Promise((res, rej) => {
+    const r = indexedDB.open('pmhub', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('imports');
+    r.onsuccess = () => res(r.result);
+    r.onerror = () => rej(r.error);
+  }));
+  const run = async (mode, fn) => {
+    const db = await open();
+    return new Promise((res, rej) => {
+      const t = db.transaction('imports', mode);
+      const req = fn(t.objectStore('imports'));
+      t.oncomplete = () => res(req.result);
+      t.onerror = () => rej(t.error);
+    });
+  };
+  return {
+    get: (k) => run('readonly', (st) => st.get(k)).catch(() => null),
+    set: (k, v) => run('readwrite', (st) => st.put(v, k)),
+    del: (k) => run('readwrite', (st) => st.delete(k)),
+  };
+})();
+
+async function saveImport(it, list) {
+  // File tạo trong iframe thuộc realm khác nên không dùng instanceof.
+  const files = [...list].filter((x) => x && typeof x.arrayBuffer === 'function' && x.size);
+  if (!files.length) return;
+  let next = files;
+  if (it.persist.mode === 'append') {
+    const prev = (await idb.get(it.id))?.files || [];
+    const names = new Set(files.map((x) => x.name));
+    next = [...prev.filter((x) => !names.has(x.name)), ...files];
+  } else {
+    next = files.slice(0, 1);
+  }
+  try {
+    await idb.set(it.id, { files: next, savedAt: Date.now() });
+    toast(`Đã lưu dữ liệu ${it.short || it.title} — lần sau mở lại không cần nạp file`);
+  } catch {
+    toast('Trình duyệt không cho lưu dữ liệu (chế độ ẩn danh?)');
+  }
+  if (current?.id === it.id) syncSaved();
+}
+
+async function hookPersist(it, f) {
+  let win, doc;
+  try { win = f.el.contentWindow; doc = f.el.contentDocument; } catch { return; }
+  if (!doc?.body) return;
+  doc.addEventListener('change', (e) => {
+    if (!f.replaying && e.target.matches?.('input[type=file]')) saveImport(it, e.target.files);
+  }, true);
+  win.addEventListener('drop', (e) => {
+    if (!f.replaying && e.dataTransfer?.files?.length) saveImport(it, e.dataTransfer.files);
+  }, true);
+  // Nút "Xoá toàn bộ dữ liệu" trong tool -> xóa luôn bản đã lưu.
+  const confirm0 = win.confirm.bind(win);
+  win.confirm = (msg) => {
+    const ok = confirm0(msg);
+    if (ok && /xo[áa]/i.test(msg) && /d[ữu] li[ệe]u|file/i.test(msg)) idb.del(it.id).then(syncSaved);
+    return ok;
+  };
+
+  const rec = await idb.get(it.id);
+  const input = doc.querySelector(it.persist.input);
+  if (!rec?.files?.length || !input) return;
+  await new Promise((r) => setTimeout(r, 60));
+  // Tạo lại File trong realm của iframe để thư viện Excel của tool nhận đúng kiểu dữ liệu.
+  const dt = new win.DataTransfer();
+  for (const file of rec.files) {
+    const buf = new win.Uint8Array(await file.arrayBuffer());
+    dt.items.add(new win.File([buf], file.name || 'data.xlsx', { type: file.type, lastModified: file.lastModified }));
+  }
+  f.replaying = true;
+  try {
+    input.files = dt.files;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+  } finally {
+    f.replaying = false;
+  }
+  toast(`Đã tự nạp lại ${rec.files.length} file cho ${it.short || it.title}`);
+}
+
+/** Nút "đã lưu N file" trên topbar của tool đang mở. */
+async function syncSaved() {
+  const chip = $('#actSaved');
+  const it = current;
+  if (!it?.persist) { chip.hidden = true; return; }
+  const rec = await idb.get(it.id);
+  if (current?.id !== it.id) return;
+  const n = rec?.files?.length || 0;
+  chip.hidden = !n;
+  if (!n) return;
+  const when = new Date(rec.savedAt).toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' });
+  chip.innerHTML = `${icon('database')}<span>Đã lưu ${n} file</span>${icon('close', 'x')}`;
+  chip.title = `Dữ liệu đã nạp được lưu trên trình duyệt này (cập nhật ${when}):\n${rec.files.map((x) => '• ' + x.name).join('\n')}\n\nBấm để xóa dữ liệu đã lưu.`;
+}
+
+async function clearSaved() {
+  const it = current;
+  if (!it?.persist || !confirm(`Xóa dữ liệu đã lưu của ${it.title}? Tool sẽ được tải lại trống.`)) return;
+  await idb.del(it.id);
+  dropFrame(it.id);
+  openItem(it);
 }
 
 async function decryptBom(it) {
@@ -558,7 +676,7 @@ function renderHome() {
       <div class="hello">${icon('clock')}<span style="text-transform:capitalize">${esc(today)}</span></div>
       <h1>${greet}, Minh 👋</h1>
       <p>Mọi công cụ PM ở một nơi — lên BOM, tổng hợp số liệu, tra cứu sale guide và học tập.</p>
-      <button class="hero-search" data-open-palette>${icon('search')}<span class="lbl">Tìm công cụ, hãng, giải pháp, nội dung…</span><kbd>Ctrl K</kbd></button>
+      <label class="hero-search">${icon('search')}<input class="lbl search-input" id="heroSearch" placeholder="Gõ để tìm công cụ, hãng, giải pháp, nội dung…" autocomplete="off" spellcheck="false"><kbd>Ctrl K</kbd></label>
       <div class="quick">Tìm nhanh: ${quick.map((q) => `<button data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div>
     </section>
     <div class="stats">
@@ -581,10 +699,10 @@ function renderHome() {
 }
 
 document.addEventListener('click', (e) => {
-  const t = e.target.closest('[data-open-palette],[data-q],[data-lock-bom]');
+  const t = e.target.closest('[data-q],[data-lock-bom]');
   if (!t) return;
   if (t.dataset.lockBom !== undefined) return lockBom();
-  openPalette(t.dataset.q || '');
+  focusSearch(t.dataset.q || '');
 });
 
 // ---------------------------------------------------------------- trang danh mục (BOM, Update, Learning)
@@ -719,8 +837,8 @@ function renderDrawer() {
     ${rel.length ? rel.map((r) => rowLink(r)).join('') : '<div class="empty-mini muted" style="padding:20px;text-align:center">Chưa có nội dung liên quan.</div>'}`;
 }
 
-// ---------------------------------------------------------------- tìm kiếm nhanh (Ctrl K)
-const pal = { sel: 0, entries: [], sugg: [] };
+// ---------------------------------------------------------------- tìm kiếm trực tiếp trong ô (Ctrl K)
+const pal = { sel: 0, entries: [], sugg: [], input: null };
 
 async function loadIndex() {
   if (indexLoading) return indexLoading;
@@ -731,23 +849,49 @@ async function loadIndex() {
   return indexLoading;
 }
 
-function openPalette(q = '') {
+/** Đặt khung kết quả ngay dưới ô tìm kiếm đang gõ. */
+function placePalette() {
+  const inp = pal.input;
+  if (!inp) return;
+  const box = (inp.closest('.top-search, .sb-search, .hero-search') || inp).getBoundingClientRect();
+  const vw = document.documentElement.clientWidth;
+  const width = Math.min(720, vw - 16);
+  const left = Math.max(8, Math.min(box.left, vw - width - 8));
   const p = $('#palette');
-  p.hidden = false;
-  const inp = $('#palInput');
-  inp.value = q;
-  inp.focus();
-  inp.select();
+  p.style.top = `${box.bottom + 8}px`;
+  p.style.left = `${left}px`;
+  p.style.width = `${width}px`;
+  p.querySelector('.pal').style.maxHeight = `${Math.max(240, window.innerHeight - box.bottom - 24)}px`;
+}
+
+function openPalette(input) {
+  pal.input = input;
+  $('#palette').hidden = false;
   pal.sel = 0;
+  placePalette();
   renderPalette();
 }
-function closePalette() { $('#palette').hidden = true; }
+function closePalette() {
+  $('#palette').hidden = true;
+}
 
-function bindPalette() {
-  const inp = $('#palInput');
-  $('#palette').addEventListener('mousedown', (e) => { if (e.target.id === 'palette') closePalette(); });
-  inp.addEventListener('input', () => { pal.sel = 0; renderPalette(); });
+/** Focus ô tìm kiếm (Ctrl K, "/", nút Tìm nhanh). */
+function focusSearch(q) {
+  const hero = $('#heroSearch');
+  const inp = hero && hero.offsetParent ? hero : $('#topSearch');
+  if (q !== undefined) inp.value = q;
+  inp.focus();
+  inp.select();
+  openPalette(inp);
+}
+
+function bindSearchInput(inp) {
+  if (inp.dataset.bound) return;
+  inp.dataset.bound = '1';
+  inp.addEventListener('focus', () => openPalette(inp));
+  inp.addEventListener('input', () => { pal.input = inp; pal.sel = 0; if ($('#palette').hidden) openPalette(inp); else renderPalette(); });
   inp.addEventListener('keydown', (e) => {
+    if ($('#palette').hidden && e.key !== 'Escape') openPalette(inp);
     if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
       e.preventDefault();
       const n = pal.entries.length;
@@ -758,18 +902,33 @@ function bindPalette() {
       e.preventDefault();
       const en = pal.entries[pal.sel];
       if (en) go(en.href);
-    } else if (e.key === 'Tab' && pal.sugg.length) {
+    } else if (e.key === 'Tab' && pal.sugg.length && !e.shiftKey) {
       e.preventDefault();
       inp.value = pal.sugg[0];
       pal.sel = 0;
       renderPalette();
+    } else if (e.key === 'Escape') {
+      closePalette();
+      inp.blur();
     }
   });
+}
+
+function bindPalette() {
+  document.querySelectorAll('.search-input').forEach(bindSearchInput);
+  const pop = $('#palette');
+  // Giữ focus ở ô đang gõ khi bấm vào khung kết quả.
+  pop.addEventListener('mousedown', (e) => e.preventDefault());
+  document.addEventListener('mousedown', (e) => {
+    if (!pop.hidden && !pop.contains(e.target) && !e.target.closest('.search-input')) closePalette();
+  });
+  window.addEventListener('resize', () => !pop.hidden && placePalette());
+  $('#view').addEventListener('scroll', () => !pop.hidden && placePalette(), { passive: true });
   $('#palSugg').addEventListener('click', (e) => {
     const b = e.target.closest('button');
-    if (!b) return;
-    inp.value = b.dataset.s;
-    inp.focus();
+    if (!b || !pal.input) return;
+    pal.input.value = b.dataset.s;
+    pal.input.focus();
     pal.sel = 0;
     renderPalette();
   });
@@ -785,6 +944,10 @@ function bindPalette() {
 
 function go(href) {
   closePalette();
+  if (pal.input) {
+    pal.input.blur();
+    pal.input.value = '';
+  }
   if (location.hash === href) route();
   else location.hash = href;
 }
@@ -805,7 +968,7 @@ function palItem(en, i) {
 }
 
 function renderPalette() {
-  const q = $('#palInput').value.trim();
+  const q = (pal.input?.value || '').trim();
   const body = $('#palBody');
   const groups = [];
   pal.entries = [];

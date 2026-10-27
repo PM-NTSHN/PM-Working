@@ -61,6 +61,10 @@ Build thử trên máy: `node tools/build.mjs` (Node 22+), rồi chạy một we
   3. Commit `data/auth.json` và `content/bom/`. Mọi phiên đăng nhập cũ tự hết hiệu lực.
 - **Không commit** file BOM gốc chưa khóa hay `users.csv` (đã có trong `.gitignore`).
 
+## Lưu dữ liệu đã nạp ở 4 tool Tổng hợp
+
+Khi nạp file Excel (bấm chọn hoặc kéo-thả) vào Dealreg / PO / CRM / KPI bên trong PM Hub, Hub lưu file vào IndexedDB của trình duyệt và tự nạp lại khi mở lại tool hoặc F5 — không cần sửa code của từng tool (cấu hình ở mục `persist` trong `config/hub.json`). Dealreg & KPI cộng dồn nhiều file (file trùng tên thì thay bản mới), PO & CRM giữ file mới nhất. Nút **"Đã lưu N file ✕"** trên thanh trên cùng để xem / xóa dữ liệu đã lưu; nút "Xoá dữ liệu" trong tool Dealreg cũng xóa luôn bản lưu. Dữ liệu chỉ nằm trên máy đang dùng.
+
 ## Phím tắt
 
-`Ctrl/⌘ K` hoặc `/`: tìm kiếm · `↑ ↓ Enter`: chọn kết quả · `Tab`: nhận gợi ý · `Esc`: đóng.
+`Ctrl/⌘ K` hoặc `/`: đưa con trỏ vào ô tìm kiếm (gõ trực tiếp, kết quả hiện ngay bên dưới) · `↑ ↓ Enter`: chọn kết quả · `Tab`: nhận gợi ý · `Esc`: đóng.

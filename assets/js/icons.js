@@ -47,6 +47,7 @@ const P = {
   refresh: '<path d="M20.5 12a8.5 8.5 0 0 1-15 5.5M3.5 12a8.5 8.5 0 0 1 15-5.5"/><path d="M18.5 2.5v4h-4M5.5 21.5v-4h4"/>',
   tag: '<path d="M2.5 12V3.5a1 1 0 0 1 1-1H12l9.5 9.5-9 9z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
   enter: '<path d="M20 4v7a4 4 0 0 1-4 4H4"/><path d="m9 10-5 5 5 5"/>',
+  database: '<ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
   info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/>',
 };
 
