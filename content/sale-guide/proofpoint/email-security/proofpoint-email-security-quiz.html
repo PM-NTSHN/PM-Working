@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proofpoint Email Security — Quiz Đánh Giá Sales & Pre-Sales</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #04090f;
+  --surface: #0a1220;
+  --card:    #0d1827;
+  --border:  rgba(255,255,255,0.07);
+  --blue:    #0a84ff;
+  --cyan:    #32d2f2;
+  --green:   #30d158;
+  --amber:   #ffd60a;
+  --red:     #ff453a;
+  --purple:  #bf5af2;
+  --text:    rgba(255,255,255,0.88);
+  --muted:   rgba(255,255,255,0.42);
+  --r:       12px;
+
+  --cat-feat:  #0a84ff;
+  --cat-cons:  #32d2f2;
+  --cat-tech:  #bf5af2;
+  --cat-sit:   #ffd60a;
+  --cat-lic:   #30d158;
+  --cat-dep:   #ff6b35;
+  --cat-comp:  #ff453a;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ── INTRO SCREEN ── */
+#screen-intro {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 40px 24px;
+  background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(10,132,255,0.12) 0%, transparent 70%);
+  position: relative; overflow: hidden;
+}
+
+#screen-intro::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(10,132,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(10,132,255,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  animation: drift 25s linear infinite;
+}
+
+@keyframes drift { to { background-position: 48px 48px; } }
+
+.intro-box {
+  position: relative; z-index: 1;
+  max-width: 680px; width: 100%;
+  background: var(--surface);
+  border: 1px solid rgba(10,132,255,0.25);
+  border-radius: 20px;
+  padding: 48px 48px 40px;
+  box-shadow: 0 0 60px rgba(10,132,255,0.08), 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.intro-badge {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(10,132,255,0.12);
+  border: 1px solid rgba(10,132,255,0.3);
+  border-radius: 100px; padding: 5px 14px;
+  font-size: 11px; font-weight: 600;
+  color: var(--cyan); letter-spacing: 1px;
+  text-transform: uppercase; margin-bottom: 24px;
+}
+
+.intro-badge::before {
+  content: '◉'; font-size: 9px; color: var(--green);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+.intro-box h1 {
+  font-size: clamp(1.7rem, 3.5vw, 2.6rem);
+  font-weight: 700; line-height: 1.15; color: #fff;
+  margin-bottom: 10px;
+}
+.intro-box h1 em { font-style: normal; color: var(--cyan); }
+
+.intro-sub {
+  font-size: 14px; color: var(--muted);
+  margin-bottom: 32px; line-height: 1.65;
+}
+
+.meta-row {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 12px; margin-bottom: 36px;
+}
+.meta-cell {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px;
+  text-align: center;
+}
+.meta-cell .mn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1.7rem; font-weight: 600;
+  color: var(--cyan); display: block; line-height: 1;
+}
+.meta-cell .ml { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+.cat-legend { margin-bottom: 32px; }
+.cat-legend h4 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin-bottom: 12px; }
+.cat-chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 6px;
+  font-size: 11px; font-weight: 500;
+}
+
+.btn-start {
+  width: 100%; padding: 16px;
+  background: linear-gradient(135deg, var(--blue), #0058cc);
+  border: none; border-radius: var(--r);
+  color: #fff; font-size: 15px; font-weight: 600;
+  cursor: pointer; font-family: 'IBM Plex Sans', sans-serif;
+  transition: all 0.2s; letter-spacing: 0.3px;
+}
+.btn-start:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(10,132,255,0.35); }
+
+/* ── QUIZ SCREEN ── */
+#screen-quiz { display: none; min-height: 100vh; }
+
+.quiz-header {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(4,9,15,0.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex; align-items: center; gap: 20px;
+}
+
+.q-counter {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px; font-weight: 600;
+  color: var(--cyan); white-space: nowrap;
+}
+
+.progress-track {
+  flex: 1; height: 4px; background: rgba(255,255,255,0.07);
+  border-radius: 2px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: linear-gradient(90deg, var(--blue), var(--cyan));
+  border-radius: 2px; transition: width 0.4s cubic-bezier(.4,0,.2,1);
+}
+
+.score-live {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px; color: var(--muted); white-space: nowrap;
+}
+
+/* ── QUESTION CARD ── */
+.quiz-body {
+  max-width: 760px; margin: 0 auto;
+  padding: 40px 24px 80px;
+}
+
+.q-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 36px 36px 28px;
+  animation: slideIn 0.35s cubic-bezier(.4,0,.2,1) both;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.q-meta {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 20px;
+}
+
+.q-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; font-weight: 600;
+  color: var(--muted); letter-spacing: 0.5px;
+}
+
+.q-cat {
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  padding: 3px 9px; border-radius: 5px;
+}
+
+.q-diff {
+  margin-left: auto;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 0.3px;
+}
+
+.q-text {
+  font-size: 16px; font-weight: 500;
+  color: #fff; line-height: 1.55;
+  margin-bottom: 28px;
+}
+
+.q-note {
+  font-size: 12.5px; color: var(--muted);
+  font-style: italic; margin-top: 8px;
+  display: block;
+}
+
+/* ── OPTIONS ── */
+.options { display: flex; flex-direction: column; gap: 10px; }
+
+.opt {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px 18px;
+  background: rgba(255,255,255,0.03);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.18s;
+  text-align: left; width: 100%;
+  font-family: 'IBM Plex Sans', sans-serif;
+  color: var(--text);
+}
+
+.opt:hover:not(:disabled) {
+  border-color: rgba(10,132,255,0.4);
+  background: rgba(10,132,255,0.07);
+}
+
+.opt-key {
+  width: 26px; height: 26px; border-radius: 7px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; font-weight: 700;
+  color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+  transition: all 0.18s;
+}
+
+.opt-text { font-size: 14px; line-height: 1.55; flex: 1; }
+
+/* Answer states */
+.opt.selected {
+  border-color: rgba(10,132,255,0.5);
+  background: rgba(10,132,255,0.1);
+}
+.opt.selected .opt-key {
+  background: var(--blue); color: #fff; border-color: var(--blue);
+}
+
+.opt.correct {
+  border-color: rgba(48,209,88,0.6);
+  background: rgba(48,209,88,0.08);
+}
+.opt.correct .opt-key {
+  background: var(--green); color: #fff; border-color: var(--green);
+}
+
+.opt.wrong {
+  border-color: rgba(255,69,58,0.5);
+  background: rgba(255,69,58,0.07);
+}
+.opt.wrong .opt-key {
+  background: var(--red); color: #fff; border-color: var(--red);
+}
+
+.opt.reveal-correct {
+  border-color: rgba(48,209,88,0.45);
+  background: rgba(48,209,88,0.06);
+}
+.opt.reveal-correct .opt-key {
+  background: rgba(48,209,88,0.25); color: var(--green); border-color: var(--green);
+}
+
+.opt:disabled { cursor: default; }
+
+/* ── EXPLANATION ── */
+.explain {
+  display: none;
+  margin-top: 20px;
+  border-radius: 10px;
+  padding: 16px 18px;
+  animation: fadeUp 0.3s ease both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.explain.correct-exp {
+  background: rgba(48,209,88,0.07);
+  border: 1px solid rgba(48,209,88,0.2);
+}
+.explain.wrong-exp {
+  background: rgba(255,69,58,0.06);
+  border: 1px solid rgba(255,69,58,0.2);
+}
+
+.exp-head {
+  font-size: 12px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+.explain.correct-exp .exp-head { color: var(--green); }
+.explain.wrong-exp .exp-head { color: var(--red); }
+
+.exp-body { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.6; }
+.exp-body strong { color: var(--cyan); }
+
+/* ── NAV BUTTONS ── */
+.q-nav {
+  display: flex; justify-content: flex-end;
+  margin-top: 28px;
+}
+
+.btn-next {
+  padding: 11px 28px;
+  background: var(--blue); border: none;
+  border-radius: var(--r); color: #fff;
+  font-size: 14px; font-weight: 600;
+  cursor: pointer; font-family: 'IBM Plex Sans', sans-serif;
+  transition: all 0.18s; display: none;
+}
+.btn-next:hover { background: #0070e0; }
+.btn-next.show { display: inline-flex; align-items: center; gap: 7px; }
+
+/* ── RESULT SCREEN ── */
+#screen-result {
+  display: none; min-height: 100vh;
+  padding: 60px 24px 80px;
+  background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(10,132,255,0.1) 0%, transparent 60%);
+}
+
+.result-box {
+  max-width: 680px; margin: 0 auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px; padding: 48px;
+}
+
+.result-grade {
+  text-align: center; margin-bottom: 40px;
+}
+
+.grade-ring {
+  width: 140px; height: 140px;
+  margin: 0 auto 20px;
+  position: relative;
+}
+
+.grade-ring svg { transform: rotate(-90deg); }
+
+.grade-ring .track { fill: none; stroke: rgba(255,255,255,0.07); stroke-width: 8; }
+.grade-ring .fill  { fill: none; stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1); }
+
+.grade-center {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+}
+.grade-pct {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 2.2rem; font-weight: 700; line-height: 1;
+}
+.grade-lbl { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+.result-verdict {
+  font-size: 1.3rem; font-weight: 700; color: #fff;
+}
+.result-sub { font-size: 13px; color: var(--muted); margin-top: 6px; }
+
+.score-breakdown {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 12px; margin-bottom: 36px;
+}
+.sb-cell {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--r); padding: 16px;
+  text-align: center;
+}
+.sb-cell .sbn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1.6rem; font-weight: 700; display: block;
+}
+.sb-cell .sbl { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+.cat-results { margin-bottom: 36px; }
+.cat-results h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 14px; }
+
+.cat-row {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 10px;
+}
+.cat-row-name { font-size: 12.5px; min-width: 180px; }
+.cat-bar-track { flex: 1; height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+.cat-bar-fill  { height: 100%; border-radius: 3px; transition: width 1s ease; }
+.cat-row-score { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--muted); min-width: 48px; text-align: right; }
+
+/* Review list */
+.review-section { margin-top: 36px; }
+.review-section h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 14px; }
+
+.review-item {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 13px;
+}
+.review-item:last-child { border-bottom: none; }
+.ri-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+.ri-q { color: rgba(255,255,255,0.65); flex: 1; }
+.ri-a { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+
+.btn-retry {
+  width: 100%; padding: 14px;
+  background: linear-gradient(135deg, var(--blue), #0058cc);
+  border: none; border-radius: var(--r);
+  color: #fff; font-size: 14px; font-weight: 600;
+  cursor: pointer; font-family: 'IBM Plex Sans', sans-serif;
+  margin-top: 32px; transition: all 0.2s;
+}
+.btn-retry:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(10,132,255,0.3); }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .intro-box, .q-card, .result-box { padding: 24px 20px; }
+  .meta-row { grid-template-columns: 1fr 1fr 1fr; }
+  .score-breakdown { grid-template-columns: 1fr 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ INTRO ══════════════ -->
+<div id="screen-intro">
+  <div class="intro-box">
+    <div class="intro-badge">Sales & Pre-Sales Certification</div>
+    <h1>Proofpoint <em>Email Security</em><br>Knowledge Assessment</h1>
+    <p class="intro-sub">Bài kiểm tra đánh giá toàn diện mức độ hiểu biết về giải pháp Proofpoint Email Security — từ tính năng sản phẩm, kỹ năng tư vấn, kỹ thuật triển khai đến xử lý tình huống thực tế với khách hàng.</p>
+
+    <div class="meta-row">
+      <div class="meta-cell">
+        <span class="mn">30</span>
+        <div class="ml">Câu hỏi</div>
+      </div>
+      <div class="meta-cell">
+        <span class="mn">80%</span>
+        <div class="ml">Điểm đạt</div>
+      </div>
+      <div class="meta-cell">
+        <span class="mn">~25'</span>
+        <div class="ml">Thời gian ước tính</div>
+      </div>
+    </div>
+
+    <div class="cat-legend">
+      <h4>Phân loại câu hỏi</h4>
+      <div class="cat-chips">
+        <div class="chip" style="background:rgba(10,132,255,0.12);color:#60a5fa;border:1px solid rgba(10,132,255,0.25);">🔧 Tính năng & Module</div>
+        <div class="chip" style="background:rgba(50,210,242,0.1);color:var(--cyan);border:1px solid rgba(50,210,242,0.25);">💬 Kỹ năng Tư vấn</div>
+        <div class="chip" style="background:rgba(191,90,242,0.1);color:#d8a0ff;border:1px solid rgba(191,90,242,0.25);">⚙️ Kỹ thuật Pre-Sales</div>
+        <div class="chip" style="background:rgba(255,214,10,0.1);color:var(--amber);border:1px solid rgba(255,214,10,0.25);">🎯 Tình huống thực tế</div>
+        <div class="chip" style="background:rgba(48,209,88,0.1);color:var(--green);border:1px solid rgba(48,209,88,0.25);">📋 License & Sizing</div>
+        <div class="chip" style="background:rgba(255,107,53,0.1);color:#ff9060;border:1px solid rgba(255,107,53,0.25);">🏗️ Mô hình triển khai</div>
+        <div class="chip" style="background:rgba(255,69,58,0.1);color:#ff8080;border:1px solid rgba(255,69,58,0.25);">⚔️ Cạnh tranh thị trường</div>
+      </div>
+    </div>
+
+    <button class="btn-start" onclick="startQuiz()">Bắt đầu kiểm tra →</button>
+  </div>
+</div>
+
+<!-- ══════════════ QUIZ ══════════════ -->
+<div id="screen-quiz">
+  <div class="quiz-header">
+    <div class="q-counter" id="q-counter">Câu 1 / 30</div>
+    <div class="progress-track"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    <div class="score-live" id="score-live">Đúng: 0</div>
+  </div>
+  <div class="quiz-body" id="quiz-body"></div>
+</div>
+
+<!-- ══════════════ RESULT ══════════════ -->
+<div id="screen-result">
+  <div class="result-box">
+    <div class="result-grade">
+      <div class="grade-ring">
+        <svg viewBox="0 0 120 120" width="140" height="140">
+          <circle class="track" cx="60" cy="60" r="52"/>
+          <circle class="fill" id="grade-arc" cx="60" cy="60" r="52"
+            stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
+        </svg>
+        <div class="grade-center">
+          <div class="grade-pct" id="grade-pct">—</div>
+          <div class="grade-lbl">điểm</div>
+        </div>
+      </div>
+      <div class="result-verdict" id="verdict"></div>
+      <div class="result-sub" id="result-sub"></div>
+    </div>
+
+    <div class="score-breakdown">
+      <div class="sb-cell"><span class="sbn" id="r-correct" style="color:var(--green)">—</span><div class="sbl">Câu đúng</div></div>
+      <div class="sb-cell"><span class="sbn" id="r-wrong" style="color:var(--red)">—</span><div class="sbl">Câu sai</div></div>
+      <div class="sb-cell"><span class="sbn" id="r-total" style="color:var(--cyan)">30</span><div class="sbl">Tổng câu</div></div>
+    </div>
+
+    <div class="cat-results">
+      <h4>Kết quả theo chủ đề</h4>
+      <div id="cat-breakdown"></div>
+    </div>
+
+    <div class="review-section">
+      <h4>Câu trả lời sai — Cần ôn lại</h4>
+      <div id="review-list"></div>
+    </div>
+
+    <button class="btn-retry" onclick="restartQuiz()">Làm lại bài kiểm tra ↺</button>
+  </div>
+</div>
+
+<script>
+// ──────────────────────────────────────────────
+// QUESTION BANK — 30 câu, phân bổ đáp án đa dạng
+// cat: feat|cons|tech|sit|lic|dep|comp
+// ──────────────────────────────────────────────
+const Q = [
+
+// ══ CÂU 1 — Tính năng & Module ══
+{
+  cat: 'feat', diff: 'Cơ bản',
+  text: 'Trong kiến trúc Proofpoint Protection Server (PPS) triển khai On-Premises, thành phần nào đóng vai trò là trung tâm quản trị (Central Management) — lưu trữ cấu hình, quản lý quarantine và đồng bộ Active Directory?',
+  opts: ['Filter Node', 'Master Node', 'TAP Cloud Service', 'Proofpoint Updates Server'],
+  ans: 1,
+  exp: '<strong>Master Node</strong> là trung tâm điều khiển (Control Plane): lưu cấu hình hệ thống, quản lý cơ sở dữ liệu người dùng (sync từ AD/Azure AD), quản lý khu vực cách ly (Quarantine) và tổng hợp báo cáo. Admin truy cập Web Console qua Master Node. Filter Node là Data Plane — thực thi việc lọc thư thực tế.'
+},
+
+// ══ CÂU 2 — Tính năng & Module ══
+{
+  cat: 'feat', diff: 'Trung bình',
+  text: 'Module TRAP (Threat Response Auto-Pull) của Proofpoint giải quyết bài toán bảo mật nào mà các Secure Email Gateway truyền thống KHÔNG thể xử lý?',
+  opts: [
+    'Phát hiện spam và phishing tại cửa ngõ trước khi email vào mailbox',
+    'Tự động thu hồi email đã được giao vào mailbox khi phát hiện URL trong đó trở thành độc hại sau thời điểm giao',
+    'Mã hóa email nhạy cảm trước khi gửi ra ngoài tổ chức',
+    'Phân tích file đính kèm trong môi trường sandbox cô lập'
+  ],
+  ans: 1,
+  exp: 'SEG truyền thống chỉ chặn tại cửa ngõ — nếu email đã lọt vào mailbox, SEG không làm gì được. <strong>TRAP giải quyết "window of exposure"</strong>: khi TAP phát hiện một URL trong email đã giao ngày hôm qua hôm nay trở thành độc hại, TRAP tự động tìm và xóa email đó khỏi TẤT CẢ mailbox trong vài chục giây — không cần can thiệp thủ công. Đây là điểm khác biệt lớn so với kiến trúc chỉ chặn trước.'
+},
+
+// ══ CÂU 3 — Kỹ thuật Pre-Sales ══
+{
+  cat: 'tech', diff: 'Nâng cao',
+  text: 'Khi triển khai Proofpoint On-Premises để bảo vệ Microsoft 365, bước cấu hình nào là BẮT BUỘC để ngăn kẻ tấn công bypass hệ thống bảo mật bằng cách gửi thẳng vào M365 mà không qua Proofpoint Filter?',
+  opts: [
+    'Cập nhật DKIM signing key trên DNS',
+    'Cấu hình Inbound Connector trên M365 để chỉ chấp nhận email từ dải IP của Proofpoint Filter Node',
+    'Kích hoạt chế độ Dual Delivery trước khi go-live',
+    'Tắt Microsoft Defender for Office 365 để tránh xung đột'
+  ],
+  ans: 1,
+  exp: 'Đây là bước kỹ thuật quan trọng nhất thường bị bỏ sót trong POC. Nếu không cấu hình <strong>Inbound Connector</strong> trên M365, kẻ tấn công có thể tìm MX record của M365 và gửi email trực tiếp — hoàn toàn bypass Proofpoint. Sau khi cấu hình connector, M365 chỉ nhận email từ IP của Proofpoint Filter Node, loại bỏ đường bypass này. Dual Delivery là cho POC, không phải security control. Tắt Defender KHÔNG được khuyến nghị.'
+},
+
+// ══ CÂU 4 — License & Sizing ══
+{
+  cat: 'lic', diff: 'Cơ bản',
+  text: 'Khách hàng hỏi: "Nếu chúng tôi triển khai On-Premises và muốn thêm 2 Filter Node để đảm bảo High Availability, chúng tôi có phải trả thêm phí license phần mềm không?" Câu trả lời đúng là gì?',
+  opts: [
+    'Có, mỗi Filter Node là một license riêng dựa trên số CPU core',
+    'Không, Proofpoint tính license theo số Mailbox (User) — không tính số lượng node Master hay Filter',
+    'Có, cần mua thêm license "Node Expansion" cho mỗi Filter Node bổ sung',
+    'Không, nhưng phải trả phí support riêng cho từng node'
+  ],
+  ans: 1,
+  exp: '<strong>Proofpoint tính license theo Mailbox (User), không theo số node.</strong> Khách hàng có thể triển khai bao nhiêu Filter Node tùy thích — 1, 5, hay 10 node — mà không tốn thêm phí license phần mềm. Đây là lợi thế lớn khi tư vấn: khách hàng có thể scale out để đáp ứng hiệu năng cao mà không lo chi phí license tăng theo. Chỉ có dịch vụ TAP Cloud Service (sandbox) là tiêu thụ trên Cloud của Proofpoint và đã bao gồm trong license user.'
+},
+
+// ══ CÂU 5 — Tình huống thực tế ══
+{
+  cat: 'sit', diff: 'Nâng cao',
+  text: 'CISO của một ngân hàng nói: "Chúng tôi vừa phát hiện email từ địa chỉ cfo@supplier-legit.com (đối tác thực sự) yêu cầu thay đổi tài khoản ngân hàng nhận tiền. Email này vượt qua SPF/DKIM/DMARC hoàn toàn hợp lệ." Module Proofpoint nào được thiết kế đặc biệt để phòng chống kịch bản tấn công chuỗi cung ứng này?',
+  opts: [
+    'Email Fraud Defense (EFD) — quản lý DMARC',
+    'Targeted Attack Protection (TAP) — sandbox URL',
+    'Supplier Threat Protection (STP) — đánh giá rủi ro tài khoản nhà cung cấp',
+    'Secure Email Relay (SER) — kiểm soát outbound'
+  ],
+  ans: 2,
+  exp: 'Đây là Supply Chain Attack điển hình — email hợp lệ về mặt kỹ thuật nhưng tài khoản nhà cung cấp đã bị xâm phạm (Account Takeover). SPF/DKIM/DMARC không phát hiện được vì email gửi từ domain thật. <strong>STP (Supplier Threat Protection)</strong> là module độc quyền của Proofpoint: phân tích lịch sử giao tiếp và hành vi email của nhà cung cấp, phát hiện dấu hiệu tài khoản bị compromise (đăng nhập bất thường, thay đổi cài đặt) TRƯỚC khi email được gửi đến. Đây là tính năng không hãng nào khác trên thị trường có.'
+},
+
+// ══ CÂU 6 — Kỹ năng Tư vấn ══
+{
+  cat: 'cons', diff: 'Trung bình',
+  text: 'Giám đốc IT của một doanh nghiệp nói: "Chúng tôi đã có Microsoft 365 E5 với Defender bao gồm sẵn, tại sao cần mua thêm Proofpoint?" Lập luận HIỆU QUẢ NHẤT và CHÍNH XÁC NHẤT để trả lời là:',
+  opts: [
+    'Proofpoint có giao diện đẹp hơn và báo cáo chi tiết hơn Microsoft Defender',
+    'Microsoft Defender bỏ sót trung bình 13,5% các mối đe dọa tinh vi mà Proofpoint phát hiện được — đặc biệt là BEC thuần văn bản, zero-day qua bare metal sandbox, và không có khả năng tự động thu hồi email đã giao (TRAP)',
+    'Proofpoint rẻ hơn Microsoft E5 nên tổng chi phí thấp hơn',
+    'Proofpoint là giải pháp của bên thứ 3 nên độc lập hơn'
+  ],
+  ans: 1,
+  exp: 'Argument tốt nhất phải dựa trên <strong>gap cụ thể của Defender</strong>: (1) Miss rate ~13.5% với threats tinh vi — đặc biệt BEC không link không file; (2) Không có Bare Metal Sandbox — thiếu lớp phân tích sâu nhất; (3) Không có TRAP — sau khi email vào mailbox, Defender không tự động thu hồi được; (4) Không có Browser Isolation native; (5) Không có Supplier Threat Protection. Đây là những điểm kỹ thuật cụ thể, khó phản bác và đúng thực tế — mạnh hơn nhiều so với các lập luận về giao diện hay chi phí.'
+},
+
+// ══ CÂU 7 — Kỹ thuật Pre-Sales ══
+{
+  cat: 'tech', diff: 'Nâng cao',
+  text: 'Nexus AI của Proofpoint có 4 engine chính. Engine nào sử dụng NLP (Natural Language Processing) để phát hiện BEC — email giả mạo lãnh đạo yêu cầu chuyển tiền mà KHÔNG chứa link hay file đính kèm?',
+  opts: [
+    'Nexus TI (Threat Intelligence) — dựa vào reputation database',
+    'Nexus CV (Computer Vision) — phân tích hình ảnh trong email',
+    'Nexus ML với model "Supernova" — phân tích ngữ nghĩa và hành vi email thuần văn bản',
+    'Nexus RG (Relationship Graph) — phân tích tần suất liên lạc'
+  ],
+  ans: 2,
+  exp: '<strong>Nexus ML — model Supernova</strong> được thiết kế chuyên cho BEC detection: phân tích nội dung văn bản email bằng NLP để hiểu ngữ cảnh — yêu cầu khẩn cấp, yêu cầu chuyển tiền, thay đổi thông tin tài khoản ngân hàng. Đây là loại tấn công nguy hiểm nhất tài chính vì không có payload để AV phát hiện. Nexus RG hỗ trợ thêm bằng cách đánh dấu email từ người lạ có nội dung bất thường. Nexus TI hoạt động dựa trên IP/URL reputation — không hiệu quả với email thuần văn bản.'
+},
+
+// ══ CÂU 8 — Mô hình triển khai ══
+{
+  cat: 'dep', diff: 'Trung bình',
+  text: 'Khách hàng là một bộ của Chính phủ Việt Nam yêu cầu toàn bộ dữ liệu email phải được lưu trữ trong Data Center nội bộ, không được chuyển ra nước ngoài. Mô hình triển khai nào phù hợp nhất?',
+  opts: [
+    'Cloud / PoD (Proofpoint on Demand) — tất cả trên hạ tầng Proofpoint',
+    'On-Premises PPS (Proofpoint Protection Server) với Filter và Master Node cài đặt trong DC nội bộ — TAP Cloud Service vẫn là cloud nhưng chỉ gửi file đáng ngờ để phân tích sandbox',
+    'Hybrid — một phần on-prem, một phần cloud',
+    'Proofpoint không hỗ trợ yêu cầu Data Residency'
+  ],
+  ans: 1,
+  exp: '<strong>On-Premises PPS</strong> là lựa chọn phù hợp nhất cho yêu cầu Data Residency của Chính phủ. Toàn bộ luồng email được xử lý trong DC nội bộ — không có email content nào chuyển ra nước ngoài. Lưu ý quan trọng khi tư vấn: <em>TAP Cloud Service vẫn là dịch vụ trên Cloud của Proofpoint</em> — khi có file đính kèm đáng ngờ, Filter Node gửi file đó lên TAP Cloud để phân tích sandbox. Cần giải thích và confirm với KH rằng đây là security control cần thiết. Một số KH Gov VN chấp nhận điều này.'
+},
+
+// ══ CÂU 9 — Cạnh tranh ══
+{
+  cat: 'comp', diff: 'Trung bình',
+  text: 'Đối thủ Abnormal Security được một khách hàng tài chính cân nhắc thay Proofpoint vì "dễ dùng hơn, ít cần cấu hình". Điểm yếu KỸ THUẬT quan trọng nhất của Abnormal Security là gì khi tư vấn cho khách hàng yêu cầu bảo vệ toàn diện?',
+  opts: [
+    'Abnormal Security không có tính năng báo cáo dashboard',
+    'Abnormal chỉ hoạt động theo mô hình API-only — không chặn được email tại cửa ngõ, chỉ xử lý sau khi email đã vào mailbox, đồng thời không có Security Awareness Training, DLP, hay DMARC management',
+    'Abnormal Security không tích hợp được với Microsoft 365',
+    'Abnormal Security không phát hiện được spam thông thường'
+  ],
+  ans: 1,
+  exp: 'Điểm yếu kỹ thuật cốt lõi của Abnormal: <strong>API-only architecture</strong> — email đến thẳng M365 rồi Abnormal mới đọc API để phân tích. Điều này có nghĩa: (1) Không có gateway chặn trước — 100% email qua được trước khi phân tích; (2) Nếu M365 bị sự cố, không có fallback; (3) Không có Sandbox, không có Browser Isolation, không có BareM etal Analysis; (4) Không có SAT, DLP, DMARC management, Archiving. Proofpoint với kiến trúc Hybrid (SEG+API) vừa chặn trước vừa phân tích sau — phòng thủ theo chiều sâu mà Abnormal không có.'
+},
+
+// ══ CÂU 10 — Tính năng & Module ══
+{
+  cat: 'feat', diff: 'Trung bình',
+  text: 'Email Fraud Defense (EFD) của Proofpoint chủ yếu giải quyết vấn đề gì và kết quả cuối cùng khách hàng đạt được là gì?',
+  opts: [
+    'Lọc spam và phishing trong email đến — giảm lượng email rác vào mailbox',
+    'Quản lý toàn bộ quá trình triển khai DMARC cho tên miền tổ chức — bao gồm cả email từ bên thứ 3 (Salesforce, CRM) — đến khi đạt DMARC p=reject, ngăn chặn hoàn toàn email giả mạo domain của tổ chức',
+    'Phân tích và cách ly file đính kèm độc hại từ nhà cung cấp bên ngoài',
+    'Đào tạo nhân viên nhận diện email phishing và BEC'
+  ],
+  ans: 1,
+  exp: '<strong>EFD = DMARC Management Platform</strong>. Mục tiêu cuối: đạt DMARC p=reject cho toàn bộ domain của tổ chức. Điều khó nhất không phải là cài DMARC — mà là phải inventory và xác thực TẤT CẢ nguồn gửi hợp pháp (Salesforce, marketing platform, CRM, HR system...). EFD cung cấp visibility đầy đủ về tất cả nguồn gửi email dưới tên miền, giúp IT tự tin triển khai p=reject mà không chặn email hợp lệ. Kết quả: email giả mạo domain tổ chức bị reject tại mail server đích — bảo vệ thương hiệu và khách hàng.'
+},
+
+// ══ CÂU 11 — Kỹ thuật Pre-Sales ══
+{
+  cat: 'tech', diff: 'Nâng cao',
+  text: 'Trong khi demo Proofpoint TAP, khách hàng hỏi: "Sandbox của Proofpoint khác gì so với sandbox thông thường?" Lợi thế kỹ thuật ĐỘC ĐÁO nhất của Proofpoint Attachment Defense là:',
+  opts: [
+    'Proofpoint sandbox xử lý file trong 30 giây — nhanh hơn đối thủ',
+    'Proofpoint là một trong số ít hãng có phân tích 3 lớp bao gồm Bare Metal Analysis — chạy file trên phần cứng thật để đánh lừa malware có khả năng nhận biết và né môi trường máy ảo (anti-VM evasion)',
+    'Proofpoint sandbox không cần kết nối internet',
+    'Proofpoint sandbox phân tích được file PDF nhanh hơn'
+  ],
+  ans: 1,
+  exp: '<strong>Bare Metal Analysis</strong> là lớp thứ 3 và quan trọng nhất: thực thi file trên phần cứng vật lý thật — không phải máy ảo. Nhiều loại malware cao cấp (APT) có cơ chế anti-VM: chúng phát hiện đang chạy trong môi trường ảo hóa và "ngủ đông" không thực thi payload. Khi chạy trên bare metal, malware bị đánh lừa và thực thi bình thường — Proofpoint quan sát toàn bộ hành vi độc hại. Đây là lợi thế kỹ thuật quan trọng trong competitive deal với APT-focused clients như ngân hàng, năng lượng, quốc phòng.'
+},
+
+// ══ CÂU 12 — License & Sizing ══
+{
+  cat: 'lic', diff: 'Trung bình',
+  text: 'Một công ty chứng khoán có 800 nhân viên đang cân nhắc Proofpoint. Họ cần: bảo vệ email cơ bản, TAP (URL+sandbox), tự động thu hồi email (TRAP) và muốn thêm phishing simulation để đào tạo nhân viên. Gói bundle nào phù hợp nhất?',
+  opts: [
+    'PX — Essentials (bảo vệ API cơ bản)',
+    'P0 Bundle (Email Protection + TAP + TRAP)',
+    'P1 Bundle (tất cả P0 + Security Awareness Training + Phishing Simulation)',
+    'P3 Bundle (full platform với Browser Isolation)'
+  ],
+  ans: 2,
+  exp: '<strong>P1 Bundle</strong> phù hợp nhất: bao gồm tất cả P0 (Email Protection SEG + TAP + TRAP + People Risk Explorer) VÀ thêm Security Awareness Training + Phishing Simulation — đúng yêu cầu của khách hàng. P0 thiếu phishing simulation. P3 có Browser Isolation mà khách hàng không yêu cầu → over-spec và giá cao không cần thiết. PX là API-only, không có SEG gateway. Đây là gói được khuyến nghị cho DN 500–5000 user cần bảo vệ toàn diện kèm đào tạo nhân viên.'
+},
+
+// ══ CÂU 13 — Tình huống thực tế ══
+{
+  cat: 'sit', diff: 'Nâng cao',
+  text: 'Trong buổi meeting với Security Manager của ngân hàng, ông ấy nói: "Đội SOC của tôi mỗi ngày nhận 200–300 email do user báo cáo là spam/phishing, nhưng chỉ 5–10% là thực sự nguy hiểm. Tôi cần 2 analyst xử lý full-time." Module Proofpoint nào giải quyết ĐÚNG pain point này?',
+  opts: [
+    'TAP — phân tích tệp đính kèm',
+    'TRAP — thu hồi email tự động',
+    'CLEAR (Closed-Loop Email Analysis & Response) — tự động phân loại và xử lý email do người dùng báo cáo qua Outlook Add-in',
+    'EFD — quản lý DMARC'
+  ],
+  ans: 2,
+  exp: '<strong>CLEAR</strong> chính xác là giải pháp cho bài toán này: khi user nhấn nút "Report Suspicious" trên Outlook Add-in, CLEAR tự động: (1) Thu thập email; (2) AI phân loại: phishing thực sự, spam, hay false alarm; (3) Nếu là threat thực sự, kích hoạt TRAP để thu hồi; (4) Cập nhật feedback vào hệ thống. Kết quả: 95% email báo cáo được xử lý tự động, analyst chỉ cần xem xét 5% còn lại. Giảm 2 FTE analyst. Đây là ROI cụ thể và dễ quantify khi tư vấn với Security Manager.'
+},
+
+// ══ CÂU 14 — Mô hình triển khai ══
+{
+  cat: 'dep', diff: 'Trung bình',
+  text: 'Một tập đoàn lớn với 5.000 nhân viên tại 3 miền Bắc-Trung-Nam, đang dùng Microsoft 365, muốn triển khai Proofpoint. Họ không có yêu cầu Data Residency đặc biệt. Mô hình triển khai NÀO được khuyến nghị và lý do?',
+  opts: [
+    'On-Premises tại 3 data center, mỗi miền 1 cụm',
+    'Cloud / PoD (Proofpoint on Demand) — không cần phần cứng, Proofpoint quản lý hạ tầng, cập nhật tự động, scale linh hoạt, thích hợp nhất cho tổ chức đã dùng M365',
+    'Hybrid — Filter on-prem tại HN và HCM, Cloud cho miền Trung',
+    'On-Premises với Master Node đặt tại HN, Filter Nodes tại cả 3 miền'
+  ],
+  ans: 1,
+  exp: '<strong>Cloud/PoD</strong> là khuyến nghị chính thức của Proofpoint cho tổ chức đã dùng M365/Google Workspace và không có yêu cầu Data Residency. Lý do: (1) Không cần đầu tư phần cứng, tiết kiệm CAPEX; (2) Proofpoint đảm bảo uptime và HA; (3) Updates tự động — luôn có signature mới nhất; (4) Scale tự động theo traffic; (5) Tích hợp với M365 qua API nhanh hơn. On-Premises phù hợp khi có yêu cầu Data Residency hoặc compliance đặc thù — thường là Gov/Quốc phòng/Ngân hàng lớn tại VN.'
+},
+
+// ══ CÂU 15 — Tính năng & Module ══
+{
+  cat: 'feat', diff: 'Trung bình',
+  text: 'Tính năng Browser Isolation của Proofpoint hoạt động như thế nào và bảo vệ người dùng khỏi mối đe dọa nào đặc biệt nhất?',
+  opts: [
+    'Chặn hoàn toàn người dùng truy cập các trang web không nằm trong whitelist',
+    'Mở trang web trên trình duyệt nội bộ của công ty',
+    'Render trang web nghi ngờ trên hạ tầng cloud của Proofpoint và chỉ gửi hình ảnh hiển thị về máy user — ngăn user nhập thông tin đăng nhập vào trang phishing giả mạo (Credential Theft)',
+    'Tự động cài antivirus lên trình duyệt của người dùng'
+  ],
+  ans: 2,
+  exp: '<strong>Browser Isolation</strong> là tính năng độc quyền trong gói P3: trang web được render hoàn toàn trên cloud Proofpoint, chỉ gửi "pixel stream" (hình ảnh) về máy user. Máy user không thực thi bất kỳ JavaScript hay code nào từ trang web. Quan trọng nhất: người dùng <em>không thể nhập mật khẩu</em> vào form đăng nhập trên trang phishing — ngăn chặn tuyệt đối Credential Theft kể cả khi user không nhận ra trang web là giả mạo. Đây là tính năng không tích hợp native ở bất kỳ giải pháp email security nào khác trên thị trường.'
+},
+
+// ══ CÂU 16 — Kỹ năng Tư vấn ══
+{
+  cat: 'cons', diff: 'Trung bình',
+  text: 'Khi tiếp cận CEO của một công ty sản xuất lớn (FDI), lập luận nào phù hợp NHẤT với tư duy kinh doanh cấp C-Level?',
+  opts: [
+    'Giải thích chi tiết về kiến trúc Nexus AI và 4 engine của hệ thống',
+    'Trình bày chi tiết về các module TAP, TRAP, EFD, STP và sự khác biệt kỹ thuật',
+    'Trình bày rủi ro tài chính cụ thể: một vụ BEC tại VN gây thiệt hại trung bình hàng tỷ đồng, chi phí compliance nếu vi phạm ND 13/2023 có thể lên 5% doanh thu, và ROI của việc đầu tư phòng ngừa so với chi phí khắc phục sự cố',
+    'Nêu danh sách tất cả tính năng của Proofpoint so với đối thủ'
+  ],
+  ans: 2,
+  exp: 'C-Level không quan tâm đến tính năng kỹ thuật — họ quyết định dựa trên <strong>Risk và ROI</strong>. Cách tiếp cận đúng: (1) Rủi ro tài chính: BEC trung bình $4.88M, 1 vụ là đủ để "đau"; (2) Rủi ro pháp lý: ND 13/2023 có thể phạt đến 5% doanh thu nếu rò rỉ DLCN qua email; (3) ROI: chi phí Proofpoint 1 năm << chi phí 1 vụ tấn công thành công; (4) Business continuity: đảm bảo email không bị gián đoạn. Giữ ngắn, dùng số liệu cụ thể, liên hệ đến ngành của họ.'
+},
+
+// ══ CÂU 17 — License & Sizing ══
+{
+  cat: 'lic', diff: 'Nâng cao',
+  text: 'Khách hàng là Sở Tài chính một tỉnh, có 300 mailbox, đang xây dựng hệ thống đáp ứng cấp độ ATTT 3 theo Nghị định 85/2016. Họ yêu cầu giải pháp phải triển khai On-Premises. Khi tư vấn license, điều nào quan trọng nhất cần clarify với khách hàng?',
+  opts: [
+    'Proofpoint không bán cho cơ quan nhà nước Việt Nam',
+    'License subscription hàng năm tính theo số 300 mailbox, On-Premises PPS được cấp đầy đủ — nhưng dịch vụ TAP Cloud (sandbox) vẫn cần kết nối internet outbound HTTPS 443 đến cloud Proofpoint để phân tích file đáng ngờ',
+    'Khách hàng cần mua thêm hardware appliance riêng từ Proofpoint',
+    'Cấp độ ATTT 3 không bắt buộc có email security riêng biệt'
+  ],
+  ans: 1,
+  exp: 'Điểm then chốt cần clarify với KH Gov/tài chính công: <strong>TAP Cloud Service là cloud-based</strong> — khi Filter Node phát hiện file đáng ngờ, nó gửi file lên TAP Cloud của Proofpoint để sandbox phân tích. Điều này cần cổng outbound HTTPS 443 đến *.proofpoint.com. Một số cơ quan nhà nước nghiêm ngặt về data không ra ngoài — cần giải thích rõ chỉ file đáng ngờ (không phải email content) được gửi lên. Nếu không thể chấp nhận, cần thảo luận về giải pháp sandbox on-prem bổ sung. Đây là câu hỏi pre-sales quan trọng phải hỏi sớm.'
+},
+
+// ══ CÂU 18 — Tính năng & Module ══
+{
+  cat: 'feat', diff: 'Cơ bản',
+  text: 'VAP (Very Attacked People) trong Proofpoint là gì và tại sao đây là thông tin có giá trị cho CISO?',
+  opts: [
+    'Danh sách các nhân viên đã từng click vào link phishing',
+    'Chỉ số đo lường hiệu quả của giải pháp email security',
+    'Phân tích và xếp hạng những nhân viên bị tấn công nhắm mục tiêu nhiều nhất — cho phép CISO ưu tiên bảo vệ, giám sát chặt hơn và đào tạo đúng người đúng thời điểm, giảm rủi ro tổng thể hiệu quả nhất',
+    'Danh sách IP của các hacker đang nhắm vào tổ chức'
+  ],
+  ans: 2,
+  exp: '<strong>VAP (Very Attacked People)</strong> là insight về "rủi ro con người" — ai trong tổ chức đang bị kẻ tấn công nhắm mục tiêu nhiều nhất (dựa trên volume và sophistication của email tấn công nhận được). Giá trị với CISO: (1) Ưu tiên bảo vệ đặc biệt cho CFO, CEO, legal team — không "bảo vệ đồng đều" mà bảo vệ đúng chỗ rủi ro cao; (2) Trigger đào tạo SAT ngay cho VAP; (3) Yêu cầu MFA bắt buộc cho VAP; (4) Giải thích được với Board tại sao đầu tư vào bảo mật người cụ thể này. Đây là People-Centric Security trong thực tế.'
+},
+
+// ══ CÂU 19 — Mô hình triển khai ══
+{
+  cat: 'dep', diff: 'Nâng cao',
+  text: 'Trong quá trình triển khai Proofpoint, giai đoạn "Dual Delivery" được thực hiện để làm gì và kéo dài bao lâu là phù hợp?',
+  opts: [
+    'Để gửi cùng một email đến hai người nhận khác nhau cùng lúc',
+    'Để chạy song song Proofpoint và hệ thống email security cũ — nhằm so sánh tỷ lệ phát hiện, tinh chỉnh ngưỡng false positive và đảm bảo không mất email trước khi cut-over — thường kéo dài 2–4 tuần',
+    'Để backup email ra một hệ thống lưu trữ dự phòng trong quá trình migration',
+    'Để test High Availability bằng cách gửi email qua cả 2 Filter Node đồng thời'
+  ],
+  ans: 1,
+  exp: '<strong>Dual Delivery (POC/Tuning phase)</strong>: luồng email thực tế được chuyển qua Proofpoint Filter, nhưng đồng thời vẫn được giao tiếp tới mail server như bình thường (journaling). Mục đích: (1) So sánh những gì Proofpoint bắt được vs hệ thống cũ; (2) Xác định false positive (Proofpoint chặn email hợp lệ) → điều chỉnh whitelist, ngưỡng; (3) Đảm bảo mail flow ổn định trước khi cut-over; (4) Build trust với KH. Thời gian 2–4 tuần là phù hợp — đủ để thấy đa dạng threat và điều chỉnh policy. Sau giai đoạn này mới go-live chính thức.'
+},
+
+// ══ CÂU 20 — Tình huống thực tế ══
+{
+  cat: 'sit', diff: 'Nâng cao',
+  text: 'Nhân viên IT của khách hàng hỏi: "Nếu kẻ tấn công gửi email chứa mã QR — không phải link thông thường — đến nhân viên của chúng tôi, Proofpoint có phát hiện được không?" Câu trả lời kỹ thuật chính xác là:',
+  opts: [
+    'Không, mã QR trong email hiện tại chưa có giải pháp nào phát hiện được',
+    'Có, nhưng chỉ khi user quét mã QR bằng điện thoại và URL được TAP scan',
+    'Có, Nexus CV (Computer Vision) của Proofpoint phân tích hình ảnh đính kèm để giải mã QR code và kiểm tra URL ẩn bên trong — phát hiện Quishing (QR Code Phishing) trước khi user quét mã',
+    'Có, nhưng chỉ khi dùng gói P3 Bundle trở lên'
+  ],
+  ans: 2,
+  exp: '"Quishing" (QR Code Phishing) là xu hướng tấn công nổi bật năm 2024–2025: URL độc hại được giấu trong hình ảnh mã QR đính kèm email — bypass hoàn toàn URL filter truyền thống vì không có text URL trong email. <strong>Nexus CV</strong> giải quyết điều này: phân tích hình ảnh bằng computer vision để nhận ra mã QR, giải mã nó, và đưa URL tìm được vào TAP URL Defense để kiểm tra reputation và sandbox nếu cần. Đây là tính năng Proofpoint triển khai sớm nhất trong thị trường và là selling point mạnh với khách hàng đang lo về xu hướng tấn công mới.'
+},
+
+// ══ CÂU 21 — Kỹ thuật Pre-Sales ══
+{
+  cat: 'tech', diff: 'Nâng cao',
+  text: 'Khi tích hợp Proofpoint với Active Directory/Azure AD, mục đích chính của việc đồng bộ LDAP là gì?',
+  opts: [
+    'Để Proofpoint xác thực admin đăng nhập vào Web Console',
+    'Để đồng bộ danh sách user/nhóm nhằm áp dụng chính sách lọc email khác nhau theo phòng ban, nhóm — ví dụ: Finance team nhận chính sách DLP nghiêm ngặt hơn, C-Level nhận enhanced BEC protection',
+    'Để Proofpoint có thể ghi log tất cả hoạt động email vào AD Event Log',
+    'Để tự động cài Outlook Add-in lên máy tính của nhân viên thông qua AD'
+  ],
+  ans: 1,
+  exp: 'Đồng bộ LDAP/Azure AD với Proofpoint phục vụ hai mục đích chính: (1) <strong>Policy enforcement theo nhóm</strong> — Proofpoint áp dụng chính sách lọc khác nhau cho từng OU/group: Finance team có DLP policy chặt hơn, Executive group (CFO, CEO) có BEC detection level cao hơn, IT admin có thể whitelist nhiều hơn; (2) <strong>Quarantine Digest cá nhân hóa</strong> — user nhận digest thông báo email của riêng họ trong quarantine và tự giải phóng nếu là false positive. Không đồng bộ được AD là deployment sẽ kém hiệu quả — chỉ áp dụng được policy theo domain.'
+},
+
+// ══ CÂU 22 — License & Sizing ══
+{
+  cat: 'lic', diff: 'Trung bình',
+  text: 'Một ngân hàng có 3.000 nhân viên muốn triển khai Proofpoint On-Premises. Kỹ sư IT hỏi: "Chúng tôi cần mua bao nhiêu Filter Node?" Thông tin NÀO là quan trọng nhất để sizing Filter Node?',
+  opts: [
+    'Số lượng tầng trong tòa nhà của ngân hàng',
+    'Lưu lượng email đỉnh (peak messages per hour) và kích thước email trung bình — vì Filter Node xử lý ~1–2 triệu messages/ngày, nên cần tính số node đủ để xử lý peak traffic với buffer, tối thiểu 2 node để đảm bảo HA',
+    'Tổng dung lượng lưu trữ của mail server hiện tại',
+    'Số lượng domain email đang sử dụng'
+  ],
+  ans: 1,
+  exp: 'Sizing Filter Node dựa trên <strong>throughput (email/giờ)</strong>: mỗi Filter Node xử lý ~1–2 triệu messages/ngày tùy cấu hình hardware. Công thức: (peak messages/hour × 24) / capacity_per_node = số node cần. Luôn thêm 30–50% buffer và tối thiểu 2 node để đảm bảo HA. Quan trọng: một ngân hàng 3.000 user thường có peak traffic cao vào giờ mở cửa và cuối giờ — cần hỏi rõ peak traffic. Ngoài ra cần hỏi: attachment size trung bình (ảnh hưởng đến sandbox queue), có Archiving không (cần storage riêng), yêu cầu retention của quarantine.'
+},
+
+// ══ CÂU 23 — Cạnh tranh ══
+{
+  cat: 'comp', diff: 'Trung bình',
+  text: 'Khách hàng đang cân nhắc Cisco IronPort vì "đã có quan hệ với Cisco từ lâu và trust thương hiệu". Điểm kỹ thuật yếu nhất của Cisco SEG cần nhấn mạnh khi competitive là:',
+  opts: [
+    'Cisco IronPort không lọc được spam',
+    'Cisco SEG là kiến trúc SEG truyền thống — rất yếu về phát hiện BEC (không có AI behavior analysis), không có Security Awareness Training tích hợp, không có tự động thu hồi email (TRAP), và xếp hạng Challenger trong Gartner MQ 2025 trong khi Proofpoint là Leader ở vị trí #1',
+    'Cisco IronPort không triển khai được On-Premises',
+    'Cisco không hỗ trợ Microsoft 365'
+  ],
+  ans: 1,
+  exp: 'Cisco IronPort/ESA là gateway truyền thống tốt — mạnh về spam/virus gateway. Nhưng <strong>điểm yếu cốt lõi</strong>: (1) BEC detection: không có NLP/AI behavior — chỉ dựa vào rules và reputation, bỏ sót phần lớn BEC thuần văn bản; (2) Không có SAT tích hợp; (3) Không có TRAP auto-pull; (4) Không có Browser Isolation; (5) Không có STP; (6) Kiến trúc cũ, chậm đổi mới. Gartner 2025: Cisco là Challenger, Proofpoint là Leader — đây là bằng chứng khách quan có thể share với KH. Relationship với Cisco là mềm, nhưng technical gap là cứng.'
+},
+
+// ══ CÂU 24 — Tình huống thực tế ══
+{
+  cat: 'sit', diff: 'Trung bình',
+  text: 'Trong buổi demo POC, Proofpoint phát hiện một email BEC giả mạo CEO gửi cho CFO yêu cầu chuyển 2 tỷ VND. Email không có link, không file, qua được SPF/DKIM. Khách hàng ấn tượng và hỏi: "Tại sao hệ thống biết đây là giả mạo?" Giải thích kỹ thuật chính xác nhất là:',
+  opts: [
+    'Proofpoint so sánh địa chỉ email gửi với blacklist có sẵn',
+    'Proofpoint dùng Nexus ML phân tích kết hợp: (1) Nội dung ngôn ngữ học — yêu cầu chuyển tiền khẩn, bí mật; (2) Nexus RG phát hiện người gửi này chưa từng liên lạc với CFO hoặc gửi từ domain khác một ký tự so với domain thật; (3) Metadata bất thường so với pattern lịch sử của CEO thật',
+    'Proofpoint phát hiện email bằng cách so sánh chữ ký digital với certificate của CEO',
+    'Proofpoint có database về tất cả CEO trên thế giới và pattern email của họ'
+  ],
+  ans: 1,
+  exp: 'BEC detection của Proofpoint là multi-signal analysis: <strong>Nexus ML + Nexus RG kết hợp</strong>: (1) NLP phân tích ngôn ngữ — từ khóa urgency (khẩn, ngay, bí mật), yêu cầu hành động tài chính; (2) Relationship Graph: người gửi thực sự có từng liên lạc với CFO không? Nếu email "từ CEO" nhưng đây là lần đầu CEO liên lạc với CFO → anomaly score cao; (3) Domain analysis: CEO@company.com vs CEO@c0mpany.com (typosquatting); (4) Timing anomaly: gửi ngoài giờ làm việc, từ timezone khác. Không có bất kỳ dấu hiệu đơn lẻ nào đủ — Proofpoint tổng hợp tất cả signals.'
+},
+
+// ══ CÂU 25 — Tính năng & Module ══
+{
+  cat: 'feat', diff: 'Trung bình',
+  text: 'Proofpoint Email DLP module sử dụng "Smart IDs" để làm gì khác với DLP truyền thống chỉ dùng regex pattern?',
+  opts: [
+    'Smart IDs chỉ hoạt động với file đính kèm, không hoạt động với nội dung email text',
+    'Smart IDs nhận dạng các loại dữ liệu có cấu trúc đặc thù như số CCCD Việt Nam, số tài khoản ngân hàng, mã nguồn độc quyền — không chỉ khớp pattern text thô mà còn xác nhận tính hợp lệ của dữ liệu (checksum, định dạng quốc gia), giảm false positive đáng kể',
+    'Smart IDs là tính năng AI tạo ra tự động các regex pattern mà không cần admin cấu hình',
+    'Smart IDs chỉ hoạt động với email gửi ra ngoài, không áp dụng với email nội bộ'
+  ],
+  ans: 1,
+  exp: '<strong>Smart IDs</strong> vượt trội hơn regex thuần: (1) Không chỉ match pattern — còn validate: số CCCD có đúng checksum không? Số thẻ tín dụng có pass Luhn algorithm không? Điều này giảm drastically false positive; (2) Hỗ trợ nhiều định dạng quốc gia: số CCCD VN, CMND cũ, số hộ chiếu; (3) Nhận diện mã nguồn: phát hiện cấu trúc code (Java, Python) trong email gửi đến AI tools bên ngoài; (4) Context-aware: nhận diện "số tài khoản ngân hàng" trong ngữ cảnh tài chính, không flag ngẫu nhiên 12 chữ số. Đây là lý do Proofpoint DLP có false positive rate thấp hơn DLP truyền thống.'
+},
+
+// ══ CÂU 26 — Kỹ năng Tư vấn ══
+{
+  cat: 'cons', diff: 'Nâng cao',
+  text: 'Khách hàng là Trưởng phòng IT của một công ty chứng khoán nói: "Chúng tôi đang dùng email bảo mật của ISP nội địa, giá rẻ hơn nhiều so với Proofpoint. Tại sao phải trả gấp 5 lần?" Lập luận TCO (Total Cost of Ownership) đúng nhất là:',
+  opts: [
+    'Proofpoint có thương hiệu tốt hơn và được nhiều công ty nước ngoài dùng',
+    'Chi phí license Proofpoint cao nhưng cần tính TCO thực: một vụ BEC thành công tại công ty chứng khoán có thể gây thiệt hại hàng tỷ đồng từ lệnh giao dịch giả mạo hoặc rò rỉ thông tin môi giới — chi phí này vượt xa 5 năm phí Proofpoint. Ngoài ra giải pháp ISP nội địa thiếu: sandbox zero-day, BEC detection, TRAP, compliance archiving',
+    'Proofpoint hỗ trợ 24/7 bằng tiếng Anh nên tốt hơn',
+    'Giải pháp ISP nội địa không có chứng chỉ quốc tế nào'
+  ],
+  ans: 1,
+  exp: 'TCO argument là cách đúng để xử lý objection về giá: <strong>So sánh chi phí bảo hiểm với chi phí sự cố</strong>. Với công ty chứng khoán: (1) 1 lệnh giao dịch giả mạo từ BEC = hàng tỷ đến hàng chục tỷ VND thiệt hại + reputational damage; (2) Vi phạm TT09/NHNN do rò rỉ thông tin giao dịch qua email → phạt + suspend license; (3) Proofpoint được 85% Fortune 100 tin dùng — risk tolerance của tổ chức tài chính phải khác SMB. Chiến lược: không defend giá, mà chuyển cuộc trò chuyện sang "chi phí của việc KHÔNG có bảo vệ đủ mạnh".'
+},
+
+// ══ CÂU 27 — Mô hình triển khai ══
+{
+  cat: 'dep', diff: 'Nâng cao',
+  text: 'Khi cấu hình mail flow cho Proofpoint On-Premises bảo vệ mail server Exchange On-Prem (không phải M365), kỹ thuật viên cần cấu hình gì trên Exchange để hướng mail outbound qua Proofpoint Filter trước khi ra Internet?',
+  opts: [
+    'Tạo Transport Rule trên Exchange để redirect tất cả outbound mail về Filter Node IP',
+    'Cấu hình Send Connector trên Exchange để smart-host outbound email về Filter Node của Proofpoint, thay vì gửi thẳng ra Internet',
+    'Cấu hình Receive Connector để chặn tất cả email không qua Proofpoint',
+    'Thay MX record để trỏ về Proofpoint cho cả outbound'
+  ],
+  ans: 1,
+  exp: 'Để kiểm soát email <strong>outbound</strong> qua Proofpoint (DLP, mã hóa, thực thi policy): trên Exchange cần cấu hình <strong>Send Connector</strong> với smart host = IP của Proofpoint Filter Node. Exchange sẽ gửi tất cả outbound email đến Filter để quét DLP, mã hóa nếu cần, rồi Filter Node gửi ra Internet. Receive Connector là cho inbound. MX record là cho inbound routing từ Internet vào Filter. Transport Rule có thể hỗ trợ nhưng Send Connector là cách chuẩn cho outbound smart-host routing trong Exchange.'
+},
+
+// ══ CÂU 28 — Tính năng & Module ══
+{
+  cat: 'feat', diff: 'Cơ bản',
+  text: 'Proofpoint Nexus Threat Intelligence có lợi thế gì so với các Threat Intelligence feed độc lập khác trên thị trường?',
+  opts: [
+    'Proofpoint Threat Intelligence chỉ cung cấp thông tin về các IP độc hại',
+    'Threat Intelligence của Proofpoint được làm giàu từ telemetry của chính nền tảng email — 3,4 nghìn tỷ email/năm từ 2,7 triệu khách hàng toàn cầu — cho phép phát hiện và cập nhật IOC mới từ các chiến dịch tấn công đang diễn ra theo thời gian thực, không phải từ honeypot hay crawl',
+    'Proofpoint Threat Intelligence có chi phí thấp nhất trên thị trường',
+    'Threat Intelligence của Proofpoint chỉ hữu ích khi dùng cùng với SIEM'
+  ],
+  ans: 1,
+  exp: 'Lợi thế cạnh tranh của Nexus TI: <strong>Real-world email telemetry ở quy mô khổng lồ</strong> — 3,4T email/năm là dataset lớn nhất thị trường email security. Khi một chiến dịch phishing mới tấn công bất kỳ 1 trong 2,7M khách hàng, IOC (URL, IP, domain, file hash) được cập nhật ngay cho TẤT CẢ khách hàng còn lại trong vài phút — hiệu ứng "herd immunity". So sánh: threat feed từ honeypot hay crawl thường lag 6–12 giờ. Đây là lý do tỷ lệ phát hiện của Proofpoint cao hơn — họ thấy tấn công thực, không phải mẫu phòng thí nghiệm.'
+},
+
+// ══ CÂU 29 — Tình huống thực tế ══
+{
+  cat: 'sit', diff: 'Nâng cao',
+  text: 'Một nhân viên kế toán nhận email từ "cfo@company-group.vn" (trong khi domain thật là company-group.com.vn) yêu cầu chuyển tiền gấp. Đây là loại tấn công nào và Proofpoint phát hiện bằng cơ chế nào?',
+  opts: [
+    'Malware attack — phát hiện bằng antivirus scan',
+    'Domain Spoofing thông thường — phát hiện bằng DMARC check',
+    'Lookalike Domain / Cousin Domain BEC attack — Proofpoint phát hiện bằng Nexus ML phân tích độ tương đồng domain (edit distance), Nexus RG kiểm tra lịch sử liên lạc, và Domain Discovery để cảnh báo về domain giả mạo',
+    'Ransomware delivery — phát hiện bằng sandbox'
+  ],
+  ans: 2,
+  exp: 'Đây là <strong>Lookalike/Cousin Domain Attack</strong>: kẻ tấn công đăng ký domain rất giống domain thật (company-group.vn vs company-group.com.vn). DMARC của domain thật không giúp được vì email gửi từ domain khác hợp lệ. Proofpoint phát hiện qua: (1) <strong>Domain Similarity Analysis</strong>: tính edit distance giữa domain gửi và domain thật của tổ chức nhận; (2) <strong>Nexus RG</strong>: domain này có trong lịch sử liên lạc không? Lần đầu tiên contact = anomaly; (3) <strong>Nexus ML</strong>: nội dung urgency + financial request = BEC pattern. Kết hợp 3 signals → block. Đây là use case điển hình cần demo cho KH tài chính.'
+},
+
+// ══ CÂU 30 — Tổng hợp ══
+{
+  cat: 'comp', diff: 'Nâng cao',
+  text: 'Trong thị trường email security năm 2025, Proofpoint có vị trí nào trong Gartner Magic Quadrant và điều gì khiến vị trí này có giá trị đặc biệt khi tư vấn khách hàng tài chính/ngân hàng tại Việt Nam?',
+  opts: [
+    'Proofpoint xếp hạng Visionary — phù hợp cho khách hàng muốn công nghệ tiên tiến nhất',
+    'Proofpoint xếp hạng Challenger — tốt về khả năng thực thi nhưng vision còn hạn chế',
+    'Proofpoint xếp hạng Leader — vị trí #1 với cả Completeness of Vision và Ability to Execute, là hãng DUY NHẤT đáp ứng 9/9 yêu cầu trong Gartner 2025, tạo căn cứ pháp chứng (due diligence) mạnh nhất để khách hàng tài chính quyết định đầu tư',
+    'Proofpoint xếp hạng Niche Player — chuyên sâu nhưng phạm vi hẹp'
+  ],
+  ans: 2,
+  exp: '<strong>Proofpoint = Leader #1 Gartner MQ 2025</strong>, hãng DUY NHẤT đáp ứng 9/9 yêu cầu tính năng bắt buộc trong báo cáo Gartner 2025. Giá trị với KH tài chính/ngân hàng VN: (1) <strong>Due Diligence</strong> — Ban lãnh đạo ngân hàng, Kiểm toán viên và NHNN chấp nhận quyết định đầu tư khi tham chiếu Gartner MQ Leader; (2) <strong>Risk management</strong> — chọn vendor #1 giảm rủi ro "vendor failure"; (3) <strong>Procurement justification</strong> — trong đấu thầu, vị trí Leader Gartner là bằng chứng độc lập; (4) Forrester Wave Leader + SE Labs AAA Rating là 3 tổ chức phân tích độc lập cùng xếp Proofpoint #1 — argument không thể phản bác.'
+}
+
+]; // end Q array
+
+// ──────────────────────────────────────────────
+// CATEGORY CONFIG
+// ──────────────────────────────────────────────
+const CAT = {
+  feat: { label: '🔧 Tính năng & Module',    color: '#0a84ff',  bg: 'rgba(10,132,255,0.12)'  },
+  cons: { label: '💬 Kỹ năng Tư vấn',        color: '#32d2f2',  bg: 'rgba(50,210,242,0.1)'   },
+  tech: { label: '⚙️ Kỹ thuật Pre-Sales',    color: '#bf5af2',  bg: 'rgba(191,90,242,0.1)'   },
+  sit:  { label: '🎯 Tình huống thực tế',     color: '#ffd60a',  bg: 'rgba(255,214,10,0.1)'   },
+  lic:  { label: '📋 License & Sizing',       color: '#30d158',  bg: 'rgba(48,209,88,0.1)'    },
+  dep:  { label: '🏗️ Mô hình triển khai',    color: '#ff6b35',  bg: 'rgba(255,107,53,0.1)'   },
+  comp: { label: '⚔️ Cạnh tranh thị trường', color: '#ff453a',  bg: 'rgba(255,69,58,0.1)'    }
+};
+
+// ──────────────────────────────────────────────
+// QUIZ ENGINE
+// ──────────────────────────────────────────────
+let current = 0;
+let score   = 0;
+let answers = []; // {selected, correct, q_idx}
+let shuffled = [];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startQuiz() {
+  shuffled = shuffle([...Array(Q.length).keys()]);
+  current  = 0; score = 0; answers = [];
+  document.getElementById('screen-intro').style.display = 'none';
+  document.getElementById('screen-quiz').style.display  = 'block';
+  renderQ();
+}
+
+function renderQ() {
+  const qi   = shuffled[current];
+  const q    = Q[qi];
+  const cat  = CAT[q.cat];
+  const opts = ['A','B','C','D'];
+  const fill = Math.round((current / Q.length) * 100);
+
+  document.getElementById('q-counter').textContent  = `Câu ${current+1} / ${Q.length}`;
+  document.getElementById('prog-fill').style.width   = fill + '%';
+  document.getElementById('score-live').textContent  = `Đúng: ${score}`;
+
+  const diffColor = { 'Cơ bản': '#30d158', 'Trung bình': '#ffd60a', 'Nâng cao': '#ff6b35' };
+
+  const optHTML = q.opts.map((o, i) => `
+    <button class="opt" onclick="selectOpt(${i})" id="opt-${i}">
+      <div class="opt-key">${opts[i]}</div>
+      <div class="opt-text">${o}</div>
+    </button>`).join('');
+
+  document.getElementById('quiz-body').innerHTML = `
+    <div class="q-card">
+      <div class="q-meta">
+        <div class="q-num">CÂU ${current+1}</div>
+        <div class="q-cat" style="background:${cat.bg};color:${cat.color};border:1px solid ${cat.color}33;">${cat.label}</div>
+        <div class="q-diff" style="color:${diffColor[q.diff]};font-size:11px;font-weight:600;">${q.diff}</div>
+      </div>
+      <div class="q-text">${q.text}</div>
+      <div class="options">${optHTML}</div>
+      <div class="explain" id="explain"></div>
+      <div class="q-nav">
+        <button class="btn-next" id="btn-next" onclick="nextQ()">
+          ${current < Q.length-1 ? 'Câu tiếp theo →' : 'Xem kết quả →'}
+        </button>
+      </div>
+    </div>`;
+}
+
+function selectOpt(idx) {
+  const q    = Q[shuffled[current]];
+  const opts = document.querySelectorAll('.opt');
+  opts.forEach(o => o.disabled = true);
+
+  const correct = (idx === q.ans);
+  if (correct) score++;
+
+  answers.push({ qIdx: shuffled[current], selected: idx, correct });
+
+  opts[idx].classList.add(correct ? 'correct' : 'wrong');
+  if (!correct) opts[q.ans].classList.add('reveal-correct');
+
+  const expEl = document.getElementById('explain');
+  expEl.className = 'explain ' + (correct ? 'correct-exp' : 'wrong-exp');
+  expEl.innerHTML = `
+    <div class="exp-head">${correct ? '✓ Chính xác!' : '✗ Chưa đúng'}</div>
+    <div class="exp-body">${q.exp}</div>`;
+  expEl.style.display = 'block';
+
+  document.getElementById('btn-next').classList.add('show');
+  document.getElementById('score-live').textContent = `Đúng: ${score}`;
+}
+
+function nextQ() {
+  current++;
+  if (current >= Q.length) { showResult(); return; }
+  renderQ();
+}
+
+// ──────────────────────────────────────────────
+// RESULT ENGINE
+// ──────────────────────────────────────────────
+function showResult() {
+  document.getElementById('screen-quiz').style.display = 'none';
+  document.getElementById('screen-result').style.display = 'block';
+
+  const pct   = Math.round((score / Q.length) * 100);
+  const pass  = pct >= 80;
+
+  // Animate ring
+  setTimeout(() => {
+    const circ = 326.7;
+    const arc  = document.getElementById('grade-arc');
+    arc.style.stroke        = pass ? '#30d158' : pct >= 60 ? '#ffd60a' : '#ff453a';
+    arc.style.strokeDashoffset = circ - (circ * pct / 100);
+  }, 200);
+
+  document.getElementById('grade-pct').textContent     = pct + '%';
+  document.getElementById('grade-pct').style.color     = pass ? '#30d158' : pct >= 60 ? '#ffd60a' : '#ff453a';
+  document.getElementById('verdict').textContent       = pass ? '🏆 ĐẠT — Đủ điều kiện tư vấn Proofpoint' : pct >= 60 ? '📚 Cần ôn thêm — Chưa đạt ngưỡng 80%' : '⚠️ Cần học lại từ đầu';
+  document.getElementById('result-sub').textContent    = pass ? `Xuất sắc! ${score}/30 câu đúng — bạn đã nắm vững giải pháp Proofpoint Email Security.` : `${score}/30 câu đúng — Hãy xem lại các giải thích và học thêm từ Sales Guide.`;
+  document.getElementById('r-correct').textContent     = score;
+  document.getElementById('r-wrong').textContent       = Q.length - score;
+
+  // Category breakdown
+  const catScore = {};
+  const catTotal = {};
+  for (const k in CAT) { catScore[k] = 0; catTotal[k] = 0; }
+  answers.forEach(a => {
+    const cat = Q[a.qIdx].cat;
+    catTotal[cat]++;
+    if (a.correct) catScore[cat]++;
+  });
+
+  let catHTML = '';
+  for (const k in CAT) {
+    if (catTotal[k] === 0) continue;
+    const p = Math.round((catScore[k] / catTotal[k]) * 100);
+    const c = p >= 80 ? '#30d158' : p >= 60 ? '#ffd60a' : '#ff453a';
+    catHTML += `
+      <div class="cat-row">
+        <div class="cat-row-name" style="font-size:12.5px;">${CAT[k].label}</div>
+        <div class="cat-bar-track">
+          <div class="cat-bar-fill" style="width:0%;background:${c}" data-w="${p}"></div>
+        </div>
+        <div class="cat-row-score">${catScore[k]}/${catTotal[k]}</div>
+      </div>`;
+  }
+  document.getElementById('cat-breakdown').innerHTML = catHTML;
+  setTimeout(() => {
+    document.querySelectorAll('.cat-bar-fill').forEach(b => {
+      b.style.width = b.dataset.w + '%';
+    });
+  }, 300);
+
+  // Wrong answers review
+  const wrong = answers.filter(a => !a.correct);
+  if (wrong.length === 0) {
+    document.getElementById('review-list').innerHTML = '<p style="font-size:13px;color:var(--green)">🎉 Tất cả đều đúng! Xuất sắc!</p>';
+  } else {
+    document.getElementById('review-list').innerHTML = wrong.map(a => {
+      const q = Q[a.qIdx];
+      return `
+        <div class="review-item">
+          <div class="ri-icon">✗</div>
+          <div>
+            <div class="ri-q">${q.text.substring(0,100)}${q.text.length>100?'...':''}</div>
+            <div class="ri-a">Đáp án đúng: <strong style="color:var(--cyan);">${['A','B','C','D'][q.ans]}. ${q.opts[q.ans].substring(0,80)}${q.opts[q.ans].length>80?'...':''}</strong></div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  window.scrollTo(0,0);
+}
+
+function restartQuiz() {
+  document.getElementById('screen-result').style.display = 'none';
+  document.getElementById('screen-intro').style.display  = 'flex';
+}
+</script>
+</body>
+</html>

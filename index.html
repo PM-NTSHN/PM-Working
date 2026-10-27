@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>PM Hub · NTS Hà Nội</title>
+<link rel="icon" href="assets/img/logo-nts.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/hub.css">
+<script>
+  try { const t = localStorage.getItem('pmhub.theme'); if (t) document.documentElement.dataset.theme = t; } catch {}
+</script>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<section id="login" class="login" hidden>
+  <div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div>
+  <div class="login-wrap">
+    <div class="login-logo"><img src="assets/img/logo-nts.png" alt="NTS Hà Nội"></div>
+    <h1 class="login-title">PM <span>Tool</span></h1>
+    <p class="login-sub">Minh.nguyen@ntshanoi.com.vn</p>
+    <form id="loginForm" class="login-card" autocomplete="on">
+      <div class="field">
+        <label for="lgUser">Tên đăng nhập</label>
+        <div class="input"><span data-ic="user"></span><input id="lgUser" name="username" autocomplete="username" placeholder="Nhập tên đăng nhập" required></div>
+      </div>
+      <div class="field">
+        <label for="lgPass">Mật khẩu</label>
+        <div class="input"><span data-ic="key"></span><input id="lgPass" name="password" type="password" autocomplete="current-password" placeholder="Nhập mật khẩu" required>
+          <button type="button" class="eye" aria-label="Hiện mật khẩu" data-ic="eye"></button></div>
+      </div>
+      <div class="row-between">
+        <label class="check"><input type="checkbox" id="lgRemember" checked> Ghi nhớ 7 ngày</label>
+      </div>
+      <button class="btn-primary" type="submit"><span>Đăng nhập</span><span data-ic="arrowRight"></span></button>
+      <div class="login-err" id="loginErr" role="alert"></div>
+    </form>
+    <div class="login-foot">© NTS Hà Nội · Phòng Quản lý Sản phẩm</div>
+  </div>
+</section>
+
+<!-- ============ APP ============ -->
+<div id="app" class="app" hidden>
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-head">
+      <a href="#/" class="sb-logo"><img src="assets/img/logo-nts.png" alt="NTS"></a>
+      <div class="sb-brand"><b>PM Hub</b><span>NTS Hà Nội</span></div>
+      <button class="sb-icon-btn" id="btnCollapse" title="Thu gọn menu" data-ic="sidebar"></button>
+    </div>
+    <button class="sb-search" id="sbSearch"><span data-ic="search"></span><span class="lbl">Tìm kiếm…</span><kbd>Ctrl K</kbd></button>
+    <nav class="nav" id="nav" aria-label="Điều hướng"></nav>
+    <div class="sb-foot">
+      <div class="avatar">PM</div>
+      <div class="sb-user"><b id="userName">Admin</b><span>Minh.nguyen@ntshanoi.com.vn</span></div>
+      <button class="sb-icon-btn" id="btnTheme" title="Đổi giao diện sáng/tối" data-ic="moon"></button>
+      <button class="sb-icon-btn" id="btnLogout" title="Đăng xuất" data-ic="logout"></button>
+    </div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <button class="icon-btn only-mobile" id="btnMenu" aria-label="Mở menu" data-ic="menu"></button>
+      <div class="crumbs" id="crumbs"></div>
+      <div class="top-actions" id="itemActions" hidden>
+        <button class="icon-btn" id="actFav" title="Ghim / bỏ ghim" data-ic="star"></button>
+        <button class="icon-btn" id="actRelated" title="Nội dung liên quan" data-ic="layers"></button>
+        <button class="icon-btn hide-sm" id="actReload" title="Tải lại" data-ic="refresh"></button>
+        <a class="icon-btn hide-sm" id="actOpen" title="Mở tab mới" target="_blank" rel="noopener" data-ic="external"></a>
+        <button class="icon-btn" id="actFocus" title="Toàn màn hình (Esc để thoát)" data-ic="maximize"></button>
+        <span class="divider-v"></span>
+      </div>
+      <button class="top-search" id="topSearch"><span data-ic="search"></span><span class="lbl">Tìm công cụ, tài liệu…</span><kbd>Ctrl K</kbd></button>
+    </header>
+    <main class="view" id="view"></main>
+    <section class="frame-view" id="frameView" hidden><div class="frame-host" id="frameHost"></div></section>
+  </div>
+</div>
+
+<!-- ============ COMMAND PALETTE ============ -->
+<div class="palette" id="palette" hidden>
+  <div class="pal" role="dialog" aria-label="Tìm kiếm">
+    <div class="pal-input"><span data-ic="search"></span><input id="palInput" placeholder="Tìm công cụ, hãng, giải pháp, nội dung tài liệu…" autocomplete="off" spellcheck="false"><kbd>Esc</kbd></div>
+    <div class="pal-sugg" id="palSugg"></div>
+    <div class="pal-body" id="palBody"></div>
+    <div class="pal-foot">
+      <span><kbd>↑</kbd><kbd>↓</kbd> di chuyển</span><span><kbd>Enter</kbd> mở</span><span><kbd>Tab</kbd> nhận gợi ý</span>
+      <span class="right" id="palStat"></span>
+    </div>
+  </div>
+</div>
+
+<aside class="drawer" id="drawer">
+  <div class="drawer-head"><span data-ic="layers"></span><b>Nội dung liên quan</b><button class="icon-btn" id="drawerClose" data-ic="close"></button></div>
+  <div class="drawer-body" id="drawerBody"></div>
+</aside>
+<div class="toast" id="toast"></div>
+
+<script type="module" src="assets/js/app.js"></script>
+</body>
+</html>

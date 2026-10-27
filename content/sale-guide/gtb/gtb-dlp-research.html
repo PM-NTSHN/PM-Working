@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GTB Technologies DLP – Nghiên Cứu Tổng Hợp Toàn Diện 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+  :root {
+    --navy:#0a1628;--navy2:#0f2040;--blue:#1a56db;--blue-lt:#3b82f6;
+    --cyan:#06b6d4;--accent:#f59e0b;--accent2:#10b981;--red:#ef4444;
+    --white:#ffffff;--gray50:#f8fafc;--gray100:#f1f5f9;--gray200:#e2e8f0;
+    --gray300:#cbd5e1;--gray600:#475569;--gray700:#334155;--gray800:#1e293b;
+    --text:#1e293b;--radius:12px;
+    --shadow:0 4px 24px rgba(10,22,40,0.10);--shadow-lg:0 8px 40px rgba(10,22,40,0.18);
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;font-size:16px}
+  body{font-family:'DM Sans',sans-serif;background:var(--gray50);color:var(--text);line-height:1.7}
+  .sidebar{position:fixed;top:0;left:0;width:260px;height:100vh;background:var(--navy);overflow-y:auto;z-index:1000;padding:0 0 32px;border-right:1px solid rgba(255,255,255,0.06)}
+  .sidebar-logo{padding:24px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;gap:10px}
+  .sidebar-logo .logo-shield{width:36px;height:36px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+  .sidebar-logo span{font-family:'Syne',sans-serif;color:white;font-size:14px;font-weight:700;line-height:1.2}
+  .sidebar-logo small{display:block;color:rgba(255,255,255,0.45);font-size:10px;font-weight:400}
+  .nav-section{padding:16px 12px 4px}
+  .nav-section-title{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.3);padding:0 8px 8px}
+  .nav-link{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;color:rgba(255,255,255,0.65);text-decoration:none;font-size:13px;font-weight:500;transition:all 0.18s ease;margin-bottom:2px}
+  .nav-link:hover,.nav-link.active{background:rgba(255,255,255,0.08);color:white}
+  .nav-link .nav-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0}
+  .main{margin-left:260px;min-height:100vh}
+  .hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 50%,#0d3060 100%);padding:72px 64px 56px;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(26,86,219,0.2) 0%,transparent 60%)}
+  .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(6,182,212,0.15);border:1px solid rgba(6,182,212,0.4);border-radius:100px;padding:6px 14px;color:var(--cyan);font-size:12px;font-weight:600;letter-spacing:0.5px;margin-bottom:20px}
+  .hero h1{font-family:'Syne',sans-serif;font-size:42px;font-weight:800;color:white;line-height:1.15;margin-bottom:16px;position:relative}
+  .hero h1 span{color:var(--cyan)}
+  .hero-sub{color:rgba(255,255,255,0.65);font-size:16px;max-width:600px;margin-bottom:32px}
+  .hero-meta{display:flex;gap:24px;flex-wrap:wrap}
+  .hero-meta-item{display:flex;align-items:center;gap:8px;color:rgba(255,255,255,0.5);font-size:13px}
+  .hero-meta-item strong{color:rgba(255,255,255,0.85)}
+  .hero-stats{display:flex;gap:32px;margin-top:40px;flex-wrap:wrap}
+  .hero-stat .num{font-family:'Syne',sans-serif;font-size:32px;font-weight:800;color:white;line-height:1}
+  .hero-stat .num span{color:var(--cyan)}
+  .hero-stat .lbl{color:rgba(255,255,255,0.45);font-size:12px;margin-top:4px}
+  .section{padding:56px 64px;border-bottom:1px solid var(--gray200)}
+  .section:nth-child(even){background:white}
+  .section-tag{display:inline-block;background:rgba(26,86,219,0.08);color:var(--blue);font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;border-radius:4px;padding:4px 10px;margin-bottom:12px}
+  .section-tag.green{background:rgba(16,185,129,0.08);color:var(--accent2)}
+  .section-tag.amber{background:rgba(245,158,11,0.08);color:var(--accent)}
+  .section-tag.red{background:rgba(239,68,68,0.08);color:var(--red)}
+  .section h2{font-family:'Syne',sans-serif;font-size:28px;font-weight:700;color:var(--navy);margin-bottom:6px;line-height:1.3}
+  .section .lead{color:var(--gray600);font-size:15px;max-width:700px;margin-bottom:32px}
+  .section h3{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--navy);margin:28px 0 12px}
+  .section h4{font-size:15px;font-weight:600;color:var(--navy2);margin:16px 0 8px}
+  .section p{color:var(--gray700);margin-bottom:12px;font-size:15px}
+  .cards{display:grid;gap:16px}
+  .cards-2{grid-template-columns:repeat(2,1fr)}
+  .cards-3{grid-template-columns:repeat(3,1fr)}
+  .cards-4{grid-template-columns:repeat(4,1fr)}
+  @media(max-width:900px){.cards-3,.cards-4{grid-template-columns:repeat(2,1fr)}.cards-2{grid-template-columns:1fr}}
+  .card{background:white;border-radius:var(--radius);border:1px solid var(--gray200);padding:20px;box-shadow:var(--shadow);transition:transform 0.18s,box-shadow 0.18s}
+  .card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+  .card-icon{font-size:28px;margin-bottom:12px}
+  .card h4{margin:0 0 8px;font-size:15px;font-weight:600;color:var(--navy)}
+  .card p{font-size:13.5px;color:var(--gray600);line-height:1.6;margin:0}
+  .card.dark{background:var(--navy);border-color:rgba(255,255,255,0.08);color:white}
+  .card.dark h4{color:white}
+  .card.dark p{color:rgba(255,255,255,0.6)}
+  .card.blue{background:linear-gradient(135deg,var(--blue) 0%,#1e40af 100%);border-color:transparent}
+  .card.blue h4,.card.blue p{color:white}
+  .pain-card{display:flex;gap:16px;align-items:flex-start;background:white;border-radius:var(--radius);border:1px solid var(--gray200);padding:20px;box-shadow:var(--shadow)}
+  .pain-num{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--red),#dc2626);color:white;font-family:'Syne',sans-serif;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .table-wrap{overflow-x:auto;border-radius:var(--radius);border:1px solid var(--gray200)}
+  table{width:100%;border-collapse:collapse;background:white;font-size:13.5px}
+  th{background:var(--navy);color:white;padding:12px 14px;text-align:left;font-weight:600;font-size:12.5px;white-space:nowrap}
+  th:first-child{border-radius:11px 0 0 0}
+  th:last-child{border-radius:0 11px 0 0}
+  td{padding:10px 14px;border-bottom:1px solid var(--gray100);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  tr:hover td{background:var(--gray50)}
+  .yes{color:var(--accent2);font-weight:700;font-size:15px}
+  .no{color:var(--red);font-size:15px}
+  .partial{color:var(--accent);font-weight:600;font-size:13px}
+  td.feat{font-weight:600;color:var(--navy)}
+  td.gtb{background:rgba(26,86,219,0.03)}
+  .feature-section-row td{background:var(--gray100);font-weight:700;color:var(--navy2);font-size:12px;text-transform:uppercase;letter-spacing:0.5px}
+  .timeline{position:relative;padding-left:32px}
+  .timeline::before{content:'';position:absolute;left:10px;top:8px;width:2px;height:calc(100% - 16px);background:linear-gradient(to bottom,var(--blue),var(--cyan))}
+  .tl-item{position:relative;margin-bottom:24px}
+  .tl-dot{position:absolute;left:-27px;top:4px;width:14px;height:14px;border-radius:50%;background:var(--blue);border:3px solid white;box-shadow:0 0 0 2px var(--blue)}
+  .tl-title{font-weight:700;color:var(--navy);font-size:15px;margin-bottom:4px}
+  .tl-body{color:var(--gray600);font-size:14px}
+  .badge{display:inline-block;padding:3px 10px;border-radius:100px;font-size:11.5px;font-weight:600}
+  .badge-blue{background:rgba(26,86,219,0.1);color:var(--blue)}
+  .badge-green{background:rgba(16,185,129,0.1);color:var(--accent2)}
+  .badge-amber{background:rgba(245,158,11,0.1);color:#b45309}
+  .badge-navy{background:var(--navy);color:white}
+  .callout{border-radius:var(--radius);padding:18px 20px;margin:16px 0;font-size:14px;display:flex;gap:14px;align-items:flex-start}
+  .callout-icon{font-size:20px;flex-shrink:0}
+  .callout.blue{background:rgba(26,86,219,0.06);border-left:4px solid var(--blue)}
+  .callout.green{background:rgba(16,185,129,0.06);border-left:4px solid var(--accent2)}
+  .callout.amber{background:rgba(245,158,11,0.08);border-left:4px solid var(--accent)}
+  .arch-box{background:var(--navy);border-radius:14px;padding:28px;color:white;margin:20px 0}
+  .arch-row{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+  .arch-comp{flex:1;min-width:160px;background:rgba(255,255,255,0.06);border-radius:10px;border:1px solid rgba(255,255,255,0.12);padding:16px}
+  .arch-comp .comp-label{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--cyan);margin-bottom:8px}
+  .arch-comp ul{list-style:none;padding:0}
+  .arch-comp ul li{font-size:12px;color:rgba(255,255,255,0.7);padding:3px 0;display:flex;gap:6px;align-items:flex-start}
+  .arch-comp ul li::before{content:'›';color:var(--cyan);font-weight:700;flex-shrink:0}
+  .arch-arrow{display:flex;align-items:center;justify-content:center;color:var(--cyan);font-size:20px}
+  .uc-card{background:white;border-radius:var(--radius);border:1px solid var(--gray200);overflow:hidden;box-shadow:var(--shadow)}
+  .uc-header{padding:14px 20px;display:flex;gap:12px;align-items:center}
+  .uc-icon{font-size:22px}
+  .uc-title{font-family:'Syne',sans-serif;font-weight:700;font-size:16px}
+  .uc-body{padding:16px 20px}
+  .uc-body p{font-size:13.5px;color:var(--gray600);margin-bottom:10px}
+  .uc-body ul{padding-left:18px}
+  .uc-body ul li{font-size:13.5px;color:var(--gray700);margin-bottom:6px}
+  .uc-header.police{background:linear-gradient(135deg,#1e3a5f,#0f2040);color:white}
+  .uc-header.military{background:linear-gradient(135deg,#1a3a1a,#0f2a0f);color:white}
+  .uc-header.bank{background:linear-gradient(135deg,#3a1e1e,#2a0f0f);color:white}
+  .uc-header.enterprise{background:linear-gradient(135deg,#1e2a3a,#0f1a2a);color:white}
+  .scenario{background:white;border-radius:var(--radius);border:1px solid var(--gray200);padding:24px;margin-bottom:16px;box-shadow:var(--shadow)}
+  .scenario-tag{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+  .scenario h4{font-size:17px;font-weight:700;color:var(--navy);margin-bottom:10px}
+  .vs-row{display:flex;gap:16px;margin-top:12px}
+  .vs-col{flex:1;padding:12px;border-radius:8px;font-size:13px}
+  .vs-col.gtb-side{background:rgba(26,86,219,0.05);border:1px solid rgba(26,86,219,0.15)}
+  .vs-col.rival-side{background:rgba(239,68,68,0.04);border:1px solid rgba(239,68,68,0.12)}
+  .vs-col-title{font-weight:700;font-size:12px;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
+  .vs-col.gtb-side .vs-col-title{color:var(--blue)}
+  .vs-col.rival-side .vs-col-title{color:var(--red)}
+  .vs-col ul{padding-left:16px;color:var(--gray700)}
+  .vs-col ul li{margin-bottom:4px}
+  .bom-table{background:white;border-radius:var(--radius);overflow:hidden;border:1px solid var(--gray200);box-shadow:var(--shadow)}
+  .bom-table table{font-size:13px}
+  .bom-table th{background:var(--navy2)}
+  .bom-note{padding:12px 16px;background:var(--gray50);font-size:12.5px;color:var(--gray600);border-top:1px solid var(--gray200)}
+  .compliance-grid{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0}
+  .compliance-item{padding:8px 16px;border-radius:8px;font-weight:700;font-size:13px;border:2px solid}
+  .ci-gdpr{border-color:#1a56db;color:#1a56db;background:rgba(26,86,219,0.05)}
+  .ci-hipaa{border-color:#10b981;color:#065f46;background:rgba(16,185,129,0.05)}
+  .ci-pci{border-color:#8b5cf6;color:#5b21b6;background:rgba(139,92,246,0.05)}
+  .award-row{display:flex;flex-wrap:wrap;gap:12px;margin:16px 0}
+  .award-item{background:white;border:1px solid var(--gray200);border-radius:10px;padding:12px 16px;display:flex;gap:10px;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,0.04);min-width:180px}
+  .award-icon{font-size:22px;flex-shrink:0}
+  .award-text .aw-title{font-size:13px;font-weight:700;color:var(--navy)}
+  .award-text .aw-sub{font-size:11px;color:var(--gray600)}
+  .spec-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .spec-card{background:white;border-radius:var(--radius);border:1px solid var(--gray200);padding:16px}
+  .spec-card .sc-title{font-weight:700;font-size:13px;color:var(--navy);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--gray100)}
+  .spec-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px solid var(--gray50)}
+  .spec-row:last-child{border-bottom:none}
+  .spec-row .sl{color:var(--gray600)}
+  .spec-row .sv{font-weight:600;color:var(--navy2)}
+  .toc{background:var(--navy);border-radius:var(--radius);padding:24px;margin:20px 0}
+  .toc-title{font-family:'Syne',sans-serif;color:var(--cyan);font-size:14px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
+  .toc-list{list-style:none;columns:2;gap:16px}
+  .toc-list li{break-inside:avoid;margin-bottom:6px}
+  .toc-list a{color:rgba(255,255,255,0.65);text-decoration:none;font-size:13px;transition:color 0.15s}
+  .toc-list a:hover{color:var(--cyan)}
+  .toc-list .toc-num{color:var(--cyan);font-weight:700;margin-right:6px}
+  .rating-row{display:flex;align-items:center;gap:10px;margin:6px 0}
+  .stars{color:var(--accent);font-size:18px;letter-spacing:2px}
+  .rating-score{font-weight:800;font-family:'Syne',sans-serif;font-size:20px;color:var(--navy)}
+  .page-footer{background:var(--navy);color:rgba(255,255,255,0.45);text-align:center;font-size:12px;padding:24px 64px}
+  ul.check-list{list-style:none;padding:0}
+  ul.check-list li{display:flex;gap:8px;align-items:flex-start;padding:6px 0;font-size:14px;color:var(--gray700)}
+  ul.check-list li::before{content:'✓';color:var(--accent2);font-weight:900;flex-shrink:0;margin-top:1px}
+  ul.cross-list{list-style:none;padding:0}
+  ul.cross-list li{display:flex;gap:8px;align-items:flex-start;padding:5px 0;font-size:14px;color:var(--gray700)}
+  ul.cross-list li::before{content:'✗';color:var(--red);font-weight:900;flex-shrink:0}
+  .tag-row{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+  @media(max-width:768px){.sidebar{display:none}.main{margin-left:0}.hero{padding:40px 24px}.section{padding:40px 24px}.hero h1{font-size:28px}.toc-list{columns:1}.vs-row{flex-direction:column}.spec-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-shield">🛡</div>
+    <div><span>GTB Technologies<small>DLP Research 2026</small></span></div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Tổng Quan</div>
+    <a href="#market" class="nav-link"><span class="nav-icon">📊</span>Thị Trường & Nhu Cầu</a>
+    <a href="#legal" class="nav-link"><span class="nav-icon">⚖️</span>Khung Pháp Lý</a>
+    <a href="#about" class="nav-link"><span class="nav-icon">🏢</span>Giới Thiệu GTB</a>
+    <a href="#awards" class="nav-link"><span class="nav-icon">🏆</span>Giải Thưởng & Xếp Hạng</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Giải Pháp</div>
+    <a href="#features" class="nav-link"><span class="nav-icon">⚡</span>Tính Năng</a>
+    <a href="#technology" class="nav-link"><span class="nav-icon">🔬</span>Công Nghệ Nổi Bật</a>
+    <a href="#architecture" class="nav-link"><span class="nav-icon">🏗️</span>Kiến Trúc & Triển Khai</a>
+    <a href="#license" class="nav-link"><span class="nav-icon">🔑</span>License & Sizing</a>
+    <a href="#bom" class="nav-link"><span class="nav-icon">📋</span>BOM Mẫu</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-title">Cạnh Tranh & Use Cases</div>
+    <a href="#compare" class="nav-link"><span class="nav-icon">⚖️</span>So Sánh Đối Thủ</a>
+    <a href="#usecases" class="nav-link"><span class="nav-icon">🎯</span>Use Cases</a>
+    <a href="#scenarios" class="nav-link"><span class="nav-icon">💬</span>Kịch Bản Tư Vấn</a>
+    <a href="#benefits" class="nav-link"><span class="nav-icon">✅</span>Lợi Ích</a>
+    <a href="#refs" class="nav-link"><span class="nav-icon">📚</span>Tài Liệu Tham Chiếu</a>
+  </div>
+</nav>
+<div class="main">
+<div class="hero">
+  <div class="hero-badge">🛡 Nghiên Cứu Toàn Diện • Phiên Bản 2026</div>
+  <h1>GTB Technologies®<br><span>Data Loss Prevention</span><br>– Phân Tích Chuyên Sâu</h1>
+  <p class="hero-sub">Tài liệu học nhanh, hiểu nhanh, đầy đủ về giải pháp DLP hàng đầu thế giới từ GTB Technologies. Tổng hợp từ 6 tài liệu chính hãng, proposal kỹ thuật và phân tích cạnh tranh thị trường 2025–2026.</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">📅 <strong>Cập nhật:</strong> Tháng 5/2026</div>
+    <div class="hero-meta-item">📄 <strong>Nguồn:</strong> 6 tài liệu chính hãng GTB</div>
+    <div class="hero-meta-item">🏢 <strong>Phân tích bởi:</strong> SONIC TECH Vietnam</div>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">20<span>+</span></div><div class="lbl">Năm kinh nghiệm DLP</div></div>
+    <div class="hero-stat"><div class="num">5<span>/5</span></div><div class="lbl">Gartner Peer Insights</div></div>
+    <div class="hero-stat"><div class="num">19<span>B$</span></div><div class="lbl">Thị trường DLP 2032</div></div>
+    <div class="hero-stat"><div class="num">100<span>%</span></div><div class="lbl">Catch Rate (SC Lab)</div></div>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="section">
+  <div class="toc">
+    <div class="toc-title">📋 Mục Lục Nội Dung</div>
+    <ul class="toc-list">
+      <li><a href="#market"><span class="toc-num">01</span>Thị trường & Nhu cầu khách hàng</a></li>
+      <li><a href="#legal"><span class="toc-num">02</span>Khung pháp lý & Chuẩn tuân thủ</a></li>
+      <li><a href="#about"><span class="toc-num">03</span>Giới thiệu GTB Technologies</a></li>
+      <li><a href="#awards"><span class="toc-num">04</span>Giải thưởng & Xếp hạng</a></li>
+      <li><a href="#features"><span class="toc-num">05</span>Tính năng giải pháp DLP</a></li>
+      <li><a href="#technology"><span class="toc-num">06</span>Công nghệ & Điểm nổi bật</a></li>
+      <li><a href="#architecture"><span class="toc-num">07</span>Kiến trúc & Mô hình triển khai</a></li>
+      <li><a href="#license"><span class="toc-num">08</span>License & Sizing</a></li>
+      <li><a href="#bom"><span class="toc-num">09</span>BOM mẫu</a></li>
+      <li><a href="#compare"><span class="toc-num">10</span>So sánh với đối thủ</a></li>
+      <li><a href="#usecases"><span class="toc-num">11</span>Use Cases triển khai thực tế</a></li>
+      <li><a href="#scenarios"><span class="toc-num">12</span>Kịch bản tư vấn</a></li>
+      <li><a href="#benefits"><span class="toc-num">13</span>Lợi ích giải pháp</a></li>
+      <li><a href="#refs"><span class="toc-num">14</span>Tài liệu tham chiếu</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- MARKET -->
+<div class="section" id="market">
+  <div class="section-tag">01 — Thị Trường</div>
+  <h2>Nhu Cầu Khách Hàng, Hiện Trạng Thị Trường & Pain Points</h2>
+  <p class="lead">Dữ liệu là tài sản cốt lõi trong kỷ nguyên số. Rủi ro thất thoát dữ liệu ngày càng gia tăng và trở thành mối đe dọa sống còn với mọi tổ chức.</p>
+  <h3>1.1 Thị Trường DLP Toàn Cầu</h3>
+  <div class="cards cards-3">
+    <div class="card blue">
+      <div class="card-icon">📈</div>
+      <h4>Quy mô thị trường 2025</h4>
+      <p>USD <strong>5,18 tỷ</strong> (Stratview Research), tăng trưởng YoY <strong>20,86%</strong>. Grand View Research định giá <strong>14,33 tỷ USD</strong> (toàn thị trường cyber security DLP).</p>
+    </div>
+    <div class="card blue">
+      <div class="card-icon">🚀</div>
+      <h4>Tốc độ tăng trưởng CAGR</h4>
+      <p>CAGR <strong>20,74%</strong> giai đoạn 2025–2032. Dự kiến đạt <strong>19,08 tỷ USD</strong> vào năm 2032 — mức tăng gần 4 lần trong 7 năm.</p>
+    </div>
+    <div class="card blue">
+      <div class="card-icon">🌍</div>
+      <h4>Động lực thị trường</h4>
+      <p>Chuyển đổi số, làm việc từ xa, ứng dụng cloud, BYOD, áp lực tuân thủ quy định bảo vệ dữ liệu cá nhân toàn cầu và bùng nổ GenAI.</p>
+    </div>
+  </div>
+  <h3>1.2 Pain Points Phổ Biến của Khách Hàng</h3>
+  <div class="cards cards-2" style="margin-top:16px">
+    <div class="pain-card">
+      <div class="pain-num">1</div>
+      <div><div class="tl-title">Rò rỉ dữ liệu nội bộ</div><p style="margin:0;font-size:14px;color:var(--gray600)">Nhân viên vô tình hoặc cố ý chia sẻ dữ liệu nhạy cảm qua email, USB, ứng dụng OTT, cloud không được phê duyệt (Shadow IT).</p></div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-num">2</div>
+      <div><div class="tl-title">Thiếu kiểm soát đa kênh</div><p style="margin:0;font-size:14px;color:var(--gray600)">Không giám sát được dữ liệu trên tất cả kênh: Email, HTTP/HTTPS, FTP, USB, Cloud Storage, Printer, Clipboard, IM/OTT.</p></div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-num">3</div>
+      <div><div class="tl-title">Dữ liệu nhạy cảm phân tán</div><p style="margin:0;font-size:14px;color:var(--gray600)">PII, PHI, tài sản trí tuệ, hợp đồng, hồ sơ khách hàng nằm rải rác nhiều hệ thống — không có khả năng inventar và phân loại tập trung.</p></div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-num">4</div>
+      <div><div class="tl-title">Phát hiện chậm, phản ứng muộn</div><p style="margin:0;font-size:14px;color:var(--gray600)">Hành vi truy xuất, sao chép, chia sẻ trái phép thường không được phát hiện kịp thời, gây thiệt hại lớn trước khi xử lý.</p></div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-num">5</div>
+      <div><div class="tl-title">Khó tuân thủ quy định</div><p style="margin:0;font-size:14px;color:var(--gray600)">Áp lực từ Nghị định 356/2025 (Việt Nam), GDPR, HIPAA, PCI-DSS đòi hỏi bằng chứng kiểm soát dữ liệu mà nhiều tổ chức chưa đáp ứng được.</p></div>
+    </div>
+    <div class="pain-card">
+      <div class="pain-num">6</div>
+      <div><div class="tl-title">Rủi ro GenAI & công nghệ mới</div><p style="margin:0;font-size:14px;color:var(--gray600)">Nhân viên đưa dữ liệu nhạy cảm vào ChatGPT, Copilot, Gemini mà không nhận thức được rủi ro rò rỉ thông tin ra bên ngoài.</p></div>
+    </div>
+  </div>
+  <div class="callout blue" style="margin-top:24px">
+    <div class="callout-icon">💡</div>
+    <div><strong>Bối cảnh Việt Nam:</strong> Nghị định 356/2025/NĐ-CP tại Điều 9 <strong>bắt buộc</strong> cơ quan, tổ chức phải áp dụng biện pháp bảo đảm an ninh mạng, bảo mật dữ liệu, phòng chống thất thoát dữ liệu cá nhân trong lưu trữ, xử lý, truyền tải — tạo làn sóng đầu tư DLP mạnh mẽ tại Việt Nam từ 2025.</div>
+  </div>
+</div>
+
+<!-- LEGAL -->
+<div class="section" id="legal">
+  <div class="section-tag amber">02 — Pháp Lý</div>
+  <h2>Khung Pháp Lý & Chuẩn Tuân Thủ Quốc Tế</h2>
+  <p class="lead">Tuân thủ pháp lý là động lực chính thúc đẩy đầu tư DLP. GTB Technologies đáp ứng toàn bộ các chuẩn quốc tế và khu vực với predefined compliance policies sẵn có.</p>
+  <h3>2.1 Quy Định Tại Việt Nam</h3>
+  <div class="cards cards-2">
+    <div class="card">
+      <div class="card-icon">🇻🇳</div>
+      <h4>Nghị định 356/2025/NĐ-CP</h4>
+      <p>Bảo vệ dữ liệu cá nhân. Điều 9 yêu cầu áp dụng biện pháp kỹ thuật phòng chống thất thoát dữ liệu cá nhân trong lưu trữ, xử lý, truyền tải. <strong>Hiệu lực từ năm 2025.</strong></p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔒</div>
+      <h4>Luật An Ninh Mạng 2018</h4>
+      <p>Yêu cầu hệ thống thông tin quan trọng phải có giải pháp bảo vệ dữ liệu toàn diện — đặc biệt với cơ quan Nhà nước, ngân hàng, cơ sở hạ tầng trọng yếu.</p>
+    </div>
+  </div>
+  <h3>2.2 Chuẩn Tuân Thủ Quốc Tế Được GTB Hỗ Trợ Out-of-the-Box</h3>
+  <div class="compliance-grid">
+    <div class="compliance-item ci-gdpr">GDPR (EU)</div>
+    <div class="compliance-item ci-hipaa">HIPAA (Y tế Mỹ)</div>
+    <div class="compliance-item ci-pci">PCI DSS</div>
+    <div class="compliance-item" style="border-color:#06b6d4;color:#155e75;background:rgba(6,182,212,0.05)">NIST CSF</div>
+    <div class="compliance-item" style="border-color:#f59e0b;color:#92400e;background:rgba(245,158,11,0.05)">ISO 27001</div>
+    <div class="compliance-item" style="border-color:#06b6d4;color:#155e75;background:rgba(6,182,212,0.05)">CCPA (California)</div>
+    <div class="compliance-item" style="border-color:#8b5cf6;color:#5b21b6;background:rgba(139,92,246,0.05)">ITAR (Quốc phòng)</div>
+    <div class="compliance-item" style="border-color:#10b981;color:#065f46;background:rgba(16,185,129,0.05)">SOC 2 Type II</div>
+    <div class="compliance-item" style="border-color:#f59e0b;color:#92400e;background:rgba(245,158,11,0.05)">GLBA (Tài chính)</div>
+    <div class="compliance-item" style="border-color:#ef4444;color:#991b1b;background:rgba(239,68,68,0.05)">CMMC (Quốc phòng Mỹ)</div>
+    <div class="compliance-item" style="border-color:#1e40af;color:#1e40af;background:rgba(30,64,175,0.05)">LGPD (Brazil)</div>
+    <div class="compliance-item" style="border-color:#ef4444;color:#991b1b;background:rgba(239,68,68,0.05)">PDPD (Việt Nam)</div>
+  </div>
+  <div class="callout green">
+    <div class="callout-icon">✅</div>
+    <div><strong>Lợi thế tuân thủ:</strong> GTB cung cấp <strong>predefined compliance policies sẵn có</strong> cho từng chuẩn — triển khai xong là bật ngay chính sách tuân thủ mà không cần cấu hình từ đầu. Đây là điểm khác biệt lớn so với các giải pháp đòi hỏi cấu hình phức tạp mất vài tuần đến vài tháng.</div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="section" id="about">
+  <div class="section-tag green">03 — Giới Thiệu</div>
+  <h2>Về GTB Technologies®</h2>
+  <p class="lead">Thành lập năm 2004 tại Mỹ, GTB Technologies là nhà lãnh đạo toàn cầu trong lĩnh vực bảo mật dữ liệu với hơn 20 năm kinh nghiệm chuyên biệt về DLP.</p>
+  <div class="cards cards-2">
+    <div>
+      <h3>Sứ Mệnh, Tầm Nhìn & Giải Pháp</h3>
+      <div class="cards cards-3" style="margin-top:0">
+        <div class="card">
+          <div class="card-icon">🎯</div>
+          <h4>Sứ mệnh</h4>
+          <p>Dẫn đầu đổi mới bảo mật dữ liệu trong khi giành được sự tin tưởng của khách hàng thông qua độ chính xác, độ tin cậy và tuân thủ.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔭</div>
+          <h4>Tầm nhìn</h4>
+          <p>Phát hiện chính xác, hỗ trợ tất cả giao thức và loại tệp, bảo mật cấp độ doanh nghiệp có khả năng mở rộng quy mô.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">⚙️</div>
+          <h4>Giải pháp</h4>
+          <p>Bảo mật dữ liệu toàn diện với AI-driven classification, giám sát thời gian thực và bảo vệ đa nền tảng.</p>
+        </div>
+      </div>
+      <h3>Phạm Vi Hoạt Động Toàn Cầu</h3>
+      <ul class="check-list">
+        <li>Bảo vệ dữ liệu nhạy cảm tại Bắc Mỹ, Châu Âu, Châu Á, Trung Đông và Mỹ Latinh</li>
+        <li>Bảo vệ thời gian thực cho môi trường on-premises, off-premises và cloud</li>
+        <li>Bảo mật endpoint Windows, Linux và Mac với giám sát nâng cao</li>
+        <li>AI-driven classification, OCR và exact data matching chống insider threat</li>
+        <li>Đảm bảo tuân thủ HIPAA, GDPR, CCPA, ITAR, NIST, SOC 2 và nhiều hơn</li>
+        <li>Quản lý và thực thi chính sách bảo mật: khi nào, ở đâu, như thế nào và ai di chuyển dữ liệu</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Vị Trí Thị Trường & Điểm Khác Biệt</h3>
+      <div class="card dark" style="margin-bottom:16px">
+        <div class="card-icon">🌐</div>
+        <h4>Pioneer trong DLP cho Sở Hữu Trí Tuệ</h4>
+        <p>GTB Technologies là <strong>người tiên phong tạo ra DLP cho Intellectual Property (IP)</strong> — định nghĩa lại thị trường DLP và vẫn là nhà lãnh đạo công nghệ sau hơn 20 năm. Sở hữu US Patent cho công nghệ cốt lõi.</p>
+      </div>
+      <div class="card dark" style="margin-bottom:16px">
+        <div class="card-icon">💡</div>
+        <h4>"Data Security that Works®"</h4>
+        <p>Thương hiệu đã đăng ký phản ánh cam kết cốt lõi: không chỉ phát hiện mối đe dọa mà <strong>loại bỏ hoàn toàn</strong> chúng. GTB không chỉ alert — GTB block, quarantine và eliminate threats.</p>
+      </div>
+      <div class="card dark">
+        <div class="card-icon">🔑</div>
+        <h4>Kiểm soát dữ liệu toàn diện</h4>
+        <p>Tổ chức tin tưởng GTB để <strong>định nghĩa, quản lý và thực thi chính sách bảo mật</strong> — kiểm soát khi nào, ở đâu, như thế nào và ai có thể di chuyển dữ liệu để bảo vệ tài sản quan trọng.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AWARDS -->
+<div class="section" id="awards">
+  <div class="section-tag amber">04 — Giải Thưởng</div>
+  <h2>Giải Thưởng, Chứng Nhận & Xếp Hạng</h2>
+  <p class="lead">GTB Technologies đã nhận được nhiều giải thưởng uy tín từ các tổ chức đánh giá hàng đầu thế giới, khẳng định vị trí dẫn đầu trong thị trường DLP toàn cầu.</p>
+  <div class="award-row">
+    <div class="award-item"><div class="award-icon">⭐</div><div class="award-text"><div class="aw-title">M&A Today Global Awards 2025</div><div class="aw-sub">Best DLP Solutions Provider</div></div></div>
+    <div class="award-item"><div class="award-icon">🏅</div><div class="award-text"><div class="aw-title">Corporate Vision Security 2024</div><div class="aw-sub">Most Trusted Global Data Security Enterprise</div></div></div>
+    <div class="award-item"><div class="award-icon">⚖️</div><div class="award-text"><div class="aw-title">Lawyer International Legal 100 – 2024</div><div class="aw-sub">Best DLP Solutions Provider – Global</div></div></div>
+    <div class="award-item"><div class="award-icon">🌏</div><div class="award-text"><div class="aw-title">Global 100 Awards 2024</div><div class="aw-sub">Best DLP Solutions Provider Worldwide</div></div></div>
+    <div class="award-item"><div class="award-icon">🛡</div><div class="award-text"><div class="aw-title">Cyber Defense Magazine – Infosec 2022</div><div class="aw-sub">Global Infosec Awards Winner</div></div></div>
+    <div class="award-item"><div class="award-icon">🤖</div><div class="award-text"><div class="aw-title">AI Cyber Security Awards 2020</div><div class="aw-sub">Best DLP Solutions Provider</div></div></div>
+    <div class="award-item"><div class="award-icon">📰</div><div class="award-text"><div class="aw-title">SC Magazine Lab Approved</div><div class="aw-sub">100% Catch Rate Verified</div></div></div>
+    <div class="award-item"><div class="award-icon">📜</div><div class="award-text"><div class="aw-title">US Patent (Bằng sáng chế Mỹ)</div><div class="aw-sub">Công nghệ DLP độc quyền</div></div></div>
+    <div class="award-item"><div class="award-icon">✅</div><div class="award-text"><div class="aw-title">SOC 2 Type II (AICPA)</div><div class="aw-sub">Kiểm toán bảo mật độc lập</div></div></div>
+    <div class="award-item"><div class="award-icon">🔬</div><div class="award-text"><div class="aw-title">Frost & Sullivan 2010</div><div class="aw-sub">Best Practices Award</div></div></div>
+  </div>
+  <h3>Đánh Giá Gartner & Thị Trường</h3>
+  <div class="cards cards-2">
+    <div class="card">
+      <div class="rating-row">
+        <div class="rating-score">5.0</div>
+        <div class="stars">★★★★★</div>
+        <div style="font-size:13px;color:var(--gray600)">Gartner Peer Insights</div>
+      </div>
+      <h4>Rating 5/5 — Tổng hợp đánh giá thực tế</h4>
+      <p><em>"GTB là giải pháp DLP mạnh mẽ để đảm bảo 100% khả năng hiển thị và bảo mật dữ liệu. Công cụ GTB phát hiện các vi phạm dữ liệu tiềm ẩn, ngăn chặn bằng cách giám sát, phát hiện và chặn dữ liệu nhạy cảm đang chuyển động."</em></p>
+      <div class="tag-row">
+        <span class="badge badge-green">Evaluation 5/5</span>
+        <span class="badge badge-green">Service 5/5</span>
+        <span class="badge badge-green">Deployment 5/5</span>
+        <span class="badge badge-green">Capabilities 5/5</span>
+      </div>
+    </div>
+    <div class="card">
+      <div class="rating-row">
+        <div class="rating-score">4.9</div>
+        <div class="stars">★★★★★</div>
+        <div style="font-size:13px;color:var(--gray600)">Overall Gartner Score</div>
+      </div>
+      <h4>Gartner Shortlist & Forrester Recognized</h4>
+      <p>GTB Technologies nằm trong shortlist các giải pháp DLP được Gartner khuyên dùng. Được phân tích bởi Forrester Research. Được nhắc đến trong Gartner Magic Quadrant các năm liên tiếp.</p>
+      <div class="tag-row">
+        <span class="badge badge-blue">Gartner Recognized</span>
+        <span class="badge badge-blue">Forrester Analyzed</span>
+        <span class="badge badge-blue">CIO Magazine Top 25</span>
+      </div>
+    </div>
+  </div>
+  <div class="callout amber">
+    <div class="callout-icon">💬</div>
+    <div><em>"100% catch rate for data leakage? You bet! If you have sensitive information on your enterprise, you need this device... This is a first-rate product with some real innovations."</em> — <strong>SC Magazine Lab Review (SC Lab Approved)</strong></div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<div class="section" id="features">
+  <div class="section-tag">05 — Tính Năng</div>
+  <h2>Tính Năng Toàn Diện Của Giải Pháp GTB DLP</h2>
+  <p class="lead">GTB Enterprise Data Security Suite cung cấp bộ tính năng đầy đủ nhất thị trường — DLP cho Endpoint, Network, Email, Cloud và Data Discovery — quản lý từ một console duy nhất.</p>
+
+  <h3>5.1 GTB Central Console — Quản Trị Tập Trung</h3>
+  <div class="cards cards-3">
+    <div class="card"><div class="card-icon">🖥️</div><h4>Giao diện quản trị hợp nhất</h4><p>Một dashboard duy nhất giám sát toàn bộ sự cố mạng và endpoint. Risk Dashboards cấu hình được để hiển thị đồng thời nhiều báo cáo từ Discovery, Network và Endpoint.</p></div>
+    <div class="card"><div class="card-icon">🔄</div><h4>Workflow & Case Management</h4><p>Quản lý luồng công việc, ghi nhật ký sự kiện, case-management và báo cáo toàn diện. Hỗ trợ phê duyệt nhiều cấp (Multi-tier approval workflow).</p></div>
+    <div class="card"><div class="card-icon">📊</div><h4>C-Suite Reporting</h4><p>Báo cáo chính xác sau mỗi lần quét để lãnh đạo cấp cao đưa ra quyết định dựa trên dữ liệu thực tế về tệp tin nhạy cảm trong tổ chức.</p></div>
+    <div class="card"><div class="card-icon">🔗</div><h4>SIEM Integration</h4><p>Chuyển tiếp logs ra các hệ thống SIEM: Splunk, IBM QRadar, ArcSight và các SIEM khác. Tích hợp với Entra ID (Azure AD) để đồng bộ người dùng và nhóm tự động.</p></div>
+    <div class="card"><div class="card-icon">🏢</div><h4>Multi-tenant Architecture</h4><p>Kiến trúc Parent-Child hỗ trợ quản lý đa khách thuê. Truy cập và điều khiển bất kỳ Inspector nào qua một console cha hoặc nhiều console con — phù hợp với MSSPs.</p></div>
+    <div class="card"><div class="card-icon">👥</div><h4>Role-Based Controls</h4><p>Tạo ngoại lệ hoặc quy tắc bảo mật duy nhất từ cấp toàn công ty xuống từng người dùng, máy tính hoặc nhóm cụ thể. Entra ID Sync giữ identities luôn cập nhật.</p></div>
+  </div>
+
+  <h3>5.2 GTB Endpoint Protector — Bảo Vệ Điểm Cuối (Win/Mac/Linux)</h3>
+  <div class="cards cards-3">
+    <div class="card"><div class="card-icon">🌐</div><h4>Network Inspection tại Endpoint</h4><p>Giám sát và phân tích lưu lượng mạng trên endpoint để ngăn chặn truyền trái phép dữ liệu nhạy cảm ra ngoài — bao gồm HTTP/HTTPS, FTP, SCP, IM channels.</p></div>
+    <div class="card"><div class="card-icon">💾</div><h4>Device Control (USB)</h4><p>Kiểm soát thiết bị lưu trữ rời — giám sát và mã hóa USB (AES-256). Log, chặn hoặc yêu cầu người dùng cung cấp lý do khi sử dụng. Inspect files được transfer ra USB.</p></div>
+    <div class="card"><div class="card-icon">🖨️</div><h4>Printer DLP</h4><p>Ngăn chặn in ấn trái phép tài liệu nhạy cảm để duy trì tính bảo mật, toàn vẹn và tuân thủ. Kiểm soát in theo chính sách phân loại dữ liệu.</p></div>
+    <div class="card"><div class="card-icon">📋</div><h4>Copy Controls (Clipboard)</h4><p>Content-aware inspection của dữ liệu nhạy cảm trong clipboard. Giáo dục người dùng về cách xử lý dữ liệu đúng cách khi copy-paste thông tin nhạy cảm.</p></div>
+    <div class="card"><div class="card-icon">📱</div><h4>Application Control</h4><p>Ngăn chặn sử dụng phần mềm không được phép và xác định ứng dụng có nguy cơ gây rò rỉ. Application Control Firewall hiển thị rõ ứng dụng của trusted vs untrusted insiders.</p></div>
+    <div class="card"><div class="card-icon">🔍</div><h4>Local Discovery + OCR</h4><p>Quét, nhận diện và áp dụng biện pháp bảo mật trực tiếp trên laptop, máy trạm và VDI. OCR trích xuất văn bản từ ảnh và tệp scan để che mờ dữ liệu nhạy cảm.</p></div>
+    <div class="card"><div class="card-icon">💬</div><h4>User Justification</h4><p>Khi người dùng gửi tệp nhạy cảm, hệ thống yêu cầu cung cấp lý do biện minh — tăng cường trách nhiệm và ý thức an ninh của nhân viên, phục vụ điều tra nếu cần.</p></div>
+    <div class="card"><div class="card-icon">🏷️</div><h4>File Classification & Labeling</h4><p>Tự động gắn nhãn và phân loại tệp dựa trên nội dung thực tế (content-based). Hỗ trợ manual labeling và automatic labeling với sensitivity labels bền vững (persistent).</p></div>
+    <div class="card"><div class="card-icon">📁</div><h4>Fileshare Auditor</h4><p>Giám sát và kiểm toán hoạt động người dùng trên file shares. Cảnh báo thời gian thực về truy cập, sửa đổi và chuyển tệp đáng ngờ. Báo cáo granular theo user/group.</p></div>
+  </div>
+
+  <h3>5.3 GTB Inspector — Network DLP & Email DLP</h3>
+  <div class="cards cards-3">
+    <div class="card"><div class="card-icon">✉️</div><h4>Email DLP (Full MTA/Smart Host)</h4><p>Kiểm tra toàn bộ email gửi đi với nhiều hành động: Block, Log, Quarantine, Encryption. Hỗ trợ SMTP/TLS, Office 365, Gmail, Zimbra. Tích hợp gateway mã hóa Symantec, PostX, Zix.</p></div>
+    <div class="card"><div class="card-icon">🔒</div><h4>SSL Decryption</h4><p>Giải mã và kiểm tra lưu lượng SSL/HTTPS được mã hóa để phát hiện dữ liệu nhạy cảm ẩn trong giao tiếp mã hóa — không có blind spot trên HTTPS traffic.</p></div>
+    <div class="card"><div class="card-icon">⚡</div><h4>TCP Scanner đa giao thức</h4><p>Inspector hoạt động như Smart Host, kiểm tra toàn bộ TCP outbound. Hỗ trợ: HTTP/HTTPS, FTP, SCP, WebMail, Yahoo Messenger, Google Talk, Skype, và hơn thế.</p></div>
+    <div class="card"><div class="card-icon">🌐</div><h4>Cloud Inspector</h4><p>Phiên bản Cloud Inspector với TCP Scanner, Full MTA, Smart Host, SSL Decryption và OCR — bảo vệ dữ liệu gửi lên cloud applications và SaaS services.</p></div>
+    <div class="card"><div class="card-icon">⚖️</div><h4>Built-in Load Balancing</h4><p>Cân bằng tải tích hợp sẵn cho Network DLP Sensors. Phân phối đều lưu lượng giữa nhiều máy chủ để đảm bảo hiệu suất và HA không cần thiết bị cân bằng tải bên ngoài.</p></div>
+    <div class="card"><div class="card-icon">🚦</div><h4>ICAP Support</h4><p>Native support Secure ICAP — tích hợp với Web Proxy (Bluecoat, F5, Squid) để kiểm soát HTTP/HTTPS traffic. Dễ tích hợp vào hạ tầng proxy hiện có.</p></div>
+    <div class="card"><div class="card-icon">📧</div><h4>Email Quarantine & Capture</h4><p>Log, chặn hoặc cách ly email chứa dữ liệu nhạy cảm. Xóa hoặc phát hành dựa trên mức độ nghiêm trọng. File and Email Capture để điều tra sự cố (forensics).</p></div>
+    <div class="card"><div class="card-icon">🎯</div><h4>Rules on Destinations</h4><p>Kiểm soát nơi người dùng có thể gửi dữ liệu dựa trên domain hoặc site destination cụ thể — granular policy theo từng điểm đến, cho phép whitelist/blacklist linh hoạt.</p></div>
+    <div class="card"><div class="card-icon">🖼️</div><h4>OCR mọi kênh</h4><p>OCR available cho mọi kênh bao gồm Endpoint — <strong>không có</strong> network bottlenecks hoặc timeouts. Redact dữ liệu nhạy cảm ngay trong tệp ảnh tại thời điểm thực.</p></div>
+  </div>
+
+  <h3>5.4 GTB Discovery Server — Khám Phá Dữ Liệu Lưu Trữ (Data at Rest)</h3>
+  <div class="cards cards-3">
+    <div class="card"><div class="card-icon">🗺️</div><h4>Phạm Vi Quét Toàn Diện</h4><p>File Shares, SharePoint/Online, Exchange/Online, OneDrive, Google Drive, Box, Dropbox, AWS S3, Azure, Databases (ODBC), Local PC — một nền tảng quét toàn bộ hạ tầng lưu trữ.</p></div>
+    <div class="card"><div class="card-icon">👁️</div><h4>Discover Hidden FileShares</h4><p>Quét toàn bộ mạng để tìm các file share bị ẩn hoặc không xác định trong bất kỳ subnet nào — phát hiện Shadow IT data stores và dữ liệu không được quản lý.</p></div>
+    <div class="card"><div class="card-icon">⚡</div><h4>Multi-threaded (1GB/phút)</h4><p>Công nghệ đa luồng đạt tốc độ quét lên đến <strong>1 Gigabyte/phút</strong>. Incremental Scanning tiết kiệm thời gian bằng cách chỉ quét dữ liệu mới hoặc thay đổi.</p></div>
+    <div class="card"><div class="card-icon">🏷️</div><h4>Auto Classification & Labeling</h4><p>Tự động áp dụng nhãn phân loại hoặc sensitivity labels bền vững cho tệp tin dựa trên nội dung thực tế — không chỉ dựa vào thuộc tính hay extension của tệp.</p></div>
+    <div class="card"><div class="card-icon">🔧</div><h4>Remediation Actions</h4><p>Di chuyển/Sao chép tệp đến vị trí an toàn, xóa tệp vi phạm, Quarantine tệp quy mô lớn — đặc biệt hữu ích cho dự án di cư dữ liệu lên cloud và data cleanup.</p></div>
+    <div class="card"><div class="card-icon">📮</div><h4>Outlook PST/OST Scan</h4><p>Quét tệp PST hoặc OST của MS Outlook để báo cáo email nào chứa dữ liệu nhạy cảm — bao gồm email lưu trữ cục bộ mà thường bị bỏ qua bởi các giải pháp khác.</p></div>
+  </div>
+
+  <h3>5.5 GTB AI Lifeguard™ — Bảo Vệ Chống GenAI & Insider Threat</h3>
+  <div class="cards cards-3">
+    <div class="card dark"><div class="card-icon">🤖</div><h4>Exact Data Matching (EDM)</h4><p>Tìm bất kỳ Sở hữu trí tuệ (IP) hoặc hồ sơ là một phần của nguồn dữ liệu đã được index — trong cả mục tiêu có cấu trúc (DB) và không có cấu trúc (documents).</p></div>
+    <div class="card dark"><div class="card-icon">🧠</div><h4>Large Language Model (LLM)</h4><p>Thuật toán nâng cao phân tích metadata email và mẫu hành vi. Thiết lập baseline thông tin liên lạc bình thường cho mỗi tổ chức để phát hiện anomaly chỉ ra mối đe dọa bảo mật.</p></div>
+    <div class="card dark"><div class="card-icon">⚙️</div><h4>AI Pre-Defined Regular Expression</h4><p>AI-driven regex và terms để đáp ứng quy định bảo mật dữ liệu: HIPAA, GDPR, CCPA, LGPD, ITAR, NIST, PCI DSS, GLBA, CMMC và nhiều hơn — ready-to-use ngay lập tức.</p></div>
+  </div>
+</div>
+
+<!-- TECHNOLOGY -->
+<div class="section" id="technology">
+  <div class="section-tag red">06 — Công Nghệ</div>
+  <h2>Điểm Mạnh Công Nghệ & Tính Năng Độc Đáo</h2>
+  <p class="lead">GTB Technologies sở hữu nhiều công nghệ độc quyền và được cấp bằng sáng chế Mỹ, tạo ra sự khác biệt rõ ràng so với mọi giải pháp DLP trên thị trường.</p>
+
+  <h3>GTB vs. DLP Truyền Thống — So Sánh Căn Bản</h3>
+  <div class="cards cards-2" style="margin-bottom:24px">
+    <div class="card" style="border:2px solid var(--red)">
+      <h4 style="color:var(--red)">❌ Giải Pháp DLP Truyền Thống</h4>
+      <ul class="cross-list">
+        <li>Khó triển khai, ROI thấp và chậm</li>
+        <li>Bảo trì cao, phải liên tục tinh chỉnh</li>
+        <li>Agent nặng ảnh hưởng hiệu suất người dùng</li>
+        <li>Phân loại dữ liệu phức tạp, dễ sai, mất nhiều tháng</li>
+        <li>False positive cao — IT team mất thời gian xử lý cảnh báo giả</li>
+        <li>OCR không chính xác hoặc thiếu trên một số kênh</li>
+        <li>Không hiệu quả với insider threat và data exfiltration phức tạp</li>
+        <li>Không ngăn được cloud data exfiltration và GenAI risks</li>
+      </ul>
+    </div>
+    <div class="card" style="border:2px solid var(--accent2)">
+      <h4 style="color:var(--accent2)">✅ GTB "Data Security that Works®"</h4>
+      <ul class="check-list">
+        <li>Triển khai nhanh (vài giờ đến vài ngày), ROI nhanh</li>
+        <li>Bảo trì thấp — ready-to-use ngay sau cài đặt</li>
+        <li>Agent nhẹ (Feather-lite) hoặc agentless options</li>
+        <li>Virtual zero false positives ngay từ đầu</li>
+        <li>Predefined compliance templates — bật là chạy ngay</li>
+        <li>OCR mọi kênh không bottleneck, bao gồm endpoint</li>
+        <li>Phát hiện và phản hồi exfiltration cực kỳ chính xác</li>
+        <li>Cực kỳ khó bỏ qua (extremely hard to bypass)</li>
+        <li>GenAI protection và cloud exfiltration control</li>
+        <li>MisClassifier™ để sửa phân loại sai tự động</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Công Nghệ Cốt Lõi Độc Quyền của GTB</h3>
+  <div class="cards cards-2">
+    <div class="card">
+      <div class="card-icon">🔏</div>
+      <h4>GTB AccuMatch™</h4>
+      <p>Công nghệ cốt lõi độc quyền kết hợp <strong>blacklist có sẵn và AI</strong> để đạt tỷ lệ phát hiện (catch rate) cao nhất trong ngành. SC Magazine Lab đã xác nhận độc lập: <strong>100% catch rate</strong>. Đây là nền tảng của toàn bộ công nghệ phát hiện GTB.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">👆</div>
+      <h4>Intelligent Fingerprinting</h4>
+      <p>Tạo dấu vân tay (fingerprint) cho tài liệu từ bất kỳ kho lưu trữ nào. Phát hiện cả <strong>khớp hoàn toàn VÀ khớp một phần</strong> (partial match) với tỷ lệ false positive gần như bằng không. Hỗ trợ fingerprint structured và unstructured data.</p>
+    </div>
+    <div class="card" style="border:2px solid var(--blue)">
+      <div class="card-icon">🔎</div>
+      <h4>⭐ Partial File Match tại Endpoint Offline — ĐỘC QUYỀN</h4>
+      <p>GTB là <strong>giải pháp DLP duy nhất trên thị trường</strong> hỗ trợ accurate partial file match đối với dữ liệu unstructured ngay tại endpoint — kể cả khi thiết bị đang <strong>offline hoàn toàn</strong>. Không cần kết nối về server để match fingerprint.</p>
+    </div>
+    <div class="card" style="border:2px solid var(--blue)">
+      <div class="card-icon">📵</div>
+      <h4>⭐ Offline Fingerprint Detection — ĐỘC QUYỀN</h4>
+      <p>Phát hiện vân tay dữ liệu khi thiết bị đang ngoài tuyến hoặc không có kết nối mạng, <strong>không cần "phone home"</strong> về máy chủ trung tâm. Bảo vệ nhân viên làm việc từ xa, trên máy bay, hoặc trong môi trường cách ly mạng.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📸</div>
+      <h4>OCR trên Mọi Kênh, Không Bottleneck</h4>
+      <p>OCR hoạt động trên <strong>mọi kênh bao gồm cả Endpoint</strong> — không có network bottlenecks hoặc timeouts. Trích xuất và che mờ (redact) dữ liệu nhạy cảm ngay trong tệp ảnh, PDF scan, screenshots tại thời điểm thực.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🏗️</div>
+      <h4>MisClassifier™ — ĐỘC QUYỀN</h4>
+      <p>Giải pháp phát hiện và <strong>sửa Data Misclassification</strong> — đảm bảo dữ liệu được phân loại đúng, duy trì tính bảo mật, toàn vẹn và tính sẵn có. Không có giải pháp DLP nào khác cung cấp tính năng này.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">💧</div>
+      <h4>Watermarking (Hình Mờ) Toàn Diện</h4>
+      <p>Cấu hình hình mờ trên <strong>tệp, email, in ấn và ngay cả màn hình</strong> — giúp truy vết nguồn rò rỉ tài liệu ngay cả sau khi tài liệu đã thoát ra ngoài. Kết hợp với watermark detection để phát hiện tài liệu mật bị rò rỉ.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">☁️</div>
+      <h4>CASB with a Twist™</h4>
+      <p>Content-Aware EDRM (Enterprise Digital Rights Management) tích hợp khả năng CASB — bảo vệ dữ liệu trên cloud applications với kiểm soát quyền truy cập cấp độ tệp tin. Hơn CASB thông thường ở chỗ có content inspection thực sự.</p>
+    </div>
+  </div>
+
+  <div class="callout blue" style="margin-top:8px">
+    <div class="callout-icon">🏆</div>
+    <div><strong>Top 5 tính năng độc quyền GTB không có ở bất kỳ đối thủ nào:</strong><br>
+    <strong>(1)</strong> Partial file match tại endpoint khi offline — chỉ GTB<br>
+    <strong>(2)</strong> Offline fingerprint detection không cần "phone home" — chỉ GTB<br>
+    <strong>(3)</strong> OCR không có bottleneck trên mọi kênh kể cả endpoint — chỉ GTB<br>
+    <strong>(4)</strong> MisClassifier™ để phát hiện và sửa data misclassification — chỉ GTB<br>
+    <strong>(5)</strong> US Patent cho công nghệ DLP — nền tảng đổi mới được bảo hộ</div>
+  </div>
+</div>
+
+<!-- ARCHITECTURE -->
+<div class="section" id="architecture">
+  <div class="section-tag">07 — Kiến Trúc</div>
+  <h2>Kiến Trúc Giải Pháp & Mô Hình Triển Khai</h2>
+  <p class="lead">GTB DLP có kiến trúc module hóa linh hoạt với 4 thành phần chính, hỗ trợ triển khai on-premises, cloud, hybrid và air-gap — đáp ứng mọi yêu cầu bảo mật.</p>
+
+  <h3>7.1 Kiến Trúc Tổng Thể</h3>
+  <div class="arch-box">
+    <div style="text-align:center;margin-bottom:24px;font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--cyan)">GTB Enterprise Data Security Suite — Architecture Overview</div>
+    <div class="arch-row">
+      <div class="arch-comp">
+        <div class="comp-label">① Central Console</div>
+        <ul>
+          <li>Central Policy Management</li>
+          <li>Workflow & Case Management</li>
+          <li>Management Reporting</li>
+          <li>Events Handling</li>
+          <li>Risk Dashboards</li>
+          <li>SIEM Integration (Splunk, QRadar)</li>
+          <li>Entra ID Sync (Azure AD)</li>
+          <li>Multi-tenant Parent-Child</li>
+        </ul>
+      </div>
+      <div class="arch-arrow">⟷</div>
+      <div class="arch-comp">
+        <div class="comp-label">② Inspector (Network DLP)</div>
+        <ul>
+          <li>TCP Scanner (đa giao thức)</li>
+          <li>Full MTA & Smart Host</li>
+          <li>SSL/TLS Decryption</li>
+          <li>OCR (không bottleneck)</li>
+          <li>ICAP Support (Proxy integration)</li>
+          <li>Built-in Load Balancing</li>
+          <li>Email Quarantine & Capture</li>
+        </ul>
+      </div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-comp">
+        <div class="comp-label">② Cloud Inspector</div>
+        <ul>
+          <li>TCP Scanner</li>
+          <li>Full MTA & Smart Host</li>
+          <li>SSL Decryption</li>
+          <li>OCR</li>
+          <li>Cloud Connector</li>
+          <li>SaaS Email DLP</li>
+        </ul>
+      </div>
+    </div>
+    <div class="arch-row">
+      <div class="arch-comp">
+        <div class="comp-label">③ Endpoint Protector</div>
+        <ul>
+          <li>TCP Scanner tại endpoint</li>
+          <li>Local Discovery + OCR</li>
+          <li>USB Device Control + AES-256</li>
+          <li>Application Control Firewall</li>
+          <li>Printer DLP</li>
+          <li>User Monitoring & Justification</li>
+          <li>Email & File Classification</li>
+          <li>Clipboard Controls</li>
+          <li>Fileshare Auditor</li>
+        </ul>
+      </div>
+      <div class="arch-arrow">⟷</div>
+      <div class="arch-comp">
+        <div class="comp-label">④ GTB Discovery Server</div>
+        <ul>
+          <li>Exchange / Exchange Online</li>
+          <li>SharePoint / SharePoint Online</li>
+          <li>OneDrive for Business</li>
+          <li>Google Drive / Box / Dropbox</li>
+          <li>Amazon S3 / Azure / ShareFile</li>
+          <li>File Shares & Local Drives</li>
+          <li>Databases (ODBC)</li>
+          <li>Outlook PST/OST Files</li>
+          <li>Auto Classification & Tagging</li>
+        </ul>
+      </div>
+      <div class="arch-arrow">⟷</div>
+      <div class="arch-comp">
+        <div class="comp-label">Integrations</div>
+        <ul>
+          <li>SMTP Mail Server</li>
+          <li>Web Proxy / Web Gateway</li>
+          <li>Email Encryption Gateway</li>
+          <li>SIEM Receiver</li>
+          <li>Router / Firewall</li>
+          <li>Azure Entra ID</li>
+          <li>Internet (Cloud)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h3>7.2 Luồng Dữ Liệu — Data in Motion (Network DLP)</h3>
+  <div class="arch-box" style="padding:20px">
+    <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--cyan);margin-bottom:16px">Email DLP Flow</div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12.5px;color:rgba(255,255,255,0.8);margin-bottom:20px">
+      <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:10px 12px;text-align:center"><div style="font-size:18px;margin-bottom:3px">💻</div><div style="color:var(--cyan);font-weight:700">User Sends Email</div><div>Exchange / SMTP</div></div>
+      <div style="color:var(--cyan);font-size:18px">→</div>
+      <div style="background:rgba(26,86,219,0.3);border-radius:8px;padding:10px 12px;text-align:center;border:1px solid rgba(26,86,219,0.6)"><div style="font-size:18px;margin-bottom:3px">🛡️</div><div style="color:var(--cyan);font-weight:700">GTB Inspector</div><div>Inspect / Allow / <span style="color:#ef4444">Block</span></div></div>
+      <div style="color:var(--cyan);font-size:18px">→</div>
+      <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:10px 12px;text-align:center"><div style="font-size:18px;margin-bottom:3px">🔒</div><div style="color:var(--cyan);font-weight:700">Encryption GW</div><div>Auto-encrypt if sensitive</div></div>
+      <div style="color:var(--cyan);font-size:18px">→</div>
+      <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:10px 12px;text-align:center"><div style="font-size:18px;margin-bottom:3px">🌐</div><div style="color:var(--cyan);font-weight:700">Internet</div></div>
+    </div>
+    <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--cyan);margin-bottom:16px">Web DLP Flow (ICAP)</div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;font-size:12.5px;color:rgba(255,255,255,0.8)">
+      <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:10px 12px;text-align:center"><div style="font-size:18px;margin-bottom:3px">💻</div><div style="color:var(--cyan);font-weight:700">User Browser</div><div>HTTP/HTTPS</div></div>
+      <div style="color:var(--cyan);font-size:18px">→</div>
+      <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:10px 12px;text-align:center"><div style="font-size:18px;margin-bottom:3px">🌐</div><div style="color:var(--cyan);font-weight:700">Web Proxy</div><div>ICAP Request/Reply</div></div>
+      <div style="color:var(--cyan);font-size:18px">↕</div>
+      <div style="background:rgba(26,86,219,0.3);border-radius:8px;padding:10px 12px;text-align:center;border:1px solid rgba(26,86,219,0.6)"><div style="font-size:18px;margin-bottom:3px">🛡️</div><div style="color:var(--cyan);font-weight:700">GTB Inspector</div><div>Allow / <span style="color:#ef4444">Deny</span></div></div>
+      <div style="color:var(--cyan);font-size:18px">→</div>
+      <div style="background:rgba(255,255,255,0.08);border-radius:8px;padding:10px 12px;text-align:center"><div style="font-size:18px;margin-bottom:3px">☁️</div><div style="color:var(--cyan);font-weight:700">Internet</div></div>
+    </div>
+  </div>
+
+  <h3>7.3 Mô Hình Triển Khai</h3>
+  <div class="cards cards-4">
+    <div class="card"><div class="card-icon">🏢</div><h4>On-Premises</h4><p>Hoàn toàn tại chỗ. Dữ liệu không rời khỏi hệ thống nội bộ. Phù hợp: Công an, Quân đội, Ngân hàng, Chính phủ. Cài đặt dạng file ISO trên VMware ESXi hoặc Hyper-V.</p></div>
+    <div class="card"><div class="card-icon">☁️</div><h4>Cloud / SaaS</h4><p>Inspector triển khai như SaaS. Endpoint agent qua DaaS (Desktop-as-a-Service). Phù hợp khi hạ tầng trên cloud hoàn toàn. Kết nối qua Cloud Connector API.</p></div>
+    <div class="card"><div class="card-icon">🔄</div><h4>Hybrid</h4><p>Kết hợp on-premises và cloud. Inspector on-prem bảo vệ traffic nội bộ, Cloud Inspector bảo vệ cloud applications. Mô hình phổ biến nhất tại doanh nghiệp.</p></div>
+    <div class="card"><div class="card-icon">🚫</div><h4>Air-gap / Offline</h4><p>Môi trường cách ly hoàn toàn không có internet. Offline fingerprint detection đảm bảo bảo vệ liên tục. Chỉ GTB hỗ trợ đầy đủ mô hình này ở endpoint.</p></div>
+  </div>
+
+  <h3>7.4 Yêu Cầu Phần Cứng Tối Thiểu</h3>
+  <div class="spec-grid">
+    <div class="spec-card">
+      <div class="sc-title">🖥️ Central Console (Management Server)</div>
+      <div class="spec-row"><span class="sl">CPU</span><span class="sv">8 Cores, 2GHz+</span></div>
+      <div class="spec-row"><span class="sl">RAM</span><span class="sv">32 GB</span></div>
+      <div class="spec-row"><span class="sl">Storage</span><span class="sv">500 GB SSD</span></div>
+      <div class="spec-row"><span class="sl">Hypervisor</span><span class="sv">VMware ESXi 6.7+</span></div>
+      <div class="spec-row"><span class="sl">Network</span><span class="sv">01 NIC</span></div>
+    </div>
+    <div class="spec-card">
+      <div class="sc-title">🌐 Network DLP Inspector</div>
+      <div class="spec-row"><span class="sl">CPU</span><span class="sv">8 Cores, 2GHz+</span></div>
+      <div class="spec-row"><span class="sl">RAM</span><span class="sv">16 GB</span></div>
+      <div class="spec-row"><span class="sl">Storage</span><span class="sv">500 GB SSD</span></div>
+      <div class="spec-row"><span class="sl">Hypervisor</span><span class="sv">VMware ESXi 6.7+</span></div>
+      <div class="spec-row"><span class="sl">Network</span><span class="sv">01 NIC</span></div>
+    </div>
+    <div class="spec-card">
+      <div class="sc-title">🔍 GTB Discovery Server</div>
+      <div class="spec-row"><span class="sl">CPU</span><span class="sv">8 Cores, 2GHz+</span></div>
+      <div class="spec-row"><span class="sl">RAM</span><span class="sv">16 GB</span></div>
+      <div class="spec-row"><span class="sl">Storage</span><span class="sv">500 GB SSD</span></div>
+      <div class="spec-row"><span class="sl">OS</span><span class="sv">Windows Server 2019+</span></div>
+      <div class="spec-row"><span class="sl">Note</span><span class="sv">Có thể chạy trên VM</span></div>
+    </div>
+    <div class="spec-card">
+      <div class="sc-title">💻 Endpoint Agent (Máy trạm/laptop)</div>
+      <div class="spec-row"><span class="sl">CPU</span><span class="sv">2GHz+</span></div>
+      <div class="spec-row"><span class="sl">RAM</span><span class="sv">4 GB+</span></div>
+      <div class="spec-row"><span class="sl">Storage</span><span class="sv">10 GB HDD/SSD</span></div>
+      <div class="spec-row"><span class="sl">Windows</span><span class="sv">Win 10/11, Server 2016+</span></div>
+      <div class="spec-row"><span class="sl">Linux</span><span class="sv">CentOS 7/8/9, Ubuntu 16.04+, RHEL 8/9, Oracle 7/8, Debian 11, Suse 15</span></div>
+      <div class="spec-row"><span class="sl">macOS</span><span class="sv">Hỗ trợ đầy đủ</span></div>
+    </div>
+  </div>
+
+  <h3>7.5 Các Bước Triển Khai Điển Hình</h3>
+  <div class="timeline" style="margin-top:16px">
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">Bước 1: Cài đặt Central Console</div><div class="tl-body">Deploy file ISO lên VMware ESXi/Hyper-V. Cấu hình network, DNS, NTP. Thiết lập admin accounts và kết nối LDAP/Active Directory. Thường hoàn thành trong 2–4 giờ.</div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">Bước 2: Deploy GTB Inspector (Network DLP)</div><div class="tl-body">Cài đặt Inspector VM. Cấu hình Smart Host cho Mail Server (Exchange/O365). Cấu hình ICAP với Web Proxy. Thiết lập SSL Decryption. Kết nối về Central Console.</div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">Bước 3: Tạo Fingerprint & Cấu hình Policies</div><div class="tl-body">Chọn compliance templates sẵn có (GDPR, HIPAA, PCI DSS, PDPD). Tạo fingerprint từ dữ liệu nhạy cảm thực tế của tổ chức. Thiết lập patterns, từ khóa và action (Block/Alert/Log/Quarantine/Encrypt).</div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">Bước 4: Deploy Endpoint Agents</div><div class="tl-body">Cài đặt Endpoint Protector agent qua GPO/SCCM/Jamf/script. Agent tự động nhận policy từ Central Console. Nên test trên nhóm pilot (20–50 users) trước khi roll-out toàn bộ.</div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">Bước 5: Discovery Scan</div><div class="tl-body">Deploy Discovery Server. Cấu hình scan targets. Chạy initial discovery scan để inventar dữ liệu nhạy cảm. Xem xét kết quả và áp dụng remediation (move, delete, quarantine, classify).</div></div>
+    <div class="tl-item"><div class="tl-dot"></div><div class="tl-title">Bước 6: Giám sát, Báo cáo & Tinh chỉnh</div><div class="tl-body">Review incidents trên dashboard. Tinh chỉnh policies để giảm thiểu false positives. Thiết lập reports tự động cho C-Suite và Compliance team. Training người dùng qua remediation popup notifications.</div></div>
+  </div>
+</div>
+
+<!-- LICENSE -->
+<div class="section" id="license">
+  <div class="section-tag green">08 — License & Sizing</div>
+  <h2>Cơ Chế License & Cách Sizing Lựa Chọn</h2>
+  <p class="lead">GTB sử dụng mô hình Subscription linh hoạt, tính theo thành phần triển khai — không phải flat rate per-user — giúp tối ưu chi phí theo nhu cầu thực tế.</p>
+
+  <h3>8.1 Cơ Chế Tính License</h3>
+  <div class="cards cards-3">
+    <div class="card"><div class="card-icon">💻</div><h4>DLP Endpoint License</h4><p>Tính theo <strong>số lượng máy chủ, máy trạm</strong> (Windows, MacOS, Linux) cần trang bị agent bảo vệ. Ví dụ: 500 endpoints = 500 Endpoint licenses/năm.</p></div>
+    <div class="card"><div class="card-icon">🌐</div><h4>DLP Network License</h4><p>Tính theo <strong>số Network Nodes, cấu hình HA</strong> và khả năng kiểm soát Mail Transfer. Bao gồm: Office 365, Zimbra, Soho và các mail servers khác.</p></div>
+    <div class="card"><div class="card-icon">🔍</div><h4>Discovery License</h4><p>Tính theo <strong>số máy chủ lưu trữ dữ liệu</strong> cần quét: Exchange, Database, SharePoint, FileShare, OneDrive, Box, Dropbox, Azure, v.v.</p></div>
+  </div>
+
+  <div class="callout amber">
+    <div class="callout-icon">💡</div>
+    <div><strong>Lưu ý quan trọng:</strong> GTB theo dạng <strong>Subscription hàng năm</strong> — không có perpetual license. Có thể mua từng module riêng lẻ hoặc toàn bộ Suite tùy nhu cầu. Gói 3 năm thường tiết kiệm 15–25% so với năm đơn lẻ.</div>
+  </div>
+
+  <h3>8.2 Ví Dụ Sizing Thực Tế</h3>
+  <div class="scenario">
+    <div class="scenario-tag">VÍ DỤ 1</div>
+    <h4>🏦 Ngân hàng thương mại — 2.000 nhân viên, 5 chi nhánh</h4>
+    <div class="vs-row">
+      <div class="vs-col gtb-side">
+        <div class="vs-col-title">Yêu cầu & Sizing License</div>
+        <ul>
+          <li><strong>Endpoint DLP:</strong> 2.000 máy trạm/laptop Windows + 50 máy chủ</li>
+          <li><strong>Network DLP:</strong> 2 Inspector (HA) tại Hội sở + 5 Inspector chi nhánh</li>
+          <li><strong>Discovery:</strong> 10 targets (Exchange, SharePoint, File Server, Database)</li>
+        </ul>
+      </div>
+      <div class="vs-col" style="background:var(--gray50);border:1px solid var(--gray200)">
+        <div class="vs-col-title" style="color:var(--navy)">Sizing Phần Cứng (VM)</div>
+        <ul>
+          <li>1× Central Console: 8C/32GB/500GB SSD</li>
+          <li>7× Inspector VM: 8C/16GB/500GB SSD mỗi cái</li>
+          <li>1× Discovery Server: 8C/16GB/500GB SSD</li>
+          <li>2.050× Endpoint Agents (nhẹ, 4GB RAM)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-tag">VÍ DỤ 2</div>
+    <h4>🏥 Bệnh viện / Tổ chức Y tế — 500 nhân viên, 1 site</h4>
+    <div class="vs-row">
+      <div class="vs-col gtb-side">
+        <div class="vs-col-title">Yêu cầu & Sizing License</div>
+        <ul>
+          <li><strong>Endpoint DLP:</strong> 500 máy trạm Windows/Linux</li>
+          <li><strong>Network DLP:</strong> 1 Inspector (email + HTTP/HTTPS)</li>
+          <li><strong>Discovery:</strong> 3 targets (File Server, Database HIS/PACS, SharePoint)</li>
+          <li>Compliance: HIPAA + PDPD/Nghị định 356</li>
+        </ul>
+      </div>
+      <div class="vs-col" style="background:var(--gray50);border:1px solid var(--gray200)">
+        <div class="vs-col-title" style="color:var(--navy)">Sizing Phần Cứng</div>
+        <ul>
+          <li>1× Central Console: 8C/32GB/500GB</li>
+          <li>1× Inspector VM: 8C/16GB/500GB</li>
+          <li>1× Discovery Server: 8C/16GB/500GB</li>
+          <li>500× Endpoint Agents</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-tag">VÍ DỤ 3</div>
+    <h4>🏛️ Cơ quan Nhà nước / An ninh — 200 cán bộ, môi trường airgap</h4>
+    <div class="vs-row">
+      <div class="vs-col gtb-side">
+        <div class="vs-col-title">Yêu cầu & Sizing License</div>
+        <ul>
+          <li><strong>Endpoint DLP:</strong> 200 máy trạm Windows</li>
+          <li><strong>Network DLP:</strong> 1 Inspector inline mode (kiểm soát 100% traffic)</li>
+          <li><strong>Discovery:</strong> File Server nội bộ + Database</li>
+          <li>Triển khai: Hoàn toàn On-Premises, airgap</li>
+        </ul>
+      </div>
+      <div class="vs-col" style="background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.2)">
+        <div class="vs-col-title" style="color:var(--accent2)">✅ Ưu điểm GTB với môi trường này</div>
+        <ul>
+          <li><strong>Offline fingerprint detection</strong>: bảo vệ ngay cả khi mất kết nối</li>
+          <li>Không cần kết nối internet — hoàn toàn tự chủ</li>
+          <li>Báo cáo tuân thủ Nghị định 356 tự động</li>
+          <li>Tính năng này Zecurion và MS Purview <strong>không có</strong></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BOM -->
+<div class="section" id="bom">
+  <div class="section-tag amber">09 — BOM</div>
+  <h2>BOM Mẫu — Bill of Materials</h2>
+  <p class="lead">BOM mẫu cho dự án DLP tầm trung (500–1.000 endpoints) tại doanh nghiệp Việt Nam. Liên hệ SONIC TECH để có báo giá chính thức.</p>
+  <div class="bom-table">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Mô Tả Sản Phẩm / Dịch Vụ</th><th>Module</th><th>Phần Cứng (VM Spec)</th><th>SL</th><th>ĐV</th><th>Ghi Chú</th></tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="7" class="feature-section-row">A. PHẦN MỀM LICENSE SUBSCRIPTION (hàng năm)</td></tr>
+        <tr><td>1</td><td class="feat">GTB Central Console</td><td>License quản trị tập trung</td><td>8C / 32GB / 500GB SSD, VM</td><td>1</td><td>Server</td><td>Cài trên VMware ESXi / Hyper-V</td></tr>
+        <tr><td>2</td><td class="feat">GTB Inspector (Network DLP)</td><td>Network DLP License – per node</td><td>8C / 16GB / 500GB SSD, VM</td><td>1–2</td><td>Node</td><td>2 nodes nếu cần HA/failover</td></tr>
+        <tr><td>3</td><td class="feat">GTB Endpoint Protector</td><td>Subscription/endpoint/năm</td><td>Agent nhẹ (4GB RAM client)</td><td>500–1.000</td><td>Endpoints</td><td>Windows / Mac / Linux đồng giá</td></tr>
+        <tr><td>4</td><td class="feat">GTB Discovery Server</td><td>Discovery License – per target</td><td>8C / 16GB / 500GB SSD, Win Svr 2019</td><td>1</td><td>Server</td><td>Quét File Share, DB, Cloud</td></tr>
+        <tr><td>5</td><td class="feat">GTB AI Lifeguard™ (tùy chọn)</td><td>Add-on Subscription/năm</td><td>Tích hợp vào Central Console</td><td>1</td><td>License</td><td>Bảo vệ GenAI, LLM behavior analytics</td></tr>
+        <tr><td colspan="7" class="feature-section-row">B. PHẦN CỨNG MÁY CHỦ (nếu chưa có sẵn VM)</td></tr>
+        <tr><td>6</td><td class="feat">Server cho Central Console</td><td>—</td><td>2×Xeon / 32GB / 2×500GB SSD RAID</td><td>1</td><td>Cái</td><td>Hoặc dùng VM trên existing vSphere</td></tr>
+        <tr><td>7</td><td class="feat">Server cho Inspector(s)</td><td>—</td><td>2×Xeon / 16GB / 2×500GB SSD RAID</td><td>1–2</td><td>Cái</td><td>Có thể là VM, không cần appliance</td></tr>
+        <tr><td colspan="7" class="feature-section-row">C. DỊCH VỤ TRIỂN KHAI & HỖ TRỢ</td></tr>
+        <tr><td>8</td><td class="feat">Dịch vụ cài đặt & cấu hình ban đầu</td><td>—</td><td>—</td><td>1</td><td>Gói</td><td>Bao gồm cấu hình policy cơ bản, tích hợp Mail/Proxy</td></tr>
+        <tr><td>9</td><td class="feat">Training quản trị viên</td><td>—</td><td>—</td><td>1</td><td>Gói</td><td>2–3 ngày on-site, tối đa 5 người</td></tr>
+        <tr><td>10</td><td class="feat">Hỗ trợ kỹ thuật năm 1 (Maintenance)</td><td>—</td><td>—</td><td>1</td><td>Năm</td><td>8×5 hoặc 24×7 theo hợp đồng</td></tr>
+        <tr><td colspan="7" class="feature-section-row">D. ADD-ONS / TÍCH HỢP (tùy chọn)</td></tr>
+        <tr><td>11</td><td class="feat">Email Encryption Gateway</td><td>Symantec / PostX / Zix</td><td>Tích hợp với Inspector</td><td>1</td><td>License</td><td>Mã hóa email tự động khi phát hiện nhạy cảm</td></tr>
+        <tr><td>12</td><td class="feat">SIEM Integration</td><td>Splunk / QRadar / ArcSight</td><td>—</td><td>1</td><td>Kết nối</td><td>Chuyển tiếp logs ra SIEM hiện có của khách hàng</td></tr>
+      </tbody>
+    </table>
+    <div class="bom-note">* Giá GTB theo Subscription năm — liên hệ SONIC TECH để có báo giá chính thức theo số lượng, thời hạn và cấu hình cụ thể. Giá thường giảm 15–25% khi mua 3 năm. Có thể bắt đầu với Endpoint hoặc Network DLP riêng lẻ và mở rộng dần.</div>
+  </div>
+</div>
+
+<!-- COMPARISON -->
+<div class="section" id="compare">
+  <div class="section-tag red">10 — So Sánh</div>
+  <h2>Bảng So Sánh Tính Năng Chi Tiết Với Đối Thủ</h2>
+  <p class="lead">So sánh chi tiết GTB Technologies với Zecurion, Forcepoint, Symantec DLP và Microsoft Purview — các giải pháp DLP thường được xem xét đồng thời tại thị trường Việt Nam.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="min-width:200px">Tính Năng / Tiêu Chí</th>
+          <th class="gtb" style="min-width:160px">GTB Technologies</th>
+          <th style="min-width:120px">Zecurion</th>
+          <th style="min-width:120px">Forcepoint</th>
+          <th style="min-width:120px">Symantec DLP</th>
+          <th style="min-width:130px">MS Purview</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="6" class="feature-section-row">PHÁT HIỆN DỮ LIỆU (DETECTION)</td></tr>
+        <tr>
+          <td class="feat">Exact Data Matching / Fingerprint</td>
+          <td class="gtb"><span class="yes">✓</span> Patented, virtual zero FP</td>
+          <td><span class="yes">✓</span> Có</td><td><span class="yes">✓</span> Có</td><td><span class="yes">✓</span> Có</td><td><span class="partial">▲</span> Giới hạn</td>
+        </tr>
+        <tr>
+          <td class="feat">Partial File Match tại Endpoint (Offline)</td>
+          <td class="gtb"><span class="yes">✓</span> <strong>ĐỘC QUYỀN — DUY NHẤT</strong></td>
+          <td><span class="no">✗</span></td><td><span class="no">✗</span></td><td><span class="no">✗</span></td><td><span class="no">✗</span></td>
+        </tr>
+        <tr>
+          <td class="feat">OCR (Nhận dạng ký tự quang học)</td>
+          <td class="gtb"><span class="yes">✓</span> Mọi kênh, không bottleneck</td>
+          <td><span class="partial">▲</span> Giới hạn</td><td><span class="partial">▲</span> Giới hạn kênh</td><td><span class="yes">✓</span> Có</td><td><span class="partial">▲</span> Azure AI OCR</td>
+        </tr>
+        <tr>
+          <td class="feat">AI/ML cho phát hiện dữ liệu</td>
+          <td class="gtb"><span class="yes">✓</span> AccuMatch™ + LLM</td>
+          <td><span class="yes">✓</span> Có</td><td><span class="yes">✓</span> Advanced ML</td><td><span class="partial">▲</span> Có</td><td><span class="yes">✓</span> Azure ML</td>
+        </tr>
+        <tr>
+          <td class="feat">Virtual Zero False Positives (out-of-box)</td>
+          <td class="gtb"><span class="yes">✓</span> SC Lab Verified</td>
+          <td><span class="partial">▲</span> Cao FP ban đầu</td><td><span class="partial">▲</span> Cần tinh chỉnh nhiều</td><td><span class="partial">▲</span> Cần tinh chỉnh</td><td><span class="partial">▲</span> Cần tinh chỉnh</td>
+        </tr>
+        <tr>
+          <td class="feat">Offline Fingerprint (không cần "phone home")</td>
+          <td class="gtb"><span class="yes">✓</span> <strong>ĐỘC QUYỀN</strong></td>
+          <td><span class="no">✗</span></td><td><span class="no">✗</span></td><td><span class="no">✗</span></td><td><span class="no">✗</span></td>
+        </tr>
+
+        <tr><td colspan="6" class="feature-section-row">KÊNH BẢO VỆ (CHANNELS)</td></tr>
+        <tr>
+          <td class="feat">Email DLP (SMTP/TLS)</td>
+          <td class="gtb"><span class="yes">✓</span> Full MTA + Smart Host</td>
+          <td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td class="feat">Network DLP (HTTP/HTTPS)</td>
+          <td class="gtb"><span class="yes">✓</span> SSL Decrypt + ICAP</td>
+          <td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="partial">▲</span> Purview Scope only</td>
+        </tr>
+        <tr>
+          <td class="feat">Endpoint DLP (Win/Mac/Linux)</td>
+          <td class="gtb"><span class="yes">✓</span> 3 nền tảng đầy đủ</td>
+          <td><span class="partial">▲</span> Win chủ yếu</td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span> Win/Mac</td>
+        </tr>
+        <tr>
+          <td class="feat">USB/Device Control + AES-256</td>
+          <td class="gtb"><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="partial">▲</span></td>
+        </tr>
+        <tr>
+          <td class="feat">Cloud DLP (O365, Google, Box...)</td>
+          <td class="gtb"><span class="yes">✓</span> Cloud Inspector + CASB</td>
+          <td><span class="partial">▲</span> Giới hạn</td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span> Native M365</td>
+        </tr>
+        <tr>
+          <td class="feat">Printer DLP</td>
+          <td class="gtb"><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td><td><span class="partial">▲</span></td><td><span class="yes">✓</span></td><td><span class="no">✗</span></td>
+        </tr>
+        <tr>
+          <td class="feat">Clipboard Control</td>
+          <td class="gtb"><span class="yes">✓</span></td>
+          <td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="partial">▲</span></td>
+        </tr>
+
+        <tr><td colspan="6" class="feature-section-row">DATA DISCOVERY & CLASSIFICATION</td></tr>
+        <tr>
+          <td class="feat">Data Discovery On-Premises</td>
+          <td class="gtb"><span class="yes">✓</span> File Share, DB, SharePoint</td>
+          <td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="partial">▲</span></td>
+        </tr>
+        <tr>
+          <td class="feat">Cloud Discovery (O365, Box, Dropbox)</td>
+          <td class="gtb"><span class="yes">✓</span> Full coverage</td>
+          <td><span class="partial">▲</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span> Native M365</td>
+        </tr>
+        <tr>
+          <td class="feat">Auto Data Classification & Labeling</td>
+          <td class="gtb"><span class="yes">✓</span> Content-based, persistent</td>
+          <td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span> Sensitivity labels</td>
+        </tr>
+        <tr>
+          <td class="feat">Discover Hidden FileShares (subnet scan)</td>
+          <td class="gtb"><span class="yes">✓</span> <strong>Độc đáo</strong></td>
+          <td><span class="no">✗</span></td><td><span class="no">✗</span></td><td><span class="partial">▲</span></td><td><span class="no">✗</span></td>
+        </tr>
+        <tr>
+          <td class="feat">MisClassifier™ (sửa phân loại sai)</td>
+          <td class="gtb"><span class="yes">✓</span> <strong>ĐỘC QUYỀN</strong></td>
+          <td><span class="no">✗</span></td><td><span class="no">✗</span></td><td><span class="no">✗</span></td><td><span class="no">✗</span></td>
+        </tr>
+
+        <tr><td colspan="6" class="feature-section-row">TRIỂN KHAI & VẬN HÀNH</td></tr>
+        <tr>
+          <td class="feat">On-Premises Deployment</td>
+          <td class="gtb"><span class="yes">✓</span> Full support</td>
+          <td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="no">✗</span> Cloud-only</td>
+        </tr>
+        <tr>
+          <td class="feat">Air-gap / Offline Deployment</td>
+          <td class="gtb"><span class="yes">✓</span> <strong>Full — kể cả endpoint offline</strong></td>
+          <td><span class="partial">▲</span> Hạn chế</td><td><span class="partial">▲</span> Hạn chế</td><td><span class="partial">▲</span> Hạn chế</td><td><span class="no">✗</span></td>
+        </tr>
+        <tr>
+          <td class="feat">Feather-lite Agent (hiệu suất cao)</td>
+          <td class="gtb"><span class="yes">✓</span></td>
+          <td><span class="partial">▲</span> Agent nặng hơn</td><td><span class="partial">▲</span></td><td><span class="partial">▲</span> Agent nặng</td><td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td class="feat">Multi-tenant (Parent-Child Console)</td>
+          <td class="gtb"><span class="yes">✓</span></td>
+          <td><span class="partial">▲</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td class="feat">Built-in Load Balancing (Network Sensor)</td>
+          <td class="gtb"><span class="yes">✓</span> <strong>Tích hợp sẵn</strong></td>
+          <td><span class="no">✗</span></td><td><span class="partial">▲</span></td><td><span class="partial">▲</span></td><td>N/A</td>
+        </tr>
+        <tr>
+          <td class="feat">Thời gian triển khai điển hình</td>
+          <td class="gtb">Vài giờ đến vài ngày</td>
+          <td>Vài tuần</td><td>Tuần đến tháng</td><td>Tuần đến tháng</td><td>Vài ngày (cloud)</td>
+        </tr>
+
+        <tr><td colspan="6" class="feature-section-row">TUÂN THỦ & TÍNH NĂNG NÂNG CAO</td></tr>
+        <tr>
+          <td class="feat">Compliance Out-of-the-Box Templates</td>
+          <td class="gtb"><span class="yes">✓</span> GDPR, HIPAA, PCI, ITAR, NIST…</td>
+          <td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span> M365 focused</td>
+        </tr>
+        <tr>
+          <td class="feat">GenAI / ChatGPT Protection</td>
+          <td class="gtb"><span class="yes">✓</span> AI Lifeguard™ + LLM</td>
+          <td><span class="no">✗</span></td><td><span class="partial">▲</span></td><td><span class="no">✗</span></td><td><span class="partial">▲</span></td>
+        </tr>
+        <tr>
+          <td class="feat">Watermarking (File, Email, Print, Screen)</td>
+          <td class="gtb"><span class="yes">✓</span> 4 loại watermark</td>
+          <td><span class="yes">✓</span></td><td><span class="partial">▲</span></td><td><span class="partial">▲</span></td><td><span class="no">✗</span></td>
+        </tr>
+        <tr>
+          <td class="feat">SIEM Integration</td>
+          <td class="gtb"><span class="yes">✓</span> Splunk, QRadar, ArcSight</td>
+          <td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td class="feat">US Patent (Bằng sáng chế Mỹ)</td>
+          <td class="gtb"><span class="yes">✓</span></td>
+          <td><span class="no">✗</span></td><td><span class="no">✗</span></td><td><span class="no">✗</span></td><td><span class="no">✗</span></td>
+        </tr>
+        <tr>
+          <td class="feat">SOC 2 Type II Certified</td>
+          <td class="gtb"><span class="yes">✓</span></td>
+          <td><span class="partial">▲</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td><td><span class="yes">✓</span></td>
+        </tr>
+        <tr>
+          <td class="feat">Nguồn gốc / Supply Chain Risk</td>
+          <td class="gtb" style="color:var(--accent2);font-weight:700">🇺🇸 USA — Không rủi ro</td>
+          <td style="color:var(--red)">🇷🇺 Nga — Rủi ro cao</td>
+          <td>🇺🇸 USA</td><td>🇺🇸 USA (Broadcom)</td><td>🇺🇸 USA</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout blue" style="margin-top:24px">
+    <div class="callout-icon">🔑</div>
+    <div><strong>6 Key Points khi so sánh với đối thủ:</strong><br>
+    <strong>(1) Partial file match offline tại endpoint</strong> — Chỉ GTB, không ai khác có. Quan trọng với remote workers, môi trường airgap.<br>
+    <strong>(2) OCR không có bottleneck trên mọi kênh</strong> — Zecurion, Forcepoint bị giới hạn kênh, tạo blind spots.<br>
+    <strong>(3) Air-gap/Offline deployment</strong> — MS Purview không hỗ trợ on-premises; GTB là lựa chọn duy nhất cho môi trường airgap.<br>
+    <strong>(4) Triển khai nhanh, bảo trì thấp</strong> — Forcepoint/Symantec: vài tháng, nhiều consultant. GTB: vài ngày, ít tài nguyên.<br>
+    <strong>(5) Virtual zero false positives out-of-box</strong> — Các giải pháp khác cần nhiều tháng fine-tuning trước khi dùng được.<br>
+    <strong>(6) Zecurion nguồn gốc Nga</strong> — Rủi ro chuỗi cung ứng nghiêm trọng với tổ chức an ninh, quốc phòng, chính phủ.</div>
+  </div>
+</div>
+
+<!-- USE CASES -->
+<div class="section" id="usecases">
+  <div class="section-tag green">11 — Use Cases</div>
+  <h2>Use Cases Triển Khai Thực Tế</h2>
+  <p class="lead">GTB Technologies đã được triển khai thành công tại nhiều loại tổ chức — từ cơ quan an ninh, quốc phòng đến tài chính, y tế và doanh nghiệp lớn.</p>
+  <div class="cards cards-2">
+    <div class="uc-card">
+      <div class="uc-header police">
+        <div class="uc-icon">🚔</div>
+        <div><div class="uc-title">Khối Công An / An Ninh Quốc Gia</div><span class="badge badge-navy">Ưu tiên cao — Airgap</span></div>
+      </div>
+      <div class="uc-body">
+        <p><strong>Nhu cầu đặc thù:</strong> Bảo vệ thông tin mật, hồ sơ điều tra, thông tin nghiệp vụ khỏi rò rỉ nội bộ. Môi trường thường không kết nối internet (airgap). Yêu cầu không để lộ thông tin sang bên thứ ba.</p>
+        <ul>
+          <li>Kiểm soát 100% dữ liệu gửi ra qua email nội bộ, USB, in ấn</li>
+          <li>Phát hiện vân tay tài liệu mật ngay cả khi thiết bị offline (độc quyền GTB)</li>
+          <li>Giám sát hành vi người dùng, cảnh báo nội gián (Insider Threat)</li>
+          <li>Watermark tài liệu mật để truy vết nguồn rò rỉ sau sự cố</li>
+          <li>Triển khai hoàn toàn on-premises, airgap — không phụ thuộc cloud</li>
+          <li>Phân quyền truy cập theo cấp độ mật và role người dùng</li>
+        </ul>
+        <p style="margin-top:8px"><strong>GTB vs. Zecurion:</strong> GTB hỗ trợ partial file match offline — phát hiện ngay cả khi không có mạng. Zecurion và hầu hết giải pháp khác yêu cầu kết nối về server. Với môi trường mạng bí mật, GTB là lựa chọn duy nhất thực sự phù hợp.</p>
+      </div>
+    </div>
+    <div class="uc-card">
+      <div class="uc-header military">
+        <div class="uc-icon">🎖️</div>
+        <div><div class="uc-title">Khối Quân Đội / Quốc Phòng</div><span class="badge badge-navy">ITAR + CMMC Compliance</span></div>
+      </div>
+      <div class="uc-body">
+        <p><strong>Nhu cầu đặc thù:</strong> Tuân thủ ITAR, CMMC. Bảo vệ thông tin kỹ thuật quân sự, kế hoạch tác chiến, tài liệu xuất khẩu kiểm soát. Bảo mật tuyệt đối không thỏa hiệp.</p>
+        <ul>
+          <li>Kiểm soát thông tin ITAR — ngăn xuất khẩu trái phép công nghệ quân sự</li>
+          <li>Phân loại tự động tài liệu theo cấp độ bảo mật (Mật/Tối Mật/...)</li>
+          <li>Application Control — chặn phần mềm không được cấp phép</li>
+          <li>Endpoint DLP kể cả thiết bị dã chiến, không có kết nối mạng</li>
+          <li>C-suite reporting cho Ban Chỉ huy về trạng thái bảo mật</li>
+          <li>Watermarking tài liệu kỹ thuật, bản vẽ thiết kế quân sự</li>
+        </ul>
+        <p style="margin-top:8px"><strong>GTB vs. Forcepoint:</strong> Forcepoint có lịch sử phục vụ quốc phòng Mỹ nhưng phức tạp và đắt. GTB cung cấp ITAR/CMMC compliance với chi phí thấp hơn, triển khai nhanh hơn và partial file match offline là lợi thế lớn trong môi trường dã chiến.</p>
+      </div>
+    </div>
+    <div class="uc-card">
+      <div class="uc-header bank">
+        <div class="uc-icon">🏦</div>
+        <div><div class="uc-title">Khối Ngân Hàng / Tài Chính</div><span class="badge badge-navy">PCI DSS + PDPD + NHNN</span></div>
+      </div>
+      <div class="uc-body">
+        <p><strong>Nhu cầu đặc thù:</strong> Bảo vệ dữ liệu thẻ tín dụng (PCI DSS), thông tin khách hàng (PII), hồ sơ giao dịch. Tuân thủ Nghị định 356 và yêu cầu NHNN về bảo mật dữ liệu.</p>
+        <ul>
+          <li>Real-time phát hiện số thẻ tín dụng, tài khoản trong email/file/web upload</li>
+          <li>Ngăn chặn tức thì gửi dữ liệu tài chính qua email, IM, cloud upload</li>
+          <li>Discovery quét Database phát hiện lưu trữ dữ liệu thẻ không an toàn</li>
+          <li>Tự động mã hóa email chứa dữ liệu nhạy cảm (tích hợp encryption gateway)</li>
+          <li>Báo cáo tuân thủ PCI DSS và PDPD tự động để audit</li>
+          <li>Giám sát hành vi cán bộ giao dịch (Insider Threat Management)</li>
+        </ul>
+        <p style="margin-top:8px"><strong>Case Study (từ tài liệu GTB):</strong> Global Retailer — phát hiện và bảo vệ dữ liệu PCI, PII, GDPR trong vài giờ sau triển khai. Đảm bảo tuân thủ đa tiêu chuẩn. Giảm đáng kể khối lượng công việc thủ công của IT team.</p>
+      </div>
+    </div>
+    <div class="uc-card">
+      <div class="uc-header enterprise">
+        <div class="uc-icon">🏢</div>
+        <div><div class="uc-title">Doanh Nghiệp / Tập Đoàn</div><span class="badge badge-navy">IP Protection + GDPR + GenAI</span></div>
+      </div>
+      <div class="uc-body">
+        <p><strong>Nhu cầu đặc thù:</strong> Bảo vệ tài sản trí tuệ (IP), hợp đồng, kế hoạch kinh doanh. Quản lý nhân viên remote và Shadow IT. Tuân thủ GDPR khi xử lý dữ liệu EU. Kiểm soát rủi ro GenAI.</p>
+        <ul>
+          <li>Fingerprint tài liệu R&D, thiết kế sản phẩm, mã nguồn phần mềm, hợp đồng</li>
+          <li>Phát hiện nhân viên cố ý gửi IP ra ngoài trước khi nghỉ việc</li>
+          <li>Cloud DLP — kiểm soát dữ liệu đưa lên OneDrive, Google Drive, Dropbox</li>
+          <li><strong>GenAI protection</strong>: Ngăn upload dữ liệu nhạy cảm vào ChatGPT, Gemini, Copilot</li>
+          <li>User Justification — nhân viên phải giải thích khi gửi file nhạy cảm</li>
+          <li>Discovery định kỳ inventar toàn bộ tài sản dữ liệu của tổ chức</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCENARIOS -->
+<div class="section" id="scenarios">
+  <div class="section-tag amber">12 — Kịch Bản Tư Vấn</div>
+  <h2>Kịch Bản Tư Vấn Khi Khách Hàng So Sánh Với Đối Thủ</h2>
+  <p class="lead">Các tình huống thực tế và cách positioning GTB Technologies hiệu quả khi khách hàng đang xem xét các giải pháp khác.</p>
+
+  <div class="scenario">
+    <div class="scenario-tag">KỊCH BẢN 1 — SO SÁNH VỚI ZECURION</div>
+    <h4>Khách hàng: "Chúng tôi đang xem xét Zecurion vì nghe nói dễ dùng và giá cạnh tranh"</h4>
+    <div class="vs-row">
+      <div class="vs-col gtb-side">
+        <div class="vs-col-title">🛡 GTB — Điểm mạnh cần nhấn mạnh</div>
+        <ul>
+          <li><strong>Partial file match offline</strong>: GTB duy nhất có — quan trọng với laptop làm việc ngoài VP</li>
+          <li><strong>OCR không bottleneck</strong>: GTB xử lý OCR mọi kênh mà không làm chậm hệ thống</li>
+          <li><strong>US Patent</strong>: Công nghệ bảo hộ, đảm bảo roadmap phát triển dài hạn</li>
+          <li><strong>Gartner 5/5</strong>: Rating cao hơn, khách hàng enterprise toàn cầu nhiều hơn</li>
+          <li><strong>GenAI protection</strong>: AI Lifeguard™ — Zecurion chưa có giải pháp tương đương</li>
+          <li><strong>SOC 2 Type II</strong>: Chứng nhận bảo mật được kiểm toán độc lập bởi bên thứ ba</li>
+        </ul>
+      </div>
+      <div class="vs-col rival-side">
+        <div class="vs-col-title">⚠️ Zecurion — Điểm hạn chế</div>
+        <ul>
+          <li>Không có partial file match tại endpoint offline — blind spot nghiêm trọng</li>
+          <li>OCR bị giới hạn, có thể gây bottleneck trên một số kênh</li>
+          <li><strong>Nguồn gốc Nga</strong> — rủi ro chuỗi cung ứng, không phù hợp cho tổ chức an ninh/quốc phòng</li>
+          <li>Hỗ trợ kỹ thuật toàn cầu hạn chế hơn GTB</li>
+          <li>Không có dedicated GenAI protection</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout blue" style="margin-top:12px">
+      <div class="callout-icon">💡</div>
+      <div><strong>Key message:</strong> "Với nhân viên thường xuyên làm việc ngoài văn phòng hoặc mang laptop về nhà, GTB bảo vệ dữ liệu ngay cả khi không có mạng — điều Zecurion không làm được. Đây là khoảng trống bảo mật thực sự, không phải lý thuyết."</div>
+    </div>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-tag">KỊCH BẢN 2 — SO SÁNH VỚI FORCEPOINT</div>
+    <h4>Khách hàng: "Forcepoint có reputation tốt với chính phủ và quân đội Mỹ, tại sao nên chọn GTB?"</h4>
+    <div class="vs-row">
+      <div class="vs-col gtb-side">
+        <div class="vs-col-title">🛡 GTB — Điểm mạnh khi so sánh</div>
+        <ul>
+          <li><strong>Triển khai nhanh hơn nhiều</strong>: GTB vài ngày vs Forcepoint vài tuần/tháng</li>
+          <li><strong>TCO thấp hơn</strong>: ít consultant, ít thời gian fine-tuning, ít nhân sự vận hành</li>
+          <li><strong>Virtual zero FP ngay từ đầu</strong>: Forcepoint cần tinh chỉnh lâu dài mới ổn định</li>
+          <li><strong>Giao diện thân thiện hơn</strong>: Forcepoint phức tạp, cần nhân sự chuyên sâu cao</li>
+          <li><strong>Bảo trì thấp</strong>: GTB ready-to-use, Forcepoint cần constant fine-tuning</li>
+          <li><strong>Agent nhẹ hơn</strong>: Forcepoint agent ảnh hưởng hiệu suất máy trạm đáng kể</li>
+        </ul>
+      </div>
+      <div class="vs-col rival-side">
+        <div class="vs-col-title">⚠️ Forcepoint — Điểm hạn chế</div>
+        <ul>
+          <li>Phức tạp — đòi hỏi chuyên gia DLP chuyên sâu để vận hành</li>
+          <li>Chi phí triển khai và tư vấn rất cao</li>
+          <li>Thời gian để đạt ROI thực tế dài (6–12 tháng điển hình)</li>
+          <li>False positive cao ban đầu, cần nhiều tháng tuning</li>
+          <li>Agent nặng — ảnh hưởng hiệu suất người dùng cuối</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout blue" style="margin-top:12px">
+      <div class="callout-icon">💡</div>
+      <div><strong>Key message:</strong> "Forcepoint có lịch sử tốt với chính phủ Mỹ, nhưng với ngân sách và timeline của tổ chức Việt Nam, GTB mang lại giá trị thực tế nhanh hơn. Chúng tôi có thể bảo vệ dữ liệu của bạn trong vài ngày, không phải vài tháng."</div>
+    </div>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-tag">KỊCH BẢN 3 — SO SÁNH VỚI MICROSOFT PURVIEW</div>
+    <h4>Khách hàng: "Chúng tôi đang dùng Microsoft 365, sao không dùng Purview cho tiện?"</h4>
+    <div class="vs-row">
+      <div class="vs-col gtb-side">
+        <div class="vs-col-title">🛡 GTB — Điểm mạnh khi so sánh</div>
+        <ul>
+          <li><strong>On-premises đầy đủ</strong>: Purview cloud-only — không phù hợp môi trường airgap</li>
+          <li><strong>Multi-cloud & multi-vendor</strong>: GTB bảo vệ cả Google Drive, Box, Dropbox — không chỉ M365</li>
+          <li><strong>Network DLP thực sự</strong>: GTB kiểm soát HTTP/HTTPS, FTP, IM... Purview không có</li>
+          <li><strong>Email DLP đầy đủ</strong>: GTB có MTA đầy đủ; Purview hạn chế trong Exchange Online</li>
+          <li><strong>Partial file match offline</strong>: Purview không có tính năng này</li>
+          <li><strong>Không phụ thuộc Microsoft</strong>: Tránh vendor lock-in hoàn toàn</li>
+        </ul>
+      </div>
+      <div class="vs-col rival-side">
+        <div class="vs-col-title">⚠️ MS Purview — Điểm hạn chế</div>
+        <ul>
+          <li>Cloud-only — không hỗ trợ on-premises hoàn toàn</li>
+          <li>Chủ yếu chỉ bảo vệ trong hệ sinh thái M365</li>
+          <li>Network DLP rất hạn chế hoặc không có</li>
+          <li>Full DLP cần E5 license — rất đắt</li>
+          <li>Phụ thuộc hoàn toàn vào Microsoft ecosystem</li>
+        </ul>
+      </div>
+    </div>
+    <div class="callout amber" style="margin-top:12px">
+      <div class="callout-icon">💡</div>
+      <div><strong>Key message:</strong> "Microsoft Purview tốt trong hệ sinh thái M365 — nhưng nếu bạn cần bảo vệ toàn bộ môi trường, bao gồm on-premises, Linux endpoints và các cloud service khác, GTB mới là giải pháp thực sự toàn diện. Hai giải pháp có thể hoạt động bổ sung nhau — GTB cho on-prem và multi-cloud, Purview cho compliance reporting trong M365."</div>
+    </div>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-tag">KỊCH BẢN 4 — KHÁCH HÀNG LO NGẠI CHI PHÍ / NGÂN SÁCH HẠN CHẾ</div>
+    <h4>Khách hàng: "Ngân sách hạn chế, giải pháp DLP có vẻ đắt và phức tạp"</h4>
+    <div class="vs-row">
+      <div class="vs-col gtb-side">
+        <div class="vs-col-title">🛡 Lập luận ROI của GTB</div>
+        <ul>
+          <li>Chi phí một vụ vi phạm dữ liệu trung bình toàn cầu: <strong>4,45 triệu USD</strong> (IBM 2023)</li>
+          <li>Phạt vi phạm PDPD/GDPR: lên đến <strong>4–5% doanh thu toàn cầu</strong></li>
+          <li>GTB triển khai nhanh → IT resources tiết kiệm → ROI thực tế trong tuần, không phải năm</li>
+          <li>Virtual zero FP → không tốn thời gian xử lý hàng trăm cảnh báo giả mỗi ngày</li>
+          <li>Subscription linh hoạt — bắt đầu module cần thiết nhất, mở rộng dần</li>
+          <li>Bảo vệ reputation và tin tưởng khách hàng — giá trị vô hình nhưng rất lớn</li>
+        </ul>
+      </div>
+      <div class="vs-col" style="background:rgba(16,185,129,0.04);border:1px solid rgba(16,185,129,0.2)">
+        <div class="vs-col-title" style="color:var(--accent2)">✅ Cách tiếp cận đề xuất (Phased)</div>
+        <ul>
+          <li><strong>Giai đoạn 1:</strong> Endpoint DLP cho nhóm users có rủi ro cao nhất (Finance, HR, R&D)</li>
+          <li><strong>Giai đoạn 2:</strong> Thêm Network Inspector để kiểm soát email và web</li>
+          <li><strong>Giai đoạn 3:</strong> Mở rộng Discovery và Cloud khi có ngân sách</li>
+          <li><strong>Tip:</strong> Gói 3 năm tiết kiệm 15–25% so với năm đơn lẻ</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BENEFITS -->
+<div class="section" id="benefits">
+  <div class="section-tag green">13 — Lợi Ích</div>
+  <h2>Lợi Ích Toàn Diện Giải Pháp GTB DLP Mang Lại</h2>
+  <p class="lead">GTB Technologies cung cấp lợi ích ở nhiều cấp độ — từ kỹ thuật, vận hành đến chiến lược và tuân thủ pháp lý — giúp tổ chức bảo vệ tài sản dữ liệu một cách toàn diện.</p>
+
+  <div class="cards cards-3">
+    <div class="card"><div class="card-icon">👁️</div><h4>Visibility 360°</h4><p>Hiển thị đầy đủ dữ liệu nhạy cảm trong mọi trạng thái: Data at Rest (lưu trữ), Data in Motion (truyền tải) và Data in Use (đang sử dụng). Không có điểm mù hay blind spot.</p></div>
+    <div class="card"><div class="card-icon">🛡️</div><h4>Bảo vệ Chủ Động</h4><p>Không chỉ cảnh báo mà thực sự ngăn chặn — Block, Quarantine, Encrypt tự động khi phát hiện vi phạm. Loại bỏ rủi ro trước khi thiệt hại xảy ra.</p></div>
+    <div class="card"><div class="card-icon">📉</div><h4>Giảm False Positives</h4><p>Virtual zero false positives giúp IT team tập trung vào vi phạm thực sự. Không tốn thời gian xử lý hàng trăm cảnh báo giả mỗi ngày — productivity tăng đáng kể.</p></div>
+    <div class="card"><div class="card-icon">✅</div><h4>Tuân thủ Tự Động</h4><p>Tự động áp dụng và báo cáo tuân thủ GDPR, HIPAA, PCI DSS, Nghị định 356/PDPD. Bằng chứng kiểm toán sẵn sàng cho regulators bất cứ lúc nào.</p></div>
+    <div class="card"><div class="card-icon">🎓</div><h4>Nâng Cao Nhận Thức</h4><p>Remediation popups giáo dục nhân viên về chính sách bảo mật ngay tại thời điểm vi phạm. User Justification tăng cường trách nhiệm cá nhân và ý thức bảo mật.</p></div>
+    <div class="card"><div class="card-icon">⚡</div><h4>ROI Nhanh</h4><p>Triển khai trong vài giờ đến vài ngày. Bảo vệ tức thì. Low maintenance — đội IT tập trung vào công việc chiến lược thay vì maintenance DLP liên tục.</p></div>
+    <div class="card"><div class="card-icon">🔍</div><h4>Insider Threat Management</h4><p>AI Lifeguard™ phân tích hành vi người dùng (UBA) để phát hiện nội gián sớm — trước khi thiệt hại xảy ra. Bao gồm behavioral analytics và anomaly detection.</p></div>
+    <div class="card"><div class="card-icon">🤖</div><h4>Bảo Vệ GenAI</h4><p>Kiểm soát và ngăn chặn nhân viên đưa dữ liệu nhạy cảm vào ChatGPT, Gemini, Copilot và công cụ AI khác — rủi ro mới mà ít giải pháp xử lý được hiệu quả.</p></div>
+    <div class="card"><div class="card-icon">🌐</div><h4>Hỗ Trợ Đa Nền Tảng</h4><p>Windows, Linux, macOS — bảo vệ toàn bộ fleet của tổ chức. Đặc biệt hữu ích với tổ chức có môi trường mixed OS như ngân hàng, bệnh viện sử dụng Linux servers.</p></div>
+  </div>
+
+  <div class="callout green" style="margin-top:24px">
+    <div class="callout-icon">🎯</div>
+    <div><strong>Tóm tắt giá trị chiến lược — GTB DLP giúp tổ chức:</strong><br>
+    ① <strong>Biết</strong> mình có dữ liệu gì và dữ liệu đó đang ở đâu (Discovery &amp; Visibility)<br>
+    ② <strong>Phân loại</strong> đúng mức độ nhạy cảm của từng dữ liệu (Classification &amp; Labeling)<br>
+    ③ <strong>Bảo vệ</strong> chủ động dữ liệu khỏi rò rỉ qua mọi kênh (DLP Enforcement)<br>
+    ④ <strong>Quản lý quyền</strong> truy cập thông minh ngay cấp độ tệp (IRM/DRM via CASB)<br>
+    ⑤ <strong>Giám sát hành vi</strong> người dùng và phát hiện nội gián (Insider Threat Analytics)<br>
+    Tất cả được quản lý từ <strong>một bảng điều khiển duy nhất</strong>, với chi phí vận hành thấp nhất trong ngành và thời gian triển khai nhanh nhất.</div>
+  </div>
+</div>
+
+<!-- REFERENCES -->
+<div class="section" id="refs">
+  <div class="section-tag">14 — Tài Liệu Tham Chiếu</div>
+  <h2>Tài Liệu Tham Chiếu</h2>
+  <p class="lead">Các tài liệu chính thức và nguồn nghiên cứu được sử dụng để biên soạn báo cáo phân tích tổng hợp này.</p>
+
+  <h3>Tài Liệu Chính Hãng GTB Technologies</h3>
+  <div class="cards cards-2">
+    <div class="card"><div class="card-icon">📄</div><h4>[1] GTB Technologies Presentation 2026</h4><p>Slide deck 22 trang về tổng quan công ty, sản phẩm, kiến trúc, case study và so sánh với giải pháp truyền thống. Nguồn chính cho phần giới thiệu, kiến trúc và công nghệ.<br><span class="badge badge-blue" style="margin-top:6px;display:inline-block">Official 2026</span></p></div>
+    <div class="card"><div class="card-icon">📄</div><h4>[2] GTB Enterprise Data Security Suite – Datasheet 2025</h4><p>Datasheet 7 trang chi tiết về các module: Email DLP, Endpoint DLP, Cloud DLP, Network DLP, Discovery và Auto Classification. Bao gồm tính năng GTB AI Lifeguard™.<br><span class="badge badge-blue" style="margin-top:6px;display:inline-block">Official 2025</span></p></div>
+    <div class="card"><div class="card-icon">📄</div><h4>[3] GTB Inspector – Data Sheet (Data in Motion)</h4><p>Datasheet 2 trang về GTB Inspector — reverse firewall system kiểm soát dữ liệu data-in-motion. Tính năng: MTA, SSL, ICAP, Load Balancing, Multi-tenant.<br><span class="badge badge-blue" style="margin-top:6px;display:inline-block">Official Datasheet</span></p></div>
+    <div class="card"><div class="card-icon">📄</div><h4>[4] GTB Endpoint Protector – Data Sheet</h4><p>Datasheet 2 trang về GTB Endpoint Protector — DLP tại điểm cuối với Device Control, Application Control, Local Discovery, Printer DLP và File Classification.<br><span class="badge badge-blue" style="margin-top:6px;display:inline-block">Official Datasheet</span></p></div>
+    <div class="card"><div class="card-icon">📄</div><h4>[5] GTB Key Benefits</h4><p>Tóm tắt lợi ích chính của GTB Enterprise Data Security Suite: Role-Based Controls, Out-of-the-Box Accuracy, GTB AI™ protection, Enterprise Ready Workflow.<br><span class="badge badge-blue" style="margin-top:6px;display:inline-block">Official</span></p></div>
+    <div class="card"><div class="card-icon">📄</div><h4>[6] Proposal GTB Technologies DLP 2026 – SONIC TECH Vietnam</h4><p>Tài liệu đề xuất kỹ thuật 17 trang tiếng Việt: nhu cầu thị trường, kiến trúc, tính năng chi tiết, yêu cầu phần cứng và gói bản quyền cho thị trường Việt Nam.<br><span class="badge badge-amber" style="margin-top:6px;display:inline-block">Vietnam Market 2026</span></p></div>
+  </div>
+
+  <h3>Nguồn Thị Trường & Phân Tích</h3>
+  <div class="cards cards-3">
+    <div class="card"><div class="card-icon">📊</div><h4>[7] Grand View Research – DLP Market</h4><p>Phân tích thị trường DLP toàn cầu 2021–2033. URL: grandviewresearch.com — dữ liệu thị trường 14,33B USD (2025), CAGR 12,5%.</p></div>
+    <div class="card"><div class="card-icon">📊</div><h4>[8] Stratview Research – DLP Market Data</h4><p>Dữ liệu thị trường DLP 2024–2032. Dự báo 5,18B USD (2025) → 19,08B USD (2032), CAGR 20,74%.</p></div>
+    <div class="card"><div class="card-icon">⭐</div><h4>[9] Gartner Peer Insights – GTB Reviews</h4><p>Đánh giá người dùng thực tế: Rating 5/5 cho GTB DLP và MisClassifier. URL: gartner.com/reviews/market/data-loss-prevention</p></div>
+    <div class="card"><div class="card-icon">🔬</div><h4>[10] SC Magazine Lab – DLP Review</h4><p>Đánh giá độc lập xác nhận 100% catch rate. SC Lab Approved certification. Trích dẫn trực tiếp trong tài liệu marketing GTB.</p></div>
+    <div class="card"><div class="card-icon">⚖️</div><h4>[11] Nghị định 356/2025/NĐ-CP</h4><p>Nghị định của Chính phủ Việt Nam về bảo vệ dữ liệu cá nhân. Điều 9 yêu cầu áp dụng biện pháp kỹ thuật phòng chống thất thoát dữ liệu cá nhân.</p></div>
+    <div class="card"><div class="card-icon">🌐</div><h4>[12] GTB Technologies – Website Chính Thức</h4><p>www.gttb.com — tài liệu kỹ thuật, case study, demo và thông tin sản phẩm. Email: info@gttb.com | +1 800 626.0557</p></div>
+  </div>
+
+  <div class="callout blue" style="margin-top:24px">
+    <div class="callout-icon">📝</div>
+    <div>
+      <strong>Về tài liệu này:</strong> Báo cáo được tổng hợp từ 6 tài liệu chính hãng GTB Technologies và các nguồn thị trường uy tín. Nội dung so sánh với đối thủ dựa trên thông tin công khai và tài liệu marketing của các hãng. Để có thông tin định giá chính xác, vui lòng liên hệ:<br><br>
+      <strong>🏢 SONIC TECH Vietnam — Đối tác phân phối chính thức GTB Technologies tại Việt Nam</strong><br>
+      📍 Tầng 16, Tòa nhà Licogi13, 164 Khuất Duy Tiến, Thanh Xuân, Hà Nội<br>
+      ☎ +84.246656 4587
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="page-footer">
+  <p>© 2026 GTB Technologies, Inc. — "Data Security that Works®" | Tài liệu tổng hợp bởi SONIC TECH Vietnam</p>
+  <p style="margin-top:8px">Nội dung chỉ mang tính chất tham khảo. Thông tin kỹ thuật và định giá có thể thay đổi. Liên hệ đối tác để có báo giá và tư vấn chính xác.</p>
+</div>
+
+</div><!-- end .main -->
+
+<script>
+  const sections = document.querySelectorAll('.section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+          if (link.getAttribute('href') === '#' + entry.target.id) {
+            link.classList.add('active');
+          }
+        });
+      }
+    });
+  }, { threshold: 0.25 });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>

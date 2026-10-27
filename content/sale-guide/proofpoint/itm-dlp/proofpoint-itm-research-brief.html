@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Research Brief — Proofpoint Insider Threat Management (ITM)</title>
+<style>
+  :root{
+    --ink:#1c2541;
+    --ink-2:#2a3457;
+    --paper:#fbfaf7;
+    --surface:#ffffff;
+    --accent:#c1542c;
+    --accent-soft:#f3e3da;
+    --accent-2:#1f7a6c;
+    --accent-2-soft:#dcefe9;
+    --text:#2a2f3a;
+    --muted:#6b7280;
+    --border:#e4e1da;
+    --warn-bg:#fdf2e3;
+    --warn-border:#e3a23a;
+    --bias-bg:#f3eefb;
+    --bias-border:#9b7fc9;
+    --code-bg:#eef0ea;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--text);
+    font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
+    line-height:1.62;
+    font-size:15.5px;
+  }
+  h1,h2,h3,h4{
+    font-family:Georgia,"Times New Roman",serif;
+    color:var(--ink);
+    line-height:1.25;
+    margin-top:0;
+  }
+  a{color:var(--accent-2);text-decoration:none;border-bottom:1px solid transparent;}
+  a:hover{border-bottom-color:var(--accent-2);}
+
+  /* ===== Header ===== */
+  .topbar{
+    background:linear-gradient(120deg,var(--ink) 0%,var(--ink-2) 100%);
+    color:#fff;
+    padding:38px 28px 30px;
+    border-bottom:5px solid var(--accent);
+  }
+  .topbar .eyebrow{
+    font-size:12.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:#d9c9bd;
+    margin-bottom:10px;
+    font-weight:600;
+  }
+  .topbar h1{
+    color:#fff;
+    font-size:30px;
+    margin:0 0 8px;
+    max-width:760px;
+  }
+  .topbar .sub{
+    color:#c7cce0;
+    font-size:14.5px;
+    max-width:700px;
+  }
+  .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:18px;
+  }
+  .meta-chip{
+    background:rgba(255,255,255,0.08);
+    border:1px solid rgba(255,255,255,0.18);
+    color:#e7e9f3;
+    font-size:12.5px;
+    padding:5px 12px;
+    border-radius:20px;
+  }
+
+  /* ===== Layout ===== */
+  .layout{
+    display:flex;
+    max-width:1180px;
+    margin:0 auto;
+    align-items:flex-start;
+  }
+  nav.toc{
+    width:255px;
+    flex-shrink:0;
+    position:sticky;
+    top:0;
+    height:100vh;
+    overflow-y:auto;
+    padding:26px 18px 40px 28px;
+    border-right:1px solid var(--border);
+  }
+  nav.toc .toc-title{
+    font-size:11px;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--muted);
+    margin-bottom:12px;
+    font-weight:700;
+  }
+  nav.toc ol{
+    list-style:none;
+    margin:0;
+    padding:0;
+    counter-reset:tocnum;
+  }
+  nav.toc li{
+    counter-increment:tocnum;
+    margin-bottom:3px;
+  }
+  nav.toc a{
+    display:block;
+    padding:7px 9px;
+    border-radius:6px;
+    color:var(--text);
+    font-size:13.3px;
+    border-bottom:none;
+  }
+  nav.toc a::before{
+    content:counter(tocnum) ". ";
+    color:var(--accent);
+    font-weight:700;
+    margin-right:2px;
+  }
+  nav.toc a:hover{background:var(--accent-soft);}
+
+  main{
+    flex:1;
+    min-width:0;
+    padding:40px 50px 80px 46px;
+    max-width:880px;
+  }
+
+  section{
+    margin-bottom:46px;
+    padding-top:6px;
+  }
+  section h2{
+    font-size:22px;
+    border-left:5px solid var(--accent);
+    padding-left:14px;
+    margin-bottom:18px;
+  }
+  section h2 .num{
+    color:var(--accent);
+    font-family:Georgia,serif;
+    margin-right:6px;
+  }
+  h3{font-size:17px;margin:22px 0 10px;color:var(--ink-2);}
+  p{margin:0 0 12px;}
+
+  /* ===== Summary box ===== */
+  .summary-box{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-left:5px solid var(--ink);
+    border-radius:8px;
+    padding:20px 24px;
+    margin:30px 0 44px;
+  }
+  .summary-box .label{
+    font-size:11.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--accent);
+    font-weight:700;
+    margin-bottom:8px;
+  }
+
+  /* ===== Tables ===== */
+  table{
+    width:100%;
+    border-collapse:collapse;
+    margin:14px 0 18px;
+    font-size:14px;
+    background:var(--surface);
+  }
+  thead th{
+    background:var(--ink);
+    color:#fff;
+    text-align:left;
+    padding:10px 12px;
+    font-weight:600;
+    font-size:13px;
+  }
+  tbody td, tbody th{
+    border-bottom:1px solid var(--border);
+    padding:10px 12px;
+    vertical-align:top;
+    text-align:left;
+  }
+  tbody tr:nth-child(even){background:#f7f6f2;}
+  tbody tr:hover{background:var(--accent-soft);}
+  td.center{text-align:center;}
+
+  .badge{
+    display:inline-block;
+    font-size:11.5px;
+    font-weight:700;
+    padding:3px 9px;
+    border-radius:12px;
+    white-space:nowrap;
+  }
+  .badge.required{background:var(--accent-soft);color:var(--accent);}
+  .badge.recommended{background:var(--accent-2-soft);color:var(--accent-2);}
+
+  /* ===== Callouts ===== */
+  .note, .bias{
+    border-radius:8px;
+    padding:14px 18px;
+    margin:14px 0 18px;
+    font-size:14px;
+  }
+  .note{
+    background:var(--warn-bg);
+    border:1px solid var(--warn-border);
+  }
+  .note .tag{font-weight:700;color:#9a6418;margin-right:4px;}
+  .bias{
+    background:var(--bias-bg);
+    border:1px solid var(--bias-border);
+  }
+  .bias .tag{font-weight:700;color:#6a4ea0;margin-right:4px;}
+
+  /* ===== Footnote refs ===== */
+  sup.fn a{
+    font-size:11px;
+    background:var(--accent-2-soft);
+    color:var(--accent-2);
+    padding:1px 5px;
+    border-radius:4px;
+    font-weight:700;
+    border-bottom:none;
+  }
+  sup.fn a:hover{background:var(--accent-2);color:#fff;}
+
+  ul, ol.normal{margin:0 0 14px;padding-left:22px;}
+  li{margin-bottom:6px;}
+
+  .pillars{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:14px;
+    margin:18px 0 24px;
+  }
+  .pillar{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-top:4px solid var(--accent-2);
+    border-radius:8px;
+    padding:16px;
+  }
+  .pillar h4{margin:0 0 8px;font-size:14.5px;color:var(--ink);}
+  .pillar p{font-size:13.3px;color:var(--muted);margin:0;}
+
+  /* ===== References ===== */
+  .ref-list{
+    counter-reset:refnum;
+    list-style:none;
+    padding:0;
+    margin:0;
+  }
+  .ref-list li{
+    counter-increment:refnum;
+    display:flex;
+    gap:10px;
+    padding:9px 0;
+    border-bottom:1px dashed var(--border);
+    font-size:13.5px;
+  }
+  .ref-list li::before{
+    content:"[" counter(refnum) "]";
+    color:var(--accent);
+    font-weight:700;
+    flex-shrink:0;
+    width:34px;
+  }
+  .ref-list .src-name{color:var(--text);font-weight:600;}
+  .ref-list .src-url{word-break:break-all;color:var(--muted);font-size:12.8px;}
+
+  footer{
+    text-align:center;
+    color:var(--muted);
+    font-size:12.5px;
+    padding:30px 20px 50px;
+    border-top:1px solid var(--border);
+  }
+
+  @media print{
+    nav.toc{display:none;}
+    .layout{display:block;}
+    main{padding:0;max-width:none;}
+    .topbar{background:var(--ink) !important;}
+  }
+  @media (max-width:880px){
+    .layout{flex-direction:column;}
+    nav.toc{position:relative;width:100%;height:auto;border-right:none;border-bottom:1px solid var(--border);}
+    main{padding:30px 22px 60px;max-width:none;}
+    .pillars{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="eyebrow">Product Research Brief · Presales / Solution Consulting</div>
+  <h1>Proofpoint Insider Threat Management (ITM)</h1>
+  <div class="sub">Tài liệu nghiên cứu sản phẩm: bài toán khách hàng, tính năng, kiến trúc, licensing, so sánh đối thủ và bộ chỉ tiêu kỹ thuật tham khảo cho HSMT.</div>
+  <div class="meta-row">
+    <span class="meta-chip">Soạn cho: NTS Hanoi Corp — Presales / PM</span>
+    <span class="meta-chip">Tổng hợp từ nguồn công khai, có trích dẫn</span>
+    <span class="meta-chip">Phiên bản: 06/2026</span>
+  </div>
+</div>
+
+<div class="layout">
+  <nav class="toc">
+    <div class="toc-title">Mục lục</div>
+    <ol>
+      <li><a href="#sec-overview">Tổng quan giải pháp</a></li>
+      <li><a href="#sec-painpoint">Bài toán khách hàng (Painpoint)</a></li>
+      <li><a href="#sec-features">Tính năng chính</a></li>
+      <li><a href="#sec-architecture">Kiến trúc triển khai</a></li>
+      <li><a href="#sec-licensing">Mô hình Licensing</a></li>
+      <li><a href="#sec-compare">So sánh với đối thủ</a></li>
+      <li><a href="#sec-hsmt">Chỉ tiêu kỹ thuật cho HSMT</a></li>
+      <li><a href="#sec-strengths">Điểm mạnh</a></li>
+      <li><a href="#sec-limits">Hạn chế / Cần xác minh</a></li>
+      <li><a href="#sec-questions">Câu hỏi cần làm rõ với hãng</a></li>
+      <li><a href="#sec-refs">Tài liệu tham khảo</a></li>
+    </ol>
+  </nav>
+
+  <main>
+
+    <div class="summary-box">
+      <div class="label">Tóm tắt nhanh</div>
+      <p>Proofpoint ITM là giải pháp SaaS (kèm tùy chọn On-Prem kế thừa từ ObserveIT mà Proofpoint mua lại năm 2019) giúp phát hiện, điều tra và ngăn chặn hành vi gây rò rỉ dữ liệu từ người dùng nội bộ — do sơ suất, tài khoản bị chiếm đoạt hoặc cố ý. Giải pháp phù hợp với khách hàng cần: bằng chứng hành vi rõ ràng phục vụ xử lý kỷ luật/pháp lý; kiểm soát rò rỉ dữ liệu tại endpoint sâu hơn DLP nội dung thuần túy; và cơ chế giám sát nội bộ có kiểm soát quyền riêng tư rõ ràng. Các đối thủ cần lưu ý khi tư vấn: Microsoft Purview Insider Risk Management (đi kèm M365 E5 — thường là lựa chọn "mặc định" của khách hàng dùng M365), DTEX InTERCEPT, Teramind, và <strong>Safetica</strong> — vốn đã có trong portfolio hiện tại của NTS.</p>
+    </div>
+
+    <!-- 1. OVERVIEW -->
+    <section id="sec-overview">
+      <h2><span class="num">1.</span>Tổng quan giải pháp</h2>
+      <p>Proofpoint ITM là sản phẩm SaaS lấy con người làm trung tâm, thuộc nhóm Data Security and Governance trong portfolio của Proofpoint, giúp bảo vệ dữ liệu nhạy cảm khỏi rủi ro nội gián và thất thoát dữ liệu tại endpoint bằng cách kết hợp ngữ cảnh nội dung, hành vi và mối đe dọa để mang lại khả năng quan sát sâu vào hoạt động người dùng<sup class="fn"><a href="#ref1">1</a></sup>. Tên thương mại "ITM" hiện dùng cho dòng sản phẩm kế thừa nền tảng ObserveIT (Proofpoint mua lại năm 2019) — đây là lý do giải pháp tồn tại song song hai biến thể kiến trúc: SaaS (nền tảng hiện đại, API-driven) và On-Prem (vẫn còn gắn nhãn "ObserveIT" trong tài liệu kỹ thuật)<sup class="fn"><a href="#ref10">10</a></sup>.</p>
+
+      <p>Cách tiếp cận của ITM dựa trên ba lớp ngữ cảnh bổ trợ nhau:</p>
+      <div class="pillars">
+        <div class="pillar">
+          <h4>Content Aware</h4>
+          <p>Nhận diện dữ liệu nhạy cảm/được quản lý thông qua phân loại, gắn nhãn dữ liệu.</p>
+        </div>
+        <div class="pillar">
+          <h4>Threat Aware</h4>
+          <p>Nhận diện tài khoản bị chiếm đoạt/phished trên email và cloud qua threat intelligence.</p>
+        </div>
+        <div class="pillar">
+          <h4>Behavior Aware</h4>
+          <p>Nhận diện hành vi, ý định người dùng trên nhiều kênh, nguồn/đích file, thiết bị lưu trữ.</p>
+        </div>
+      </div>
+      <p style="font-size:12.8px;color:var(--muted);">Nguồn: <sup class="fn"><a href="#ref3">3</a></sup></p>
+
+      <p>Định vị thị trường: ITM nằm trong nhóm "Insider Risk Management / Insider Threat Management" — vùng giao giữa UAM (User Activity Monitoring), UEBA (User and Entity Behavior Analytics) và Endpoint DLP. Proofpoint công bố hơn 1000 khách hàng toàn cầu sử dụng ITM<sup class="fn"><a href="#ref5">5</a></sup>, với hơn 400 threat template dựng sẵn rút ra từ kinh nghiệm triển khai thực tế và các khung an ninh phổ biến<sup class="fn"><a href="#ref3">3</a></sup>.</p>
+    </section>
+
+    <!-- 2. PAINPOINT -->
+    <section id="sec-painpoint">
+      <h2><span class="num">2.</span>Bài toán khách hàng đang gặp phải</h2>
+      <p>Theo báo cáo 2025 Cost of Insider Risks Global Report (Ponemon Institute, khảo sát hơn 8.000 cá nhân tại 349 tổ chức), chi phí trung bình hàng năm mà một tổ chức phải gánh để xử lý rủi ro nội gián đã tăng từ 15,4 triệu USD (2022) lên 17,4 triệu USD, với số vụ việc được phân tích tăng từ 3.269 vụ (2018) lên 7.868 vụ trong năm nghiên cứu<sup class="fn"><a href="#ref16">16</a></sup>. Cùng kỳ, mức đầu tư an ninh dành riêng cho rủi ro nội gián đã tăng gấp đôi, từ 8,2% lên 16,5% tổng ngân sách an ninh mạng của tổ chức<sup class="fn"><a href="#ref17">17</a></sup>. Một khảo sát độc lập khác (Verizon DBIR) cho thấy thông tin xác thực bị đánh cắp (credential) có liên quan tới 22% tổng số vụ vi phạm dữ liệu được ghi nhận<sup class="fn"><a href="#ref18">18</a></sup>.</p>
+
+      <p>Quy đổi sang các bài toán cụ thể mà khách hàng (đặc biệt nhóm tài chính – ngân hàng, năng lượng, cơ quan nhà nước) thường gặp:</p>
+      <ul>
+        <li><strong>Không phân biệt được hành vi hợp lệ và bất hợp lệ</strong> khi cả hai đều xuất phát từ tài khoản có quyền truy cập hợp pháp — công cụ giám sát biên (firewall, IDS/IPS hướng ngoại) không phát hiện được.</li>
+        <li><strong>Thời gian điều tra và khoanh vùng sự cố kéo dài</strong>, do thiếu timeline hành vi tập trung; log rời rạc từ nhiều hệ thống khiến team an ninh khó dựng lại trình tự sự việc.</li>
+        <li><strong>Thiếu bằng chứng đủ thuyết phục về mặt pháp lý/nhân sự</strong> khi cần xử lý kỷ luật hoặc khởi kiện nhân sự nội bộ vi phạm.</li>
+        <li><strong>Rủi ro mất IP và dữ liệu khách hàng</strong> trước/trong giai đoạn nhân sự nghỉ việc, đặc biệt với tổ chức có sở hữu trí tuệ hoặc dữ liệu khách hàng nhạy cảm.</li>
+        <li><strong>Khó cân bằng giữa giám sát và quyền riêng tư người lao động</strong> — triển khai giám sát quá mức có thể tạo rủi ro pháp lý hoặc ảnh hưởng văn hóa tổ chức.</li>
+      </ul>
+
+      <div class="note">
+        <span class="tag">Lưu ý áp dụng tại Việt Nam</span> Đây là suy luận của người soạn tài liệu, không phải phát biểu chính thức từ Proofpoint: khi tư vấn cho khách hàng tại VN, cần đối chiếu thiết kế privacy-by-design của ITM (identity masking, giới hạn quyền truy cập theo nguyên tắc need-to-know) với các yêu cầu của Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân và quy chế nội bộ về giám sát người lao động của khách hàng. Cần xác nhận với bộ phận pháp chế của khách hàng trước khi đưa vào đề xuất chính thức.
+      </div>
+    </section>
+
+    <!-- 3. FEATURES -->
+    <section id="sec-features">
+      <h2><span class="num">3.</span>Tính năng chính</h2>
+      <table>
+        <thead>
+          <tr><th style="width:22%">Nhóm tính năng</th><th>Mô tả</th><th style="width:8%">Nguồn</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Activity Timeline</td><td>Dựng lại trình tự "ai – làm gì – khi nào – ở đâu" của từng người dùng: đổi đuôi file, đổi tên file chứa dữ liệu nhạy cảm, upload lên site chưa được duyệt, copy vào cloud sync, cài/chạy phần mềm lạ, hoạt động admin bảo mật, hành vi xóa dấu vết, truy cập web không hợp lệ.</td><td><sup class="fn"><a href="#ref1">1</a></sup></td></tr>
+          <tr><td>Thư viện cảnh báo dựng sẵn</td><td>Hơn 400 threat template rút từ hơn 1.000 khách hàng và các framework an ninh phổ biến; cho phép tùy biến hoặc xây rule mới từ đầu.</td><td><sup class="fn"><a href="#ref3">3</a></sup></td></tr>
+          <tr><td>Console tập trung</td><td>Tổng hợp telemetry từ endpoint, email, cloud về một dashboard; hỗ trợ điều tra, threat hunting, phối hợp xử lý sự cố đa kênh.</td><td><sup class="fn"><a href="#ref1">1</a></sup></td></tr>
+          <tr><td>Quét &amp; phân loại nội dung tự động</td><td>Quét dữ liệu đang di chuyển (data-in-motion), đọc nhãn phân loại của Microsoft Information Protection, kết hợp engine phát hiện nội dung từ Proofpoint Cloud DLP/Email DLP.</td><td><sup class="fn"><a href="#ref6">6</a></sup></td></tr>
+          <tr><td>Ngăn chặn rò rỉ dữ liệu (Prevention)</td><td>Chặn exfiltration qua USB, cloud sync folder, upload web, in ấn, network share; có thể leo thang từ giám sát sang chặn theo mức rủi ro của từng người dùng, kèm pop-up cảnh báo/coaching tại thời điểm vi phạm.</td><td><sup class="fn"><a href="#ref4">4</a></sup></td></tr>
+          <tr><td>Tích hợp SIEM/SOAR</td><td>Webhook đưa alert vào SIEM/SOAR hiện có; export tự động sang AWS S3 do khách hàng sở hữu/vận hành.</td><td><sup class="fn"><a href="#ref6">6</a></sup></td></tr>
+          <tr><td>Kiểm soát dữ liệu linh hoạt</td><td>Datacenter tại US, EU, Australia, Japan; phân vùng dữ liệu endpoint theo địa lý; giới hạn quyền truy cập analyst theo nguyên tắc need-to-know trong khung thời gian xác định.</td><td><sup class="fn"><a href="#ref6">6</a></sup></td></tr>
+          <tr><td>Privacy-by-design</td><td>Identity masking và data anonymization để bảo vệ quyền riêng tư, giảm thiên kiến điều tra; data masking giữ dữ liệu chỉ hiển thị theo nguyên tắc cần biết.</td><td><sup class="fn"><a href="#ref4">4</a></sup></td></tr>
+          <tr><td>Zen Endpoint Agent</td><td>Agent nhẹ, triển khai âm thầm, không ảnh hưởng hiệu năng máy, dùng chung cho cả ITM và Endpoint DLP; có mở rộng ZenWeb cho trình duyệt.</td><td><sup class="fn"><a href="#ref4">4</a></sup>, <sup class="fn"><a href="#ref8">8</a></sup></td></tr>
+          <tr><td>Chia sẻ bằng chứng điều tra</td><td>Xuất bản ghi hành vi nguy hiểm (kèm screenshot tùy chọn) sang PDF/định dạng phổ biến để chia sẻ liên phòng ban.</td><td><sup class="fn"><a href="#ref1">1</a></sup></td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 4. ARCHITECTURE -->
+    <section id="sec-architecture">
+      <h2><span class="num">4.</span>Kiến trúc triển khai</h2>
+      <p>ITM tồn tại ở hai biến thể kiến trúc, khác biệt rõ về mô hình vận hành và đối tượng khách hàng phù hợp:</p>
+
+      <table>
+        <thead>
+          <tr><th style="width:20%">Tiêu chí</th><th>ITM SaaS</th><th>ITM On-Prem (kế thừa ObserveIT)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Mô hình hạ tầng</td><td>Hosting trên Information and Cloud Security Platform của Proofpoint.</td><td>Triển khai trên hạ tầng do khách hàng cung cấp (bare-metal, VM, hoặc cloud do khách hàng quản lý); Proofpoint không có quyền truy cập vào hệ thống của khách hàng.</td></tr>
+          <tr><td>Thành phần chính</td><td>Agent (Zen) cài trên desktop/laptop/VM/server do khách hàng quản lý + ZenWeb browser extension (tùy chọn) cho giám sát web.</td><td>Application Server + Agent, có cơ chế cấp phép qua license file, hỗ trợ cấu hình SSL/port riêng.</td></tr>
+          <tr><td>Dữ liệu thu thập</td><td>Metadata Capture (telemetry hành vi) và Visual Capture (ghi màn hình, tùy chọn) gửi về platform của Proofpoint.</td><td>Lưu trữ và xử lý hoàn toàn trong hạ tầng nội bộ khách hàng.</td></tr>
+          <tr><td>Phù hợp nhất với</td><td>Khách hàng ưu tiên time-to-value nhanh, không muốn vận hành hạ tầng giám sát riêng.</td><td>Khách hàng có yêu cầu chủ quyền dữ liệu nghiêm ngặt (ví dụ một số đơn vị nhà nước/quốc phòng) hoặc hạ tầng air-gapped.</td></tr>
+        </tbody>
+      </table>
+      <p style="font-size:12.8px;color:var(--muted);">Nguồn: <sup class="fn"><a href="#ref9">9</a></sup>, <sup class="fn"><a href="#ref10">10</a></sup></p>
+
+      <h3>Hệ điều hành &amp; nền tảng được hỗ trợ</h3>
+      <p>Agent hỗ trợ Windows (x86/AMD64/ARM64, tối thiểu Intel i3 hoặc tương đương) và macOS; có lộ trình EOL theo phiên bản agent (ví dụ Windows Agent 1.9.1.8 là bản cuối hỗ trợ Windows 8.1)<sup class="fn"><a href="#ref8">8</a></sup>. Với ITM On-Prem (ObserveIT), agent còn hỗ trợ Unix/Linux qua giao thức riêng (cổng mặc định 4884, hoặc 443 khi dùng SSL)<sup class="fn"><a href="#ref10">10</a></sup>.</p>
+
+      <h3>Dữ liệu cần thu thập trước khi sizing</h3>
+      <ul>
+        <li>Số lượng user/endpoint cần giám sát, theo nhóm rủi ro (toàn bộ nhân sự vs. nhóm người dùng đặc quyền/rời nghỉ).</li>
+        <li>Tỷ lệ hệ điều hành (Windows/Mac/Linux) và mô hình làm việc (văn phòng/hybrid/remote).</li>
+        <li>Yêu cầu lưu trữ dữ liệu (retention) và băng thông cho agent gửi dữ liệu lên cloud (đối với bản SaaS).</li>
+        <li>Có yêu cầu Visual Capture (ghi màn hình) hay chỉ cần Metadata Capture.</li>
+        <li>Yêu cầu data residency cụ thể (US/EU/AU/JP) — <strong>cần xác nhận</strong> liệu có vùng dữ liệu khu vực APAC/Đông Nam Á dành riêng hay không, vì danh sách công khai hiện chỉ nêu 4 khu vực trên<sup class="fn"><a href="#ref6">6</a></sup>.</li>
+      </ul>
+    </section>
+
+    <!-- 5. LICENSING -->
+    <section id="sec-licensing">
+      <h2><span class="num">5.</span>Mô hình Licensing</h2>
+
+      <h3>ITM SaaS</h3>
+      <p>Đơn vị tính phí là <strong>User</strong> — một cá nhân duy nhất gắn với một thông tin xác thực (access credential) đang được giám sát, không phân biệt agent cài trên máy vật lý hay máy ảo. Nếu một cá nhân sở hữu nhiều tài khoản truy cập riêng biệt, cần mua license riêng cho từng tài khoản. Ngoài ra, một "User" được cấp phép cũng có thể là một <strong>Server</strong> (vật lý hoặc ảo) có thông tin xác thực riêng đang được giám sát<sup class="fn"><a href="#ref9">9</a></sup>.</p>
+      <p>Hai gói năng lực thu thập dữ liệu: <strong>Metadata Capture</strong> (telemetry hành vi, mặc định) và <strong>Visual Capture</strong> (ghi hình màn hình, có thể là gói bổ sung riêng — "ITM Additional Visual Capture"). Cả hai đều bị giới hạn theo hạn mức lưu trữ tổng (aggregate data storage limit) quy định trong báo giá/Order Form. Tính năng <strong>ITM SaaS Metadata Feed</strong> (xuất metadata ra ngoài) bị giới hạn theo khối lượng export tối đa mỗi tháng; nếu vượt hạn mức ingest/storage/export, Proofpoint có quyền yêu cầu thu phí bổ sung, hoặc dữ liệu sẽ bị cache cục bộ trên agent/throttling khi truyền lên cloud<sup class="fn"><a href="#ref9">9</a></sup>.</p>
+
+      <h3>ITM On-Prem</h3>
+      <p>Cấp phép theo <strong>số lượng endpoint có cài Agent</strong>, không phân biệt loại máy. Khách hàng tự quản lý hạ tầng; Proofpoint không có quyền truy cập vào dữ liệu/hệ thống triển khai<sup class="fn"><a href="#ref9">9</a></sup>. Đây là mô hình cấp phép kế thừa từ ObserveIT, sử dụng license file kiểm soát số agent được phép cài đặt — cài vượt hạn mức sẽ khiến cài đặt thất bại<sup class="fn"><a href="#ref10">10</a></sup>.</p>
+
+      <div class="note">
+        <span class="tag">Cần xác nhận</span> Các điều khoản trên trích từ Proofpoint Product Terms (điều khoản global, công khai trên website hãng). Gói thương mại cụ thể tại thị trường Việt Nam (đơn giá theo User, tier package nếu có Starter/Advanced/Enterprise, chính sách bundle với Email DLP/Cloud DLP) cần được xác nhận lại qua đại diện hãng hoặc nhà phân phối, vì các thông tin này không công khai và có thể thay đổi theo khu vực/thời điểm.
+      </div>
+    </section>
+
+    <!-- 6. COMPARISON -->
+    <section id="sec-compare">
+      <h2><span class="num">6.</span>So sánh với các giải pháp khác trên thị trường</h2>
+      <p>Nhóm "Insider Threat/Risk Management" hiện có nhiều hướng tiếp cận khác nhau: giải pháp gắn liền ecosystem (Microsoft Purview), giải pháp chuyên biệt insider risk (DTEX, Proofpoint ITM), giải pháp employee-monitoring mở rộng sang insider risk (Teramind), và giải pháp DLP+IRM tích hợp (Safetica — hiện đã có trong portfolio NTS).</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th style="width:14%">Tiêu chí</th>
+            <th>Proofpoint ITM</th>
+            <th>Microsoft Purview IRM</th>
+            <th>DTEX InTERCEPT</th>
+            <th>Teramind</th>
+            <th>Safetica</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Trọng tâm chính</td>
+            <td>Insider threat + Endpoint DLP, bằng chứng hành vi chi tiết</td>
+            <td>Insider risk trong phạm vi M365, gắn chặt Microsoft Purview/Compliance</td>
+            <td>Insider risk + UEBA + DLP hành vi, thiết kế privacy-by-design (pseudonymization)<sup class="fn"><a href="#ref22">22</a></sup></td>
+            <td>Employee monitoring mở rộng sang insider threat, mạnh về behavior baseline theo đánh giá của chính Teramind<sup class="fn"><a href="#ref7">7</a></sup></td>
+            <td>DLP + Insider Risk Management tích hợp, phân loại dữ liệu theo nội dung/nguồn gốc/thuộc tính file<sup class="fn"><a href="#ref13">13</a></sup></td>
+          </tr>
+          <tr>
+            <td>Mô hình triển khai</td>
+            <td>SaaS (chính) hoặc On-Prem</td>
+            <td>SaaS, native M365</td>
+            <td>SaaS, cloud-native trên AWS<sup class="fn"><a href="#ref22">22</a></sup></td>
+            <td>SaaS hoặc On-Prem</td>
+            <td>On-Prem/Cloud, linh hoạt</td>
+          </tr>
+          <tr>
+            <td>Mô hình giá tham khảo</td>
+            <td>Theo User/Server, tách Metadata vs Visual Capture<sup class="fn"><a href="#ref9">9</a></sup></td>
+            <td>Thường bao gồm trong M365 E5/E5 Compliance (ước tính ~57 USD/user/tháng cho cả gói E5, không riêng IRM — số liệu bên thứ ba, cần xác nhận)<sup class="fn"><a href="#ref14">14</a></sup></td>
+            <td>Theo subscription, có gói Managed IRM (dịch vụ kèm chuyên gia)<sup class="fn"><a href="#ref21">21</a></sup></td>
+            <td>Theo seat/tháng (cần xác nhận giá hiện hành)</td>
+            <td>Theo license đã có sẵn trong các thỏa thuận phân phối của NTS</td>
+          </tr>
+          <tr>
+            <td>Gắn kết ecosystem</td>
+            <td>Tốt với hệ Proofpoint (Email DLP, Cloud DLP) qua chung engine phân loại nội dung</td>
+            <td>Rất mạnh nếu khách hàng đã dùng M365 E5 sẵn; hạn chế quan sát ngoài hệ Microsoft<sup class="fn"><a href="#ref14">14</a></sup></td>
+            <td>Tích hợp SIEM/SOAR/ITSM qua export, không gắn riêng một ecosystem<sup class="fn"><a href="#ref22">22</a></sup></td>
+            <td>Tích hợp rộng nhiều nền tảng giám sát năng suất</td>
+            <td>Đã tích hợp sẵn trong quy trình bán hàng/hỗ trợ hiện tại của NTS</td>
+          </tr>
+          <tr>
+            <td>Đánh giá người dùng (crowd-sourced)</td>
+            <td>4,4/5 trên Gartner Peer Insights (62 review)<sup class="fn"><a href="#ref12">12</a></sup>; G2 ghi nhận là lựa chọn ITM phổ biến<sup class="fn"><a href="#ref4">4</a></sup></td>
+            <td>4,3/5 trên Gartner Peer Insights (19 review, mục Information Protection — không hoàn toàn cùng category)<sup class="fn"><a href="#ref12">12</a></sup></td>
+            <td>Được Gartner Peer Insights ghi nhận tốt về quản trị, audit log, hỗ trợ khách hàng<sup class="fn"><a href="#ref23">23</a></sup></td>
+            <td>Được nêu là lựa chọn thay thế phổ biến trên G2 cho cả Proofpoint và Microsoft Purview<sup class="fn"><a href="#ref13">13</a></sup>, <sup class="fn"><a href="#ref24">24</a></sup></td>
+            <td>Được G2 liệt kê là một trong các lựa chọn thay thế chính cho Proofpoint ITM<sup class="fn"><a href="#ref13">13</a></sup></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="bias">
+        <span class="tag">Lưu ý nguồn có thể thiên lệch</span> Một số nhận định cạnh tranh trong bảng trên (đặc biệt phần so sánh ưu/nhược điểm chi tiết giữa Proofpoint vs. Teramind, hoặc Proofpoint vs. Microsoft Purview) được lấy từ blog của chính các hãng cạnh tranh hoặc từ blog của Proofpoint khi so sánh với đối thủ<sup class="fn"><a href="#ref7">7</a></sup>, <sup class="fn"><a href="#ref19">19</a></sup>. Các phát biểu này cần được kiểm chứng độc lập (qua PoC thực tế, báo cáo Gartner/Forrester gốc nếu khách hàng có quyền truy cập) trước khi đưa vào tài liệu chào thầu chính thức, vì đây là nguồn vendor-supplied/đối thủ, không phải bên thứ ba trung lập.
+      </div>
+
+      <div class="note">
+        <span class="tag">Lưu ý nội bộ NTS</span> Safetica hiện đã có trong portfolio bảo vệ dữ liệu của NTS. Khi khách hàng đặt câu hỏi "Proofpoint ITM khác gì Safetica", nên làm rõ định vị: Proofpoint ITM tập trung sâu vào điều tra hành vi/insider investigation với agent chuyên biệt và thư viện 400+ rule dựng sẵn, còn vai trò và phạm vi license hiện tại của Safetica trong các hợp đồng NTS cần được nhóm phụ trách Safetica xác nhận lại để tránh chào hai giải pháp chồng lấn cho cùng một khách hàng.
+      </div>
+    </section>
+
+    <!-- 7. HSMT TABLE -->
+    <section id="sec-hsmt">
+      <h2><span class="num">7.</span>Bộ chỉ tiêu kỹ thuật tham khảo cho HSMT</h2>
+      <p>Bộ chỉ tiêu dưới đây được viết theo nguyên tắc đo lường được, có thể kiểm chứng (đối chiếu năng lực thực tế của Proofpoint ITM) và hạn chế khóa cứng vào một thương hiệu duy nhất ở mức diễn đạt. Cột "Tài liệu chứng minh" gợi ý loại hồ sơ nhà thầu cần nộp kèm; cần rà soát lại theo từng gói thầu cụ thể trước khi đưa vào HSMT chính thức.</p>
+
+      <table>
+        <thead>
+          <tr><th style="width:4%">#</th><th style="width:14%">Nhóm yêu cầu</th><th>Chỉ tiêu kỹ thuật</th><th style="width:10%">Mức đáp ứng</th><th style="width:16%">Tài liệu chứng minh</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>1</td><td>Kiến trúc</td><td>Giải pháp phải hỗ trợ triển khai theo mô hình SaaS hoặc tương đương, có khả năng quản trị tập trung chính sách, cấu hình và giám sát từ một console duy nhất.</td><td><span class="badge required">Bắt buộc</span></td><td>Tài liệu kiến trúc của hãng</td></tr>
+          <tr><td>2</td><td>Kiến trúc</td><td>Giải pháp phải cung cấp phương án triển khai tại hạ tầng do khách hàng quản lý (on-premises/private cloud) cho các hệ thống có yêu cầu chủ quyền dữ liệu nghiêm ngặt.</td><td><span class="badge recommended">Khuyến nghị</span></td><td>Tài liệu kiến trúc / Cam kết của nhà thầu</td></tr>
+          <tr><td>3</td><td>Agent endpoint</td><td>Agent giám sát endpoint phải hoạt động ở chế độ nền (background), không yêu cầu người dùng tương tác, và không gây suy giảm hiệu năng máy ở mức ảnh hưởng đến công việc thông thường.</td><td><span class="badge required">Bắt buộc</span></td><td>Tài liệu kỹ thuật / Kết quả PoC</td></tr>
+          <tr><td>4</td><td>Agent endpoint</td><td>Agent phải hỗ trợ tối thiểu hệ điều hành Windows và macOS đang được sử dụng phổ biến tại tổ chức; trường hợp có máy chủ Unix/Linux cần giám sát, hệ thống phải hỗ trợ agent tương ứng.</td><td><span class="badge required">Bắt buộc</span></td><td>Bảng tương thích hệ điều hành của hãng</td></tr>
+          <tr><td>5</td><td>Giám sát hành vi</td><td>Hệ thống phải ghi nhận và hiển thị theo dòng thời gian (timeline) các hành vi của người dùng liên quan đến file (đổi tên, đổi đuôi, sao chép, di chuyển), bao gồm thông tin người dùng, thời gian và nguồn/đích thao tác.</td><td><span class="badge required">Bắt buộc</span></td><td>Demo trực tiếp / Tài liệu kỹ thuật</td></tr>
+          <tr><td>6</td><td>Giám sát hành vi</td><td>Hệ thống phải có khả năng giám sát hành vi truy cập thiết bị lưu trữ ngoài (USB), thư mục đồng bộ cloud, in ấn và tải lên website.</td><td><span class="badge required">Bắt buộc</span></td><td>Demo trực tiếp / Tài liệu kỹ thuật</td></tr>
+          <tr><td>7</td><td>Phát hiện cảnh báo</td><td>Hệ thống phải cung cấp thư viện rule/cảnh báo dựng sẵn cho các kịch bản rủi ro nội gián phổ biến, đồng thời cho phép quản trị viên xây dựng rule tùy biến.</td><td><span class="badge required">Bắt buộc</span></td><td>Danh mục rule mẫu của hãng</td></tr>
+          <tr><td>8</td><td>Phân loại dữ liệu</td><td>Hệ thống phải có khả năng quét nội dung dữ liệu đang di chuyển (data-in-motion) để nhận diện dữ liệu nhạy cảm, và đọc được nhãn phân loại dữ liệu phổ biến trên thị trường (ví dụ Microsoft Information Protection).</td><td><span class="badge required">Bắt buộc</span></td><td>Tài liệu kỹ thuật / Kết quả PoC</td></tr>
+          <tr><td>9</td><td>Ngăn chặn (Prevention)</td><td>Hệ thống phải cho phép cấu hình chính sách chặn (block) thao tác sao chép/tải lên dữ liệu được xác định là nhạy cảm, có khả năng hiển thị thông báo cảnh báo cho người dùng tại thời điểm vi phạm.</td><td><span class="badge required">Bắt buộc</span></td><td>Demo trực tiếp</td></tr>
+          <tr><td>10</td><td>Ngăn chặn (Prevention)</td><td>Hệ thống nên cho phép áp dụng mức kiểm soát khác nhau theo hồ sơ rủi ro của từng người dùng/nhóm người dùng.</td><td><span class="badge recommended">Khuyến nghị</span></td><td>Tài liệu kỹ thuật</td></tr>
+          <tr><td>11</td><td>Điều tra &amp; bằng chứng</td><td>Hệ thống phải cho phép xuất bằng chứng hành vi (bao gồm metadata và, nếu được kích hoạt, ảnh chụp màn hình) ra định dạng phổ biến (PDF hoặc tương đương) để phục vụ báo cáo, xử lý kỷ luật hoặc tố tụng.</td><td><span class="badge required">Bắt buộc</span></td><td>Mẫu báo cáo điều tra</td></tr>
+          <tr><td>12</td><td>Tích hợp hệ thống</td><td>Hệ thống phải hỗ trợ tích hợp gửi cảnh báo sang SIEM/SOAR hiện có của khách hàng qua API hoặc webhook.</td><td><span class="badge required">Bắt buộc</span></td><td>Tài liệu API/Kết quả PoC</td></tr>
+          <tr><td>13</td><td>Tích hợp hệ thống</td><td>Hệ thống nên hỗ trợ xuất dữ liệu sang hạ tầng lưu trữ object storage do khách hàng sở hữu/vận hành để phục vụ lưu trữ dài hạn hoặc phân tích bổ sung.</td><td><span class="badge recommended">Khuyến nghị</span></td><td>Tài liệu kỹ thuật</td></tr>
+          <tr><td>14</td><td>Bảo mật &amp; quyền riêng tư</td><td>Hệ thống phải hỗ trợ cơ chế ẩn danh tính người dùng (identity masking) trong giao diện điều tra ban đầu, chỉ hiển thị danh tính đầy đủ khi được phân quyền phù hợp.</td><td><span class="badge required">Bắt buộc</span></td><td>Demo trực tiếp / Tài liệu kỹ thuật</td></tr>
+          <tr><td>15</td><td>Bảo mật &amp; quyền riêng tư</td><td>Hệ thống phải hỗ trợ phân quyền truy cập dữ liệu giám sát theo vai trò và theo nguyên tắc cần biết (need-to-know), giới hạn theo nhóm người dùng và khoảng thời gian xác định.</td><td><span class="badge required">Bắt buộc</span></td><td>Tài liệu phân quyền (RBAC)</td></tr>
+          <tr><td>16</td><td>Bảo mật &amp; quyền riêng tư</td><td>Trường hợp dữ liệu giám sát được lưu trữ ngoài lãnh thổ Việt Nam, nhà thầu phải cung cấp tài liệu mô tả khu vực đặt trung tâm dữ liệu và phương án đáp ứng quy định pháp luật về bảo vệ dữ liệu cá nhân áp dụng tại Việt Nam.</td><td><span class="badge required">Bắt buộc</span></td><td>Văn bản cam kết / Tài liệu pháp lý của hãng</td></tr>
+          <tr><td>17</td><td>Vận hành &amp; báo cáo</td><td>Hệ thống phải cung cấp dashboard hiển thị danh sách người dùng có điểm rủi ro cao nhất (risk scoring) và cho phép quản trị viên theo dõi theo thời gian thực hoặc gần thời gian thực.</td><td><span class="badge required">Bắt buộc</span></td><td>Demo trực tiếp</td></tr>
+          <tr><td>18</td><td>Vận hành &amp; báo cáo</td><td>Hệ thống phải ghi nhận log hoạt động quản trị (ai cấu hình gì, khi nào) phục vụ mục đích kiểm toán nội bộ.</td><td><span class="badge required">Bắt buộc</span></td><td>Tài liệu kỹ thuật / Kịch bản demo</td></tr>
+          <tr><td>19</td><td>Triển khai &amp; hỗ trợ</td><td>Nhà thầu phải cung cấp tài liệu hướng dẫn triển khai agent hàng loạt (mass deployment) tương thích với công cụ quản lý thiết bị (MDM/GPO) hiện có của khách hàng.</td><td><span class="badge required">Bắt buộc</span></td><td>Tài liệu hướng dẫn triển khai</td></tr>
+          <tr><td>20</td><td>Bản quyền &amp; hỗ trợ</td><td>Nhà thầu phải nêu rõ đơn vị tính bản quyền (theo người dùng/thiết bị/máy chủ), thời hạn license, và chính sách gia hạn/hỗ trợ kỹ thuật kèm theo (SLA, kênh hỗ trợ, thời gian phản hồi).</td><td><span class="badge required">Bắt buộc</span></td><td>Bảng giá &amp; chính sách hỗ trợ của hãng</td></tr>
+          <tr><td>21</td><td>Bản quyền &amp; hỗ trợ</td><td>Nhà thầu nên cung cấp thông tin về hạn mức lưu trữ/xuất dữ liệu đi kèm license và chính sách xử lý khi khách hàng vượt hạn mức (phụ phí, throttling, hoặc nâng cấp gói).</td><td><span class="badge recommended">Khuyến nghị</span></td><td>Điều khoản sản phẩm (Product Terms) của hãng</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 8. STRENGTHS -->
+    <section id="sec-strengths">
+      <h2><span class="num">8.</span>Điểm mạnh</h2>
+      <ul>
+        <li><strong>Bằng chứng hành vi trực quan, dễ hiểu với người không chuyên kỹ thuật</strong> — timeline + ảnh màn hình giúp HR/Legal/lãnh đạo nắm được sự việc nhanh, không cần đọc log thô.</li>
+        <li><strong>Thư viện rule dựng sẵn lớn (400+)</strong> giúp rút ngắn thời gian go-live so với việc khách hàng tự xây chương trình insider-risk từ đầu.</li>
+        <li><strong>Một agent dùng chung cho cả ITM và Endpoint DLP</strong>, giảm số lượng agent cài trên máy người dùng so với việc triển khai nhiều công cụ rời rạc.</li>
+        <li><strong>Cơ chế privacy-by-design rõ ràng</strong> (identity masking, data masking, phân quyền theo thời gian) — điểm cộng khi làm việc với khách hàng nhạy cảm về quan hệ lao động.</li>
+        <li><strong>Cộng đồng người dùng lớn, điểm đánh giá tốt</strong> trên các nền tảng review độc lập (Gartner Peer Insights, G2).</li>
+      </ul>
+    </section>
+
+    <!-- 9. LIMITATIONS -->
+    <section id="sec-limits">
+      <h2><span class="num">9.</span>Hạn chế / Điểm cần xác minh thêm</h2>
+      <ul>
+        <li>Một nguồn cạnh tranh (Teramind) cho rằng Proofpoint ITM thiên về phát hiện theo rule/policy hơn là phân tích hành vi baseline (anomaly detection) chuyên sâu như một số nền tảng UEBA chuyên biệt, dẫn tới khả năng phát sinh false positive cao hơn<sup class="fn"><a href="#ref7">7</a></sup>. <strong>Đây là nhận định từ đối thủ, cần được kiểm chứng qua PoC thực tế</strong>, không nên đưa trực tiếp vào tài liệu chào thầu.</li>
+        <li>Mô hình license SaaS (kết hợp phí hạ tầng cố định + license endpoint) được một nguồn thứ ba (cũng là đối thủ) nhận định có thể gây khó khăn khi phân bổ license giữa các máy ảo trong môi trường có hạ tầng động (dynamic/virtualized)<sup class="fn"><a href="#ref7">7</a></sup> — cần xác nhận trực tiếp với hãng về cách tính license trong môi trường VDI/cloud.</li>
+        <li>Danh sách data center công khai chỉ gồm US/EU/Australia/Japan; <strong>chưa xác nhận</strong> có vùng dữ liệu riêng cho APAC/Đông Nam Á hay không — quan trọng với khách hàng có yêu cầu data residency trong khu vực.</li>
+        <li>Thông tin licensing/giá cụ thể cho thị trường Việt Nam (đơn giá, gói tier, chính sách bundle) chưa có trong tài liệu công khai — cần làm việc trực tiếp với hãng/distributor.</li>
+        <li>Tài liệu này chưa bao gồm kiểm chứng độc lập từ báo cáo Gartner Market Guide for Insider Risk Management Solutions hoặc Forrester Wave (nếu có) do giới hạn truy cập nguồn trả phí; nên bổ sung nếu NTS hoặc khách hàng có quyền truy cập.</li>
+      </ul>
+    </section>
+
+    <!-- 10. QUESTIONS -->
+    <section id="sec-questions">
+      <h2><span class="num">10.</span>Câu hỏi cần làm rõ với hãng</h2>
+      <ol class="normal">
+        <li>Bảng giá/gói license cụ thể áp dụng cho khách hàng tại Việt Nam là gì? Có phân theo tier (ví dụ cơ bản/nâng cao) hay chỉ một SKU duy nhất theo User?</li>
+        <li>Cách tính license trong môi trường VDI/máy ảo động (ví dụ VDI non-persistent) như thế nào?</li>
+        <li>Có vùng dữ liệu (data residency) nào tại khu vực APAC ngoài Australia/Japan, hoặc lộ trình mở thêm vùng dữ liệu mới không?</li>
+        <li>Hạn mức lưu trữ/export mặc định đi kèm mỗi license User là bao nhiêu, và chi phí phát sinh khi vượt hạn mức được tính như thế nào?</li>
+        <li>Lộ trình hỗ trợ phiên bản On-Prem (ObserveIT) trong các năm tới — có roadmap hợp nhất hoàn toàn về SaaS không?</li>
+        <li>Proofpoint có cung cấp gói dịch vụ tư vấn/triển khai (professional services) đi kèm hay phải qua đối tác như NTS thực hiện toàn bộ?</li>
+        <li>Khả năng tích hợp trực tiếp với các SIEM phổ biến tại thị trường VN mà NTS đang triển khai (ví dụ ArcSight) đã được hãng nào xác nhận tương thích sẵn chưa?</li>
+      </ol>
+    </section>
+
+    <!-- 11. REFERENCES -->
+    <section id="sec-refs">
+      <h2><span class="num">11.</span>Tài liệu tham khảo</h2>
+      <ol class="ref-list">
+        <li id="ref1"><div><div class="src-name">Proofpoint — "Insider Threat Management Solutions: Detection, Prevention" (trang sản phẩm chính thức)</div><div class="src-url">https://www.proofpoint.com/us/products/insider-threat-management</div></div></li>
+        <li id="ref2"><div><div class="src-name">Proofpoint — Data Sheet: "Proofpoint Insider Threat Management"</div><div class="src-url">https://www.proofpoint.com/us/resources/data-sheets/insider-threat-management</div></div></li>
+        <li id="ref3"><div><div class="src-name">VLCM — "Insider Threat Management with Proofpoint" (nội dung đối tác phân phối)</div><div class="src-url">https://www.vlcm.com/cybersecurity/proofpoint-insider-threat-management</div></div></li>
+        <li id="ref4"><div><div class="src-name">G2 — "Proofpoint Insider Threat Management Reviews"</div><div class="src-url">https://www.g2.com/products/proofpoint-insider-threat-management/reviews</div></div></li>
+        <li id="ref5"><div><div class="src-name">Cybersecurity Excellence Awards — Hồ sơ "Proofpoint Insider Threat Management (ITM)"</div><div class="src-url">https://cybersecurity-excellence-awards.com/candidates/proofpoint-insider-threat-management-itm/</div></div></li>
+        <li id="ref6"><div><div class="src-name">CybersecTools — Hồ sơ "Proofpoint Insider Threat Management"</div><div class="src-url">https://cybersectools.com/tools/proofpoint-insider-threat-management</div></div></li>
+        <li id="ref7"><div><div class="src-name">Teramind (blog của đối thủ cạnh tranh) — "Proofpoint ITM: Features, Pros, Cons &amp; Alternatives"</div><div class="src-url">https://www.teramind.co/blog/proofpoint-itm/</div></div></li>
+        <li id="ref8"><div><div class="src-name">Proofpoint Docs — "System Requirements and Supported Platforms for ITM and Endpoint DLP"</div><div class="src-url">https://docs.public.analyze.proofpoint.com/itm_endpoint_dlp_configuration/supported_platforms_itm.htm</div></div></li>
+        <li id="ref9"><div><div class="src-name">Proofpoint — "Product Terms" (điều khoản cấp phép sản phẩm, mục ITM)</div><div class="src-url">https://www.proofpoint.com/us/legal/license/product-terms</div></div></li>
+        <li id="ref10"><div><div class="src-name">Proofpoint Docs (ObserveIT/ITM On-Prem) — Hướng dẫn triển khai Agent Windows/Unix-Linux</div><div class="src-url">https://prod.docs.oit.proofpoint.com/installation_guide/windows_agent_deployment_.htm</div></div></li>
+        <li id="ref12"><div><div class="src-name">Gartner Peer Insights — "Microsoft Purview Information Protection vs Proofpoint Insider Threat Management"</div><div class="src-url">https://www.gartner.com/reviews/market/data-loss-prevention/compare/product/microsoft-purview-information-protection-vs-proofpoint-insider-threat-management</div></div></li>
+        <li id="ref13"><div><div class="src-name">G2 — "Top 10 Proofpoint Insider Threat Management Alternatives &amp; Competitors"</div><div class="src-url">https://www.g2.com/products/proofpoint-insider-threat-management/competitors/alternatives</div></div></li>
+        <li id="ref14"><div><div class="src-name">Insider Risk Index (tài trợ bởi Above Security) — "2025 Insider Risk Management Vendor Comparison"</div><div class="src-url">https://www.insiderisk.io/research/insider-risk-management-vendor-comparison-2025</div></div></li>
+        <li id="ref16"><div><div class="src-name">Ponemon Institute — "The Security Risk Organizations Should Not Ignore: Careless, Negligent and Malicious Insiders" (tóm tắt báo cáo 2025 Cost of Insider Risks)</div><div class="src-url">https://www.ponemon.org/news-updates/blog/security/the-security-risk-organizations-should-not-ignore-careless-negligent-and-malicious-insiders.html</div></div></li>
+        <li id="ref17"><div><div class="src-name">Computer Weekly — "CISOs spending more on insider risk" (trích báo cáo DTEX/Ponemon 2025)</div><div class="src-url">https://www.computerweekly.com/news/366619622/CISOs-spending-more-on-insider-risk</div></div></li>
+        <li id="ref18"><div><div class="src-name">DeepStrike — "Insider Threat Statistics 2025" (trích dẫn Verizon DBIR 2025)</div><div class="src-url">https://deepstrike.io/blog/insider-threat-statistics-2025</div></div></li>
+        <li id="ref19"><div><div class="src-name">Proofpoint Blog (nguồn vendor) — "Comparing Proofpoint DLP with Microsoft Purview"</div><div class="src-url">https://www.proofpoint.com/us/blog/information-protection/comparing-proofpoint-dlp-with-microsoft-purview</div></div></li>
+        <li id="ref21"><div><div class="src-name">DTEX Systems — Thông cáo "Insider Threat Defense Group (ITDG) Selects DTEX InTERCEPT..."</div><div class="src-url">https://www.dtexsystems.com/newsroom/press-releases/insider-threat-defense-group-itdg-selects-dtex-intercept-to-accelerate-global-access-to-next-generation-insider-threat-management-capabilities/</div></div></li>
+        <li id="ref22"><div><div class="src-name">DTEX InTERCEPT — Datasheet "Insider Risk Management" (qua cvisionintl.com)</div><div class="src-url">https://www.cvisionintl.com/media/3ieg4nov/dtex_ds_interceptinsiderriskmgt.pdf</div></div></li>
+        <li id="ref23"><div><div class="src-name">Gartner Peer Insights — "DTEX Platform Reviews &amp; Ratings"</div><div class="src-url">https://www.gartner.com/reviews/market/insider-risk-management-solutions/vendor/dtex/product/dtex-intercept</div></div></li>
+        <li id="ref24"><div><div class="src-name">G2 — "Top 10 Microsoft Purview Insider Risk Management Alternatives &amp; Competitors"</div><div class="src-url">https://www.g2.com/products/microsoft-purview-insider-risk-management/competitors/alternatives</div></div></li>
+      </ol>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  Tài liệu tổng hợp từ nguồn công khai phục vụ nghiên cứu nội bộ NTS Hanoi Corp. Cần xác nhận lại với đại diện Proofpoint/nhà phân phối trước khi đưa số liệu giá, licensing hoặc chỉ tiêu kỹ thuật vào hồ sơ chào thầu chính thức. Phiên bản 06/2026.
+</footer>
+
+</body>
+</html>

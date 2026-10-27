@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Mã hóa BOM · PM Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --blue: #0b5cad; --orange: #f37021; --border: #d3dbe7; --muted: #5a6a82; }
+  * { box-sizing: border-box; }
+  body { margin: 0; min-height: 100vh; font-family: 'Be Vietnam Pro', system-ui, sans-serif; background: linear-gradient(160deg, #031128, #0a2f63); color: #0e1a2b; display: grid; place-items: center; padding: 24px 16px; }
+  main { width: 100%; max-width: 560px; background: #fff; border-radius: 18px; padding: 28px; box-shadow: 0 30px 80px -20px rgba(0, 0, 0, .6); }
+  h1 { margin: 0 0 4px; font-size: 22px; }
+  p { margin: 0 0 18px; color: var(--muted); font-size: 14px; line-height: 1.55; }
+  label { display: block; font-size: 13px; font-weight: 600; margin: 14px 0 6px; }
+  input { width: 100%; height: 42px; border-radius: 10px; border: 1px solid var(--border); padding: 0 12px; font: inherit; }
+  input[type=file] { padding: 8px; height: auto; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  button { margin-top: 20px; width: 100%; height: 46px; border: 0; border-radius: 10px; font-family: inherit; font-weight: 700; font-size: 15px; color: #fff; cursor: pointer; background: linear-gradient(135deg, #ff8a3d, #d9550c); }
+  button:disabled { opacity: .6; cursor: wait; }
+  #msg { margin-top: 14px; font-size: 13.5px; min-height: 20px; }
+  .err { color: #c2410c; } .ok { color: #15803d; }
+  pre { background: #f4f6fa; border: 1px solid var(--border); border-radius: 10px; padding: 12px; font-size: 12px; overflow: auto; white-space: pre-wrap; }
+  ol { color: var(--muted); font-size: 13.5px; padding-left: 20px; line-height: 1.7; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Mã hóa tool BOM</h1>
+  <p>Chọn file HTML tool BOM gốc (chưa khóa). File được mã hóa ngay trên máy bạn — không gửi đi đâu — rồi tải về file <code>.bin</code> để đưa lên PM Hub.</p>
+  <form id="f">
+    <div class="row">
+      <div><label for="u">Tài khoản PM</label><input id="u" autocomplete="username" required></div>
+      <div><label for="p">Mật khẩu</label><input id="p" type="password" autocomplete="current-password" required></div>
+    </div>
+    <label for="file">File HTML tool BOM gốc</label>
+    <input id="file" type="file" accept=".html,.htm" required>
+    <div class="row">
+      <div><label for="name">Tên file xuất (không dấu)</label><input id="name" placeholder="vd: gtb" pattern="[a-z0-9-]+" required></div>
+      <div><label for="title">Tên hiển thị</label><input id="title" placeholder="vd: BOM GTB" required></div>
+    </div>
+    <button type="submit">Mã hóa &amp; tải về</button>
+    <div id="msg"></div>
+  </form>
+  <div id="next" hidden>
+    <ol>
+      <li>Đưa file <b id="outName"></b> vào thư mục <code>content/bom/</code> của repo PM-Working.</li>
+      <li>Trong <code>config/hub.json</code>, thêm (hoặc sửa mục "Sắp có" tương ứng: bỏ <code>"status": "soon"</code>, thêm <code>"src"</code>):</li>
+    </ol>
+    <pre id="snippet"></pre>
+  </div>
+</main>
+<script type="module">
+  import { verify, encryptFile } from '../assets/js/crypto.js';
+  const $ = (s) => document.querySelector(s);
+  $('#file').addEventListener('change', () => {
+    const f = $('#file').files[0];
+    if (f && !$('#name').value) $('#name').value = f.name.replace(/\.html?$/i, '').toLowerCase().replace(/_?(bom_?tool|source)/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  });
+  $('#f').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = $('button'), msg = $('#msg');
+    btn.disabled = true; msg.className = ''; msg.textContent = 'Đang mã hóa…';
+    try {
+      const auth = await (await fetch('../data/auth.json', { cache: 'no-cache' })).json();
+      const key = await verify($('#u').value, $('#p').value, auth);
+      if (!key) throw new Error('Sai tài khoản hoặc mật khẩu PM Hub.');
+      const bytes = await encryptFile(key, await $('#file').files[0].text());
+      const name = `${$('#name').value}.bin`;
+      const a = Object.assign(document.createElement('a'), { href: URL.createObjectURL(new Blob([bytes])), download: name });
+      a.click();
+      msg.className = 'ok';
+      msg.textContent = `Đã tạo ${name} (${(bytes.length / 1024).toFixed(0)} KB).`;
+      $('#outName').textContent = name;
+      $('#snippet').textContent = JSON.stringify({
+        id: `bom-${$('#name').value}`, section: 'bom', title: $('#title').value, kind: 'bom', src: `content/bom/${name}`,
+        vendor: '', product: '', icon: 'calculator', desc: '', tags: ['BOM'],
+      }, null, 2);
+      $('#next').hidden = false;
+    } catch (err) {
+      msg.className = 'err';
+      msg.textContent = err.message;
+    } finally {
+      btn.disabled = false;
+    }
+  });
+</script>
+</body>
+</html>

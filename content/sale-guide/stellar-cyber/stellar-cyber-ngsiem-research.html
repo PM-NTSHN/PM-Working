@@ -1,0 +1,2158 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stellar Cyber NG-SIEM — Nghiên cứu chuyên sâu</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Sora:wght@300;400;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #060e1f;
+  --navy2: #0b1830;
+  --navy3: #112045;
+  --orange: #f5621e;
+  --orange2: #ff8040;
+  --blue: #1a6fff;
+  --blue2: #5ba4ff;
+  --cyan: #00d4e8;
+  --gold: #ffd166;
+  --green: #06d6a0;
+  --red: #ef476f;
+  --text: #e2e8f0;
+  --text2: #94a3b8;
+  --text3: #64748b;
+  --border: rgba(255,255,255,0.08);
+  --card: rgba(255,255,255,0.04);
+  --card2: rgba(255,255,255,0.07);
+  --glass: rgba(10,22,45,0.85);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--navy);
+  color: var(--text);
+  font-family: 'Sora', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--navy2); }
+::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 3px; }
+
+/* ── BG GRID ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    linear-gradient(rgba(26,111,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26,111,255,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none; z-index: 0;
+}
+
+/* ── SIDEBAR NAV ── */
+#sidenav {
+  position: fixed; left: 0; top: 0; bottom: 0;
+  width: 260px;
+  background: var(--navy2);
+  border-right: 1px solid var(--border);
+  z-index: 100;
+  overflow-y: auto;
+  padding: 24px 0;
+  transition: transform 0.3s ease;
+}
+#sidenav .logo {
+  padding: 0 20px 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+}
+#sidenav .logo span {
+  display: inline-block;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--orange);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+#sidenav .logo h2 {
+  font-size: 14px; font-weight: 700; color: var(--text);
+  margin-top: 4px; line-height: 1.3;
+}
+#sidenav a {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 9px 20px;
+  text-decoration: none;
+  color: var(--text2);
+  font-size: 12.5px;
+  font-weight: 400;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+  line-height: 1.4;
+}
+#sidenav a .num {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--text3);
+  min-width: 20px;
+  margin-top: 1px;
+}
+#sidenav a:hover, #sidenav a.active {
+  color: var(--orange);
+  background: rgba(245,98,30,0.08);
+  border-left-color: var(--orange);
+}
+#sidenav a.active .num { color: var(--orange); }
+
+/* ── MAIN CONTENT ── */
+#main {
+  margin-left: 260px;
+  position: relative; z-index: 1;
+}
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 80px 60px 60px;
+  position: relative;
+  overflow: hidden;
+}
+#hero::before {
+  content: '';
+  position: absolute;
+  top: -100px; right: -100px;
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(245,98,30,0.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+#hero::after {
+  content: '';
+  position: absolute;
+  bottom: -100px; left: 200px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(26,111,255,0.10) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--orange);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.hero-tag::before {
+  content: '';
+  width: 40px; height: 1px;
+  background: var(--orange);
+}
+#hero h1 {
+  font-size: clamp(36px, 5vw, 72px);
+  font-weight: 800;
+  line-height: 1.05;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, #fff 30%, var(--orange2) 70%, var(--cyan) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  font-size: 18px; color: var(--text2);
+  max-width: 600px;
+  margin-bottom: 40px;
+  font-weight: 300;
+}
+.hero-stats {
+  display: flex; gap: 40px; flex-wrap: wrap;
+  margin-top: 48px;
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+}
+.stat { }
+.stat-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 32px; font-weight: 700;
+  color: var(--orange);
+  line-height: 1;
+}
+.stat-label {
+  font-size: 12px; color: var(--text3);
+  margin-top: 4px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ── SECTIONS ── */
+section {
+  padding: 80px 60px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+section:nth-child(even) {
+  background: rgba(11,24,48,0.5);
+}
+
+.section-tag {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: var(--orange);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+h2.sec-title {
+  font-size: 36px; font-weight: 800;
+  color: #fff;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+.sec-line {
+  width: 48px; height: 3px;
+  background: linear-gradient(90deg, var(--orange), var(--cyan));
+  margin-bottom: 36px;
+  border-radius: 2px;
+}
+h3.sub-title {
+  font-size: 18px; font-weight: 700;
+  color: var(--blue2);
+  margin: 36px 0 14px;
+  display: flex; align-items: center; gap: 10px;
+}
+h3.sub-title::before {
+  content: '//';
+  font-family: 'Space Mono', monospace;
+  color: var(--orange);
+  font-size: 14px;
+}
+
+p { color: var(--text2); margin-bottom: 14px; }
+p strong { color: var(--text); }
+
+/* ── CARDS GRID ── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin: 24px 0;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--orange), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.card:hover {
+  border-color: rgba(245,98,30,0.3);
+  background: var(--card2);
+  transform: translateY(-2px);
+}
+.card:hover::before { opacity: 1; }
+.card-icon {
+  font-size: 28px; margin-bottom: 12px;
+}
+.card h4 {
+  font-size: 15px; font-weight: 700;
+  color: #fff; margin-bottom: 8px;
+}
+.card p { font-size: 13px; margin: 0; }
+
+/* ── STAT CARDS ── */
+.stat-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  margin: 24px 0;
+}
+.stat-card {
+  background: linear-gradient(135deg, rgba(245,98,30,0.08), rgba(26,111,255,0.08));
+  border: 1px solid rgba(245,98,30,0.2);
+  border-radius: 12px;
+  padding: 24px 20px;
+  text-align: center;
+}
+.stat-card .big-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 36px; font-weight: 700;
+  color: var(--orange);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.stat-card .label {
+  font-size: 12px; color: var(--text2);
+  line-height: 1.4;
+}
+
+/* ── PAIN POINTS ── */
+.pain-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 20px; margin: 24px 0;
+}
+.pain-card {
+  background: linear-gradient(135deg, rgba(239,71,111,0.06), rgba(239,71,111,0.02));
+  border: 1px solid rgba(239,71,111,0.2);
+  border-radius: 12px;
+  padding: 24px;
+}
+.pain-card .pain-icon {
+  font-size: 24px; margin-bottom: 10px;
+}
+.pain-card h4 { color: var(--red); font-size: 14px; margin-bottom: 8px; }
+.pain-card p { font-size: 13px; margin: 0; }
+
+/* ── FEATURE LIST ── */
+.feature-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 20px 0;
+}
+.feat-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 14px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px; color: var(--text2);
+}
+.feat-item .check {
+  color: var(--green);
+  font-size: 14px;
+  min-width: 18px; margin-top: 1px;
+}
+.feat-item strong { color: var(--text); display: block; font-size: 13px; }
+
+/* ── TABLE ── */
+.table-wrap { overflow-x: auto; margin: 24px 0; border-radius: 12px; }
+table {
+  width: 100%; border-collapse: collapse;
+  font-size: 13px;
+}
+thead th {
+  background: var(--navy3);
+  padding: 14px 16px;
+  text-align: left;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: var(--text2);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+thead th:first-child {
+  border-radius: 12px 0 0 0;
+}
+thead th:last-child {
+  border-radius: 0 12px 0 0;
+}
+tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s;
+}
+tbody tr:hover { background: var(--card); }
+tbody td {
+  padding: 13px 16px;
+  color: var(--text2);
+  vertical-align: top;
+  line-height: 1.5;
+}
+tbody td:first-child {
+  color: var(--text);
+  font-weight: 600;
+  font-size: 13px;
+}
+.yes { color: var(--green); font-weight: 700; }
+.no { color: var(--red); }
+.partial { color: var(--gold); }
+
+/* ── COMPARISON TABLE SPECIAL ── */
+.comp-head-stellar { color: var(--orange) !important; }
+.stellar-col { background: rgba(245,98,30,0.04) !important; }
+
+/* ── AI LAYERS ── */
+.ai-layers {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin: 24px 0;
+}
+.ai-layer {
+  display: flex; align-items: center; gap: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.layer-num {
+  background: var(--orange);
+  color: #fff;
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 14px 16px;
+  min-width: 48px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.layer-content {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-left: none;
+  padding: 14px 20px;
+  flex: 1;
+  display: flex; align-items: center; gap: 20px;
+}
+.layer-name {
+  font-weight: 700; color: #fff;
+  min-width: 160px; font-size: 13px;
+}
+.layer-tech {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; color: var(--cyan);
+  min-width: 200px;
+}
+.layer-desc { font-size: 13px; color: var(--text2); }
+
+/* ── ARCHITECTURE ── */
+.arch-diagram {
+  background: var(--navy2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  margin: 24px 0;
+}
+.arch-row {
+  display: flex; gap: 12px;
+  margin-bottom: 12px;
+  align-items: stretch;
+}
+.arch-box {
+  flex: 1;
+  border-radius: 10px;
+  padding: 16px;
+  font-size: 13px;
+  text-align: center;
+  font-weight: 600;
+  line-height: 1.4;
+}
+.arch-arrow {
+  display: flex; align-items: center;
+  color: var(--text3); font-size: 20px;
+  padding: 0 4px;
+}
+.arch-sources { background: rgba(26,111,255,0.12); border: 1px solid rgba(26,111,255,0.25); color: var(--blue2); }
+.arch-sensor { background: rgba(0,212,232,0.08); border: 1px solid rgba(0,212,232,0.25); color: var(--cyan); }
+.arch-processor { background: rgba(245,98,30,0.10); border: 1px solid rgba(245,98,30,0.3); color: var(--orange2); }
+.arch-lake { background: rgba(255,209,102,0.08); border: 1px solid rgba(255,209,102,0.25); color: var(--gold); }
+.arch-ai { background: rgba(6,214,160,0.08); border: 1px solid rgba(6,214,160,0.25); color: var(--green); }
+.arch-output { background: rgba(245,98,30,0.08); border: 1px solid rgba(245,98,30,0.2); color: var(--orange); }
+.arch-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  color: var(--text3);
+  text-align: center;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+/* ── DEPLOY MODES ── */
+.deploy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px; margin: 24px 0;
+}
+.deploy-card {
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid var(--border);
+}
+.deploy-card.saas { background: linear-gradient(135deg, rgba(26,111,255,0.08), rgba(26,111,255,0.02)); border-color: rgba(26,111,255,0.2); }
+.deploy-card.onprem { background: linear-gradient(135deg, rgba(245,98,30,0.08), rgba(245,98,30,0.02)); border-color: rgba(245,98,30,0.2); }
+.deploy-card.hybrid { background: linear-gradient(135deg, rgba(0,212,232,0.06), rgba(0,212,232,0.01)); border-color: rgba(0,212,232,0.2); }
+.deploy-card.appliance { background: linear-gradient(135deg, rgba(255,209,102,0.06), rgba(255,209,102,0.01)); border-color: rgba(255,209,102,0.2); }
+.deploy-card .d-title {
+  font-size: 15px; font-weight: 700; color: #fff;
+  margin-bottom: 4px;
+}
+.deploy-card .d-tag {
+  font-family: 'Space Mono', monospace; font-size: 10px;
+  letter-spacing: 1px; text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.deploy-card.saas .d-tag { color: var(--blue2); }
+.deploy-card.onprem .d-tag { color: var(--orange); }
+.deploy-card.hybrid .d-tag { color: var(--cyan); }
+.deploy-card.appliance .d-tag { color: var(--gold); }
+.deploy-card ul { list-style: none; }
+.deploy-card ul li { font-size: 12.5px; color: var(--text2); padding: 4px 0; padding-left: 14px; position: relative; }
+.deploy-card ul li::before { content: '▸'; position: absolute; left: 0; color: var(--text3); }
+
+/* ── LICENSE TABLE ── */
+.license-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px; margin: 24px 0;
+}
+.lic-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+}
+.lic-card h4 {
+  font-size: 17px; font-weight: 700; color: #fff;
+  margin-bottom: 4px;
+}
+.lic-badge {
+  display: inline-block;
+  background: rgba(245,98,30,0.15);
+  color: var(--orange);
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1px;
+  padding: 3px 8px; border-radius: 4px;
+  margin-bottom: 16px;
+}
+.lic-card ul { list-style: none; }
+.lic-card ul li {
+  font-size: 13px; color: var(--text2);
+  padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+  display: flex; gap: 8px;
+}
+.lic-card ul li span { color: var(--cyan); font-family: 'IBM Plex Mono', monospace; font-size: 12px; min-width: 100px; }
+
+/* ── USE CASES ── */
+.usecase-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px; margin: 24px 0;
+}
+.uc-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.3s;
+}
+.uc-card:hover {
+  border-color: rgba(26,111,255,0.3);
+  transform: translateY(-2px);
+}
+.uc-card .uc-icon { font-size: 28px; margin-bottom: 10px; }
+.uc-card h4 { color: #fff; font-size: 15px; margin-bottom: 6px; }
+.uc-card .uc-label {
+  display: inline-block;
+  background: rgba(26,111,255,0.12);
+  color: var(--blue2);
+  font-size: 10px; font-family: 'Space Mono', monospace;
+  letter-spacing: 1px; padding: 2px 8px; border-radius: 4px;
+  margin-bottom: 12px;
+}
+.uc-card p { font-size: 12.5px; margin: 0; }
+
+/* ── SCENARIO CARDS ── */
+.scenario {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 28px;
+  margin-bottom: 20px;
+}
+.scenario-header {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 16px;
+}
+.scenario-badge {
+  background: rgba(245,98,30,0.15);
+  color: var(--orange);
+  font-family: 'Space Mono', monospace;
+  font-size: 10px; letter-spacing: 1px;
+  padding: 4px 10px; border-radius: 4px;
+  white-space: nowrap;
+}
+.scenario h4 { color: #fff; font-size: 16px; font-weight: 700; }
+.scenario-body { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.s-col h5 { font-size: 12px; font-family: 'Space Mono', monospace; letter-spacing: 1px; color: var(--text3); text-transform: uppercase; margin-bottom: 8px; }
+.s-col p { font-size: 13px; margin: 0; }
+.s-col.response p { color: var(--green); }
+
+/* ── QUOTE ── */
+.quote-block {
+  border-left: 3px solid var(--orange);
+  padding: 16px 24px;
+  margin: 20px 0;
+  background: rgba(245,98,30,0.04);
+  border-radius: 0 8px 8px 0;
+}
+.quote-block p {
+  font-style: italic;
+  font-size: 14px;
+  color: var(--text);
+  margin: 0 0 8px;
+}
+.quote-block .source {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--orange);
+  margin: 0;
+}
+
+/* ── RANKING TABLE ── */
+.rank-table { margin: 24px 0; }
+.rank-item {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  transition: all 0.2s;
+}
+.rank-item:hover { border-color: rgba(245,98,30,0.3); }
+.rank-item.gold-border { border-color: rgba(255,209,102,0.3); background: rgba(255,209,102,0.04); }
+.rank-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 22px; font-weight: 700;
+  min-width: 40px; text-align: center;
+}
+.rank-item.gold-border .rank-num { color: var(--gold); }
+.rank-item:not(.gold-border) .rank-num { color: var(--text3); }
+.rank-body { flex: 1; }
+.rank-body h4 { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 3px; }
+.rank-body p { font-size: 12.5px; margin: 0; }
+.rank-badge {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  padding: 3px 10px; border-radius: 4px;
+  white-space: nowrap;
+}
+.rb-green { background: rgba(6,214,160,0.12); color: var(--green); }
+.rb-blue { background: rgba(26,111,255,0.12); color: var(--blue2); }
+.rb-orange { background: rgba(245,98,30,0.15); color: var(--orange); }
+
+/* ── DIFF PILLS ── */
+.diff-grid {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin: 20px 0;
+}
+.diff-pill {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(6,214,160,0.08);
+  border: 1px solid rgba(6,214,160,0.25);
+  border-radius: 100px;
+  padding: 8px 16px;
+  font-size: 13px; color: var(--green);
+}
+.diff-pill::before {
+  content: '★';
+  font-size: 11px;
+}
+
+/* ── REFS ── */
+.refs {
+  display: flex; flex-direction: column; gap: 10px;
+  margin: 24px 0;
+}
+.ref-item {
+  display: flex; gap: 14px;
+  padding: 14px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  align-items: flex-start;
+}
+.ref-num {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px; color: var(--orange);
+  min-width: 28px;
+}
+.ref-content { flex: 1; }
+.ref-content strong { color: var(--text); font-size: 13px; display: block; }
+.ref-content span { color: var(--text3); font-size: 12px; }
+.ref-content a { color: var(--blue2); font-size: 12px; text-decoration: none; }
+.ref-content a:hover { text-decoration: underline; }
+
+/* ── CALLOUT ── */
+.callout {
+  background: linear-gradient(135deg, rgba(245,98,30,0.08), rgba(26,111,255,0.06));
+  border: 1px solid rgba(245,98,30,0.25);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin: 20px 0;
+  display: flex; gap: 14px; align-items: flex-start;
+}
+.callout-icon { font-size: 20px; min-width: 24px; }
+.callout-text { font-size: 13.5px; color: var(--text); }
+.callout-text strong { color: var(--orange); }
+
+/* ── PROGRESS BARS ── */
+.progress-list { margin: 20px 0; }
+.prog-item { margin-bottom: 14px; }
+.prog-label { display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px; color: var(--text2); }
+.prog-label strong { color: var(--text); }
+.prog-bar { height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+.prog-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
+.prog-orange { background: linear-gradient(90deg, var(--orange), var(--orange2)); }
+.prog-blue { background: linear-gradient(90deg, var(--blue), var(--blue2)); }
+.prog-green { background: linear-gradient(90deg, #04a57a, var(--green)); }
+.prog-cyan { background: linear-gradient(90deg, #00a8b8, var(--cyan)); }
+
+/* ── STEP LIST ── */
+.steps { margin: 20px 0; }
+.step {
+  display: flex; gap: 20px; margin-bottom: 20px;
+  position: relative;
+}
+.step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 16px; top: 40px; bottom: -20px;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--orange), transparent);
+}
+.step-num {
+  width: 32px; height: 32px;
+  background: var(--orange);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 12px; font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+.step-body h4 { color: #fff; font-size: 14px; margin-bottom: 4px; }
+.step-body p { font-size: 13px; margin: 0; }
+
+/* ── FOOTER ── */
+footer {
+  margin-left: 260px;
+  padding: 40px 60px;
+  border-top: 1px solid var(--border);
+  background: var(--navy2);
+  text-align: center;
+}
+footer p {
+  font-family: 'Space Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+  margin: 0;
+}
+
+/* ── MOBILE ── */
+@media (max-width: 900px) {
+  #sidenav { transform: translateX(-100%); }
+  #main, footer { margin-left: 0; }
+  section { padding: 60px 24px; }
+  #hero { padding: 60px 24px; }
+  .feature-list { grid-template-columns: 1fr; }
+  .license-grid { grid-template-columns: 1fr; }
+  .scenario-body { grid-template-columns: 1fr; }
+  .arch-row { flex-direction: column; }
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fadeUp 0.6s ease forwards; }
+.fade-up:nth-child(1) { animation-delay: 0.1s; }
+.fade-up:nth-child(2) { animation-delay: 0.2s; }
+.fade-up:nth-child(3) { animation-delay: 0.3s; }
+.fade-up:nth-child(4) { animation-delay: 0.4s; }
+</style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<nav id="sidenav">
+  <div class="logo">
+    <span>Research Report</span>
+    <h2>Stellar Cyber<br>NG-SIEM</h2>
+  </div>
+  <a href="#hero" class="active"><span class="num">00</span>Tổng quan</a>
+  <a href="#market"><span class="num">01</span>Thị trường & Nhu cầu</a>
+  <a href="#intro"><span class="num">02</span>Giới thiệu Stellar Cyber</a>
+  <a href="#features"><span class="num">03</span>Tính năng giải pháp</a>
+  <a href="#ai"><span class="num">04</span>Multi-Layer AI™</a>
+  <a href="#arch"><span class="num">05</span>Kiến trúc & Triển khai</a>
+  <a href="#licensing"><span class="num">06</span>License & Sizing</a>
+  <a href="#comparison"><span class="num">07</span>So sánh đối thủ</a>
+  <a href="#differentiators"><span class="num">08</span>Điểm mạnh độc quyền</a>
+  <a href="#usecases"><span class="num">09</span>Use Cases thực tế</a>
+  <a href="#scenarios"><span class="num">10</span>Kịch bản tư vấn</a>
+  <a href="#benefits"><span class="num">11</span>Lợi ích đem lại</a>
+  <a href="#ranking"><span class="num">12</span>Xếp hạng thị trường</a>
+  <a href="#references"><span class="num">13</span>Tài liệu tham chiếu</a>
+</nav>
+
+<!-- ── MAIN ── -->
+<div id="main">
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-tag">Nghiên cứu chuyên sâu · Tháng 5/2026</div>
+  <h1>Stellar Cyber<br>Next-Gen SIEM</h1>
+  <p class="hero-sub">Bài phân tích toàn diện về giải pháp NG-SIEM trong nền tảng Open XDR — từ kiến trúc, tính năng, đến chiến lược cạnh tranh và kịch bản triển khai thực tế.</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">16K+</div>
+      <div class="stat-label">Tổ chức bảo vệ</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">80+</div>
+      <div class="stat-label">Top 250 MSSPs</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">600+</div>
+      <div class="stat-label">Security Detections</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">50+</div>
+      <div class="stat-label">Quốc gia triển khai</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">400%</div>
+      <div class="stat-label">Giảm MTTR</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 01: MARKET -->
+<section id="market">
+  <div class="section-tag">01 · Market Context</div>
+  <h2 class="sec-title">Nhu cầu thị trường & Pain Points</h2>
+  <div class="sec-line"></div>
+
+  <p>Bối cảnh an ninh mạng năm 2024–2026 đang thay đổi với tốc độ chưa từng có. AI-powered attacks, ransomware-as-a-service, và supply chain threats đang khiến các SOC truyền thống không còn đủ khả năng đối phó.</p>
+
+  <h3 class="sub-title">Số liệu thực trạng</h3>
+  <div class="stat-cards">
+    <div class="stat-card">
+      <div class="big-num">4,484</div>
+      <div class="label">Cảnh báo trung bình/ngày mỗi tổ chức</div>
+    </div>
+    <div class="stat-card">
+      <div class="big-num">67%</div>
+      <div class="label">Cảnh báo không được điều tra</div>
+    </div>
+    <div class="stat-card">
+      <div class="big-num">3h</div>
+      <div class="label">Thời gian triage thủ công mỗi ngày</div>
+    </div>
+    <div class="stat-card">
+      <div class="big-num">$4.88M</div>
+      <div class="label">Chi phí vi phạm dữ liệu trung bình (2024)</div>
+    </div>
+    <div class="stat-card">
+      <div class="big-num">130+</div>
+      <div class="label">Security tools tại Enterprise</div>
+    </div>
+    <div class="stat-card">
+      <div class="big-num">36K/s</div>
+      <div class="label">AI-automated attacks mỗi giây (5/2025)</div>
+    </div>
+  </div>
+
+  <h3 class="sub-title">Pain Points của khách hàng</h3>
+  <div class="pain-grid">
+    <div class="pain-card">
+      <div class="pain-icon">🚨</div>
+      <h4>Alert Overload</h4>
+      <p>Quá nhiều cảnh báo nhiễu. 67% không được xem xét. Analyst bị kiệt sức và bỏ lỡ mối đe dọa thực.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">🔍</div>
+      <h4>Thiếu Visibility</h4>
+      <p>Mỗi công cụ chỉ nhìn thấy một phần. Không có "single pane of glass" cho toàn bộ attack surface.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">⚙️</div>
+      <h4>Correlation thủ công</h4>
+      <p>Analyst phải tự viết và duy trì correlation rules. Tốn kém thời gian, dễ bỏ sót các cuộc tấn công phức tạp.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">💸</div>
+      <h4>Chi phí phức tạp</h4>
+      <p>SIEM + SOAR + NDR + UEBA = nhiều vendor, nhiều license, nhiều chi phí tích hợp. TCO cao khó kiểm soát.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">🐢</div>
+      <h4>Response chậm</h4>
+      <p>Không có automated response. Analyst phải tự chạy playbook. MTTR kéo dài hàng giờ đến hàng ngày.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">👥</div>
+      <h4>Thiếu nhân lực</h4>
+      <p>Thiếu hụt 3.5 triệu chuyên gia an ninh mạng toàn cầu. Đội nhỏ phải làm việc của đội lớn.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">📋</div>
+      <h4>Compliance phức tạp</h4>
+      <p>GDPR, PCI DSS, ISO 27001, NIS2 — mỗi quy định cần reporting riêng. Legacy SIEM không đủ linh hoạt.</p>
+    </div>
+    <div class="pain-card">
+      <div class="pain-icon">🔒</div>
+      <h4>Legacy SIEM lỗi thời</h4>
+      <p>Thiết kế cho thời đại log-centric, không có AI native, không có NDR, tốn kém và khó scale.</p>
+    </div>
+  </div>
+
+  <h3 class="sub-title">Hạn chế của Legacy SIEM</h3>
+  <div class="callout">
+    <span class="callout-icon">⚠️</span>
+    <div class="callout-text"><strong>Vấn đề kiến trúc cốt lõi:</strong> Legacy SIEM lưu raw data trước, chuẩn hóa sau — khiến AI không thể xây dựng model nhất quán. Open XDR buộc normalize & enrich TRƯỚC khi vào Data Lake, tạo nền tảng cho AI fidelity cao hơn nhiều.</div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Tiêu chí</th><th>Legacy SIEM</th><th>Vấn đề phát sinh</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Phát hiện mối đe dọa</td><td>Rule-based thủ công</td><td>Bỏ sót zero-day và unknown threats</td></tr>
+        <tr><td>Correlation</td><td>Human-authored rules</td><td>Tốn kém, không scale được</td></tr>
+        <tr><td>Network Visibility</td><td>Không có (cần NDR riêng)</td><td>Blind spot với lateral movement</td></tr>
+        <tr><td>Response</td><td>Thủ công hoặc SOAR riêng</td><td>Chậm, tốn thêm license</td></tr>
+        <tr><td>Threat Intelligence</td><td>Tích hợp TIP bên ngoài</td><td>Thêm chi phí và độ phức tạp</td></tr>
+        <tr><td>Pricing</td><td>Per-GB ingestion</td><td>Chi phí tăng theo data volume không kiểm soát</td></tr>
+        <tr><td>AI/ML</td><td>Add-on, không native</td><td>Model chất lượng thấp vì data không đồng nhất</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SECTION 02: INTRO -->
+<section id="intro">
+  <div class="section-tag">02 · Company Overview</div>
+  <h2 class="sec-title">Giới thiệu Stellar Cyber</h2>
+  <div class="sec-line"></div>
+
+  <div class="cards-grid">
+    <div class="card fade-up">
+      <div class="card-icon">🏢</div>
+      <h4>Về công ty</h4>
+      <p>Thành lập tại Silicon Valley, trụ sở San Jose, California. Công ty tiên phong trong công nghệ Open XDR, hiện là "the illumination company" trong an ninh mạng.</p>
+    </div>
+    <div class="card fade-up">
+      <div class="card-icon">🎯</div>
+      <h4>Sứ mệnh</h4>
+      <p>"Chiếu sáng những góc tối nhất trong vận hành bảo mật — giúp tổ chức nhìn thấy cuộc tấn công, biết cách chống lại và hành động quyết đoán."</p>
+    </div>
+    <div class="card fade-up">
+      <div class="card-icon">💡</div>
+      <h4>Định vị</h4>
+      <p>Automation-Driven Open & Unified SecOps Platform — nền tảng vận hành bảo mật mở, thống nhất, điều khiển bằng AI và tự động hóa.</p>
+    </div>
+    <div class="card fade-up">
+      <div class="card-icon">🌍</div>
+      <h4>Quy mô</h4>
+      <p>16.000+ tổ chức được bảo vệ tại 50+ quốc gia. 80+ trong Top 250 MSSP toàn cầu tin dùng. Hàng trăm TB xử lý mỗi ngày.</p>
+    </div>
+  </div>
+
+  <h3 class="sub-title">Giải pháp NG-SIEM trong nền tảng Open XDR</h3>
+  <p>NG-SIEM của Stellar Cyber không phải là sản phẩm SIEM độc lập hay add-on. Đây là <strong>native capability</strong> được tích hợp sâu vào nền tảng Open XDR — đi kèm với NDR, UEBA, ITDR, IDS/Sandbox, FIM và SOAR trong <strong>một license duy nhất</strong>.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Thành phần</th><th>Chức năng</th><th>Thay thế giải pháp độc lập</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>NG-SIEM</td><td>Thu thập, chuẩn hóa, làm giàu log; Threat Hunting</td><td>Splunk, QRadar, ArcSight, LogRhythm</td></tr>
+        <tr><td>NDR / OT</td><td>Phân tích traffic mạng; phát hiện lateral movement</td><td>Darktrace, ExtraHop, Vectra</td></tr>
+        <tr><td>UEBA</td><td>Phân tích hành vi người dùng và thực thể bất thường</td><td>Exabeam, Securonix (standalone)</td></tr>
+        <tr><td>ITDR</td><td>Phát hiện mối đe dọa danh tính; ATO, MFA abuse</td><td>CrowdStrike Identity, Silverfort</td></tr>
+        <tr><td>IDS / Sandbox</td><td>Phát hiện xâm nhập, phân tích malware</td><td>Snort/Suricata, Cuckoo standalone</td></tr>
+        <tr><td>FIM</td><td>File Integrity Monitoring</td><td>Tripwire, AIDE standalone</td></tr>
+        <tr><td>SOAR / Response</td><td>Tự động hóa phản ứng, AI playbooks, case management</td><td>Palo Alto XSOAR, Splunk SOAR</td></tr>
+        <tr><td>TIP</td><td>Threat Intelligence Platform tích hợp sẵn</td><td>ThreatConnect, Anomali standalone</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="quote-block">
+    <p>"Stellar Cyber is the most cost-effective XDR, powered by AI."</p>
+    <div class="source">— Erwin Eimers, CISO of Sumitomo Chemical</div>
+  </div>
+  <div class="quote-block">
+    <p>"Stellar Cyber's Multi-Layer AI™ delivers orders of magnitude faster detection and response than other products."</p>
+    <div class="source">— Joshua Cole, CTO & Co-Founder of Assura, Inc.</div>
+  </div>
+</section>
+
+<!-- SECTION 03: FEATURES -->
+<section id="features">
+  <div class="section-tag">03 · Core Capabilities</div>
+  <h2 class="sec-title">Tính năng giải pháp SIEM</h2>
+  <div class="sec-line"></div>
+
+  <h3 class="sub-title">Thu thập & Chuẩn hóa Dữ liệu</h3>
+  <p>Stellar Cyber thu thập dữ liệu từ toàn bộ attack surface qua nhiều phương thức khác nhau:</p>
+  <div class="feature-list">
+    <div class="feat-item"><span class="check">✓</span><div><strong>Endpoint (EDR/EPP)</strong>CrowdStrike, SentinelOne, Carbon Black, Microsoft Defender</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Identity</strong>Active Directory, Azure AD, Okta, CyberArk, Ping Identity</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Cloud & SaaS</strong>AWS, Azure, GCP, OCI, Microsoft 365, Google Workspace</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Network (SPAN/TAP)</strong>Firewall logs, IDS/IPS, Switch, Router, raw packet capture</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Email Gateway</strong>Log thu thập + Auto-triage phishing tự động (v6.0+)</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Syslog</strong>Bất kỳ thiết bị nào xuất Syslog chuẩn</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>API Connectors</strong>500+ integrations với công cụ bảo mật phổ biến</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Vulnerability Management</strong>Tenable, Rapid7, Qualys</div></div>
+  </div>
+
+  <h3 class="sub-title">Phát hiện Mối đe dọa</h3>
+  <div class="feature-list">
+    <div class="feat-item"><span class="check">✓</span><div><strong>600+ Built-in Detections</strong>Sẵn có từ ngày 1, không cần cấu hình thêm</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>ML/DL Anomaly Detection</strong>Unsupervised ML cho zero-day, unknown threats</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Signature-based</strong>Supervised ML với threat signatures đã biết</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>GraphML Correlation</strong>Kết nối tự động các events rời rạc thành attack chain</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>MITRE ATT&CK Aligned</strong>Mọi alert tự động tag theo technique/tactic</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Custom Rules</strong>Analyst tự định nghĩa rule và threshold tùy chỉnh</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Threat Intelligence</strong>CrowdStrike, Redsense, ESET, SOCRadar, Recorded Future IOC feeds</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Real-time Enrichment</strong>GeoIP, ASN, DNS, Threat Intel tự động làm giàu mọi event</div></div>
+  </div>
+
+  <h3 class="sub-title">Case Management & Response</h3>
+  <div class="feature-list">
+    <div class="feat-item"><span class="check">✓</span><div><strong>Case-Centric Approach</strong>AI nhóm alerts liên quan thành 1 case — giảm 8x khối lượng analyst</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>AI Case Orchestration</strong>Tự động tạo, ưu tiên, và gán case theo risk score</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Automated Response</strong>One-click hoặc fully automated response actions</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>GenAI Playbooks</strong>Agentic AI playbooks — tự điều chỉnh theo context</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Phishing Auto-Triage</strong>AI phân tích email phishing trong vài phút (v6.0+)</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Case Suppression</strong>Lọc false positive case theo query phức tạp (v6.0+)</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Ticket Integration</strong>Tự động tạo ticket Jira, ServiceNow, PagerDuty</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Multi-Tenant Response</strong>Response action phân biệt theo từng tenant</div></div>
+  </div>
+
+  <h3 class="sub-title">Threat Hunting & Investigation</h3>
+  <div class="feature-list">
+    <div class="feat-item"><span class="check">✓</span><div><strong>AI Investigator (NLP)</strong>Đặt câu hỏi ngôn ngữ tự nhiên: "Show incidents where data was exported 12–9AM"</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Continuous Threat Hunting</strong>ML liên tục quét data, phát hiện pattern ẩn</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Query Builder</strong>Pop-out query editor, test filters trực tiếp</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Case Analysis & Summary</strong>AI tóm tắt toàn bộ attack chain trong 1 đoạn văn</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>MITRE Coverage Analyzer</strong>Đo lường coverage gap theo ATT&CK framework</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Historical Search</strong>Cold data scan không cần import vào hot storage</div></div>
+  </div>
+
+  <h3 class="sub-title">Compliance & Reporting</h3>
+  <div class="feature-list">
+    <div class="feat-item"><span class="check">✓</span><div><strong>Compliance Frameworks</strong>GDPR, PCI DSS, ISO 27001, HIPAA, SOX, NIST, NIS2</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>New Reporting Engine</strong>Beautiful out-of-the-box reports, scheduler multi-tenant (v5.4+)</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Custom Logo Reports</strong>Branded reports cho MSSP gửi khách hàng (v6.1+)</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Audit Trail</strong>Theo dõi đầy đủ user events: tạo, sửa, xóa tài khoản</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Dashboard Export</strong>Export dashboard dạng PDF, chia sẻ với stakeholders</div></div>
+    <div class="feat-item"><span class="check">✓</span><div><strong>Client-branded Dashboards</strong>Mỗi MSSP tạo dashboard riêng cho từng khách hàng</div></div>
+  </div>
+</section>
+
+<!-- SECTION 04: AI -->
+<section id="ai">
+  <div class="section-tag">04 · Technology Differentiator</div>
+  <h2 class="sec-title">Multi-Layer AI™ — Động cơ thông minh</h2>
+  <div class="sec-line"></div>
+
+  <p>Multi-Layer AI™ không phải một AI đơn lẻ mà là <strong>6 lớp AI hoạt động song song</strong>, được train trên real-world data và liên tục cải thiện qua operational exposure.</p>
+
+  <div class="ai-layers">
+    <div class="ai-layer">
+      <div class="layer-num">L1</div>
+      <div class="layer-content">
+        <div class="layer-name">Normalization & Enrichment</div>
+        <div class="layer-tech">Parsing Engine + Contextual AI</div>
+        <div class="layer-desc">Chuẩn hóa data từ mọi nguồn sang ngôn ngữ chung; gán context GeoIP, ASN, DNS, Threat Intel TRƯỚC khi lưu vào Data Lake</div>
+      </div>
+    </div>
+    <div class="ai-layer">
+      <div class="layer-num">L2</div>
+      <div class="layer-content">
+        <div class="layer-name">ML/DL Detection</div>
+        <div class="layer-tech">Supervised + Unsupervised Machine Learning</div>
+        <div class="layer-desc">Supervised ML phát hiện threats đã biết; Unsupervised ML phát hiện zero-day và anomalous behavior — không cần viết rule</div>
+      </div>
+    </div>
+    <div class="ai-layer">
+      <div class="layer-num">L3</div>
+      <div class="layer-content">
+        <div class="layer-name">GraphML Correlation</div>
+        <div class="layer-tech">Graph Neural Network</div>
+        <div class="layer-desc">Kết nối tự động các sự kiện rời rạc dựa trên property, temporal và behavioral similarity — phát hiện attack pattern không thể nhìn thấy bằng mắt người</div>
+      </div>
+    </div>
+    <div class="ai-layer">
+      <div class="layer-num">L4</div>
+      <div class="layer-content">
+        <div class="layer-name">Predictive AI</div>
+        <div class="layer-tech">Predictive Analytics Models</div>
+        <div class="layer-desc">Dự báo mối đe dọa mới nổi dựa trên pattern lịch sử và threat intel; giảm 40–70% false positives so với signature-based</div>
+      </div>
+    </div>
+    <div class="ai-layer">
+      <div class="layer-num">L5</div>
+      <div class="layer-content">
+        <div class="layer-name">GenAI / LLM Search</div>
+        <div class="layer-tech">Large Language Model (NLP)</div>
+        <div class="layer-desc">AI Investigator: trợ lý điều tra ảo — đặt câu hỏi ngôn ngữ tự nhiên, tóm tắt case, tạo narrative threat story; giảm 400% MTTR</div>
+      </div>
+    </div>
+    <div class="ai-layer">
+      <div class="layer-num">L6</div>
+      <div class="layer-content">
+        <div class="layer-name">Agentic AI</div>
+        <div class="layer-tech">Autonomous AI Agents + Playbooks</div>
+        <div class="layer-desc">AI agents tự động triage phishing, điều tra, quyết định response; human analyst chỉ cần validate và approve critical actions</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub-title">Case-Centric Approach vs Alert-Centric</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Tiêu chí</th><th>Alert-Centric (Legacy SIEM)</th><th class="comp-head-stellar">Case-Centric (Stellar Cyber)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Khối lượng analyst</td><td>Xử lý từng alert riêng lẻ — hàng nghìn/ngày</td><td class="stellar-col">Xử lý Cases đã nhóm — vài chục/ngày</td></tr>
+        <tr><td>Ngữ cảnh điều tra</td><td>Phải tự tìm và kết nối thủ công</td><td class="stellar-col">AI tự động tập hợp toàn bộ context</td></tr>
+        <tr><td>Ưu tiên hóa</td><td>Khó phân biệt alert quan trọng vs nhiễu</td><td class="stellar-col">Risk score tự động; case quan trọng lên đầu</td></tr>
+        <tr><td>Thời gian response</td><td>Vài giờ đến vài ngày</td><td class="stellar-col">Vài phút với autonomous response</td></tr>
+        <tr><td>Năng suất analyst</td><td>3h/ngày chỉ cho triage</td><td class="stellar-col">Giảm 60–80% thời gian triage lặp lại</td></tr>
+        <tr><td>False positive</td><td>Analyst xử lý thủ công từng cái</td><td class="stellar-col">AI loại bỏ tự động; giảm 40–70% FP</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <span class="callout-icon">🚀</span>
+    <div class="callout-text"><strong>Kết quả đo lường:</strong> AI Investigator giảm số quyết định của analyst từ hàng nghìn xuống còn 10–100/ngày. Thời gian response giảm 400%. Analyst có thêm 4–6 giờ/ca cho công việc chiến lược.</div>
+  </div>
+</section>
+
+<!-- SECTION 05: ARCHITECTURE -->
+<section id="arch">
+  <div class="section-tag">05 · Architecture & Deployment</div>
+  <h2 class="sec-title">Kiến trúc & Mô hình triển khai</h2>
+  <div class="sec-line"></div>
+
+  <h3 class="sub-title">Kiến trúc tổng quan</h3>
+  <div class="arch-diagram">
+    <div class="arch-label">Lớp thu thập dữ liệu</div>
+    <div class="arch-row">
+      <div class="arch-box arch-sources">🖥️ Endpoint<br><small>EDR/EPP Agents</small></div>
+      <div class="arch-box arch-sources">🌐 Network<br><small>SPAN/TAP/Syslog</small></div>
+      <div class="arch-box arch-sources">☁️ Cloud/SaaS<br><small>AWS/Azure/GCP/M365</small></div>
+      <div class="arch-box arch-sources">👤 Identity<br><small>AD/Okta/Azure AD</small></div>
+      <div class="arch-box arch-sources">📧 Email<br><small>Email Gateway</small></div>
+    </div>
+    <div class="arch-row">
+      <div style="flex:1; text-align:center; color:var(--text3); font-size:20px; padding:4px 0;">↓ ↓ ↓ ↓ ↓</div>
+    </div>
+    <div class="arch-label">Lớp thu thập (Sensors)</div>
+    <div class="arch-row">
+      <div class="arch-box arch-sensor" style="flex:2">🔍 Security Sensor / Log Forwarder (VM hoặc Hardware)<br><small>Thu thập + lọc + forward data đến Data Processor</small></div>
+      <div class="arch-box arch-sensor">🌐 IDS/Sandbox Module<br><small>Network inspection + malware analysis</small></div>
+      <div class="arch-box arch-sensor">🔗 API Connectors<br><small>500+ integrations trực tiếp</small></div>
+    </div>
+    <div class="arch-row">
+      <div style="flex:1; text-align:center; color:var(--text3); font-size:20px; padding:4px 0;">↓</div>
+    </div>
+    <div class="arch-label">Lớp xử lý (Data Processor)</div>
+    <div class="arch-row">
+      <div class="arch-box arch-processor" style="flex:1">⚙️ Normalize<br><small>Chuẩn hóa sang định dạng chung (ASIM/ECS)</small></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box arch-processor" style="flex:1">✨ Enrich<br><small>GeoIP, ASN, DNS, Threat Intel làm giàu tự động</small></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-box arch-processor" style="flex:1">🔄 Data Fusion<br><small>Hợp nhất dữ liệu đa nguồn</small></div>
+    </div>
+    <div class="arch-row">
+      <div style="flex:1; text-align:center; color:var(--text3); font-size:20px; padding:4px 0;">↓</div>
+    </div>
+    <div class="arch-label">Lớp lưu trữ</div>
+    <div class="arch-row">
+      <div class="arch-box arch-lake" style="flex:2">🗄️ Data Lake (Hot Storage 30 ngày + Cold Storage 1 năm)<br><small>Dữ liệu đã chuẩn hóa — cơ sở cho AI training và querying</small></div>
+    </div>
+    <div class="arch-row">
+      <div style="flex:1; text-align:center; color:var(--text3); font-size:20px; padding:4px 0;">↓</div>
+    </div>
+    <div class="arch-label">Lớp AI & Phân tích</div>
+    <div class="arch-row">
+      <div class="arch-box arch-ai">🤖 ML/DL Detection</div>
+      <div class="arch-box arch-ai">🕸️ GraphML Correlation</div>
+      <div class="arch-box arch-ai">💬 LLM / GenAI</div>
+      <div class="arch-box arch-ai">🔮 Predictive AI</div>
+    </div>
+    <div class="arch-row">
+      <div style="flex:1; text-align:center; color:var(--text3); font-size:20px; padding:4px 0;">↓</div>
+    </div>
+    <div class="arch-label">Lớp đầu ra</div>
+    <div class="arch-row">
+      <div class="arch-box arch-output">📋 Cases & Alerts</div>
+      <div class="arch-box arch-output">🔨 Automated Response</div>
+      <div class="arch-box arch-output">📊 Dashboards & Reports</div>
+      <div class="arch-box arch-output">🔍 Threat Hunting</div>
+    </div>
+  </div>
+
+  <h3 class="sub-title">Mô hình triển khai</h3>
+  <div class="deploy-grid">
+    <div class="deploy-card saas">
+      <div class="d-tag">☁️ Cloud</div>
+      <div class="d-title">SaaS (Public Cloud)</div>
+      <ul>
+        <li>Data Processor trên cloud Stellar Cyber</li>
+        <li>Sensor on-prem forward data lên</li>
+        <li>30 ngày hot storage tích hợp sẵn</li>
+        <li>1 năm cold storage</li>
+        <li>Không cần quản lý infra</li>
+        <li>Phù hợp: SME, MSSP</li>
+      </ul>
+    </div>
+    <div class="deploy-card onprem">
+      <div class="d-tag">🏠 On-Premises</div>
+      <div class="d-title">Virtual On-Premises</div>
+      <ul>
+        <li>Data Processor VM: VMware, KVM, Hyper-V</li>
+        <li>Hardware Appliance option</li>
+        <li>Data không rời data center</li>
+        <li>Hỗ trợ multi-site, data residency</li>
+        <li>Tự quản lý storage</li>
+        <li>Phù hợp: Gov, Banking, Defense</li>
+      </ul>
+    </div>
+    <div class="deploy-card hybrid">
+      <div class="d-tag">🔀 Hybrid</div>
+      <div class="d-title">Private Cloud / Hybrid</div>
+      <ul>
+        <li>VMware vSphere, KVM, Docker</li>
+        <li>AWS, Azure, GCP, OCI</li>
+        <li>Kết hợp private + public cloud</li>
+        <li>Multi-site data residency</li>
+        <li>Compliance đa khu vực</li>
+        <li>Phù hợp: Đa quốc gia, Enterprise</li>
+      </ul>
+    </div>
+    <div class="deploy-card appliance">
+      <div class="d-tag">💻 Hardware</div>
+      <div class="d-title">Physical Appliance</div>
+      <ul>
+        <li>Security Sensor hardware appliance</li>
+        <li>Data Processor hardware appliance</li>
+        <li>Air-gapped environment support</li>
+        <li>Performance cao, low latency</li>
+        <li>OT/ICS environment</li>
+        <li>Phù hợt: Military, Air-gapped</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub-title">Các bước triển khai</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4>Planning & Architecture Design</h4>
+        <p>Xác định scope (data sources, EPS, GB/day); chọn mô hình triển khai (SaaS/On-Prem/Hybrid); thiết kế network topology; xác định storage requirements.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4>Deploy Data Processor</h4>
+        <p>Cài đặt Data Processor (VM hoặc hardware); cấu hình network interfaces; kết nối với Data Lake storage; cấu hình multi-tenancy nếu cần (MSSP).</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h4>Deploy Security Sensors</h4>
+        <p>Đặt sensor tại các vị trí chiến lược (SPAN port switch, upstream firewall); cài Log Forwarder trên servers Linux/Windows; cấu hình IDS/Sandbox module.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-body">
+        <h4>Connect Data Sources</h4>
+        <p>Cấu hình API connectors (Cloud, Identity, EDR); thiết lập syslog forwarding; kết nối vulnerability management; enable Threat Intelligence feeds.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <h4>Baseline & Tuning</h4>
+        <p>Cho hệ thống học 1–2 tuần để xây dựng baseline hành vi; review và tune detections; cấu hình response actions; thiết lập reporting và dashboards.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <h4>Go Live & Optimize</h4>
+        <p>Chuyển sang chế độ production; onboarding analyst team; cấu hình automation level; liên tục optimize dựa trên feedback loop từ AI và analyst.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <span class="callout-icon">⚡</span>
+    <div class="callout-text"><strong>Thời gian triển khai:</strong> Cloud-native (SaaS) đạt trạng thái operational ban đầu trong 2–4 tuần. Virtual On-Premises mất 4–8 tuần. Tương đương với Splunk nhưng nhanh hơn nhiều so với QRadar truyền thống (3–6 tháng).</div>
+  </div>
+</section>
+
+<!-- SECTION 06: LICENSING -->
+<section id="licensing">
+  <div class="section-tag">06 · Licensing & Sizing</div>
+  <h2 class="sec-title">License & Sizing</h2>
+  <div class="sec-line"></div>
+
+  <p>Stellar Cyber có <strong>2 mô hình cấp phép subscription-based</strong>. Điểm khác biệt lớn: <strong>tất cả tính năng (NG-SIEM + NDR + UEBA + ITDR + IDS + FIM + SOAR + TIP) đều được bao gồm trong một license duy nhất</strong> — không cần mua thêm module.</p>
+
+  <div class="license-grid">
+    <div class="lic-card">
+      <h4>Volume-Based (GB/Day)</h4>
+      <div class="lic-badge">DỰA TRÊN LƯỢNG DATA</div>
+      <ul>
+        <li><span>Starter Pack:</span>100 GB/Day (On-Prem hoặc SaaS)</li>
+        <li><span>Add-on 25GB:</span>Stellar-25GB-ADD</li>
+        <li><span>Add-on 50GB:</span>Stellar-50GB-ADD</li>
+        <li><span>Add-on 100GB:</span>Stellar-100GB-ADD</li>
+        <li><span>Security Module:</span>200M / 500M / 1G / 10G throughput</li>
+        <li><span>Network Module:</span>1G / 10G throughput</li>
+        <li><span>Server Sensor:</span>Cho Linux (số lượng tùy chỉnh)</li>
+        <li><span>Windows Sensor:</span>Không giới hạn số lượng</li>
+        <li><span>Hot Storage (SaaS):</span>30 ngày (tích hợp sẵn)</li>
+        <li><span>Cold Storage (SaaS):</span>1 năm (khớp ingestion)</li>
+        <li><span>Bao gồm:</span>Parsers, API Connectors, Training, Support</li>
+      </ul>
+    </div>
+    <div class="lic-card">
+      <h4>Asset-Based</h4>
+      <div class="lic-badge">DỰA TRÊN SỐ TÀI SẢN</div>
+      <ul>
+        <li><span>Private IP:</span>Mỗi thiết bị có private IP trong mạng</li>
+        <li><span>Identity Account:</span>Mỗi user account được giám sát</li>
+        <li><span>Ưu điểm:</span>Chi phí dự đoán được theo headcount</li>
+        <li><span>Phù hợp:</span>Tổ chức data volume thấp, nhiều user</li>
+        <li><span>Ví dụ:</span>500 IP × rate = license cost/year</li>
+        <li><span>Bao gồm:</span>Đầy đủ tính năng platform</li>
+        <li><span>MSSP Model:</span>Pooled capacity across tenants</li>
+        <li><span>Không tính thêm:</span>New integrations (miễn phí)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub-title">Ví dụ Sizing thực tế</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Kịch bản</th><th>Quy mô</th><th>Ước tính GB/Day</th><th>License đề xuất</th><th>Ghi chú</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>SME Fintech</td>
+          <td>200 users, 150 servers, 5 cloud apps</td>
+          <td>~30–50 GB/day</td>
+          <td>Starter Pack 100GB + Security Module 1G</td>
+          <td>SaaS deployment; 30-day hot storage đủ</td>
+        </tr>
+        <tr>
+          <td>Mid-size Enterprise</td>
+          <td>1.000 users, 500 servers, multi-cloud</td>
+          <td>~150–300 GB/day</td>
+          <td>Starter 100GB + 2× Add-on 100GB + Network Module 10G</td>
+          <td>On-Prem VM; cần NDR sensor cho network</td>
+        </tr>
+        <tr>
+          <td>Large Bank / Gov</td>
+          <td>5.000 users, 2.000 servers, OT</td>
+          <td>~500–1.000 GB/day</td>
+          <td>Multiple 100GB packs + Security Module 10G × N + NDR sensors</td>
+          <td>On-Prem hardware; multi-site; 1-year cold storage</td>
+        </tr>
+        <tr>
+          <td>MSSP (100 khách hàng)</td>
+          <td>Pooled 10.000 users</td>
+          <td>~1–5 TB/day</td>
+          <td>Enterprise deal; multi-tenant; pooled capacity</td>
+          <td>SaaS hoặc Hybrid; tính theo tổng ingestion</td>
+        </tr>
+        <tr>
+          <td>Viettel SOC</td>
+          <td>Telecom MSSP — hàng trăm khách hàng</td>
+          <td>Multi-TB/day</td>
+          <td>Strategic partnership; white-label option</td>
+          <td>Tham chiếu use case Việt Nam thực tế</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <span class="callout-icon">💡</span>
+    <div class="callout-text"><strong>Quy tắc sizing nhanh:</strong> Ước tính GB/day = (số servers × 2GB) + (số endpoint × 0.5GB) + (số cloud apps × 5GB). Sau đó cộng 20% buffer. Chọn gói Starter Pack + Add-on phù hợp. Luôn tính thêm Network Module nếu cần NDR (SPAN port).</div>
+  </div>
+</section>
+
+<!-- SECTION 07: COMPARISON -->
+<section id="comparison">
+  <div class="section-tag">07 · Competitive Analysis</div>
+  <h2 class="sec-title">So sánh chi tiết với đối thủ SIEM</h2>
+  <div class="sec-line"></div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Tính năng / Tiêu chí</th>
+          <th class="comp-head-stellar">Stellar Cyber NG-SIEM</th>
+          <th>Splunk ES</th>
+          <th>IBM QRadar</th>
+          <th>OpenText ArcSight</th>
+          <th>Graylog Security</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Kiến trúc nền</td>
+          <td class="stellar-col yes">Open XDR Platform</td>
+          <td>Log analytics + Add-ons</td>
+          <td>Legacy SIEM + Add-ons</td>
+          <td>Legacy ESM Architecture</td>
+          <td>Open-source + commercial</td>
+        </tr>
+        <tr>
+          <td>Single License All-in-One</td>
+          <td class="stellar-col yes">✅ NG-SIEM+NDR+UEBA+ITDR+IDS+FIM+SOAR+TIP</td>
+          <td class="no">❌ Nhiều module riêng lẻ</td>
+          <td class="no">❌ Nhiều product riêng lẻ</td>
+          <td class="no">❌ ESM + SOAR riêng</td>
+          <td class="partial">⚠️ Gói Security tích hợp cơ bản</td>
+        </tr>
+        <tr>
+          <td>Native NDR tích hợp</td>
+          <td class="stellar-col yes">✅ Built-in, deep packet analysis</td>
+          <td class="partial">⚠️ Qua Cisco tích hợp riêng</td>
+          <td class="partial">⚠️ QRadar NDR — riêng biệt</td>
+          <td class="no">❌ Không native</td>
+          <td class="no">❌ Không có</td>
+        </tr>
+        <tr>
+          <td>GraphML AI Correlation</td>
+          <td class="stellar-col yes">✅ Native GraphML engine</td>
+          <td class="no">❌ Không có</td>
+          <td class="no">❌ Rule-based correlation</td>
+          <td class="no">❌ Rule-based correlation</td>
+          <td class="no">❌ Không có</td>
+        </tr>
+        <tr>
+          <td>GenAI / NLP Search</td>
+          <td class="stellar-col yes">✅ AI Investigator (NLP query)</td>
+          <td class="yes">✅ Splunk AI Assistant</td>
+          <td class="partial">⚠️ Watson — hạn chế</td>
+          <td class="no">❌ Không có</td>
+          <td class="partial">⚠️ AI-assisted (limited)</td>
+        </tr>
+        <tr>
+          <td>Case-Centric Approach</td>
+          <td class="stellar-col yes">✅ Native, AI-automated</td>
+          <td class="partial">⚠️ Manual incident creation</td>
+          <td class="partial">⚠️ Offense management</td>
+          <td class="partial">⚠️ Case management cơ bản</td>
+          <td class="no">❌ Alert-centric</td>
+        </tr>
+        <tr>
+          <td>600+ Built-in Detections</td>
+          <td class="stellar-col yes">✅ Out-of-the-box, no config</td>
+          <td class="partial">⚠️ Cần cấu hình correlation</td>
+          <td class="partial">⚠️ Rules cần tuning</td>
+          <td class="partial">⚠️ Rules cần tuning</td>
+          <td class="partial">⚠️ Cần configure</td>
+        </tr>
+        <tr>
+          <td>On-Premises Deployment</td>
+          <td class="stellar-col yes">✅ VM + Hardware Appliance</td>
+          <td class="yes">✅ Đầy đủ</td>
+          <td class="yes">✅ Đầy đủ</td>
+          <td class="yes">✅ Đầy đủ</td>
+          <td class="yes">✅ Self-managed</td>
+        </tr>
+        <tr>
+          <td>Cloud / SaaS Deployment</td>
+          <td class="stellar-col yes">✅ AWS, Azure, GCP, OCI, SaaS</td>
+          <td class="yes">✅ Splunk Cloud</td>
+          <td class="partial">⚠️ Cloud SIEM → Palo Alto</td>
+          <td class="partial">⚠️ Hạn chế</td>
+          <td class="yes">✅ Cloud option</td>
+        </tr>
+        <tr>
+          <td>Native SOAR / Playbooks</td>
+          <td class="stellar-col yes">✅ Built-in + AI Agentic Playbooks</td>
+          <td class="yes">✅ Splunk SOAR (riêng)</td>
+          <td class="yes">✅ QRadar SOAR (riêng)</td>
+          <td class="yes">✅ ArcSight SOAR (riêng)</td>
+          <td class="partial">⚠️ Built-in SOAR cơ bản</td>
+        </tr>
+        <tr>
+          <td>Multi-Tenancy Native</td>
+          <td class="stellar-col yes">✅ Multi-tier, multi-site native</td>
+          <td class="partial">⚠️ Workspaces — hạn chế</td>
+          <td class="partial">⚠️ Phức tạp khi setup</td>
+          <td class="partial">⚠️ Hạn chế</td>
+          <td class="partial">⚠️ Cơ bản</td>
+        </tr>
+        <tr>
+          <td>UEBA Built-in</td>
+          <td class="stellar-col yes">✅ Native UEBA + ITDR</td>
+          <td class="partial">⚠️ UBA add-on riêng</td>
+          <td class="partial">⚠️ User Behavior Analytics riêng</td>
+          <td class="no">❌ Cần tích hợp ngoài</td>
+          <td class="partial">⚠️ Basic UEBA</td>
+        </tr>
+        <tr>
+          <td>OT/ICS Security</td>
+          <td class="stellar-col yes">✅ NDR/OT chuyên biệt</td>
+          <td class="partial">⚠️ Qua partner</td>
+          <td class="partial">⚠️ Hạn chế</td>
+          <td class="no">❌ Không native</td>
+          <td class="no">❌ Không có</td>
+        </tr>
+        <tr>
+          <td>Phishing Auto-Triage</td>
+          <td class="stellar-col yes">✅ Agentic AI tự động (v6.0+)</td>
+          <td class="no">❌ Không có</td>
+          <td class="no">❌ Không có</td>
+          <td class="no">❌ Không có</td>
+          <td class="no">❌ Không có</td>
+        </tr>
+        <tr>
+          <td>Pricing Model</td>
+          <td class="stellar-col yes">✅ Volume/Asset; predictable cost</td>
+          <td class="no">❌ Per-GB — rất đắt khi scale</td>
+          <td class="partial">⚠️ EPS-based + modules</td>
+          <td class="partial">⚠️ Per-EPS — phức tạp</td>
+          <td class="yes">✅ Flat monthly ($1.250–1.550)</td>
+        </tr>
+        <tr>
+          <td>TCO tổng thể</td>
+          <td class="stellar-col yes">✅ Thấp nhất (all-in-one)</td>
+          <td class="no">❌ Rất cao khi scale</td>
+          <td class="partial">⚠️ Cao (nhiều module)</td>
+          <td class="partial">⚠️ Cao (consultation required)</td>
+          <td class="yes">✅ Thấp (open source base)</td>
+        </tr>
+        <tr>
+          <td>Autonomous SOC / AI Agents</td>
+          <td class="stellar-col yes">✅ Agentic AI — market leader</td>
+          <td class="partial">⚠️ Đang phát triển</td>
+          <td class="no">❌ Chưa có</td>
+          <td class="no">❌ Chưa có</td>
+          <td class="partial">⚠️ Hạn chế</td>
+        </tr>
+        <tr>
+          <td>Gartner Recognition (2025)</td>
+          <td class="stellar-col yes">✅ NDR MQ Challenger; XDR Rep. Vendor</td>
+          <td class="yes">✅ SIEM MQ Leader</td>
+          <td class="partial">⚠️ SIEM MQ (uncertain roadmap)</td>
+          <td class="partial">⚠️ Visionary (2022)</td>
+          <td class="no">❌ Không được xếp hạng SIEM MQ</td>
+        </tr>
+        <tr>
+          <td>Setup time</td>
+          <td class="stellar-col yes">✅ 2–4 tuần (SaaS) / &lt;1 ngày POC</td>
+          <td class="partial">⚠️ 4–8 tuần</td>
+          <td class="no">❌ 3–6 tháng</td>
+          <td class="no">❌ Phức tạp, dài</td>
+          <td class="yes">✅ Nhanh (open source)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub-title">Radar so sánh tổng quan</h3>
+  <div class="progress-list">
+    <div class="prog-item">
+      <div class="prog-label"><span>🟠 <strong>Stellar Cyber</strong> — AI & Automation Native</span><span>95/100</span></div>
+      <div class="prog-bar"><div class="prog-fill prog-orange" style="width:95%"></div></div>
+    </div>
+    <div class="prog-item">
+      <div class="prog-label"><span>⚪ Splunk ES — Log Analytics & Maturity</span><span>80/100</span></div>
+      <div class="prog-bar"><div class="prog-fill prog-blue" style="width:80%"></div></div>
+    </div>
+    <div class="prog-item">
+      <div class="prog-label"><span>⚪ IBM QRadar — Compliance & Forensics</span><span>65/100</span></div>
+      <div class="prog-bar"><div class="prog-fill prog-blue" style="width:65%"></div></div>
+    </div>
+    <div class="prog-item">
+      <div class="prog-label"><span>⚪ OpenText ArcSight — Enterprise Correlation</span><span>60/100</span></div>
+      <div class="prog-bar"><div class="prog-fill prog-blue" style="width:60%"></div></div>
+    </div>
+    <div class="prog-item">
+      <div class="prog-label"><span>⚪ Graylog — Cost-effective Log Management</span><span>55/100</span></div>
+      <div class="prog-bar"><div class="prog-fill prog-cyan" style="width:55%"></div></div>
+    </div>
+  </div>
+  <p style="font-size:12px; color:var(--text3); margin-top:8px;">* Điểm tổng hợp đánh giá theo: AI/ML capability, TCO, deployment flexibility, detection coverage, MSSP readiness, roadmap stability</p>
+</section>
+
+<!-- SECTION 08: DIFFERENTIATORS -->
+<section id="differentiators">
+  <div class="section-tag">08 · Unique Strengths</div>
+  <h2 class="sec-title">Điểm mạnh độc quyền của Stellar Cyber</h2>
+  <div class="sec-line"></div>
+
+  <p>Dưới đây là những tính năng và lợi thế mà <strong>đối thủ không có hoặc không hỗ trợ</strong>:</p>
+
+  <div class="diff-grid">
+    <div class="diff-pill">GraphML Correlation Native</div>
+    <div class="diff-pill">Single License All-in-One</div>
+    <div class="diff-pill">NDR tích hợp sẵn</div>
+    <div class="diff-pill">Phishing Agentic Auto-Triage</div>
+    <div class="diff-pill">Case-Centric AI Approach</div>
+    <div class="diff-pill">NLP Query (AI Investigator)</div>
+    <div class="diff-pill">Multi-tenant native</div>
+    <div class="diff-pill">On-Prem + Cloud + Hybrid</div>
+    <div class="diff-pill">OT/ICS NDR sensor</div>
+    <div class="diff-pill">600+ detections out-of-box</div>
+    <div class="diff-pill">Cold Data Scan không cần import</div>
+    <div class="diff-pill">New integrations miễn phí</div>
+    <div class="diff-pill">Autonomous SOC Journey</div>
+    <div class="diff-pill">Case Analysis AI Summary</div>
+  </div>
+
+  <h3 class="sub-title">Key Points khi so sánh với đối thủ</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Khi khách hàng hỏi về...</th><th>Key Point cần nhấn mạnh</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Chi phí tổng thể (TCO)</td><td>Stellar Cyber ALL-IN-ONE: 1 license thay thế 5–8 giải pháp độc lập. ROI thực tế 20X so với legacy SIEM. Không tính thêm chi phí cho new integrations.</td></tr>
+        <tr><td>AI và Machine Learning</td><td>Multi-Layer AI™ được NATIVE — không phải add-on. GraphML là công nghệ độc quyền không có ở đối thủ nào. Được train trên real-world data, liên tục improve.</td></tr>
+        <tr><td>Network Visibility</td><td>NDR tích hợp NATIVE với deep packet inspection. Đối thủ (Splunk, ArcSight, Graylog) cần mua NDR riêng. Stellar Cyber phát hiện lateral movement, east-west traffic ngay trong platform.</td></tr>
+        <tr><td>Độ phức tạp vận hành</td><td>600+ detections out-of-box không cần tuning. Case-Centric giảm 8X khối lượng analyst. AI Investigator cho phép đặt câu hỏi tự nhiên. Setup &lt;1 ngày cho POC.</td></tr>
+        <tr><td>MSSP / Multi-tenant</td><td>Multi-tier, multi-tenant, multi-site là NATIVE. Đối thủ (QRadar, ArcSight) cần cấu hình phức tạp. Pooled licensing cho phép MSSP tối ưu chi phí.</td></tr>
+        <tr><td>Roadmap & Future</td><td>QRadar Cloud đã bị bán cho Palo Alto — khách hàng QRadar On-Prem không có upgrade path rõ ràng. Stellar Cyber đang trên đà tăng trưởng mạnh, NDR Gartner Challenger 2025.</td></tr>
+        <tr><td>Compliance Việt Nam</td><td>On-Premises hoàn toàn — data không rời data center. Đáp ứng yêu cầu data sovereignty của cơ quan chính phủ, ngân hàng, quốc phòng Việt Nam.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SECTION 09: USE CASES -->
+<section id="usecases">
+  <div class="section-tag">09 · Real-world Use Cases</div>
+  <h2 class="sec-title">Các Use Cases triển khai thực tế</h2>
+  <div class="sec-line"></div>
+
+  <div class="usecase-grid">
+    <div class="uc-card">
+      <div class="uc-icon">🔑</div>
+      <div class="uc-label">ITDR</div>
+      <h4>Compromised Credentials / Account Takeover</h4>
+      <p>70% breach bắt đầu từ credential bị xâm phạm (Verizon DBIR 2024). ITDR + UEBA phát hiện real-time: ATO, MFA abuse, privilege escalation, geo-anomaly login, brute force. Real-time identity risk scoring.</p>
+    </div>
+    <div class="uc-card">
+      <div class="uc-icon">👁️</div>
+      <div class="uc-label">UEBA + FIM</div>
+      <h4>Insider Threat Detection</h4>
+      <p>Phát hiện nhân viên nội bộ rò rỉ dữ liệu hoặc lạm dụng đặc quyền. UEBA phân tích behavioral anomaly; FIM giám sát thay đổi file quan trọng. Alert khi access pattern bất thường.</p>
+    </div>
+    <div class="uc-card">
+      <div class="uc-icon">🦀</div>
+      <div class="uc-label">NDR</div>
+      <h4>Lateral Movement Detection</h4>
+      <p>Kẻ tấn công di chuyển ngang sau khi xâm nhập. NDR phân tích east-west traffic; GraphML kết nối chuỗi sự kiện. Phát hiện reconnaissance, pass-the-hash, SMB enumeration.</p>
+    </div>
+    <div class="uc-card">
+      <div class="uc-icon">💣</div>
+      <div class="uc-label">ML + Auto Response</div>
+      <h4>Ransomware Early Detection</h4>
+      <p>Phát hiện sớm chuỗi ransomware: initial access → persistence → encryption. ML Detection + IDS Sandbox phân tích malware behavior. Auto Response cô lập thiết bị tự động.</p>
+    </div>
+    <div class="uc-card">
+      <div class="uc-icon">📧</div>
+      <div class="uc-label">Agentic AI</div>
+      <h4>Phishing Auto-Triage</h4>
+      <p>AI agents tự động phân tích 100% email phishing được report trong vài phút. Xác định URL độc hại, attachment malware, sender spoofing. Tự động quarantine và thông báo (v6.0+).</p>
+    </div>
+    <div class="uc-card">
+      <div class="uc-icon">☁️</div>
+      <div class="uc-label">CDR</div>
+      <h4>Multi-Cloud Security Monitoring</h4>
+      <p>Giám sát unified AWS, Azure, GCP, OCI trong một dashboard. Phát hiện misconfiguration, unusual API calls, data exfiltration. Cross-cloud attack correlation với on-prem events.</p>
+    </div>
+    <div class="uc-card">
+      <div class="uc-icon">🏭</div>
+      <div class="uc-label">NDR/OT</div>
+      <h4>OT/ICS Security</h4>
+      <p>Giám sát mạng công nghiệp (nhà máy, điện, nước, dầu khí). Sensor chuyên biệt phân tích Modbus, DNP3, IEC 61850. Phát hiện unauthorized commands, anomalous device behavior.</p>
+    </div>
+    <div class="uc-card">
+      <div class="uc-icon">🛡️</div>
+      <div class="uc-label">Consolidation</div>
+      <h4>Security Stack Consolidation</h4>
+      <p>Thay thế 5–8 giải pháp độc lập (SIEM + NDR + UEBA + SOAR + TIP) bằng 1 platform. Giảm alert fatigue. Single pane of glass. Giảm TCO đáng kể.</p>
+    </div>
+    <div class="uc-card">
+      <div class="uc-icon">🏦</div>
+      <div class="uc-label">Vietnam</div>
+      <h4>Ngân hàng / Chính phủ Việt Nam</h4>
+      <p>On-Premises hoàn toàn đáp ứng data sovereignty. Use cases thực tế: Viettel SOC, VNPT MDR, Bộ QP, Bộ Công an. Compliance với quy định NHNN, Bộ TT&TT.</p>
+    </div>
+  </div>
+
+  <h3 class="sub-title">Customer Evidence</h3>
+  <div class="quote-block">
+    <p>"Stellar Cyber makes our analyst teams more efficient and improves our services daily, something we couldn't do with our old SIEM."</p>
+    <div class="source">— 5IRON (chuyển từ Splunk)</div>
+  </div>
+  <div class="quote-block">
+    <p>"It took me less than one business day to set up Stellar Cyber. It took over a week to figure out what I was doing with my old system."</p>
+    <div class="source">— INSOC (chuyển từ AlienVault)</div>
+  </div>
+  <div class="quote-block">
+    <p>"The platform's AI delivers a complete view of security events across our clients' global infrastructure under one pane of glass."</p>
+    <div class="source">— Todd Willoughby, Director of Security & Privacy at RSM US</div>
+  </div>
+</section>
+
+<!-- SECTION 10: SCENARIOS -->
+<section id="scenarios">
+  <div class="section-tag">10 · Sales Scenarios</div>
+  <h2 class="sec-title">Kịch bản tư vấn khi so sánh với đối thủ</h2>
+  <div class="sec-line"></div>
+
+  <div class="scenario">
+    <div class="scenario-header">
+      <span class="scenario-badge">vs SPLUNK</span>
+      <h4>"Chúng tôi đang dùng Splunk Enterprise Security — tại sao phải chuyển?"</h4>
+    </div>
+    <div class="scenario-body">
+      <div class="s-col">
+        <h5>Điểm yếu của Splunk</h5>
+        <p>Chi phí per-GB tăng mạnh theo data volume — nhiều tổ chức bị "data-shaming" phải limit ingest. Splunk ES cần mua thêm SOAR, UBA riêng lẻ. Không có NDR native. Correlation rules vẫn largely manual. TCO rất cao.</p>
+      </div>
+      <div class="s-col response">
+        <h5>Response Stellar Cyber</h5>
+        <p>Stellar Cyber có thể AUGMENT Splunk (không bắt buộc migrate): bổ sung NDR, UEBA, ITDR và AI correlation. Hoặc replace Splunk với TCO thấp hơn đáng kể. 5IRON đã chuyển từ Splunk và cải thiện dịch vụ hàng ngày. Chi phí dự đoán được — không surprise bill.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-header">
+      <span class="scenario-badge">vs IBM QRADAR</span>
+      <h4>"Chúng tôi đã đầu tư vào QRadar — lo ngại về migration."</h4>
+    </div>
+    <div class="scenario-body">
+      <div class="s-col">
+        <h5>Tình huống QRadar</h5>
+        <p>IBM đã bán QRadar Cloud SIEM cho Palo Alto Networks. On-Prem QRadar không có upgrade path rõ ràng. Khách hàng QRadar đang đứng trước ngã ba đường bắt buộc. Roadmap không chắc chắn cho multi-year investment.</p>
+      </div>
+      <div class="s-col response">
+        <h5>Response Stellar Cyber</h5>
+        <p>Đây là thời điểm lý tưởng để migrate — không phải vì Stellar Cyber tốt hơn mà vì QRadar KHÔNG CÒN LÀ LỰA CHỌN AN TOÀN. Stellar Cyber cung cấp migration support, rule translation, và parallel operation. Hỗ trợ nhập cùng data sources. Không tính phí new integrations.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-header">
+      <span class="scenario-badge">vs OPENTEXT ARCSIGHT</span>
+      <h4>"ArcSight ESM đang hoạt động tốt — sao lại thay?"</h4>
+    </div>
+    <div class="scenario-body">
+      <div class="s-col">
+        <h5>Hạn chế của ArcSight</h5>
+        <p>ArcSight là legacy architecture từ thời HPE — thiết kế cho log-centric monitoring. Không có AI/ML native. SOAR riêng biệt. Không có NDR, UEBA native. Phức tạp trong việc integrate. TCO cao. Pricing không minh bạch.</p>
+      </div>
+      <div class="s-col response">
+        <h5>Response Stellar Cyber</h5>
+        <p>ArcSight "hoạt động tốt" theo nghĩa collect logs — nhưng thiếu hẳn khả năng phát hiện và phản ứng hiện đại. Không phát hiện được lateral movement (không có NDR). Không tự động hóa response. Đội analyst vẫn phải làm nhiều thủ công. Stellar Cyber bổ sung những gì ArcSight thiếu.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-header">
+      <span class="scenario-badge">vs GRAYLOG</span>
+      <h4>"Graylog rẻ hơn nhiều — tại sao trả tiền cho Stellar?"</h4>
+    </div>
+    <div class="scenario-body">
+      <div class="s-col">
+        <h5>Hạn chế của Graylog</h5>
+        <p>Graylog là log management platform tốt nhưng SIEM capability còn hạn chế: không có NDR, không có GraphML correlation, không có GenAI/NLP search, không có ITDR native, không có Autonomous SOC journey. Phù hợp cho log aggregation, không phải advanced threat detection.</p>
+      </div>
+      <div class="s-col response">
+        <h5>Response Stellar Cyber</h5>
+        <p>Graylog Security ($1.550/month) phù hợp cho SME cần log management cơ bản. Stellar Cyber phù hợp khi tổ chức cần: phát hiện advanced threats (APT, lateral movement), regulatory compliance đầy đủ, MSSP multi-tenant, và lộ trình Autonomous SOC. Đây là sự khác biệt về đẳng cấp sản phẩm.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-header">
+      <span class="scenario-badge">vs ALL</span>
+      <h4>"Chi phí Stellar Cyber có đắt không?"</h4>
+    </div>
+    <div class="scenario-body">
+      <div class="s-col">
+        <h5>Cách khách hàng thường so sánh</h5>
+        <p>So sánh trực tiếp giá list price của Stellar Cyber với 1 sản phẩm (chỉ SIEM của Splunk hoặc QRadar) — tưởng Stellar đắt hơn. Nhưng đây là so sánh sai.</p>
+      </div>
+      <div class="s-col response">
+        <h5>Response: Tổng chi phí thực tế (TCO)</h5>
+        <p>Stellar Cyber = SIEM + NDR + UEBA + ITDR + IDS + FIM + SOAR + TIP. Cộng tất cả chi phí tương đương của đối thủ (Splunk ES + Splunk SOAR + NDR vendor + UEBA vendor) → Stellar Cyber rẻ hơn 30–50%. Chưa kể tiết kiệm nhân lực vận hành và tích hợp.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 11: BENEFITS -->
+<section id="benefits">
+  <div class="section-tag">11 · Business Value</div>
+  <h2 class="sec-title">Lợi ích đem lại</h2>
+  <div class="sec-line"></div>
+
+  <div class="cards-grid">
+    <div class="card">
+      <div class="card-icon">⚡</div>
+      <h4>Giảm MTTD/MTTR</h4>
+      <p>AI Investigator giảm 400% thời gian phản ứng. GraphML phát hiện attack pattern trong seconds thay vì giờ. Auto Response thu hẹp breach window tối đa.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">👨‍💻</div>
+      <h4>Tăng năng suất Analyst</h4>
+      <p>Giảm 60–80% thời gian triage. Giảm 8X khối lượng nhờ Case-Centric. Analyst tập trung vào công việc chiến lược và threat hunting — không còn "alert fatigue".</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">💰</div>
+      <h4>Tối ưu Chi phí (TCO)</h4>
+      <p>1 license thay thế 5–8 giải pháp. Không phí tích hợp mới. Không surprise billing. ROI thực tế 20X. Giảm chi phí vận hành và đào tạo đa platform.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎯</div>
+      <h4>Phát hiện Chính xác hơn</h4>
+      <p>Giảm 40–70% false positives. 600+ detections sẵn có. ML phát hiện zero-day. GraphML phát hiện attack chain phức tạp không thể detect bằng rule-based.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📈</div>
+      <h4>Scale dễ dàng</h4>
+      <p>Cloud-native microservices scale theo nhu cầu. Xử lý hàng trăm TB/ngày. Multi-tenant cho MSSP phục vụ hàng trăm khách hàng từ 1 platform.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔒</div>
+      <h4>Tuân thủ Compliance</h4>
+      <p>GDPR, PCI DSS, ISO 27001, HIPAA, SOX out-of-the-box. Audit trail đầy đủ. Automated reporting. Giảm thời gian chuẩn bị audit xuống hàng tuần.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🌐</div>
+      <h4>Full Attack Surface Coverage</h4>
+      <p>Endpoint + Network + Cloud + Identity + Email + OT trong một platform. Không blind spot. Single source of truth cho toàn bộ security posture của tổ chức.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🤝</div>
+      <h4>MSSP Revenue Growth</h4>
+      <p>Multi-tenant native giúp MSSP mở rộng khách hàng không cần tăng analyst. Pooled licensing tối ưu margin. White-label dashboards tăng giá trị dịch vụ.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 12: RANKING -->
+<section id="ranking">
+  <div class="section-tag">12 · Market Position</div>
+  <h2 class="sec-title">Đánh giá & Xếp hạng thị trường</h2>
+  <div class="sec-line"></div>
+
+  <h3 class="sub-title">Nhận diện từ Gartner (2024–2025)</h3>
+  <div class="rank-table">
+    <div class="rank-item gold-border">
+      <div class="rank-num">★</div>
+      <div class="rank-body">
+        <h4>Gartner Magic Quadrant for NDR — Challenger (2025)</h4>
+        <p>Vị trí Challenger — vị trí duy nhất trong quadrant này. Được đánh giá cao về execution và vision trong Network Detection & Response.</p>
+      </div>
+      <span class="rank-badge rb-orange">MQ 2025</span>
+    </div>
+    <div class="rank-item">
+      <div class="rank-num">01</div>
+      <div class="rank-body">
+        <h4>Gartner Market Guide for XDR — Representative Vendor</h4>
+        <p>Được ghi nhận 2 năm liên tiếp (2023 & 2024) là Representative Vendor trong XDR Market Guide.</p>
+      </div>
+      <span class="rank-badge rb-blue">2023 & 2024</span>
+    </div>
+    <div class="rank-item">
+      <div class="rank-num">02</div>
+      <div class="rank-body">
+        <h4>Gartner Market Guide for NDR — Representative Vendor (2024)</h4>
+        <p>"NDR technology contributes to XDR by detecting network-based anomalies." Stellar Cyber là một trong số ít vendor kết hợp NDR và XDR thành công.</p>
+      </div>
+      <span class="rank-badge rb-blue">2024</span>
+    </div>
+    <div class="rank-item">
+      <div class="rank-num">03</div>
+      <div class="rank-body">
+        <h4>Gartner Hype Cycle for Security Operations — Sample Vendor (2024)</h4>
+        <p>Được nhận diện trong Hype Cycle, chứng tỏ vị trí trong xu hướng Autonomous SOC và AI-driven SecOps.</p>
+      </div>
+      <span class="rank-badge rb-green">2024</span>
+    </div>
+  </div>
+
+  <h3 class="sub-title">Giải thưởng ngành</h3>
+  <div class="rank-table">
+    <div class="rank-item"><div class="rank-num">🏆</div><div class="rank-body"><h4>Best Cybersecurity Solution 2022 — Cloud Security Winner</h4><p>Futuriom 40-Cloud Market Leader 2022</p></div><span class="rank-badge rb-orange">2022</span></div>
+    <div class="rank-item"><div class="rank-num">🏆</div><div class="rank-body"><h4>Editor's Choice XDR 2022 — Most Innovative XDR Solution 2023</h4><p>CRN "10 Hot XDR Security Companies You Should Watch" 2023</p></div><span class="rank-badge rb-blue">2022–2023</span></div>
+    <div class="rank-item"><div class="rank-num">🏆</div><div class="rank-body"><h4>Baby Black Unicorn Awards 2022</h4><p>Nhận diện là một trong những startup an ninh mạng đáng chú ý nhất</p></div><span class="rank-badge rb-green">2022</span></div>
+  </div>
+
+  <h3 class="sub-title">Vị trí thị trường</h3>
+  <div class="stat-cards">
+    <div class="stat-card">
+      <div class="big-num">⅓</div>
+      <div class="label">Top 250 MSSP toàn cầu tin dùng Stellar Cyber</div>
+    </div>
+    <div class="stat-card">
+      <div class="big-num">#1</div>
+      <div class="label">De-facto Standard SOC Platform for MSSPs (theo nhiều báo cáo)</div>
+    </div>
+    <div class="stat-card">
+      <div class="big-num">20X</div>
+      <div class="label">ROI điển hình so với legacy SIEM platform</div>
+    </div>
+    <div class="stat-card">
+      <div class="big-num">v6.2</div>
+      <div class="label">Phiên bản mới nhất (2025) với Autonomous SOC capabilities</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <span class="callout-icon">📊</span>
+    <div class="callout-text"><strong>Xu hướng thị trường xác nhận:</strong> Gartner dự báo đến 2026, hơn 50% tổ chức sẽ thay thế legacy SIEM bằng các nền tảng tích hợp SIEM + XDR. Stellar Cyber đang đúng vị trí và đúng thời điểm với kiến trúc Open XDR native.</div>
+  </div>
+</section>
+
+<!-- SECTION 13: REFERENCES -->
+<section id="references">
+  <div class="section-tag">13 · Sources & References</div>
+  <h2 class="sec-title">Tài liệu tham chiếu</h2>
+  <div class="sec-line"></div>
+
+  <h3 class="sub-title">Tài liệu nội bộ (Project Files)</h3>
+  <div class="refs">
+    <div class="ref-item">
+      <div class="ref-num">[S1]</div>
+      <div class="ref-content">
+        <strong>Stellar Cyber Sales Training Slides (March 2025)</strong>
+        <span>Internal training material — 18 slides. Covers: overview, platform architecture, licensing, use cases Vietnam, customer quotes, MSSP positioning.</span>
+      </div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-num">[S2]</div>
+      <div class="ref-content">
+        <strong>Stellar Cyber Open XDR Solution Overview (July 2025)</strong>
+        <span>Presentation 41 slides. Covers: autonomous SOC roadmap, product releases 5.4–6.2, deployment architecture, licensing model, competitive positioning, 2025 roadmap.</span>
+      </div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-num">[S3]</div>
+      <div class="ref-content">
+        <strong>Stellar Cyber Survey.xlsx</strong>
+        <span>Internal survey data và market research.</span>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub-title">Website chính thức stellarcyber.ai</h3>
+  <div class="refs">
+    <div class="ref-item">
+      <div class="ref-num">[W1]</div>
+      <div class="ref-content">
+        <strong>AI-Native Next-Gen SIEM</strong>
+        <a href="https://stellarcyber.ai/platform/capabilities-ng-siem/" target="_blank">stellarcyber.ai/platform/capabilities-ng-siem/</a>
+      </div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-num">[W2]</div>
+      <div class="ref-content">
+        <strong>AI-Driven SIEM Platform</strong>
+        <a href="https://stellarcyber.ai/platform/capabilities-ai-siem/" target="_blank">stellarcyber.ai/platform/capabilities-ai-siem/</a>
+      </div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-num">[W3]</div>
+      <div class="ref-content">
+        <strong>Multi-Layer AI™ — How It Works</strong>
+        <a href="https://stellarcyber.ai/product/stellar-cyber-multi-layer-ai/" target="_blank">stellarcyber.ai/product/stellar-cyber-multi-layer-ai/</a>
+      </div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-num">[W4]</div>
+      <div class="ref-content">
+        <strong>Open XDR vs SIEM — Technical Comparison</strong>
+        <a href="https://stellarcyber.ai/open-xdr-vs-siem/" target="_blank">stellarcyber.ai/open-xdr-vs-siem/</a>
+      </div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-num">[W5]</div>
+      <div class="ref-content">
+        <strong>Stellar Cyber vs QRadar</strong>
+        <a href="https://stellarcyber.ai/product/stellar-cyber-vs-qradar/" target="_blank">stellarcyber.ai/product/stellar-cyber-vs-qradar/</a>
+      </div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-num">[W6]</div>
+      <div class="ref-content">
+        <strong>Stellar Cyber vs Splunk</strong>
+        <a href="https://stellarcyber.ai/product/stellar-cyber-vs-splunk/" target="_blank">stellarcyber.ai/product/stellar-cyber-vs-splunk/</a>
+      </div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-num">[W7]</div>
+      <div class="ref-content">
+        <strong>SIEM Compliance Use Cases (GDPR, PCI DSS, ISO, etc.)</strong>
+        <a href="https://stellarcyber.ai/learn/siem-compliance-use-cases/" target="_blank">stellarcyber.ai/learn/siem-compliance-use-cases/</a>
+      </div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-num">[W8]</div>
+      <div class="ref-content">
+        <strong>Top 10 SIEM Solutions 2025</strong>
+        <a href="https://stellarcyber.ai/learn/top-siem-solutions/" target="_blank">stellarcyber.ai/learn/top-siem-solutions/</a>
+      </div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-num">[W9]</div>
+      <div class="ref-content">
+        <strong>SOAR vs SIEM vs Hyperautomation</strong>
+        <a href="https://stellarcyber.ai/learn/soar-vs-siem-vs-hyperautomation/" target="_blank">stellarcyber.ai/learn/soar-vs-siem-vs-hyperautomation/</a>
+      </div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-num">[W10]</div>
+      <div class="ref-content">
+        <strong>Top 10 Agentic SOC Platforms 2026</strong>
+        <a href="https://stellarcyber.ai/learn/top-10-agentic-soc-platforms/" target="_blank">stellarcyber.ai/learn/top-10-agentic-soc-platforms/</a>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub-title">Press Releases & Analyst Reports</h3>
+  <div class="refs">
+    <div class="ref-item">
+      <div class="ref-num">[A1]</div>
+      <div class="ref-content">
+        <strong>Gartner Magic Quadrant for Network Detection and Response (May 2025)</strong>
+        <span>Stellar Cyber xếp hạng Challenger — vị trí duy nhất trong quadrant này.</span>
+        <a href="https://info.stellarcyber.ai/Gartner-Magic-Quadrant-NDR-May-2025.html" target="_blank">Download Report</a>
+      </div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-num">[A2]</div>
+      <div class="ref-content">
+        <strong>Gartner Market Guide for Extended Detection and Response (2024)</strong>
+        <span>Stellar Cyber — Representative Vendor, lần thứ 2 liên tiếp.</span>
+      </div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-num">[A3]</div>
+      <div class="ref-content">
+        <strong>Gartner Hype Cycle for Security Operations 2024</strong>
+        <span>Stellar Cyber — Sample Vendor cho Autonomous SOC category.</span>
+      </div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-num">[A4]</div>
+      <div class="ref-content">
+        <strong>Stellar Cyber 6.1 Press Release — "Milestone on the Journey to Autonomous Security" (Sep 2025)</strong>
+        <a href="https://stellarcyber.ai/news/press-releases/stellar-cyber-illuminates-the-path-forward-with-release-6-1-a-milestone-on-the-journey-to-autonomous-security/" target="_blank">Press Release</a>
+      </div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-num">[A5]</div>
+      <div class="ref-content">
+        <strong>Stellar Cyber ITDR Launch — Advanced Identity Threat Detection (Jul 2025)</strong>
+        <a href="https://stellarcyber.ai/news/press-releases/stellar-cyber-identity-threat-detection-response/" target="_blank">Press Release</a>
+      </div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-num">[A6]</div>
+      <div class="ref-content">
+        <strong>Stellar Cyber Agentic AI at RSAC 2026 (Mar 2026)</strong>
+        <a href="https://stellarcyber.ai/news/press-releases/stellar-cyber-agentic-ai-autonomous-soc-rsac/" target="_blank">Press Release</a>
+      </div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-num">[A7]</div>
+      <div class="ref-content">
+        <strong>Verizon 2024 DBIR — Data Breach Investigations Report</strong>
+        <span>70% breach bắt đầu từ compromised credentials. Referenced trong ITDR positioning.</span>
+      </div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-num">[A8]</div>
+      <div class="ref-content">
+        <strong>IBM Cost of Data Breach Report 2024</strong>
+        <span>$4.88M chi phí vi phạm trung bình toàn cầu; $9.36M tại Mỹ; tăng 10% từ 2023.</span>
+      </div>
+    </div>
+    <div class="ref-item">
+      <div class="ref-num">[A9]</div>
+      <div class="ref-content">
+        <strong>Gartner Peer Insights — Open XDR Platform Reviews 2026</strong>
+        <a href="https://www.gartner.com/reviews/market/network-detection-and-response/vendor/stellar-cyber" target="_blank">Gartner Reviews</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div><!-- end #main -->
+
+<footer>
+  <p>Stellar Cyber NG-SIEM Research Report · Tổng hợp từ tài liệu nội bộ & stellarcyber.ai · Tháng 5/2026 · Dành cho đội ngũ Sales & Pre-Sales</p>
+</footer>
+
+<script>
+// Active nav highlight
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('#sidenav a');
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector(`#sidenav a[href="#${e.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { threshold: 0.3, rootMargin: '-10% 0px -60% 0px' });
+sections.forEach(s => observer.observe(s));
+
+// Animate progress bars on scroll
+const progFills = document.querySelectorAll('.prog-fill');
+const progObs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.width = e.target.style.width;
+    }
+  });
+}, { threshold: 0.5 });
+progFills.forEach(p => progObs.observe(p));
+</script>
+</body>
+</html>

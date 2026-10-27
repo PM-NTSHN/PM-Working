@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>NETSCOUT Sightline Insight — Tài Liệu Thuyết Minh Chuyên Sâu</title>
+<style>
+:root{
+  --primary:#00274D;--accent:#0066CC;--green:#00875A;--orange:#D14900;
+  --red:#C9372C;--yellow:#E2A400;--sky:#0091D5;--bg:#F4F7FA;
+  --card:#fff;--border:#DDE3EA;--text:#1A2332;--muted:#5A6A7E;
+  --tag-blue:#DBEAFE;--tag-green:#DCFCE7;--tag-orange:#FFEDD5;--tag-purple:#EDE9FE;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);font-size:15px;line-height:1.7;}
+
+/* HEADER */
+.hdr{background:linear-gradient(135deg,#001833 0%,#00274D 50%,#003D7A 100%);color:#fff;padding:44px 40px 32px;border-bottom:4px solid var(--green);}
+.hdr-badge{display:inline-block;background:var(--green);color:#fff;font-size:11px;font-weight:700;letter-spacing:1.5px;padding:3px 12px;border-radius:20px;text-transform:uppercase;margin-bottom:14px;}
+.hdr h1{font-size:30px;font-weight:900;line-height:1.2;margin-bottom:10px;}
+.hdr .sub{font-size:14px;opacity:.82;max-width:780px;line-height:1.7;}
+.hdr-meta{margin-top:18px;display:flex;flex-wrap:wrap;gap:20px;font-size:12px;opacity:.7;}
+.hdr-meta span::before{content:"● ";color:var(--green);}
+
+/* NAV */
+.nav{background:var(--primary);padding:0 40px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.3);}
+.nav-inner{display:flex;flex-wrap:wrap;gap:2px;}
+.nav a{color:rgba(255,255,255,.65);text-decoration:none;font-size:12.5px;font-weight:600;padding:12px 14px;display:inline-block;border-bottom:3px solid transparent;transition:.2s;white-space:nowrap;}
+.nav a:hover,.nav a.active{color:#fff;border-color:var(--green);}
+
+/* LAYOUT */
+.wrap{max-width:1180px;margin:0 auto;padding:36px 24px 80px;}
+
+/* SECTION */
+.sec{margin-bottom:52px;}
+.sec-hdr{display:flex;align-items:center;gap:14px;margin-bottom:24px;padding-bottom:12px;border-bottom:3px solid var(--accent);}
+.sec-num{width:40px;height:40px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;flex-shrink:0;}
+.sec-title{font-size:21px;font-weight:900;color:var(--primary);}
+.sec-sub{font-size:13px;color:var(--muted);margin-top:2px;}
+
+h3{font-size:16px;font-weight:800;color:var(--primary);margin:26px 0 10px;padding-left:12px;border-left:4px solid var(--green);}
+h4{font-size:14px;font-weight:700;color:var(--accent);margin:16px 0 6px;}
+p{margin-bottom:11px;}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px 24px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.04);}
+.card.al{border-left:4px solid var(--accent);}
+.card.gl{border-left:4px solid var(--green);}
+.card.ol{border-left:4px solid var(--orange);}
+.card.rl{border-left:4px solid var(--red);}
+.card-title{font-size:15px;font-weight:800;color:var(--primary);margin-bottom:8px;}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+@media(max-width:900px){.g3,.g4{grid-template-columns:1fr 1fr;}}
+@media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr;}}
+
+/* FEAT LIST */
+ul.fl{list-style:none;padding:0;}
+ul.fl li{padding:6px 0 6px 24px;position:relative;border-bottom:1px solid var(--border);font-size:14px;}
+ul.fl li:last-child{border-bottom:none;}
+ul.fl li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:900;}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:14px 0;}
+th{background:var(--primary);color:#fff;padding:10px 13px;text-align:left;font-size:12.5px;}
+td{padding:9px 13px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:nth-child(even) td{background:#f8fafc;}
+tr:hover td{background:#eef4ff;}
+
+/* TAGS */
+.tag{display:inline-block;padding:2px 9px;border-radius:12px;font-size:11px;font-weight:700;margin:2px;}
+.tb{background:var(--tag-blue);color:#1D4ED8;}
+.tg{background:var(--tag-green);color:#166534;}
+.to{background:var(--tag-orange);color:#9A3412;}
+.tp{background:var(--tag-purple);color:#6D28D9;}
+
+/* CALLOUT */
+.callout{border-left:5px solid var(--accent);background:#EFF6FF;border-radius:0 8px 8px 0;padding:13px 18px;margin:14px 0;font-size:14px;}
+.callout.green{background:#F0FDF4;border-color:var(--green);}
+.callout.warn{background:#FFFBEB;border-color:var(--yellow);}
+.callout.red{background:#FEF2F2;border-color:var(--red);}
+
+/* ARCH BOX */
+.arch{background:#001833;border-radius:12px;padding:24px;color:#fff;font-size:12.5px;overflow-x:auto;line-height:1.9;}
+.arch-layer{border:1px solid rgba(255,255,255,.18);border-radius:7px;padding:10px 15px;margin:7px 0;background:rgba(255,255,255,.04);}
+.arch-layer-title{font-size:11px;font-weight:700;color:var(--green);letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;}
+
+/* STAT */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:18px 0;}
+@media(max-width:700px){.stat-row{grid-template-columns:1fr 1fr;}}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;}
+.stat-num{font-size:26px;font-weight:900;color:var(--accent);}
+.stat-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:4px;}
+
+/* FLOW DIAGRAM */
+.flow{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:16px 0;}
+.flow-box{background:var(--card);border:2px solid var(--border);border-radius:8px;padding:10px 14px;text-align:center;font-size:12.5px;font-weight:700;color:var(--primary);min-width:110px;}
+.flow-box.active{background:var(--primary);color:#fff;border-color:var(--primary);}
+.flow-box.green{background:var(--green);color:#fff;border-color:var(--green);}
+.flow-box.sky{background:var(--sky);color:#fff;border-color:var(--sky);}
+.flow-arr{font-size:18px;color:var(--muted);}
+
+/* HIGHLIGHT */
+.hl{background:linear-gradient(135deg,#EFF6FF,#F0FDF4);border:1px solid #BFDBFE;border-radius:10px;padding:18px 22px;margin:14px 0;}
+.hl-title{font-weight:900;color:var(--primary);font-size:13px;margin-bottom:7px;}
+
+/* STEP */
+.steps{counter-reset:step;}
+.step{counter-increment:step;display:flex;gap:14px;margin-bottom:18px;}
+.step-num{width:32px;height:32px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;flex-shrink:0;margin-top:2px;}
+.step-num::before{content:counter(step);}
+.step-body{flex:1;}
+.step-title{font-weight:800;color:var(--primary);margin-bottom:4px;}
+
+/* TIMELINE */
+.tl{position:relative;padding-left:26px;}
+.tl::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--border);}
+.tl-item{position:relative;margin-bottom:20px;}
+.tl-item::before{content:'';position:absolute;left:-22px;top:6px;width:12px;height:12px;border-radius:50%;background:var(--accent);border:2px solid #fff;box-shadow:0 0 0 2px var(--accent);}
+.tl-date{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;}
+.tl-title{font-weight:700;margin:3px 0 5px;}
+
+/* FOOTER */
+footer{background:var(--primary);color:rgba(255,255,255,.65);padding:24px 40px;text-align:center;font-size:13px;margin-top:60px;}
+footer a{color:var(--green);text-decoration:none;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <span class="hdr-badge">Tài Liệu Tư Vấn · NETSCOUT · Tháng 4/2026</span>
+  <h1>NETSCOUT Sightline™ Insight<br>Tài Liệu Thuyết Minh Chuyên Sâu</h1>
+  <p class="sub">Phân tích toàn diện giải pháp Sightline Insight — kiến trúc, tính năng, licensing, tích hợp Sightline/TMS, và use case triển khai thực tế cho nhà mạng VNPT Net. Tổng hợp từ tài liệu gốc NETSCOUT, datasheet, installation guide và tài liệu đề xuất cho VNPT.</p>
+  <div class="hdr-meta">
+    <span>Nguồn: NETSCOUT Official Docs + VNPT Proposal Document</span>
+    <span>Sản phẩm: Arbor Sightline with Insight v10+</span>
+    <span>Đối tượng: Tư vấn giải pháp &amp; Pre-sales</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-inner">
+    <a href="#s1">1. Tổng quan</a>
+    <a href="#s2">2. Kiến trúc</a>
+    <a href="#s3">3. Sightline Core</a>
+    <a href="#s4">4. Insight Add-on</a>
+    <a href="#s5">5. Tích hợp TMS</a>
+    <a href="#s6">6. ATLAS &amp; AIF</a>
+    <a href="#s7">7. Licensing</a>
+    <a href="#s8">8. Triển khai</a>
+    <a href="#s9">9. Use Case VNPT</a>
+    <a href="#s10">10. So sánh &amp; ROI</a>
+    <a href="#s11">11. Tài liệu tham khảo</a>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- ═══ 1. TỔNG QUAN ═══ -->
+<section class="sec" id="s1">
+  <div class="sec-hdr">
+    <div class="sec-num">1</div>
+    <div>
+      <div class="sec-title">Tổng Quan Giải Pháp</div>
+      <div class="sec-sub">NETSCOUT Arbor Sightline with Insight — Định vị, lịch sử, vai trò trong hệ sinh thái</div>
+    </div>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-box"><div class="stat-num">400+</div><div class="stat-lbl">ISP/Nhà mạng lớn toàn cầu sử dụng</div></div>
+    <div class="stat-box"><div class="stat-num">80+</div><div class="stat-lbl">Facets trên mỗi flow record (ASI)</div></div>
+    <div class="stat-box"><div class="stat-num">15+</div><div class="stat-lbl">Tbps năng lực scrubbing Arbor Cloud</div></div>
+    <div class="stat-box"><div class="stat-num">1s</div><div class="stat-lbl">Thời gian phát hiện DDoS nhanh nhất</div></div>
+  </div>
+
+  <div class="card gl">
+    <div class="card-title">🔍 Sightline Insight là gì?</div>
+    <p><strong>NETSCOUT Arbor Sightline with Insight</strong> là sự kết hợp của hai thành phần bổ sung cho nhau:</p>
+    <div class="g2">
+      <div>
+        <h4>Arbor Sightline (Base Platform)</h4>
+        <p style="font-size:13px;">Nền tảng giám sát mạng và phát hiện DDoS theo thời gian thực, sử dụng NetFlow/IPFIX/sFlow + BGP + SNMP để phân tích lưu lượng toàn mạng. Là "bộ não" phát hiện và điều phối mitigation.</p>
+      </div>
+      <div>
+        <h4>Arbor Insight (Add-on Module)</h4>
+        <p style="font-size:13px;">Module mở rộng big data analytics — lưu trữ lâu dài toàn bộ flow data đã được enriched với độ phân giải cao, cho phép phân tích đa chiều, điều tra forensics, và báo cáo ad-hoc không giới hạn.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>1.1 Vị Trí trong Hệ Sinh Thái NETSCOUT Arbor</h3>
+  <div class="arch">
+    <div class="arch-layer">
+      <div class="arch-layer-title">Lớp Giám Sát &amp; Phân Tích (Visibility)</div>
+      <strong style="color:#7DD3FC;">Arbor Sightline</strong> — NetFlow/IPFIX/sFlow collection, BGP peering, traffic engineering, DDoS detection
+      &nbsp;+&nbsp; <strong style="color:#86EFAC;">Arbor Insight</strong> — Big data analytics, long-term retention, ATR reports, forensics
+    </div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">Lớp Thông Minh (Intelligence)</div>
+      <strong style="color:#FCD34D;">ATLAS Intelligence Feed (AIF)</strong> — Threat intelligence toàn cầu, botnet C2, attack signatures
+    </div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">Lớp Giảm Thiểu (Mitigation)</div>
+      <strong style="color:#F9A8D4;">Arbor TMS / vTMS</strong> — Scrubbing appliance (on-net)
+      &nbsp;|&nbsp; <strong style="color:#F9A8D4;">BGP FlowSpec</strong> — Distributed edge mitigation
+      &nbsp;|&nbsp; <strong style="color:#F9A8D4;">RTBH</strong> — Blackhole routing
+      &nbsp;|&nbsp; <strong style="color:#F9A8D4;">Arbor Cloud</strong> — Upstream cloud scrubbing
+    </div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">Lớp Tự Động Hóa</div>
+      <strong style="color:#C4B5FD;">Sightline Sentinel</strong> — Automated orchestration, ML-driven mitigation workflow
+    </div>
+  </div>
+
+  <h3>1.2 Lịch Sử Phát Triển</h3>
+  <div class="tl">
+    <div class="tl-item"><div class="tl-date">2000</div><div class="tl-title">Arbor Networks thành lập, phát triển Peakflow SP — tiền thân của Sightline</div></div>
+    <div class="tl-item"><div class="tl-date">2010</div><div class="tl-title">Peakflow SP đổi tên thành Arbor SP, chiếm thị phần ISP toàn cầu</div></div>
+    <div class="tl-item"><div class="tl-date">2015</div><div class="tl-title">NETSCOUT mua lại Arbor Networks — tích hợp vào portfolio NETSCOUT</div></div>
+    <div class="tl-item"><div class="tl-date">2016</div><div class="tl-title">Ra mắt <strong>Arbor SP Insight</strong> — big data analytics extension đầu tiên</div></div>
+    <div class="tl-item"><div class="tl-date">2018</div><div class="tl-title">Arbor SP đổi tên thành <strong>Arbor Sightline</strong>; Flex Licensing ra mắt</div></div>
+    <div class="tl-item"><div class="tl-date">2020</div><div class="tl-title">Ra mắt <strong>Sightline with Sentinel</strong> — automated DDoS orchestration</div></div>
+    <div class="tl-item"><div class="tl-date">2022</div><div class="tl-title">Arbor Insight tích hợp <strong>Patented ASI Technology</strong> — 80+ facet per flow</div></div>
+    <div class="tl-item"><div class="tl-date">2023–2026</div><div class="tl-title">Sightline Insight v10+: cloud-ready, vTMS, enhanced ML detection, Insight v10 Software</div></div>
+  </div>
+
+  <h3>1.3 Đối Tượng Khách Hàng Mục Tiêu</h3>
+  <div class="g3">
+    <div class="card al">
+      <div class="card-title">🌐 ISP / Nhà mạng</div>
+      <ul class="fl">
+        <li>Giám sát lưu lượng toàn mạng backbone</li>
+        <li>Phát hiện &amp; giảm thiểu DDoS upstream</li>
+        <li>Phân tích peering/transit optimization</li>
+        <li>Dịch vụ DDoS managed service cho khách hàng</li>
+      </ul>
+    </div>
+    <div class="card al">
+      <div class="card-title">🏢 Data Center / IXP</div>
+      <ul class="fl">
+        <li>Bảo vệ cơ sở hạ tầng hosting</li>
+        <li>Traffic engineering đa nhà mạng</li>
+        <li>SLA enforcement cho tenant</li>
+      </ul>
+    </div>
+    <div class="card al">
+      <div class="card-title">🏛 Large Enterprise</div>
+      <ul class="fl">
+        <li>Mạng WAN phức tạp, nhiều PoP</li>
+        <li>Bảo vệ ứng dụng critical</li>
+        <li>Compliance &amp; forensics</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 2. KIẾN TRÚC ═══ -->
+<section class="sec" id="s2">
+  <div class="sec-hdr">
+    <div class="sec-num">2</div>
+    <div>
+      <div class="sec-title">Kiến Trúc Hệ Thống</div>
+      <div class="sec-sub">Các thành phần, vai trò, mô hình triển khai vật lý và ảo hóa</div>
+    </div>
+  </div>
+
+  <h3>2.1 Các Thành Phần Hệ Thống</h3>
+  <table>
+    <tr><th>Thành phần</th><th>Vai trò</th><th>Hình thức</th><th>Quy mô tối đa</th></tr>
+    <tr><td><strong>Sightline Leader</strong></td><td>Giao diện quản lý trung tâm (UI), điều phối toàn hệ thống, tổng hợp dữ liệu, cấu hình policy</td><td>Physical SP7500 hoặc VM</td><td>1 Primary + 1 Backup</td></tr>
+    <tr><td><strong>TRA (Traffic &amp; Routing Analytics)</strong></td><td>Thu thập flow (NetFlow/IPFIX/sFlow), BGP, SNMP; xử lý phát hiện anomaly; DDoS detection engine</td><td>Physical SP7500 hoặc VM</td><td>200 nodes</td></tr>
+    <tr><td><strong>DS (Data Storage)</strong></td><td>Lưu trữ flow data cho Insight analytics; big data backend</td><td>Physical hoặc VM + external storage</td><td>20 nodes</td></tr>
+    <tr><td><strong>UI (User Interface)</strong></td><td>Giao diện web bổ sung cho người dùng phân tán</td><td>VM</td><td>20 nodes</td></tr>
+    <tr><td><strong>TMS / vTMS</strong></td><td>Thiết bị scrubbing — lọc traffic tấn công, trả về traffic sạch</td><td>Physical TMS hoặc vTMS (NFV)</td><td>100 nodes</td></tr>
+    <tr><td><strong>Insight Node</strong></td><td>Big data analytics engine cho Insight module; nhận annotated flows từ TRA</td><td>VM (Linux) + Elasticsearch cluster</td><td>Scalable cluster</td></tr>
+  </table>
+
+  <h3>2.2 Kiến Trúc Triển Khai Điển Hình (ISP)</h3>
+  <div class="arch" style="font-size:12px;">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start;">
+      <div style="flex:1;min-width:200px;">
+        <div class="arch-layer">
+          <div class="arch-layer-title">Internet / Upstream</div>
+          Transit ISP, Peering IX, CDN
+        </div>
+        <div style="text-align:center;color:#aaa;padding:4px 0;">↓ BGP + Flow Export</div>
+        <div class="arch-layer">
+          <div class="arch-layer-title">Edge Routers / PE Routers</div>
+          Cisco ASR / Juniper MX — cấu hình NetFlow export đến TRA
+        </div>
+        <div style="text-align:center;color:#aaa;padding:4px 0;">↓ Sampled NetFlow (1:1000–1:2000)</div>
+        <div class="arch-layer" style="background:rgba(0,102,204,.15);border-color:rgba(0,102,204,.4);">
+          <div class="arch-layer-title" style="color:#7DD3FC;">Sightline TRA Nodes</div>
+          Thu thập &amp; phân tích flow; DDoS detection; anomaly alerts → Leader
+        </div>
+      </div>
+      <div style="flex:1;min-width:200px;">
+        <div class="arch-layer" style="background:rgba(0,135,90,.15);border-color:rgba(0,135,90,.4);">
+          <div class="arch-layer-title" style="color:#86EFAC;">Sightline Leader (Primary)</div>
+          Quản lý tập trung; UI dashboard; alert management; TMS orchestration
+        </div>
+        <div style="text-align:center;color:#aaa;padding:4px 0;">↕ Annotated Flows</div>
+        <div class="arch-layer" style="background:rgba(0,145,213,.15);border-color:rgba(0,145,213,.4);">
+          <div class="arch-layer-title" style="color:#93C5FD;">Insight Node (Big Data)</div>
+          Elasticsearch; long-term storage; ATR reports; REST API; forensic search
+        </div>
+        <div style="text-align:center;color:#aaa;padding:4px 0;">↕ ATLAS AIF Updates</div>
+        <div class="arch-layer" style="background:rgba(225,164,0,.1);border-color:rgba(225,164,0,.4);">
+          <div class="arch-layer-title" style="color:#FCD34D;">ATLAS Intelligence Feed</div>
+          Global threat intelligence; botnet C2; DDoS signatures (cloud service)
+        </div>
+      </div>
+      <div style="flex:1;min-width:180px;">
+        <div class="arch-layer" style="background:rgba(201,55,44,.12);border-color:rgba(201,55,44,.4);">
+          <div class="arch-layer-title" style="color:#FCA5A5;">TMS Scrubbing</div>
+          On-net scrubbing; surgical filtering; clean traffic return
+        </div>
+        <div style="text-align:center;color:#aaa;padding:4px 0;">+ BGP FlowSpec / RTBH</div>
+        <div class="arch-layer">
+          <div class="arch-layer-title">Edge Mitigation</div>
+          BGP FS: drop/police/redirect tại edge router; RTBH: null-route prefix bị tấn công
+        </div>
+        <div style="text-align:center;color:#aaa;padding:4px 0;">+ Cloud Backup</div>
+        <div class="arch-layer">
+          <div class="arch-layer-title">Arbor Cloud</div>
+          Upstream cloud scrubbing khi volumetric attacks vượt quá on-net capacity
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>2.3 Hardware Appliance — Sightline SP7500</h3>
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Thông số phần cứng SP7500</div>
+      <table style="font-size:13px;">
+        <tr><td><strong>Form factor</strong></td><td>2U Rack-mount</td></tr>
+        <tr><td><strong>Network ports</strong></td><td>2x 10GbE Copper + 4x 10GbE SFP+</td></tr>
+        <tr><td><strong>Management</strong></td><td>IPMI out-of-band, 1GbE MGMT port</td></tr>
+        <tr><td><strong>Storage</strong></td><td>Dual SSD RAID (OS) + HDD arrays</td></tr>
+        <tr><td><strong>Power</strong></td><td>Redundant PSU, AC</td></tr>
+        <tr><td><strong>OS</strong></td><td>Hardened Linux (NETSCOUT Sightline OS)</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-title">Virtual Machine (VM) Deployment</div>
+      <table style="font-size:13px;">
+        <tr><td><strong>Hypervisor</strong></td><td>VMware ESXi, KVM</td></tr>
+        <tr><td><strong>vCPU</strong></td><td>8–32 vCPU (tùy role)</td></tr>
+        <tr><td><strong>RAM</strong></td><td>32–128 GB (tùy role)</td></tr>
+        <tr><td><strong>Storage</strong></td><td>500 GB – 10 TB (Insight node cần nhiều nhất)</td></tr>
+        <tr><td><strong>Network</strong></td><td>VMXNET3, SR-IOV supported</td></tr>
+        <tr><td><strong>100% virtualized</strong></td><td>Toàn bộ deployment (Sightline + TMS) có thể ảo hóa hoàn toàn</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h3>2.4 Flow Data Collection — Cách Sightline Nhận Dữ Liệu</h3>
+  <div class="card al">
+    <div class="g2">
+      <div>
+        <h4>Giao thức hỗ trợ</h4>
+        <ul class="fl">
+          <li><strong>NetFlow v5/v9</strong> — Cisco IOS, IOS-XR, IOS-XE</li>
+          <li><strong>IPFIX</strong> — Standard (RFC 7011), hỗ trợ tốt nhất</li>
+          <li><strong>sFlow v4/v5</strong> — Juniper, Arista, Huawei</li>
+          <li><strong>BGP</strong> — Full table routing context</li>
+          <li><strong>SNMP</strong> — Interface utilization, counter polling</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Sampling Rate khuyến nghị</h4>
+        <table style="font-size:12.5px;">
+          <tr><th>Link speed</th><th>Sampling</th><th>FPS ước tính</th></tr>
+          <tr><td>1 Gbps</td><td>1:1.000</td><td>~1.000 fps</td></tr>
+          <tr><td>10 Gbps</td><td>1:2.000</td><td>~5.000 fps</td></tr>
+          <tr><td>100 Gbps</td><td>1:10.000</td><td>~10.000 fps</td></tr>
+          <tr><td>1 Tbps+</td><td>1:50.000</td><td>~20.000 fps</td></tr>
+        </table>
+        <p style="font-size:12px;color:var(--muted);margin-top:6px;">* FPS (Flows Per Second) là đơn vị cơ sở để tính license Sightline</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 3. SIGHTLINE CORE ═══ -->
+<section class="sec" id="s3">
+  <div class="sec-hdr">
+    <div class="sec-num">3</div>
+    <div>
+      <div class="sec-title">Arbor Sightline — Nền Tảng Core</div>
+      <div class="sec-sub">Tính năng chính của Sightline base platform</div>
+    </div>
+  </div>
+
+  <h3>3.1 Giám Sát Lưu Lượng Mạng</h3>
+  <div class="g2">
+    <div class="card gl">
+      <div class="card-title">Traffic Visibility</div>
+      <ul class="fl">
+        <li>Giám sát NetFlow/IPFIX/sFlow trên toàn infrastructure phân tán</li>
+        <li>Phân tích theo: AS, prefix, interface, protocol, port, DSCP</li>
+        <li>Top talkers, top flows, top applications, top countries</li>
+        <li>Traffic matrix — nguồn/đích theo AS hoặc prefix</li>
+        <li>Drill-down từ network level xuống host level</li>
+        <li>Hỗ trợ IPv4 và IPv6 đầy đủ</li>
+      </ul>
+    </div>
+    <div class="card gl">
+      <div class="card-title">BGP Routing Analysis</div>
+      <ul class="fl">
+        <li>Thu thập BGP full table từ các router</li>
+        <li>Phân tích traffic theo autonomous system (AS path)</li>
+        <li>Peering analysis — xác định traffic trao đổi với từng AS láng giềng</li>
+        <li>Tối ưu routing: chuyển từ transit sang peering</li>
+        <li>BGP FlowSpec orchestration cho mitigation</li>
+        <li>RPKI validation support</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>3.2 Phát Hiện DDoS</h3>
+  <div class="hl">
+    <div class="hl-title">💡 Hai cơ chế phát hiện chính của Sightline</div>
+    <div class="g2">
+      <div>
+        <strong>Host Detection (Misuse)</strong><br/>
+        <span style="font-size:13px;">Dùng <em>static threshold</em> trên từng host/prefix. Cảnh báo khi traffic vượt ngưỡng tuyệt đối được cấu hình. Phát hiện nhanh, thời gian thực. Phù hợp các attack đã biết.</span>
+      </div>
+      <div>
+        <strong>Profiled Router / Network Detection</strong><br/>
+        <span style="font-size:13px;">Dùng <em>historical baseline</em> — Sightline học traffic pattern bình thường theo giờ/ngày/tuần, cảnh báo khi có sai lệch bất thường. Phát hiện zero-day attacks, low &amp; slow attacks.</span>
+      </div>
+    </div>
+  </div>
+  <div class="g3">
+    <div class="card">
+      <h4>Phát hiện theo Volume</h4>
+      <ul class="fl">
+        <li>UDP/TCP/ICMP flood</li>
+        <li>DNS amplification</li>
+        <li>NTP/SSDP/CLDAP reflection</li>
+        <li>Volumetric attacks (bps/pps)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Phát hiện theo Protocol</h4>
+      <ul class="fl">
+        <li>SYN flood</li>
+        <li>HTTP/S GET/POST flood</li>
+        <li>DNS query flood</li>
+        <li>BGP hijacking detection</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Phát hiện Multi-vector</h4>
+      <ul class="fl">
+        <li>Kết hợp nhiều vector cùng lúc</li>
+        <li>Application layer (L7) attacks</li>
+        <li>Infrastructure attacks</li>
+        <li>Botnet C2 traffic (qua AIF)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>3.3 Traffic Engineering &amp; Capacity Planning</h3>
+  <div class="g2">
+    <div class="card al">
+      <div class="card-title">Peering Analysis</div>
+      <p style="font-size:13px;">Sightline trình bày rõ ràng tất cả AS láng giềng và lượng traffic trao đổi, giúp xác định:</p>
+      <ul class="fl">
+        <li>AS nào đang gửi nhiều traffic nhất qua transit (tốn tiền)</li>
+        <li>Cơ hội chuyển sang free peering hoặc paid peering</li>
+        <li>Traffic asymmetry giữa các link</li>
+        <li>Candidates cho new peering sessions</li>
+      </ul>
+    </div>
+    <div class="card al">
+      <div class="card-title">Capacity Planning</div>
+      <ul class="fl">
+        <li>Theo dõi utilization từng interface (95th percentile)</li>
+        <li>Dự báo tăng trưởng bandwidth</li>
+        <li>Cảnh báo khi sắp đạt ngưỡng saturation</li>
+        <li>Hỗ trợ re-engineering traffic routing</li>
+        <li>Reports tự động cho planning team</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>3.4 Managed Objects — Cơ Chế Quản Lý Đối Tượng</h3>
+  <div class="callout">
+    <strong>Managed Object</strong> là đơn vị cơ bản trong Sightline để xác định đối tượng cần giám sát: có thể là một prefix IP, một customer, một dịch vụ, hay một subnet nội bộ. Policy phát hiện DDoS và auto-mitigation được cấu hình per Managed Object.
+  </div>
+  <table>
+    <tr><th>Loại Managed Object</th><th>Ví dụ</th><th>Dùng cho</th></tr>
+    <tr><td>Customer</td><td>VNPT Broadband Customers /20</td><td>Bảo vệ khách hàng cuối, dịch vụ managed DDoS</td></tr>
+    <tr><td>Network</td><td>Core backbone prefix /16</td><td>Bảo vệ hạ tầng nội bộ</td></tr>
+    <tr><td>Peer</td><td>Transit link với Telia AS1299</td><td>Theo dõi chất lượng peering</td></tr>
+    <tr><td>Profile</td><td>DNS server cluster</td><td>Baseline-based detection cho dịch vụ critical</td></tr>
+    <tr><td>Interface</td><td>Uplink router interface</td><td>Capacity monitoring, saturation alert</td></tr>
+  </table>
+</section>
+
+<!-- ═══ 4. INSIGHT ADD-ON ═══ -->
+<section class="sec" id="s4">
+  <div class="sec-hdr">
+    <div class="sec-num">4</div>
+    <div>
+      <div class="sec-title">Arbor Insight — Module Phân Tích Chuyên Sâu</div>
+      <div class="sec-sub">Big Data Analytics · Photographic Memory · ASI Technology · ATR Reports</div>
+    </div>
+  </div>
+
+  <div class="callout green">
+    <strong>Insight là gì so với Sightline?</strong> Sightline giữ dữ liệu tổng hợp (binned/aggregated) trong thời gian ngắn. Insight lưu trữ <em>toàn bộ raw annotated flows</em> trong thời gian dài (tuần/tháng), cho phép điều tra forensics và phân tích "what-if" không giới hạn.
+  </div>
+
+  <h3>4.1 ASI Technology — Công Nghệ Cốt Lõi</h3>
+  <div class="card al">
+    <div class="card-title">Patented Adaptive Service Intelligence (ASI)</div>
+    <p>NETSCOUT sở hữu patent công nghệ ASI — <strong>mỗi flow record được enriched với 80+ facets</strong> (chiều dữ liệu), thay vì chỉ 5 tuple thông thường (src IP, dst IP, src port, dst port, protocol).</p>
+    <div class="g2" style="margin-top:12px;">
+      <div>
+        <h4>Flow record thông thường (5-tuple)</h4>
+        <p style="font-size:13px;background:#f8fafc;padding:10px;border-radius:6px;font-family:monospace;">Src: 1.2.3.4:1234 → Dst: 5.6.7.8:80<br/>Protocol: TCP | Bytes: 1024 | Pkts: 8</p>
+      </div>
+      <div>
+        <h4>ASI Enriched Flow (80+ facets)</h4>
+        <p style="font-size:12px;background:#f0f9ff;padding:10px;border-radius:6px;">Thêm: AS origin, AS path, BGP community, prefix, geo-location, threat intel (AIF), service classification, DSCP, TTL, TCP flags, interface, customer ID, attack fingerprint, QoS class...</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>4.2 "Photographic Memory" — Lưu Trữ Toàn Bộ Traffic</h3>
+  <div class="g2">
+    <div class="card gl">
+      <div class="card-title">Time-Series Data (Binned)</div>
+      <ul class="fl">
+        <li>Dữ liệu tổng hợp theo khoảng thời gian (1 phút, 5 phút, 1 giờ)</li>
+        <li>Nhanh để render dashboard, biểu đồ trend</li>
+        <li>Lưu trữ dài hạn với dung lượng thấp</li>
+        <li>Phân tích: so sánh traffic qua các ngày/tuần/tháng</li>
+        <li>Dùng cho capacity planning, SLA reporting</li>
+      </ul>
+    </div>
+    <div class="card gl">
+      <div class="card-title">Raw Annotated Flows</div>
+      <ul class="fl">
+        <li>Toàn bộ flow records với đầy đủ 80+ facets</li>
+        <li>Giữ nguyên độ phân giải cao, không mất thông tin</li>
+        <li>Tìm kiếm ad-hoc: "show me all flows from AS4589 to port 53 last 30 days"</li>
+        <li>Forensics: tái hiện lại sự cố sau khi đã xảy ra</li>
+        <li>Lưu trên customer-supplied storage (Elasticsearch cluster)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>4.3 Advanced Traffic Reports (ATR)</h3>
+  <div class="callout">
+    <strong>ATR</strong> là loại báo cáo linh hoạt, có thể tùy chỉnh với N chiều dữ liệu và granularity tùy chọn. Đây là tính năng phân biệt Insight với Sightline base.
+  </div>
+  <div class="g3">
+    <div class="card">
+      <h4>Cấu hình ATR</h4>
+      <ul class="fl">
+        <li>Chọn N facets kết hợp (vd: AS + port + protocol)</li>
+        <li>Time range tùy ý (1 giờ đến 1 năm)</li>
+        <li>Binning granularity: 1 phút đến 1 ngày</li>
+        <li>Filter không giới hạn</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Visualization</h4>
+      <ul class="fl">
+        <li>Line charts, stacked area charts</li>
+        <li>Top N bar charts</li>
+        <li>Geo heat maps</li>
+        <li>Tabular reports</li>
+        <li>Drill-down interactive</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Export &amp; Automation</h4>
+      <ul class="fl">
+        <li>REST API đầy đủ cho tích hợp</li>
+        <li>Scheduled reports (email/PDF)</li>
+        <li>CSV/JSON export</li>
+        <li>Webhook notifications</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>4.4 Insight v10 — Software Installation</h3>
+  <div class="callout warn">
+    Theo tài liệu <em>Insight 10 Software Installation Guide</em>: Insight v10 có thể cài đặt dưới dạng <strong>software-only</strong> trên Linux server hoặc VM, không bắt buộc dùng hardware appliance NETSCOUT.
+  </div>
+  <div class="g2">
+    <div class="card ol">
+      <div class="card-title">Yêu cầu hệ thống Insight v10</div>
+      <table style="font-size:13px;">
+        <tr><td><strong>OS</strong></td><td>RHEL / CentOS 7.x hoặc 8.x (64-bit)</td></tr>
+        <tr><td><strong>CPU</strong></td><td>16+ cores (Xeon hoặc tương đương)</td></tr>
+        <tr><td><strong>RAM</strong></td><td>64 GB minimum, 128 GB recommended</td></tr>
+        <tr><td><strong>Storage</strong></td><td>SSD cho OS/app; HDD/SAN cho data (tính theo retention period)</td></tr>
+        <tr><td><strong>Network</strong></td><td>2x 10GbE (management + data)</td></tr>
+        <tr><td><strong>Elasticsearch</strong></td><td>Cluster 3+ nodes recommended cho HA</td></tr>
+      </table>
+    </div>
+    <div class="card ol">
+      <div class="card-title">Storage Sizing cho Insight</div>
+      <table style="font-size:13px;">
+        <tr><th>FPS (flows/sec)</th><th>Retention 30 ngày</th><th>Retention 90 ngày</th></tr>
+        <tr><td>10.000</td><td>~5 TB</td><td>~15 TB</td></tr>
+        <tr><td>50.000</td><td>~25 TB</td><td>~75 TB</td></tr>
+        <tr><td>100.000</td><td>~50 TB</td><td>~150 TB</td></tr>
+        <tr><td>200.000</td><td>~100 TB</td><td>~300 TB</td></tr>
+      </table>
+      <p style="font-size:12px;color:var(--muted);margin-top:6px;">* Ước tính, thực tế phụ thuộc vào compression ratio và flow characteristics</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 5. TÍCH HỢP TMS ═══ -->
+<section class="sec" id="s5">
+  <div class="sec-hdr">
+    <div class="sec-num">5</div>
+    <div>
+      <div class="sec-title">Tích Hợp Sightline / TMS — DDoS Mitigation End-to-End</div>
+      <div class="sec-sub">Kiến trúc phát hiện → giảm thiểu · Các phương thức mitigation · Quy trình tự động</div>
+    </div>
+  </div>
+
+  <h3>5.1 Các Phương Thức Mitigation</h3>
+  <div class="g2">
+    <div class="card rl">
+      <div class="card-title">① TMS Scrubbing (On-net)</div>
+      <p style="font-size:13px;">Sightline phát hiện attack → tự động chuyển hướng traffic (via BGP diversion) vào TMS → TMS scrubs malicious traffic → trả clean traffic về đích.</p>
+      <ul class="fl">
+        <li>Lọc <em>surgical</em> — chỉ block attack traffic, không block legitimate</li>
+        <li>Hỗ trợ 100+ countermeasures layer 3-7</li>
+        <li>Throughput: 40–160 Gbps per TMS appliance</li>
+        <li>Phù hợp: targeted attacks cần lọc tinh tế</li>
+      </ul>
+    </div>
+    <div class="card rl">
+      <div class="card-title">② BGP FlowSpec (Distributed Edge)</div>
+      <p style="font-size:13px;">Sightline gửi BGP FlowSpec rules đến edge routers qua Route Reflector — router tự lọc traffic tại biên mà không cần đưa về scrubbing center.</p>
+      <ul class="fl">
+        <li>Cực kỳ scalable — không bị bottleneck tại scrubbing</li>
+        <li>Actions: drop, police (rate-limit), redirect</li>
+        <li>Match criteria: src/dst IP, port, protocol, DSCP, length</li>
+        <li>Phù hợp: volumetric attacks lớn, infrastructure protection</li>
+      </ul>
+    </div>
+    <div class="card rl">
+      <div class="card-title">③ RTBH — Remotely Triggered Blackhole</div>
+      <p style="font-size:13px;">Sightline advertise BGP route với community đặc biệt → edge routers null-route toàn bộ traffic đến prefix bị tấn công.</p>
+      <ul class="fl">
+        <li>Nhanh nhất — propagate trong vài giây</li>
+        <li>Drop ALL traffic (kể cả legitimate)</li>
+        <li>Phù hợp: khi victim sẵn sàng chịu downtime để bảo vệ network</li>
+        <li>Hỗ trợ: IPv4 RTBH, IPv6 RTBH, Source-based RTBH</li>
+      </ul>
+    </div>
+    <div class="card rl">
+      <div class="card-title">④ Arbor Cloud (Upstream)</div>
+      <p style="font-size:13px;">Khi on-net capacity không đủ xử lý volumetric attack, Sightline tự động kích hoạt upstream cloud scrubbing tại Arbor Cloud (15+ Tbps).</p>
+      <ul class="fl">
+        <li>Hybrid protection: on-net + cloud</li>
+        <li>16 scrubbing centers toàn cầu</li>
+        <li>Kích hoạt tự động hoặc manual</li>
+        <li>Phù hợp: terabit-level DDoS attacks</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>5.2 Luồng Phát Hiện → Giảm Thiểu Tự Động</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <div class="step-title">Detection — Sightline TRA phát hiện anomaly</div>
+        <p style="font-size:13px;">TRA node nhận NetFlow từ router, so sánh với baseline/threshold của Managed Object. Phát hiện traffic bất thường (vd: UDP flood đến 203.162.0.0/20 tăng 500% trong 10 giây) → tạo Alert.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <div class="step-title">Classification — Fingerprint &amp; AIF correlation</div>
+        <p style="font-size:13px;">Sightline tạo attack fingerprint (signature): src ports, protocols, packet sizes, TTL values. Đối chiếu với ATLAS AIF để xác định loại attack, botnet source. Xác định severity và vector.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <div class="step-title">Mitigation Selection — Chọn phương thức phù hợp</div>
+        <p style="font-size:13px;">Dựa trên attack characteristics: nếu volumetric lớn → FlowSpec/RTBH trước; nếu cần surgical filtering → TMS diversion; nếu vượt on-net capacity → Arbor Cloud. Sentinel tự động quyết định.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <div class="step-title">Orchestration — Điều phối mitigation</div>
+        <p style="font-size:13px;">Sightline gửi lệnh đến TMS (qua API) và/hoặc advertise BGP FlowSpec/RTBH route. TMS bắt đầu scrubbing trong vòng &lt;10 giây sau khi nhận lệnh.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <div class="step-title">Monitoring — Theo dõi hiệu quả mitigation</div>
+        <p style="font-size:13px;">Sightline tiếp tục monitor traffic của victim. Nếu attack thay đổi vector hoặc tăng cường độ, tự động điều chỉnh countermeasures. Insight ghi lại toàn bộ flow data của sự cố.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <div class="step-title">Post-incident — Forensics &amp; Reporting</div>
+        <p style="font-size:13px;">Sau khi mitigation kết thúc, Insight cho phép phân tích toàn bộ diễn biến attack: ai tấn công, từ đâu, attack vector nào, hiệu quả mitigation ra sao. Xuất báo cáo cho NOC/SOC và khách hàng.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>5.3 Sightline Sentinel — Tự Động Hóa Hoàn Toàn</h3>
+  <div class="callout green">
+    <strong>Sightline with Sentinel</strong> là add-on tự động hóa cao nhất: kết hợp ML-driven analysis với automated orchestration để bảo vệ mà không cần can thiệp thủ công của NOC.
+  </div>
+  <div class="g3">
+    <div class="card"><h4>Auto Detection</h4><p style="font-size:13px;">ML model học pattern bình thường, tự động phát hiện bất thường mà không cần cấu hình threshold thủ công.</p></div>
+    <div class="card"><h4>Auto Mitigation</h4><p style="font-size:13px;">Tự động chọn phương thức mitigation phù hợp dựa trên attack type, size, và infrastructure capabilities.</p></div>
+    <div class="card"><h4>Auto Reporting</h4><p style="font-size:13px;">Tự động gửi alert, report cho NOC team và khách hàng (managed service) qua email/webhook.</p></div>
+  </div>
+</section>
+
+<!-- ═══ 6. ATLAS ═══ -->
+<section class="sec" id="s6">
+  <div class="sec-hdr">
+    <div class="sec-num">6</div>
+    <div>
+      <div class="sec-title">ATLAS &amp; Atlas Intelligence Feed (AIF)</div>
+      <div class="sec-sub">Global threat intelligence · DDoS attack data · Botnet C2 · IOC</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>ATLAS (Active Threat Level Analysis System)</strong> là mạng lưới sensor toàn cầu của NETSCOUT — thu thập dữ liệu DDoS attack từ hơn 400 ISP khách hàng trên khắp thế giới, cung cấp cái nhìn về ~1/3 lưu lượng internet toàn cầu.
+  </div>
+
+  <div class="g2">
+    <div class="card al">
+      <div class="card-title">ATLAS Intelligence Feed (AIF)</div>
+      <ul class="fl">
+        <li><strong>Active attackers</strong>: Danh sách IP đang thực hiện DDoS tấn công hiện tại</li>
+        <li><strong>Botnet C2</strong>: Địa chỉ Command &amp; Control của các botnet DDoS</li>
+        <li><strong>Attack signatures</strong>: Fingerprint của các loại tấn công mới nhất</li>
+        <li><strong>IoC (Indicators of Compromise)</strong>: Hash, IP, domain độc hại</li>
+        <li><strong>Auto-update</strong>: Cập nhật tự động vào Sightline qua internet</li>
+        <li><strong>Zero false-positive design</strong>: Chỉ đánh dấu confirmed threats</li>
+      </ul>
+    </div>
+    <div class="card al">
+      <div class="card-title">Giá trị của ATLAS cho ISP</div>
+      <ul class="fl">
+        <li>Phát hiện ngay lập tức khi botnet trong mạng bắt đầu tấn công</li>
+        <li>Biết trước attack vector sẽ được dùng từ threat intelligence</li>
+        <li>Giảm MTTD (Mean Time to Detect) xuống dưới 1 phút</li>
+        <li>Phát hiện compromised hosts trong mạng khách hàng</li>
+        <li>Báo cáo threat intel cho khách hàng như value-added service</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 7. LICENSING ═══ -->
+<section class="sec" id="s7">
+  <div class="sec-hdr">
+    <div class="sec-num">7</div>
+    <div>
+      <div class="sec-title">Mô Hình Licensing</div>
+      <div class="sec-sub">Cách tính license Sightline + Insight · Flex Licensing · Sizing guide</div>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <strong>Lưu ý quan trọng:</strong> NETSCOUT không công bố giá license chính thức. Thông tin dưới đây dựa trên tài liệu kỹ thuật và cấu trúc license được NETSCOUT mô tả công khai. Giá cụ thể cần liên hệ NETSCOUT hoặc distributor.
+  </div>
+
+  <h3>7.1 Các Thành Phần License</h3>
+  <table>
+    <tr><th>Thành phần</th><th>Đơn vị tính license</th><th>Mô tả</th></tr>
+    <tr><td><strong>Sightline Base</strong></td><td>FPS (Flows Per Second)</td><td>License cơ bản cho nền tảng Sightline — phụ thuộc vào lưu lượng flow tổng cộng từ tất cả router</td></tr>
+    <tr><td><strong>Sightline TRA Node</strong></td><td>Per appliance/VM</td><td>Mỗi TRA node thêm FPS capacity; nhiều TRA = xử lý flow lớn hơn</td></tr>
+    <tr><td><strong>Insight Add-on</strong></td><td>FPS (phải ≥ Sightline FPS)</td><td>Module Insight license theo FPS — phải match hoặc lớn hơn Sightline base FPS</td></tr>
+    <tr><td><strong>TMS Capacity</strong></td><td>Gbps throughput</td><td>License scrubbing bandwidth: 10G, 40G, 80G, 160G per TMS appliance</td></tr>
+    <tr><td><strong>AIF Subscription</strong></td><td>Annual subscription</td><td>ATLAS Intelligence Feed — subscription hàng năm, per deployment</td></tr>
+    <tr><td><strong>Sentinel Add-on</strong></td><td>Add-on to Sightline</td><td>Automated mitigation orchestration module</td></tr>
+    <tr><td><strong>Arbor Cloud</strong></td><td>Gbps committed + burst</td><td>Upstream cloud DDoS protection — theo committed bandwidth + burst</td></tr>
+  </table>
+
+  <h3>7.2 Flex Licensing — Mô Hình Linh Hoạt</h3>
+  <div class="g2">
+    <div class="card gl">
+      <div class="card-title">Flex Licensing là gì?</div>
+      <p style="font-size:13px;"><strong>Software-only licensing</strong> — cho phép chạy Sightline trên hardware của khách hàng (COTS server) hoặc VM, thay vì bắt buộc mua appliance NETSCOUT SP7500.</p>
+      <ul class="fl">
+        <li>Tiết kiệm chi phí hardware (dùng server sẵn có)</li>
+        <li>Scale up/down dễ dàng theo nhu cầu</li>
+        <li>Phù hợp môi trường SDN/NFV/cloud-native</li>
+        <li>License FPS có thể upgrade khi mạng tăng trưởng</li>
+      </ul>
+    </div>
+    <div class="card gl">
+      <div class="card-title">Cách tính FPS cần thiết</div>
+      <p style="font-size:13px;"><strong>Công thức ước tính FPS:</strong></p>
+      <div style="background:#f0fdf4;padding:12px;border-radius:8px;font-family:monospace;font-size:13px;margin:8px 0;">
+        Total FPS = Σ(Link_bandwidth × PPS / Sampling_rate)<br/>
+        <br/>
+        Ví dụ VNPT Net:<br/>
+        - 10x 10Gbps uplinks, 1:2000 sampling<br/>
+        - PPS avg = 1Gbps / 100bytes = ~1.2M pps<br/>
+        - FPS per link = 1.2M / 2000 = 600 fps<br/>
+        - Total = 10 × 600 = 6.000 fps<br/>
+        → License 10K FPS (với headroom 40%)
+      </div>
+    </div>
+  </div>
+
+  <h3>7.3 License Tiers Phổ Biến (Tham Khảo)</h3>
+  <table>
+    <tr><th>Tier</th><th>FPS Sightline</th><th>FPS Insight</th><th>Phù hợp</th><th>Ước tính scale mạng</th></tr>
+    <tr><td>Starter</td><td>5.000 fps</td><td>5.000 fps</td><td>ISP nhỏ, regional</td><td>&lt;10 Gbps aggregate</td></tr>
+    <tr><td>Mid-tier</td><td>25.000 fps</td><td>25.000 fps</td><td>ISP vừa</td><td>10–100 Gbps aggregate</td></tr>
+    <tr><td>Large</td><td>100.000 fps</td><td>100.000 fps</td><td>Tier-2 ISP</td><td>100 Gbps – 1 Tbps</td></tr>
+    <tr><td>Carrier</td><td>500.000 fps</td><td>500.000 fps</td><td>Tier-1 ISP / carrier</td><td>1 Tbps+</td></tr>
+    <tr><td>Unlimited</td><td>Unlimited</td><td>N/A</td><td>Very large carrier</td><td>Multi-Tbps</td></tr>
+  </table>
+
+  <h3>7.4 Checklist Sizing cho Dự Án</h3>
+  <div class="card ol">
+    <div class="card-title">Thông tin cần thu thập để tính license</div>
+    <div class="g2">
+      <ul class="fl">
+        <li>Tổng bandwidth tất cả uplink (Gbps)</li>
+        <li>Số lượng router sẽ export flow</li>
+        <li>Sampling rate dự kiến (1:1000 – 1:10000)</li>
+        <li>Số lượng unique prefix/AS cần monitor</li>
+      </ul>
+      <ul class="fl">
+        <li>Retention period yêu cầu cho Insight (30/90/180 ngày)</li>
+        <li>Số lượng Managed Objects (customer prefix)</li>
+        <li>Bandwidth cần scrubbing per incident (TMS sizing)</li>
+        <li>Cần Sentinel automation không?</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 8. TRIỂN KHAI ═══ -->
+<section class="sec" id="s8">
+  <div class="sec-hdr">
+    <div class="sec-num">8</div>
+    <div>
+      <div class="sec-title">Triển Khai Thực Tế</div>
+      <div class="sec-sub">Các bước triển khai · Cấu hình router · Best practices · Timeline</div>
+    </div>
+  </div>
+
+  <h3>8.1 Các Giai Đoạn Triển Khai</h3>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <div class="step-title">Planning &amp; Design (2–4 tuần)</div>
+        <ul class="fl">
+          <li>Network topology review — xác định điểm cần monitor</li>
+          <li>Router inventory — danh sách router, OS version, flow support</li>
+          <li>IP addressing plan cho Sightline nodes</li>
+          <li>Storage sizing cho Insight</li>
+          <li>TMS placement — vị trí scrubbing center trong mạng</li>
+        </ul>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <div class="step-title">Hardware/VM Deployment (1–2 tuần)</div>
+        <ul class="fl">
+          <li>Cài đặt Sightline Leader + TRA nodes (physical hoặc VM)</li>
+          <li>Cài đặt Insight node (v10 software installation theo guide)</li>
+          <li>Cài đặt TMS appliances tại scrubbing locations</li>
+          <li>Network connectivity: management VLAN, flow collection network</li>
+        </ul>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <div class="step-title">Router Configuration (1–2 tuần)</div>
+        <ul class="fl">
+          <li>Cấu hình NetFlow/IPFIX export đến TRA IP</li>
+          <li>Cấu hình BGP peering giữa router và Sightline (read-only BGP)</li>
+          <li>Cấu hình BGP FlowSpec — chuẩn bị sẵn cho mitigation</li>
+          <li>SNMP community string cho interface monitoring</li>
+          <li>ACL để cho phép flow traffic từ router đến TRA</li>
+        </ul>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <div class="step-title">Sightline Configuration (1–2 tuần)</div>
+        <ul class="fl">
+          <li>Tạo Managed Objects cho tất cả customer prefix và network prefix</li>
+          <li>Cấu hình detection thresholds (host + profiled)</li>
+          <li>Cấu hình auto-mitigation rules</li>
+          <li>Tích hợp TMS vào Sightline</li>
+          <li>Cấu hình ATLAS AIF subscription</li>
+          <li>User accounts, roles, permissions</li>
+        </ul>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <div class="step-title">Insight Configuration &amp; Tuning (1 tuần)</div>
+        <ul class="fl">
+          <li>Cấu hình Insight node kết nối với Sightline Leader</li>
+          <li>Thiết lập data retention policy</li>
+          <li>Tạo Advanced Traffic Reports (ATR) templates</li>
+          <li>Cấu hình scheduled reports và alerts</li>
+          <li>REST API integration với portal/ticketing</li>
+        </ul>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num"></div>
+      <div class="step-body">
+        <div class="step-title">Testing &amp; Baseline Learning (2–4 tuần)</div>
+        <ul class="fl">
+          <li>Test mitigation: kích hoạt TMS manual, kiểm tra FlowSpec</li>
+          <li>Cho Sightline học baseline (~2 tuần minimum)</li>
+          <li>Điều chỉnh threshold để giảm false positives</li>
+          <li>Drill test: mô phỏng DDoS attack để test quy trình</li>
+          <li>NOC training</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h3>8.2 Cấu Hình Router Mẫu (Cisco IOS-XR)</h3>
+  <div class="card" style="background:#001833;color:#e2e8f0;padding:18px 22px;font-family:monospace;font-size:12.5px;line-height:1.9;">
+    <div style="color:#86EFAC;font-size:11px;font-weight:700;margin-bottom:10px;">! CISCO IOS-XR — NetFlow Export to Sightline TRA</div>
+    flow exporter SIGHTLINE-TRA<br/>
+    &nbsp;&nbsp;destination <span style="color:#FCD34D;">192.168.10.10</span> 2055<br/>
+    &nbsp;&nbsp;source Loopback0<br/>
+    &nbsp;&nbsp;transport udp 2055<br/>
+    &nbsp;&nbsp;version v9<br/>
+    !<br/>
+    flow monitor SIGHTLINE-MON<br/>
+    &nbsp;&nbsp;exporter SIGHTLINE-TRA<br/>
+    &nbsp;&nbsp;record ipv4<br/>
+    !<br/>
+    sampler SIGHTLINE-SAMPLE<br/>
+    &nbsp;&nbsp;random 1 out-of <span style="color:#FCD34D;">2000</span><br/>
+    !<br/>
+    interface TenGigE0/0/0/0<br/>
+    &nbsp;&nbsp;flow ipv4 monitor SIGHTLINE-MON sampler SIGHTLINE-SAMPLE ingress<br/>
+    &nbsp;&nbsp;flow ipv4 monitor SIGHTLINE-MON sampler SIGHTLINE-SAMPLE egress<br/>
+    !<br/>
+    <div style="color:#86EFAC;font-size:11px;font-weight:700;margin-top:10px;">! BGP peering với Sightline (read-only)</div>
+    router bgp <span style="color:#FCD34D;">45899</span><br/>
+    &nbsp;&nbsp;neighbor <span style="color:#FCD34D;">192.168.10.10</span><br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;remote-as 65000<br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;update-source Loopback0<br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;address-family ipv4 unicast<br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;route-policy PASS-ALL in<br/>
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;soft-reconfiguration inbound always<br/>
+  </div>
+
+  <h3>8.3 Best Practices</h3>
+  <div class="g3">
+    <div class="card">
+      <h4>Flow Collection</h4>
+      <ul class="fl">
+        <li>Ưu tiên IPFIX hơn NetFlow v5/v9</li>
+        <li>Export cả ingress và egress</li>
+        <li>Đồng bộ NTP giữa router và Sightline</li>
+        <li>Dùng Loopback làm source cho ổn định</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Detection Tuning</h4>
+      <ul class="fl">
+        <li>Cho học baseline ít nhất 2 tuần trước khi enable</li>
+        <li>Bắt đầu với alert-only, không auto-mitigate</li>
+        <li>Review và tune sau 30 ngày đầu</li>
+        <li>Tách biệt threshold cho customer và infrastructure</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>High Availability</h4>
+      <ul class="fl">
+        <li>Deploy Leader + Backup Leader</li>
+        <li>TRA nodes: deploy ≥2 để redundancy</li>
+        <li>Insight: Elasticsearch 3-node cluster</li>
+        <li>TMS: active/standby hoặc active/active</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 9. USE CASE VNPT ═══ -->
+<section class="sec" id="s9">
+  <div class="sec-hdr">
+    <div class="sec-num">9</div>
+    <div>
+      <div class="sec-title">Use Case — VNPT Net</div>
+      <div class="sec-sub">Đề xuất triển khai · Kịch bản nghiệp vụ · Giá trị mang lại cho VNPT</div>
+    </div>
+  </div>
+
+  <div class="callout green">
+    <strong>VNPT Net</strong> là nhà mạng viễn thông lớn nhất Việt Nam — cung cấp dịch vụ Internet, kết nối quốc tế, data center, và các dịch vụ doanh nghiệp. Là Tier-1 ISP trong nước, VNPT cần giải pháp bảo vệ toàn mạng và có khả năng cung cấp Managed DDoS Service cho khách hàng.
+  </div>
+
+  <h3>9.1 Bối Cảnh và Thách Thức của VNPT Net</h3>
+  <div class="g2">
+    <div class="card ol">
+      <div class="card-title">Thách thức hiện tại</div>
+      <ul class="fl">
+        <li><strong>Scale lớn:</strong> Mạng backbone quốc gia, hàng trăm router PE/P</li>
+        <li><strong>DDoS ngày càng lớn:</strong> Attack volumetric hàng trăm Gbps vào hạ tầng và khách hàng</li>
+        <li><strong>Khó forensics:</strong> Không có lịch sử flow để điều tra sự cố sau khi xảy ra</li>
+        <li><strong>Manual mitigation:</strong> NOC phải manually chặn attack, tốn thời gian, lỗi người dùng</li>
+        <li><strong>Transit cost:</strong> Traffic transit đắt, cần tối ưu peering</li>
+        <li><strong>Managed service:</strong> Muốn cung cấp DDoS protection cho khách hàng doanh nghiệp</li>
+      </ul>
+    </div>
+    <div class="card ol">
+      <div class="card-title">Yêu cầu kỹ thuật từ tài liệu đề xuất</div>
+      <ul class="fl">
+        <li>Giám sát flow toàn mạng backbone (hàng chục router)</li>
+        <li>Phát hiện DDoS tự động &lt;1 phút</li>
+        <li>Mitigation tự động kết hợp TMS + FlowSpec</li>
+        <li>Lưu trữ flow history 90 ngày cho forensics</li>
+        <li>Analytics đa chiều cho NOC/SOC team</li>
+        <li>API để tích hợp với OSS/BSS/portal nội bộ</li>
+        <li>Reporting cho khách hàng managed service</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>9.2 Kiến Trúc Đề Xuất cho VNPT Net</h3>
+  <div class="arch" style="font-size:12px;">
+    <div style="margin-bottom:14px;color:#86EFAC;font-weight:700;">TOPOLOGY ĐỀ XUẤT — VNPT NET SIGHTLINE INSIGHT DEPLOYMENT</div>
+    <div class="arch-layer" style="background:rgba(0,100,200,.15);">
+      <div class="arch-layer-title">Kết nối Quốc Tế &amp; Peering</div>
+      Singtel, PCCW, Telia, TATA — 3 PoP quốc tế: Hà Nội, Hồ Chí Minh, Đà Nẵng<br/>
+      <em style="color:#aaa;font-size:11px;">→ NetFlow export từ tất cả router biên quốc tế đến TRA nodes</em>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin:8px 0;">
+      <div class="arch-layer" style="flex:1;min-width:180px;background:rgba(0,135,90,.15);">
+        <div class="arch-layer-title" style="color:#86EFAC;">Sightline Leader (Primary)</div>
+        Hà Nội NOC — SP7500 hoặc VM<br/>Leader + Backup Leader HA pair
+      </div>
+      <div class="arch-layer" style="flex:1;min-width:180px;background:rgba(0,135,90,.15);">
+        <div class="arch-layer-title" style="color:#86EFAC;">TRA Node #1 — HN</div>
+        Thu thập flow từ PE/P routers phía Bắc<br/>50K FPS capacity
+      </div>
+      <div class="arch-layer" style="flex:1;min-width:180px;background:rgba(0,135,90,.15);">
+        <div class="arch-layer-title" style="color:#86EFAC;">TRA Node #2 — HCM</div>
+        Thu thập flow từ PE/P routers phía Nam<br/>50K FPS capacity
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin:8px 0;">
+      <div class="arch-layer" style="flex:1;min-width:200px;background:rgba(0,145,213,.15);">
+        <div class="arch-layer-title" style="color:#93C5FD;">Insight Node Cluster</div>
+        Hà Nội — 3x Elasticsearch nodes<br/>Storage: 150 TB (100K FPS × 90 ngày)<br/>Photographic memory toàn mạng VNPT
+      </div>
+      <div class="arch-layer" style="flex:2;min-width:200px;background:rgba(201,55,44,.12);">
+        <div class="arch-layer-title" style="color:#FCA5A5;">TMS Scrubbing — 2 Sites</div>
+        TMS HN: 160 Gbps scrubbing capacity<br/>TMS HCM: 160 Gbps scrubbing capacity<br/>vTMS dự phòng trên VMware cluster<br/>BGP FlowSpec: tất cả edge routers
+      </div>
+    </div>
+    <div class="arch-layer" style="background:rgba(225,164,0,.1);">
+      <div class="arch-layer-title">Tích hợp hệ thống VNPT nội bộ</div>
+      REST API → OSS/BSS Portal | Webhook → NOC Ticketing (Remedy) | Email alert → Customer DDoS Portal | Syslog → SIEM
+    </div>
+  </div>
+
+  <h3>9.3 Kịch Bản Nghiệp Vụ Chi Tiết</h3>
+
+  <div class="card al" style="margin-bottom:14px;">
+    <div class="card-title">🎯 Kịch bản 1: Phát hiện &amp; Chặn DDoS vào Khách Hàng Doanh Nghiệp</div>
+    <p style="font-size:13px;"><strong>Bối cảnh:</strong> Khách hàng Ngân hàng Vietcombank (IP: 203.162.x.0/24) bị UDP amplification DDoS 120 Gbps từ botnet Mirai.</p>
+    <div class="flow">
+      <div class="flow-box active">T+0s<br/>Attack bắt đầu</div><div class="flow-arr">→</div>
+      <div class="flow-box sky">T+15s<br/>TRA phát hiện<br/>anomaly</div><div class="flow-arr">→</div>
+      <div class="flow-box sky">T+30s<br/>AIF xác nhận<br/>Mirai botnet</div><div class="flow-arr">→</div>
+      <div class="flow-box green">T+45s<br/>TMS activated<br/>FlowSpec</div><div class="flow-arr">→</div>
+      <div class="flow-box green">T+60s<br/>Attack mitigated<br/>Clean traffic</div>
+    </div>
+    <p style="font-size:13px;"><strong>Kết quả:</strong> Insight ghi lại toàn bộ flow của cuộc tấn công. VNPT xuất báo cáo chi tiết cho Vietcombank: thời điểm bắt đầu, nguồn tấn công (top 20 source countries), volume, vector, thời điểm chặn. → Value-added service cho khách hàng.</p>
+  </div>
+
+  <div class="card al" style="margin-bottom:14px;">
+    <div class="card-title">📊 Kịch bản 2: Tối Ưu Chi Phí Transit &amp; Peering</div>
+    <p style="font-size:13px;"><strong>Bối cảnh:</strong> VNPT đang trả chi phí transit lớn cho Singtel và TATA. Dùng Sightline Insight để phân tích.</p>
+    <ul class="fl">
+      <li>Insight ATR phân tích: "Top 20 AS nguồn gửi traffic vào VNPT qua transit links trong 30 ngày"</li>
+      <li>Phát hiện: Google (AS15169), Facebook (AS32934), Akamai (AS20940) chiếm 45% transit traffic</li>
+      <li>Insight drill-down: traffic từ Google đi qua Singtel transit thay vì VNIX peering</li>
+      <li>Action: VNPT mở thêm peering session với Google tại VNIX → tiết kiệm ước tính $X00K/năm transit cost</li>
+      <li>Insight tiếp tục monitor để verify kết quả sau khi optimize routing</li>
+    </ul>
+  </div>
+
+  <div class="card al" style="margin-bottom:14px;">
+    <div class="card-title">🔍 Kịch bản 3: Forensics Điều Tra Sự Cố</div>
+    <p style="font-size:13px;"><strong>Bối cảnh:</strong> Khách hàng báo cáo dịch vụ bị gián đoạn 3 ngày trước. NOC không có log. Dùng Insight để điều tra.</p>
+    <ul class="fl">
+      <li>Vào Insight, truy vấn: "flows đến 203.162.5.0/24 từ 3 ngày trước"</li>
+      <li>Phát hiện spike traffic bất thường lúc 2:30 AM từ Trung Quốc và Russia</li>
+      <li>Drill-down: attack type là DNS amplification, volume 80 Gbps kéo dài 45 phút</li>
+      <li>Insight export báo cáo đầy đủ với timeline, source IPs, attack volume</li>
+      <li>Dùng dữ liệu này để cải thiện detection threshold cho lần sau</li>
+    </ul>
+  </div>
+
+  <div class="card al">
+    <div class="card-title">💰 Kịch bản 4: Cung Cấp Managed DDoS Service</div>
+    <p style="font-size:13px;"><strong>Bối cảnh:</strong> VNPT muốn cung cấp "VNPT DDoS Protection" như một dịch vụ trả phí cho khách hàng doanh nghiệp và ISP nhỏ.</p>
+    <div class="g2">
+      <div>
+        <h4>Mô hình dịch vụ</h4>
+        <ul class="fl">
+          <li>Khách hàng đăng ký prefix vào Managed Objects</li>
+          <li>Sightline auto-detect và auto-mitigate DDoS</li>
+          <li>Portal khách hàng xem dashboard real-time (via REST API)</li>
+          <li>Monthly report tự động từ Insight ATR</li>
+          <li>SLA guarantee: phát hiện trong 60s, mitigation trong 120s</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Gói dịch vụ đề xuất</h4>
+        <table style="font-size:12.5px;">
+          <tr><th>Gói</th><th>Protection</th><th>Reporting</th></tr>
+          <tr><td>Basic</td><td>Auto-detect + RTBH</td><td>Monthly summary</td></tr>
+          <tr><td>Standard</td><td>TMS surgical + FlowSpec</td><td>Weekly + incident</td></tr>
+          <tr><td>Premium</td><td>TMS + Cloud backup</td><td>Real-time dashboard + API</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <h3>9.4 Tích Hợp với Hệ Thống VNPT Hiện Tại</h3>
+  <table>
+    <tr><th>Hệ thống VNPT</th><th>Tích hợp với Sightline Insight</th><th>Phương thức</th></tr>
+    <tr><td>NOC Portal / OSS</td><td>Push alerts, mitigation status, traffic dashboard</td><td>REST API + Webhook</td></tr>
+    <tr><td>Ticketing (Remedy/JIRA)</td><td>Auto-create ticket khi có DDoS alert</td><td>Webhook → REST API</td></tr>
+    <tr><td>SIEM (ArcSight/Splunk)</td><td>Forward Sightline security events, attack logs</td><td>Syslog CEF format</td></tr>
+    <tr><td>Customer Portal</td><td>Real-time traffic dashboard, attack report cho end customer</td><td>REST API query Insight</td></tr>
+    <tr><td>NMS (NetCool/Cacti)</td><td>Import Sightline interface utilization data</td><td>SNMP / API</td></tr>
+    <tr><td>Billing System</td><td>Export DDoS events để tính phí managed service</td><td>REST API + CSV</td></tr>
+  </table>
+</section>
+
+<!-- ═══ 10. SO SÁNH & ROI ═══ -->
+<section class="sec" id="s10">
+  <div class="sec-hdr">
+    <div class="sec-num">10</div>
+    <div>
+      <div class="sec-title">So Sánh &amp; Phân Tích ROI</div>
+      <div class="sec-sub">Sightline vs. giải pháp thay thế · Giá trị kinh doanh · ROI cho VNPT</div>
+    </div>
+  </div>
+
+  <h3>10.1 So Sánh Sightline vs. Giải Pháp Cạnh Tranh</h3>
+  <table>
+    <tr><th>Tiêu chí</th><th>NETSCOUT Sightline + Insight</th><th>Kentik</th><th>Nokia Deepfield</th><th>Radware DefensePro</th></tr>
+    <tr><td>Flow collection</td><td style="color:var(--green)"><strong>✓ NetFlow/IPFIX/sFlow</strong></td><td>✓ Cloud-based</td><td>✓</td><td>Packet-based</td></tr>
+    <tr><td>DDoS Detection</td><td style="color:var(--green)"><strong>✓ Host + Profiled + AIF</strong></td><td>✓ ML-based</td><td>✓</td><td>✓ Behavior</td></tr>
+    <tr><td>Big Data Analytics</td><td style="color:var(--green)"><strong>✓ Insight (80+ facets)</strong></td><td>✓ Cloud native</td><td>Limited</td><td>✗</td></tr>
+    <tr><td>TMS On-net Scrubbing</td><td style="color:var(--green)"><strong>✓ Tích hợp native</strong></td><td>✗ (cloud only)</td><td>Partial</td><td>✓</td></tr>
+    <tr><td>BGP FlowSpec</td><td style="color:var(--green)"><strong>✓ Native orchestration</strong></td><td>Limited</td><td>✓</td><td>Limited</td></tr>
+    <tr><td>ISP Market Share</td><td style="color:var(--green)"><strong>✓ #1 worldwide</strong></td><td>Growing</td><td>Limited</td><td>Enterprise focus</td></tr>
+    <tr><td>On-premises deployment</td><td style="color:var(--green)"><strong>✓ Full control</strong></td><td>Hybrid/Cloud</td><td>✓</td><td>✓</td></tr>
+    <tr><td>Vietnam reference</td><td style="color:var(--green)"><strong>✓ Multiple ISP</strong></td><td>Limited</td><td>Limited</td><td>Limited</td></tr>
+  </table>
+
+  <h3>10.2 Giá Trị Kinh Doanh cho VNPT Net</h3>
+  <div class="g2">
+    <div class="card gl">
+      <div class="card-title">💵 Tiết kiệm chi phí trực tiếp</div>
+      <ul class="fl">
+        <li><strong>Giảm transit cost:</strong> Tối ưu peering dựa trên Insight analytics → tiết kiệm 20–40% transit</li>
+        <li><strong>Giảm OPEX NOC:</strong> Auto-mitigation giảm effort thủ công của NOC team 60–80%</li>
+        <li><strong>Giảm downtime:</strong> MTTD giảm từ ~30 phút xuống &lt;1 phút → tránh SLA penalty</li>
+        <li><strong>Giảm hardware sprawl:</strong> Flex Licensing cho phép dùng COTS server thay appliance đắt tiền</li>
+      </ul>
+    </div>
+    <div class="card gl">
+      <div class="card-title">📈 Tạo doanh thu mới</div>
+      <ul class="fl">
+        <li><strong>Managed DDoS Service:</strong> $500–$5000/tháng per customer × 100–1000 khách hàng</li>
+        <li><strong>Premium SLA:</strong> Khách hàng trả thêm để được DDoS protection guarantee</li>
+        <li><strong>Security Analytics:</strong> Cung cấp threat intelligence report cho khách hàng enterprise</li>
+        <li><strong>Competitive advantage:</strong> Là ISP duy nhất ở VN có full DDoS protection service</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>10.3 Điểm Khác Biệt Chính Khi Tư Vấn</h3>
+  <div class="hl">
+    <div class="hl-title">🎯 Key Selling Points cho VNPT Net</div>
+    <div class="g2">
+      <ul class="fl">
+        <li><strong>#1 Market position:</strong> Hơn 90% ISP lớn toàn cầu dùng Arbor — "industry standard"</li>
+        <li><strong>Photographic memory:</strong> Không bao giờ mất dữ liệu traffic — forensics mọi lúc</li>
+        <li><strong>ASI 80+ facets:</strong> Không giải pháp nào có độ phong phú dữ liệu như Arbor</li>
+        <li><strong>Native TMS integration:</strong> Detection và mitigation từ cùng một vendor — không integration gap</li>
+      </ul>
+      <ul class="fl">
+        <li><strong>ATLAS global intel:</strong> Biết attack từ 1/3 internet trước khi nó đến mạng VNPT</li>
+        <li><strong>Proven ISP scale:</strong> Đã triển khai ở Tier-1 ISP với hàng trăm Tbps</li>
+        <li><strong>Monetization platform:</strong> Biến security infrastructure thành revenue stream</li>
+        <li><strong>REST API:</strong> Tích hợp đầy đủ với hệ thống OSS/BSS VNPT hiện có</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 11. TÀI LIỆU THAM KHẢO ═══ -->
+<section class="sec" id="s11">
+  <div class="sec-hdr">
+    <div class="sec-num">11</div>
+    <div>
+      <div class="sec-title">Tài Liệu Tham Khảo</div>
+      <div class="sec-sub">Nguồn chính thức từ NETSCOUT và tài liệu đính kèm</div>
+    </div>
+  </div>
+  <div class="g2">
+    <div>
+      <h3>Tài liệu gốc đính kèm (VNPT)</h3>
+      <ul style="padding-left:18px;line-height:2.2;font-size:14px;">
+        <li>MYSightlineInsight_for_VNPT_NET.pdf — Proposal document</li>
+        <li>Insight_10_Software_Installation_Guide.pdf — Hướng dẫn cài đặt v10</li>
+      </ul>
+      <h3>Tài liệu chính thức NETSCOUT</h3>
+      <ul style="padding-left:18px;line-height:2.2;font-size:14px;">
+        <li><a href="https://www.netscout.com/product/arbor-sightline" style="color:var(--accent);">Arbor Sightline Product Page</a></li>
+        <li><a href="https://www.netscout.com/product/arbor-insight" style="color:var(--accent);">Arbor Insight Product Page</a></li>
+        <li><a href="https://www.netscout.com/resources/data-sheets/arbor-sightline-with-insight" style="color:var(--accent);">Sightline with Insight Datasheet</a></li>
+        <li><a href="https://www.netscout.com/resources/data-sheets/arbor-sightline-flex-licensing" style="color:var(--accent);">Flex Licensing Datasheet</a></li>
+        <li><a href="https://www.netscout.com/resources/data-sheets/getting-started-with-arbor-insight" style="color:var(--accent);">Getting Started with Arbor Insight</a></li>
+        <li><a href="https://www.netscout.com/product/arbor-threat-mitigation-system" style="color:var(--accent);">Arbor TMS Product Page</a></li>
+        <li><a href="https://www.netscout.com/product/atlas-intelligence-feed" style="color:var(--accent);">ATLAS Intelligence Feed</a></li>
+        <li><a href="https://www.netscout.com/resources/data-sheets/implementation-services-for-netscout-arbor-insight" style="color:var(--accent);">Implementation Services for Arbor Insight</a></li>
+        <li><a href="https://en.nwu.ua/blog/netscout-en/how-arbor-sightline-and-tms-provide-multi-layered-ddos-protection/" style="color:var(--accent);">Sightline + TMS: Multi-Layer DDoS Protection</a></li>
+        <li><a href="https://storage.googleapis.com/site-media-prod/documents/Arbor_Sightline_With_Insight.pdf" style="color:var(--accent);">Arbor Sightline with Insight (PDF)</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Tài liệu kỹ thuật chuyên sâu</h3>
+      <ul style="padding-left:18px;line-height:2.2;font-size:14px;">
+        <li><a href="https://www.netscout.com/sites/default/files/2021-11/SECPDS_005_EN-2102%20-%20Arbor%20Sightline.pdf" style="color:var(--accent);">Arbor Sightline Full Datasheet (PDF)</a></li>
+        <li><a href="https://www.netscout.com/sites/default/files/2019-01/Effective-DDoS-Mitigation-in-Distributed.pdf" style="color:var(--accent);">Effective DDoS Mitigation (Distributed)</a></li>
+        <li><a href="https://www.netscout.com/sites/default/files/2020-09/SECJTF_004_EN-2001%20-%20Sightline%20TMS%20and%20AED%20-%20How%20They%20Work%20Together.pdf" style="color:var(--accent);">Sightline, TMS and AED — How They Work Together</a></li>
+        <li><a href="https://en.nwu.ua/blog/netscout-en/bgp-flowspec-and-arbor-accelerated-ddos-mitigation/" style="color:var(--accent);">BGP FlowSpec &amp; Arbor Mitigation</a></li>
+        <li><a href="https://www.netscout.com/resources/data-sheets/arbor-sightline-virtual-machine-requirements" style="color:var(--accent);">Sightline VM Requirements</a></li>
+        <li><a href="https://www.netscout.com/resources/data-sheets/arbor-threat-mitigation-system-tms" style="color:var(--accent);">Arbor TMS Datasheet</a></li>
+        <li><a href="https://www.netscout.com/use-case/fundamental-peering-analysis" style="color:var(--accent);">Peering Analysis Use Case</a></li>
+        <li><a href="https://www.netscout.com/resources/course-information/arbor-sightline-tms-ddos-detection-and-mitigation-administrator-course" style="color:var(--accent);">Sightline/TMS Admin Training Course</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</div><!-- /wrap -->
+
+<footer>
+  <p>Tài liệu thuyết minh tổng hợp — NETSCOUT Arbor Sightline with Insight · Phiên bản tháng 4/2026</p>
+  <p style="margin-top:6px;">Tổng hợp từ tài liệu chính thức NETSCOUT, tài liệu đề xuất VNPT, và nghiên cứu kỹ thuật. Dành cho mục đích tư vấn nội bộ.</p>
+  <p style="margin-top:8px;font-size:12px;opacity:.6;">NETSCOUT®, Arbor®, Sightline™, ATLAS® là nhãn hiệu của NETSCOUT Systems, Inc. Tài liệu này không phải ấn phẩm chính thức của NETSCOUT.</p>
+</footer>
+</body>
+</html>

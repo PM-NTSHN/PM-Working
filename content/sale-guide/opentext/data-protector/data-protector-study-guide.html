@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenText Data Protector — Tài liệu học</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0d1117;
+    --bg2: #161b22;
+    --bg3: #21262d;
+    --border: #30363d;
+    --text: #e6edf3;
+    --text2: #8b949e;
+    --blue: #58a6ff;
+    --blue-bg: #1f3a5c;
+    --green: #3fb950;
+    --green-bg: #1a3a2a;
+    --amber: #d29922;
+    --amber-bg: #3a2a10;
+    --red: #f85149;
+    --red-bg: #3a1a1a;
+    --purple: #bc8cff;
+    --purple-bg: #2a1a4a;
+    --teal: #39d353;
+    --accent: #58a6ff;
+    --font: 'IBM Plex Sans', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+    --r: 8px;
+    --r2: 12px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(135deg, #0d1117 0%, #1a2744 50%, #0d1117 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 20px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .logo {
+    width: 40px; height: 40px;
+    background: var(--blue);
+    border-radius: var(--r);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .header h1 { font-size: 17px; font-weight: 600; color: var(--text); }
+  .header p { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+  /* ── NAV TABS ── */
+  .nav {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+  }
+  .nav::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    font-family: var(--font);
+    font-size: 12px;
+    padding: 6px 14px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    background: transparent;
+    color: var(--text2);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .nav-btn.active {
+    background: var(--blue);
+    color: #fff;
+    border-color: var(--blue);
+  }
+  .nav-btn:active { opacity: 0.8; transform: scale(0.97); }
+
+  /* ── CONTENT ── */
+  .content { padding: 20px 16px 60px; max-width: 700px; margin: 0 auto; }
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ── TYPOGRAPHY ── */
+  .page-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .page-subtitle {
+    font-size: 13px;
+    color: var(--text2);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  h2 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin: 24px 0 10px;
+  }
+  h2:first-child { margin-top: 0; }
+  h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  p { font-size: 14px; color: var(--text2); line-height: 1.65; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--r2);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+  }
+  .card-blue { border-left: 3px solid var(--blue); }
+  .card-green { border-left: 3px solid var(--green); }
+  .card-amber { border-left: 3px solid var(--amber); }
+  .card-red { border-left: 3px solid var(--red); }
+  .card-purple { border-left: 3px solid var(--purple); }
+
+  /* ── GRID ── */
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  @media(max-width:480px) { .grid2 { grid-template-columns: 1fr; } }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+  @media(max-width:480px) { .grid3 { grid-template-columns: 1fr 1fr; } }
+
+  /* ── METRIC ── */
+  .metric {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 12px;
+    text-align: center;
+  }
+  .metric .num { font-size: 22px; font-weight: 600; color: var(--blue); }
+  .metric .lbl { font-size: 11px; color: var(--text2); margin-top: 3px; line-height: 1.35; }
+
+  /* ── TAGS / BADGES ── */
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 9px;
+    border-radius: 20px;
+    margin: 2px 3px 2px 0;
+  }
+  .tag-blue { background: var(--blue-bg); color: var(--blue); }
+  .tag-green { background: var(--green-bg); color: var(--green); }
+  .tag-amber { background: var(--amber-bg); color: var(--amber); }
+  .tag-red { background: var(--red-bg); color: var(--red); }
+  .tag-purple { background: var(--purple-bg); color: var(--purple); }
+
+  /* ── LIST ── */
+  ul.dot { list-style: none; padding: 0; }
+  ul.dot li {
+    font-size: 14px;
+    color: var(--text2);
+    padding: 5px 0 5px 18px;
+    position: relative;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.5;
+  }
+  ul.dot li:last-child { border-bottom: none; }
+  ul.dot li::before {
+    content: '›';
+    position: absolute;
+    left: 0;
+    color: var(--blue);
+    font-weight: 600;
+  }
+  ul.dot li strong { color: var(--text); font-weight: 500; }
+
+  /* ── CALLOUT ── */
+  .callout {
+    background: var(--blue-bg);
+    border: 1px solid rgba(88,166,255,0.3);
+    border-radius: var(--r2);
+    padding: 12px 14px;
+    margin-bottom: 14px;
+  }
+  .callout p { color: #a8d4ff; font-size: 13px; }
+  .callout-amber { background: var(--amber-bg); border-color: rgba(210,153,34,0.3); }
+  .callout-amber p { color: #f0c060; }
+  .callout-green { background: var(--green-bg); border-color: rgba(63,185,80,0.3); }
+  .callout-green p { color: #7ee88e; }
+
+  /* ── TABLE ── */
+  .tbl { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 14px; }
+  .tbl th {
+    text-align: left;
+    padding: 9px 10px;
+    color: var(--text2);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--border);
+  }
+  .tbl td {
+    padding: 9px 10px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+  }
+  .tbl tr:last-child td { border-bottom: none; }
+  .tbl .hl { background: var(--blue-bg); }
+  .tbl .hl td { color: var(--blue); }
+  .yes { color: var(--green); font-weight: 600; }
+  .no { color: var(--border); }
+
+  /* ── STEPS ── */
+  .step {
+    display: flex;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .step:last-child { border-bottom: none; }
+  .step-n {
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-body h4 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .step-body p { font-size: 13px; color: var(--text2); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 20px 0;
+  }
+
+  /* ── TALKING POINT ── */
+  .tp {
+    display: flex;
+    gap: 12px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--r2);
+    padding: 14px;
+    margin-bottom: 10px;
+    align-items: flex-start;
+  }
+  .tp-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--amber);
+    background: var(--amber-bg);
+    padding: 3px 7px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .tp h4 { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .tp p, .tp li { font-size: 13px; color: var(--text2); line-height: 1.55; }
+  .tp ul { padding-left: 14px; }
+  .tp li { margin-bottom: 3px; }
+
+  /* ── PROGRESS BAR ── */
+  .progress-row { margin-bottom: 10px; }
+  .progress-label { display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .progress-label span { font-size: 12px; color: var(--text2); }
+  .progress-label strong { font-size: 12px; color: var(--text); }
+  .progress-bar { height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--blue); border-radius: 2px; }
+
+  /* ── QUOTE ── */
+  .quote {
+    background: var(--bg3);
+    border-left: 3px solid var(--amber);
+    border-radius: 0 var(--r) var(--r) 0;
+    padding: 12px 14px;
+    margin: 14px 0;
+  }
+  .quote p { font-size: 13px; color: #f0c060; font-style: italic; }
+  .quote cite { font-size: 11px; color: var(--text2); font-style: normal; display: block; margin-top: 5px; }
+
+  /* ── MONO TAG ── */
+  code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--bg3);
+    color: var(--green);
+    padding: 1px 6px;
+    border-radius: 4px;
+  }
+
+  /* progress indicator */
+  .reading-progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: var(--blue);
+    transition: width 0.1s;
+    z-index: 999;
+    width: 0%;
+  }
+</style>
+</head>
+<body>
+
+<div class="reading-progress" id="rp"></div>
+
+<div class="header">
+  <div class="header-top">
+    <div class="logo">DP</div>
+    <div>
+      <h1>OpenText Data Protector</h1>
+      <p>Tài liệu học toàn diện — Phiên bản 25.2</p>
+    </div>
+  </div>
+  <nav class="nav" id="nav">
+    <button class="nav-btn active" onclick="show('s0')">Tổng quan</button>
+    <button class="nav-btn" onclick="show('s1')">Kiến trúc</button>
+    <button class="nav-btn" onclick="show('s2')">Tính năng</button>
+    <button class="nav-btn" onclick="show('s3')">Tích hợp</button>
+    <button class="nav-btn" onclick="show('s4')">Cloud & VM</button>
+    <button class="nav-btn" onclick="show('s5')">Bảo mật</button>
+    <button class="nav-btn" onclick="show('s6')">GRE</button>
+    <button class="nav-btn" onclick="show('s7')">DR & Retention</button>
+    <button class="nav-btn" onclick="show('s8')">License</button>
+    <button class="nav-btn" onclick="show('s9')">Sales Pitch</button>
+    <button class="nav-btn" onclick="show('s10')">Q&amp;A Khách hàng</button>
+  </nav>
+</div>
+
+<div class="content">
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 0 — TỔNG QUAN
+══════════════════════════════════════════════════════ -->
+<div id="s0" class="section active">
+  <p class="page-title">OpenText Data Protector</p>
+  <p class="page-subtitle">Giải pháp backup & disaster recovery cấp doanh nghiệp, 33+ năm trên thị trường, bảo vệ petabytes dữ liệu cho hàng nghìn doanh nghiệp lớn toàn cầu.</p>
+
+  <div class="callout">
+    <p>🎯 <strong>Một câu định nghĩa:</strong> Data Protector là nền tảng bảo vệ dữ liệu thống nhất cho môi trường IT phức tạp — từ server vật lý, máy ảo, đến cloud và container — với một console quản lý duy nhất.</p>
+  </div>
+
+  <h2>Chỉ số ấn tượng</h2>
+  <div class="grid3">
+    <div class="metric"><div class="num">33+</div><div class="lbl">Năm kinh nghiệm thị trường</div></div>
+    <div class="metric"><div class="num">18%</div><div class="lbl">Cải thiện RTO trung bình</div></div>
+    <div class="metric"><div class="num">45%</div><div class="lbl">Giảm thời gian backup</div></div>
+    <div class="metric"><div class="num">50%</div><div class="lbl">Giảm dung lượng lưu trữ</div></div>
+    <div class="metric"><div class="num">200+</div><div class="lbl">Chứng nhận tích hợp 3rd party</div></div>
+    <div class="metric"><div class="num">1 PB+</div><div class="lbl">Khả năng scale dedup</div></div>
+  </div>
+
+  <h2>2 Phiên bản chính</h2>
+  <div class="grid2">
+    <div class="card card-blue">
+      <h3>Data Protector Express</h3>
+      <p>Dành riêng cho <strong style="color:var(--text)">môi trường ảo hóa</strong>. License theo socket CPU của hypervisor host.</p>
+      <div style="margin-top:8px">
+        <span class="tag tag-blue">VMware</span>
+        <span class="tag tag-blue">Hyper-V</span>
+        <span class="tag tag-blue">H3C CAS</span>
+      </div>
+    </div>
+    <div class="card card-green">
+      <h3>Data Protector Premium</h3>
+      <p>Môi trường <strong style="color:var(--text)">hybrid đầy đủ</strong>: physical + virtual + cloud + database. License theo TB front-end.</p>
+      <div style="margin-top:8px">
+        <span class="tag tag-green">Toàn bộ tính năng</span>
+        <span class="tag tag-green">Mọi ứng dụng</span>
+      </div>
+    </div>
+  </div>
+
+  <h2>Tại sao chọn Data Protector?</h2>
+  <div class="card card-blue">
+    <h3>Superior Data Protection</h3>
+    <ul class="dot">
+      <li>Thống nhất backup toàn môi trường, loại bỏ silo dữ liệu</li>
+      <li>Bảo vệ toàn diện khỏi disaster, breach, ransomware, cyber-attack</li>
+      <li>Báo cáo nâng cao: insight, predictability, audit compliance</li>
+    </ul>
+  </div>
+  <div class="card card-amber">
+    <h3>Better Recovery Processes</h3>
+    <ul class="dot">
+      <li>Phục hồi nhanh, đáp ứng SLA theo RPO/RTO yêu cầu</li>
+      <li>Application-consistent backup → recovery nhanh nhất</li>
+      <li>Chiến lược 3-2-1-1-0 thực sự: Disk → Tape → Cloud</li>
+    </ul>
+  </div>
+  <div class="card card-green">
+    <h3>Greater Agility & Lower Cost</h3>
+    <ul class="dot">
+      <li>Một giải pháp bảo vệ physical + virtual + cloud</li>
+      <li>Licensing linh hoạt, minh bạch, dễ dự toán ngân sách</li>
+      <li>Giảm chi phí đào tạo, vận hành so với nhiều công cụ khác nhau</li>
+    </ul>
+  </div>
+
+  <div class="quote">
+    <p>"The solution provides the necessary capacity, performance, and management features to achieve compliance with accounting audits, while demanding only a fair amount of resources to operate."</p>
+    <cite>— György Fajt, Senior IT Infrastructure Specialist, Telenor Hungary</cite>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 1 — KIẾN TRÚC
+══════════════════════════════════════════════════════ -->
+<div id="s1" class="section">
+  <p class="page-title">Kiến trúc Data Protector</p>
+  <p class="page-subtitle">Kiến trúc đa tầng, thống nhất, linh hoạt — có thể scale từ vài server đến hàng nghìn server trên nhiều site.</p>
+
+  <h2>Thành phần cốt lõi</h2>
+  <div class="card card-blue">
+    <h3>Cell Manager</h3>
+    <ul class="dot">
+      <li><strong>Não bộ</strong> của hệ thống Data Protector</li>
+      <li>Quản lý toàn bộ backup policies, catalog, scheduling</li>
+      <li>Cài đặt trên <strong>Windows, Linux, hoặc HP-UX</strong></li>
+      <li>Một Cell Manager quản lý được toàn bộ "cell" (tập hợp các client)</li>
+    </ul>
+  </div>
+  <div class="card card-blue">
+    <h3>Manager of Managers (MoM)</h3>
+    <ul class="dot">
+      <li>Quản lý tập trung <strong>nhiều Cell Manager</strong> từ một console</li>
+      <li>Phù hợp môi trường doanh nghiệp lớn, multi-site</li>
+      <li>Centralized licensing trong môi trường MoM</li>
+    </ul>
+  </div>
+  <div class="card card-blue">
+    <h3>Media Agent (MA) & Disk Agent (DA)</h3>
+    <ul class="dot">
+      <li><strong>Media Agent:</strong> chịu trách nhiệm di chuyển dữ liệu đến backup device (tape, disk, cloud)</li>
+      <li><strong>Disk Agent:</strong> agent cài trên client để backup file system</li>
+      <li>Hỗ trợ <strong>parallel và multiplexed</strong> data streams — backup nhiều nguồn đồng thời</li>
+    </ul>
+  </div>
+  <div class="card card-blue">
+    <h3>Internal Database (IDB)</h3>
+    <ul class="dot">
+      <li>Catalog lưu trữ toàn bộ metadata về backup sessions, media, objects</li>
+      <li>Là nền tảng cho tính năng tìm kiếm, reporting, restore</li>
+      <li>Tự động backup IDB để đảm bảo continuity của hệ thống backup</li>
+    </ul>
+  </div>
+
+  <h2>Mô hình triển khai</h2>
+  <div class="card">
+    <ul class="dot">
+      <li><strong>On-premises:</strong> Cell Manager + Media Server + Agents tại datacenter</li>
+      <li><strong>Remote/Branch site:</strong> Installation Server đẩy agent, không cần admin local</li>
+      <li><strong>Hybrid Cloud:</strong> backup target cloud (Azure, AWS S3) tích hợp native</li>
+      <li><strong>Virtual:</strong> agentless backup VMware/Hyper-V không cần cài agent trong VM</li>
+    </ul>
+  </div>
+
+  <h2>GUI & Quản lý</h2>
+  <div class="card">
+    <ul class="dot">
+      <li>Giao diện đồ họa (GUI) web-based + desktop client</li>
+      <li>CLI (Command Line Interface) cho scripting và automation</li>
+      <li>REST API cho tích hợp vào portal/ITSM của khách hàng</li>
+      <li>Nhiều admin có thể cùng quản lý từ nhiều console khác nhau</li>
+    </ul>
+  </div>
+
+  <div class="callout-amber callout">
+    <p>💡 <strong>Key selling point:</strong> Một console duy nhất quản lý toàn bộ môi trường — physical, virtual, cloud — giảm tải đáng kể cho đội vận hành IT.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 2 — TÍNH NĂNG
+══════════════════════════════════════════════════════ -->
+<div id="s2" class="section">
+  <p class="page-title">Tính năng chính</p>
+  <p class="page-subtitle">14 tính năng cốt lõi tạo nên sức mạnh của Data Protector.</p>
+
+  <div class="card card-blue">
+    <h3>1. Standardized Protection</h3>
+    <ul class="dot">
+      <li>Bảo vệ tập trung qua môi trường physical, virtual, cloud từ một nền tảng</li>
+      <li>Hỗ trợ đa dạng OS: Windows, Linux, UNIX, HP-UX, AIX, Solaris</li>
+      <li>Support matrix rộng nhất: disk, tape, cloud làm backup target</li>
+      <li>Từ datacenter trung tâm đến remote site đều quản lý được</li>
+    </ul>
+  </div>
+
+  <div class="card card-green">
+    <h3>2. Application-Consistent Recovery</h3>
+    <ul class="dot">
+      <li>Agent tích hợp sâu với ứng dụng: biết trạng thái application khi backup</li>
+      <li>Đảm bảo backup ở trạng thái <strong>consistent</strong> — không bị corrupt khi restore</li>
+      <li>Automated transaction log backup & truncation</li>
+      <li>Point-in-time recovery: phục hồi đến đúng thời điểm trước sự cố</li>
+      <li>Granular Recovery Extension (GRE): phục hồi từng item riêng lẻ</li>
+    </ul>
+  </div>
+
+  <div class="card card-amber">
+    <h3>3. Advanced Virtual Server Protection</h3>
+    <ul class="dot">
+      <li>Native agentless backup VMware vSphere và Microsoft Hyper-V</li>
+      <li>Policy inheritance: VM mới tự động áp dụng backup policy</li>
+      <li>Hardware-assisted backup: offload khỏi hypervisor layer</li>
+      <li><strong>VM Power On:</strong> khởi động VM trực tiếp từ backup image</li>
+      <li><strong>Live Migrate:</strong> khởi động từ backup, đồng thời restore về đích</li>
+      <li><strong>Cached GRE:</strong> phục hồi file từ backup image mà không cần restore VM</li>
+    </ul>
+  </div>
+
+  <div class="card card-purple">
+    <h3>4. Data Protector Deduplication (DPD)</h3>
+    <ul class="dot">
+      <li>Software dedup tích hợp, không cần appliance riêng</li>
+      <li>Dedup cả source side và target side</li>
+      <li>Data vẫn deduplicated khi truyền qua mạng → tiết kiệm bandwidth</li>
+      <li>Scale đến hơn <strong>1 PB</strong> source data</li>
+      <li>Hỗ trợ Linux và Windows, nhiều folder/mount points</li>
+    </ul>
+  </div>
+
+  <div class="card card-blue">
+    <h3>5. High-Performance Backup</h3>
+    <ul class="dot">
+      <li>Backup đến <strong>hàng trăm device đồng thời</strong></li>
+      <li>Parallel data streams — nhiều luồng dữ liệu song song</li>
+      <li>Multiplexed backup — ghi nhiều nguồn vào một device</li>
+      <li>Synthetic backup: tạo full backup từ existing incremental</li>
+      <li>Disk staging: dữ liệu lên disk trước, sau chuyển sang tape/cloud</li>
+    </ul>
+  </div>
+
+  <div class="card card-green">
+    <h3>6. Predictive Analytics & Orchestration</h3>
+    <ul class="dot">
+      <li>Dashboard thời gian thực về KPI backup/recovery</li>
+      <li>Advanced integrated reporting (Premium): client stats, licensing, sessions</li>
+      <li>Business Value Dashboard (BVD): truy cập từ bất kỳ thiết bị nào</li>
+      <li>Phân tích dự đoán xung đột lịch backup, contention tài nguyên</li>
+      <li>Operations Orchestration (OO): tạo workflow tự động hóa quy trình</li>
+      <li>Rapid root-cause analysis trước khi sự cố leo thang</li>
+    </ul>
+  </div>
+
+  <div class="card card-amber">
+    <h3>7. REST API Access</h3>
+    <ul class="dot">
+      <li>Authentication & authorization layer đầy đủ</li>
+      <li>Tích hợp Data Protector vào service portal/ITSM của khách hàng</li>
+      <li>Self-service restore: File System, SQL, SAP, Oracle, VMware, Hyper-V</li>
+      <li>Script hóa mọi tương tác với Data Protector</li>
+    </ul>
+  </div>
+
+  <div class="card card-blue">
+    <h3>8. Data Security</h3>
+    <ul class="dot">
+      <li>Mã hóa AES-256 (software-based): encrypt trước khi truyền qua mạng</li>
+      <li>Drive-based encryption: tận dụng firmware của backup drive</li>
+      <li>Quản lý encryption key: expire, reactivate, export, import, delete</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 3 — TÍCH HỢP ỨNG DỤNG
+══════════════════════════════════════════════════════ -->
+<div id="s3" class="section">
+  <p class="page-title">Tích hợp ứng dụng & Storage</p>
+  <p class="page-subtitle">Support matrix rộng nhất thị trường — một trong những điểm mạnh cạnh tranh nhất của Data Protector.</p>
+
+  <h2>Microsoft Applications</h2>
+  <div class="card">
+    <div style="margin-bottom:8px">
+      <span class="tag tag-blue">Exchange Server 2010+</span>
+      <span class="tag tag-blue">SharePoint Server</span>
+      <span class="tag tag-blue">SQL Server</span>
+      <span class="tag tag-blue">Exchange Online</span>
+      <span class="tag tag-blue">SharePoint Online</span>
+      <span class="tag tag-blue">OneDrive for Business</span>
+      <span class="tag tag-blue">Microsoft Teams</span>
+    </div>
+    <ul class="dot">
+      <li>Exchange: backup email, contacts, calendar, tasks — restore từng item (GRE)</li>
+      <li>SharePoint: backup site, library, document — restore đến item level</li>
+      <li>SQL Server: application-aware, point-in-time, transaction log</li>
+      <li>M365 Teams: chats 1-on-1, Teams chats, document libraries, sites</li>
+    </ul>
+  </div>
+
+  <h2>Oracle & SAP</h2>
+  <div class="card">
+    <div style="margin-bottom:8px">
+      <span class="tag tag-amber">Oracle Database</span>
+      <span class="tag tag-amber">SAP (BRTOOLS)</span>
+      <span class="tag tag-amber">SAP HANA</span>
+    </div>
+    <ul class="dot">
+      <li>Oracle: RMAN integration, archive log backup, tablespace restore</li>
+      <li>SAP: tích hợp qua BRTOOLS, backup theo schedule của SAP</li>
+      <li>SAP HANA: native integration, backup log, point-in-time recovery</li>
+      <li>Recovery đến gần thời điểm cuối cùng trước sự cố (near-zero data loss)</li>
+    </ul>
+  </div>
+
+  <h2>Databases khác</h2>
+  <div class="card">
+    <div style="margin-bottom:8px">
+      <span class="tag tag-green">IBM Db2</span>
+      <span class="tag tag-green">PostgreSQL</span>
+      <span class="tag tag-green">MySQL</span>
+      <span class="tag tag-green">Sybase ASE</span>
+    </div>
+    <ul class="dot">
+      <li>Application-aware backup & recovery cho tất cả</li>
+      <li>Automated transaction log backup và truncation</li>
+      <li>Granular, point-in-time recovery</li>
+    </ul>
+  </div>
+
+  <h2>Storage Arrays tích hợp</h2>
+  <div class="card card-purple">
+    <h3>HPE Storage</h3>
+    <ul class="dot">
+      <li><strong>Zero Downtime Backup (ZDB):</strong> tạo snapshot không downtime, application-aware</li>
+      <li><strong>Instant Recovery:</strong> restore ngay từ snapshot trên storage array (RTO gần = 0)</li>
+      <li>HPE StoreOnce Catalyst: federated deduplication</li>
+      <li>HPE StoreOnce Cloud Bank: chuyển backup lên cloud không cần rehydrate</li>
+      <li>Hỗ trợ: HPE Nimble Storage, HPE SimpliVity, HPE Alletra, HPE Cloud Volumes</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h3>3rd Party Storage</h3>
+    <ul class="dot">
+      <li><strong>Dell EMC Data Domain Boost:</strong> federated dedup, inline hoặc post-process</li>
+      <li><strong>NetApp SnapMirror:</strong> snapshot integration, NDMP backup</li>
+      <li>Dell EMC Isilon & Unity: 3-way NDMP backup</li>
+      <li>Hitachi: NDMP-based backup và recovery</li>
+      <li><strong>Nutanix AHV:</strong> backup và restore VM trực tiếp</li>
+    </ul>
+  </div>
+
+  <div class="callout">
+    <p>🔑 <strong>Federated Deduplication:</strong> dedup chạy tại source (client), media server, hoặc backup appliance — linh hoạt chọn điểm tối ưu nhất. Data deduplicated suốt hành trình, không cần rehydrate.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 4 — CLOUD & VM
+══════════════════════════════════════════════════════ -->
+<div id="s4" class="section">
+  <p class="page-title">Cloud & Virtual Environments</p>
+  <p class="page-subtitle">Data Protector for Cloud Workloads (DP4CW) mở rộng khả năng backup cho cloud, container và SaaS applications.</p>
+
+  <h2>Hypervisors được hỗ trợ</h2>
+  <div class="card">
+    <p style="margin-bottom:8px; font-size:13px; color:var(--text2)">Core Data Protector:</p>
+    <span class="tag tag-blue">VMware vSphere</span>
+    <span class="tag tag-blue">Microsoft Hyper-V</span>
+    <span class="tag tag-blue">H3C CAS</span>
+    <p style="margin: 10px 0 8px; font-size:13px; color:var(--text2)">Qua DP4CW Extension:</p>
+    <span class="tag tag-green">KVM</span>
+    <span class="tag tag-green">Oracle VM</span>
+    <span class="tag tag-green">AWS EC2</span>
+    <span class="tag tag-green">Nutanix AHV</span>
+    <span class="tag tag-green">Citrix XenServer</span>
+    <span class="tag tag-green">Proxmox</span>
+    <div style="margin-top:10px">
+      <ul class="dot">
+        <li>Full và incremental backup protection cho tất cả hypervisor</li>
+        <li>Changed Block Tracking (CBT): chỉ backup phần thay đổi → tăng tốc backup</li>
+        <li>Application consistent snapshots (tùy hypervisor)</li>
+        <li>LVM thin-pool support, loại trừ volume cụ thể</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>Cloud Storage Targets</h2>
+  <div class="card card-blue">
+    <ul class="dot">
+      <li><strong>Microsoft Azure:</strong> native integration, dùng như backup target</li>
+      <li><strong>Amazon S3:</strong> native integration, S3-compatible (Ceph, Scality)</li>
+      <li><strong>Google Cloud:</strong> qua Deduplication Store cloud support</li>
+      <li><strong>HPE StoreOnce Cloud Bank:</strong> không cần rehydrate khi restore, metadata luôn ở cloud</li>
+      <li><strong>HPE Cloud Volumes:</strong> mở rộng capacity disk systems lên cloud</li>
+      <li><strong>Microsoft StorSimple:</strong> gateway cho large cloud backups</li>
+    </ul>
+  </div>
+
+  <h2>Microsoft 365 Protection</h2>
+  <div class="card card-green">
+    <p style="font-size:13px; color:var(--text2); margin-bottom:10px">M365 chỉ cung cấp minimal retention mặc định. DP4CW bảo vệ đầy đủ:</p>
+    <ul class="dot">
+      <li><strong>Exchange Online:</strong> emails, contacts, calendar, events</li>
+      <li><strong>SharePoint Online:</strong> Sites, subsites</li>
+      <li><strong>OneDrive for Business:</strong> Files và folder structure</li>
+      <li><strong>Microsoft Teams:</strong> chats, 1-on-1, document libraries, sites</li>
+      <li>Auto sync users mới, cross-account migration</li>
+      <li>Quick search & find, restore về cloud hoặc local</li>
+    </ul>
+  </div>
+
+  <h2>Containers & Modern Platforms</h2>
+  <div class="card">
+    <div style="margin-bottom:8px">
+      <span class="tag tag-purple">Kubernetes</span>
+      <span class="tag tag-purple">OpenShift</span>
+      <span class="tag tag-purple">OpenStack</span>
+      <span class="tag tag-purple">Proxmox</span>
+    </div>
+    <ul class="dot">
+      <li>Kubernetes: backup metadata và persistent volume data</li>
+      <li>OpenShift: backup metadata + data trong persistent volumes, auto pause deployments</li>
+      <li>OpenStack: backup instance metadata, QCOW2 volumes, full & incremental</li>
+    </ul>
+  </div>
+
+  <h2>Chiến lược 3-2-1-1-0</h2>
+  <div class="card card-amber">
+    <ul class="dot">
+      <li><strong>3</strong> bản sao dữ liệu</li>
+      <li><strong>2</strong> loại media khác nhau (ví dụ: disk + tape)</li>
+      <li><strong>1</strong> bản sao offsite</li>
+      <li><strong>1</strong> bản sao air-gapped / immutable (tape WORM hoặc immutable cloud)</li>
+      <li><strong>0</strong> lỗi khi verify backup</li>
+    </ul>
+    <p style="margin-top:8px; font-size:13px; color:var(--amber)">→ Data Protector hỗ trợ đầy đủ: Disk (SmartCache) → Tape (WORM) → Cloud (Azure/S3)</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 5 — BẢO MẬT
+══════════════════════════════════════════════════════ -->
+<div id="s5" class="section">
+  <p class="page-title">Bảo mật & Ransomware Protection</p>
+  <p class="page-subtitle">Mô hình bảo mật đa lớp — từ truyền thông, mã hóa dữ liệu đến bảo vệ chống ransomware toàn diện.</p>
+
+  <h2>Mô hình bảo mật truyền thông</h2>
+  <div class="card card-blue">
+    <ul class="dot">
+      <li><strong>TLS 1.2:</strong> tất cả communication giữa các Data Protector components</li>
+      <li><strong>Secure Peering:</strong> Cell Manager ↔ Installation Server qua TLS channel riêng</li>
+      <li><strong>Trust Verification:</strong> xác thực quan hệ Cell Manager / Installation Server</li>
+      <li><strong>SMB Signing:</strong> khi push install agent trên Windows (data integrity)</li>
+      <li><strong>SSH Protocol:</strong> khi push install agent trên Linux/Unix</li>
+      <li><strong>Certificate Pinning:</strong> self-signed cert với pinning thay vì root CA</li>
+      <li><strong>Common Criteria Certified:</strong> chứng nhận quốc tế về bảo mật phần mềm</li>
+    </ul>
+  </div>
+
+  <h2>Mã hóa dữ liệu</h2>
+  <div class="card card-blue">
+    <ul class="dot">
+      <li><strong>AES-256 Software Encryption:</strong> mã hóa TRƯỚC KHI truyền qua mạng và ghi ra media</li>
+      <li><strong>Drive-based Encryption:</strong> tận dụng firmware của backup drive hardware</li>
+      <li>Quản lý key: expire, reactivate, export, import, delete qua CLI/GUI</li>
+      <li>Phát hiện được object nào đã mã hóa qua GUI hoặc CLI</li>
+    </ul>
+  </div>
+
+  <h2>Chống Ransomware — 5 lớp bảo vệ</h2>
+  <div class="card card-red">
+    <div class="step">
+      <div class="step-n">1</div>
+      <div class="step-body">
+        <h4>Linux OS deployment</h4>
+        <p>Cell Manager trên Linux ít bị ảnh hưởng bởi ransomware hơn Windows. Ransomware thường nhắm vào Windows trước.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">2</div>
+      <div class="step-body">
+        <h4>Data Immutability & WORM</h4>
+        <p>Backup data ghi WORM (Write Once Read Many) — không thể sửa hay xóa sau khi ghi. Tape tự nhiên là immutable.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">3</div>
+      <div class="step-body">
+        <h4>Air Gapping</h4>
+        <p>Tape được export khỏi library và lưu offline. Ransomware không thể tiếp cận dữ liệu không có kết nối mạng.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">4</div>
+      <div class="step-body">
+        <h4>Malware Check trước Backup</h4>
+        <p>Tích hợp Webroot để scan malware trước khi backup. Có thể abort backup nếu phát hiện ransomware — không backup dữ liệu đã nhiễm.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">5</div>
+      <div class="step-body">
+        <h4>Backup Verification & Bare Metal DR</h4>
+        <p>Tự động verify backup integrity. EADR nhúng sẵn — phục hồi toàn bộ hệ thống không tốn thêm chi phí.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Tape — Air Gap tuyệt đối</h2>
+  <div class="card card-amber">
+    <ul class="dot">
+      <li>Tape không bao giờ expose file-system-like access → malware không đọc được</li>
+      <li>Data trên tape: interleaved, encrypted, chỉ backup app mới đọc được</li>
+      <li>Export tape ra khỏi library → lưu vault vật lý → air gap hoàn toàn</li>
+      <li>WORM tape: không thể modify ở hardware level</li>
+      <li>Ship tape sang location khác: không qua WAN → không bị intercept</li>
+    </ul>
+  </div>
+
+  <div class="callout">
+    <p>🛡️ <strong>Thông điệp bán hàng:</strong> "Khi ransomware tấn công, câu hỏi không phải là CÓ bị tấn công không — mà là BAO LÂU để phục hồi. Data Protector đảm bảo bạn luôn có clean copy để restore."</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 6 — GRE
+══════════════════════════════════════════════════════ -->
+<div id="s6" class="section">
+  <p class="page-title">Granular Recovery Extension (GRE)</p>
+  <p class="page-subtitle">Phục hồi từng item riêng lẻ mà không cần restore toàn bộ database — tính năng độc đáo xử lý 80% yêu cầu recovery thường ngày.</p>
+
+  <div class="callout">
+    <p>💡 <strong>Analogy hay:</strong> "Thay vì restore cả tòa nhà để tìm lại 1 chiếc ghế, GRE cho phép bạn đi thẳng vào đúng phòng và lấy đúng chiếc ghế đó."</p>
+  </div>
+
+  <h2>GRE for Exchange Server</h2>
+  <div class="card card-blue">
+    <p style="margin-bottom:8px; font-size:13px; color:var(--text2)">Phục hồi item level trong Exchange mailbox:</p>
+    <span class="tag tag-blue">Emails</span>
+    <span class="tag tag-blue">Contacts</span>
+    <span class="tag tag-blue">Calendar items</span>
+    <span class="tag tag-blue">Tasks</span>
+    <span class="tag tag-blue">Notes</span>
+    <div style="margin-top:10px">
+      <ul class="dot">
+        <li>Restore DB về temporary location → tạo Recovery Database (RDB)</li>
+        <li>Mount RDB vào cache → duyệt và tìm kiếm item</li>
+        <li>Restore về mailbox gốc, mailbox khác, hoặc filesystem</li>
+        <li>Production không bị gián đoạn trong suốt quá trình</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>GRE for SharePoint</h2>
+  <div class="card card-green">
+    <p style="margin-bottom:8px; font-size:13px; color:var(--text2)">Phục hồi item level trong SharePoint:</p>
+    <span class="tag tag-green">Document</span>
+    <span class="tag tag-green">Folder</span>
+    <span class="tag tag-green">List</span>
+    <span class="tag tag-green">Library</span>
+    <span class="tag tag-green">Calendar item</span>
+    <span class="tag tag-green">Entire Site + subsites</span>
+    <span class="tag tag-green">Metadata & Workflow</span>
+    <div style="margin-top:10px">
+      <ul class="dot">
+        <li>Tích hợp vào SharePoint Central Administration UI</li>
+        <li><strong>Site Collection Admin tự restore</strong> — không cần IT Admin</li>
+        <li>Tìm kiếm nâng cao theo author, date, document type</li>
+        <li>Restore về different farm, different site, hoặc filesystem</li>
+        <li>Phục hồi cả site đã xóa kể cả khi recycle bin đã trống</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2>GRE for VMware vSphere</h2>
+  <div class="card card-purple">
+    <ul class="dot">
+      <li>Plugin tích hợp HTML5 vCenter UI</li>
+      <li>Mount VM backup image, duyệt file system, chọn file cần restore</li>
+      <li><strong>Standard GRE:</strong> restore về Mount Proxy → copy file về đích</li>
+      <li><strong>Cached GRE (HPE StoreOnce / Dell EMC DD):</strong> duyệt trực tiếp từ backup appliance, không cần restore VM trước → nhanh hơn rất nhiều</li>
+    </ul>
+    <p style="margin-top:8px; font-size:12px; color:var(--text2)">Lưu ý: Cached GRE yêu cầu HPE StoreOnce hoặc Dell EMC Data Domain làm backup target.</p>
+  </div>
+
+  <h2>So sánh GRE vs Full Restore</h2>
+  <table class="tbl">
+    <thead>
+      <tr>
+        <th>Tiêu chí</th>
+        <th>Full Restore</th>
+        <th>GRE</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Item nhỏ nhất</td><td>Cả DB/disk</td><td style="color:var(--green)">Từng email/file</td></tr>
+      <tr><td>Thời gian</td><td>Hàng giờ</td><td style="color:var(--green)">Vài phút</td></tr>
+      <tr><td>Ảnh hưởng production</td><td style="color:var(--red)">Có thể gián đoạn</td><td style="color:var(--green)">Không ảnh hưởng</td></tr>
+      <tr><td>Ghi đè data mới</td><td style="color:var(--red)">Rủi ro cao</td><td style="color:var(--green)">Không</td></tr>
+      <tr><td>Người thực hiện</td><td>IT Admin</td><td style="color:var(--green)">App Owner tự làm</td></tr>
+      <tr><td>Phù hợp khi</td><td>Disaster toàn hệ thống</td><td style="color:var(--green)">Xóa nhầm hàng ngày</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout-green callout">
+    <p>✅ <strong>GRE chỉ có trong Data Protector Premium</strong>, không có trong phiên bản Express.</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 7 — DR & RETENTION
+══════════════════════════════════════════════════════ -->
+<div id="s7" class="section">
+  <p class="page-title">Disaster Recovery & Information Retention</p>
+
+  <h2>Enhanced Automated DR (EADR)</h2>
+  <div class="card card-red">
+    <ul class="dot">
+      <li>Bare-metal recovery: phục hồi hoàn toàn từ/đến physical và virtual systems</li>
+      <li>Backup cả OS files, drivers, boot process — không chỉ application data</li>
+      <li>Kích hoạt bằng <strong>một checkbox</strong> trong Data Protector GUI</li>
+      <li>Tạo DR image từ bất kỳ existing backup set — không cần backup đặc biệt</li>
+      <li>Không tốn thêm chi phí license — có sẵn trong Data Protector</li>
+      <li>Phục hồi từ bất kỳ backup set nào (full, incremental, object copy)</li>
+    </ul>
+  </div>
+
+  <h2>Instant Recovery (ZDB)</h2>
+  <div class="card card-amber">
+    <ul class="dot">
+      <li>Snapshot lưu ngay trên storage array → restore point tại chỗ</li>
+      <li>RTO gần bằng 0 cho critical applications</li>
+      <li>Storage array là first point of recovery</li>
+      <li>Tích hợp HPE storage và NetApp SnapMirror</li>
+    </ul>
+  </div>
+
+  <h2>Information Retention — Tiered Architecture</h2>
+  <div class="card">
+    <p style="margin-bottom:10px; font-size:14px; color:var(--text)">Data Protector tạo kiến trúc recovery theo tầng:</p>
+    <div class="step">
+      <div class="step-n" style="background:var(--green)">1</div>
+      <div class="step-body">
+        <h4>Tier 1 — Primary Storage (SmartCache)</h4>
+        <p>Recovery nhanh nhất, dữ liệu gần đây nhất trên disk</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n" style="background:var(--amber)">2</div>
+      <div class="step-body">
+        <h4>Tier 2 — Disk-based Backup Appliance</h4>
+        <p>HPE StoreOnce, Dell EMC Data Domain — dedup, trung hạn</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n" style="background:var(--text2)">3</div>
+      <div class="step-body">
+        <h4>Tier 3 — Tape</h4>
+        <p>Long-term retention, air gap, WORM, chi phí thấp nhất</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n" style="background:var(--blue)">4</div>
+      <div class="step-body">
+        <h4>Tier 4 — Cloud</h4>
+        <p>Offsite, elastic, Azure / AWS S3 / Google Cloud</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Automatic Replication Synchronization</h2>
+  <div class="card">
+    <ul class="dot">
+      <li>Tự động chia sẻ metadata giữa hai Cell Manager đang quản lý 2 backup device replicating nhau</li>
+      <li>Hỗ trợ HPE StoreOnce và Dell EMC Data Domain appliances</li>
+      <li>Cho phép restore từ bất kỳ node nào — tăng tính resilience</li>
+      <li>Phù hợp mô hình DR site với replication</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 8 — LICENSE
+══════════════════════════════════════════════════════ -->
+<div id="s8" class="section">
+  <p class="page-title">Licensing</p>
+  <p class="page-subtitle">3 mô hình license, mỗi mô hình phù hợp với nhu cầu khác nhau. Hiểu rõ để tư vấn đúng.</p>
+
+  <h2>3 mô hình licensing</h2>
+
+  <div class="card card-blue">
+    <h3>Express — Socket-based License (SBL)</h3>
+    <ul class="dot">
+      <li>Tính theo số <strong>CPU socket</strong> của hypervisor host (ESX, Hyper-V)</li>
+      <li>Chỉ dành cho <strong>môi trường ảo hóa</strong></li>
+      <li>Mọi tính năng liên quan VM đều included (GRE, Power On, Live Migrate)</li>
+      <li>Quản lý socket qua GUI, không dùng CLI</li>
+      <li>Upgrade lên Premium chỉ cần đổi license key</li>
+    </ul>
+  </div>
+
+  <div class="card card-green" style="border: 2px solid var(--green);">
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px">
+      <span class="tag tag-green">KHUYẾN NGHỊ</span>
+      <h3 style="margin:0">Premium — Capacity-based License (CBL)</h3>
+    </div>
+    <ul class="dot">
+      <li>Tính theo <strong>TB front-end data</strong> được bảo vệ (1 TB = 1024 GB)</li>
+      <li>Bảo vệ <strong>toàn bộ môi trường</strong>: physical + virtual + database + cloud</li>
+      <li>Multiple backup copies không tốn thêm license</li>
+      <li>Pay-as-you-grow: mua thêm TB khi dữ liệu tăng</li>
+      <li>License có thể transfer sang server/storage/app mới</li>
+      <li>Bao gồm unlimited use of enterprise features</li>
+      <li>Subscription license cũng có (OPEX model)</li>
+    </ul>
+    <p style="margin-top:8px; font-size:12px; color:var(--green)">→ Tối ưu cho tổ chức cần bảo vệ môi trường hybrid đầy đủ</p>
+  </div>
+
+  <div class="card">
+    <h3>Feature-based License (Traditional)</h3>
+    <ul class="dot">
+      <li>License từng tính năng riêng lẻ: cell manager, tape drives, libraries, extensions</li>
+      <li>Chi phí vào thấp hơn, nhưng phức tạp hơn khi tính toán</li>
+      <li>Mỗi Cell Manager cần license riêng</li>
+      <li>Phù hợp môi trường ổn định, ít thay đổi</li>
+    </ul>
+  </div>
+
+  <h2>So sánh Feature-based vs Capacity-based</h2>
+  <table class="tbl">
+    <thead>
+      <tr><th>Tiêu chí</th><th>Feature-based</th><th class="hl">Capacity-based</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Chi phí ban đầu</td>
+        <td>Thấp hơn</td>
+        <td class="hl">Có thể cao hơn</td>
+      </tr>
+      <tr>
+        <td>Tính năng included</td>
+        <td>Mua từng tính năng</td>
+        <td class="hl">Tất cả enterprise features</td>
+      </tr>
+      <tr>
+        <td>Multiple backup copies</td>
+        <td>Tốn thêm chi phí</td>
+        <td class="hl">Không tốn thêm</td>
+      </tr>
+      <tr>
+        <td>Quản lý license</td>
+        <td>Phức tạp, nhiều module</td>
+        <td class="hl">Đơn giản — chỉ tính TB</td>
+      </tr>
+      <tr>
+        <td>Scale</td>
+        <td>Cần mua thêm module</td>
+        <td class="hl">Pay-as-you-grow</td>
+      </tr>
+      <tr>
+        <td>Transfer license</td>
+        <td>Hạn chế</td>
+        <td class="hl">Chuyển sang infra mới</td>
+      </tr>
+      <tr>
+        <td>Phù hợp khi</td>
+        <td>Môi trường nhỏ, ổn định</td>
+        <td class="hl">Hybrid, đang mở rộng</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>Thông tin kỹ thuật khác</h2>
+  <div class="card">
+    <ul class="dot">
+      <li><strong>Trial (Instant-On):</strong> 90 ngày sau cài đặt trước khi cần license thật</li>
+      <li><strong>Ngôn ngữ:</strong> English, French, Japanese, Simplified Chinese</li>
+      <li><strong>Cell Manager OS:</strong> Windows, Linux, HP-UX</li>
+      <li><strong>DP4CW OS:</strong> Linux và CentOS</li>
+      <li><strong>Feature-based + Capacity-based</strong> không thể trộn trên cùng Cell Manager</li>
+    </ul>
+  </div>
+
+  <div class="callout-amber callout">
+    <p>💡 <strong>Tip bán hàng:</strong> Với khách hàng đang lo ngại về chi phí ẩn — nhấn mạnh Capacity License: "Bạn chỉ trả tiền cho data cần bảo vệ, không quan tâm bao nhiêu lần backup copy, bao nhiêu loại ứng dụng."</p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 9 — SALES PITCH
+══════════════════════════════════════════════════════ -->
+<div id="s9" class="section">
+  <p class="page-title">Sales Talking Points</p>
+  <p class="page-subtitle">6 luận điểm bán hàng chính — học thuộc, kể được câu chuyện, và có sẵn ví dụ thực tế.</p>
+
+  <div class="tp">
+    <div class="tp-num">#1</div>
+    <div>
+      <h4>Flexible Deployment</h4>
+      <ul>
+        <li>Cell Manager trên Windows hoặc Linux — khách hàng chọn</li>
+        <li>Dedup bằng HW appliance (StoreOnce, Data Domain) hoặc software DPD trên standard server</li>
+        <li>On-prem + Cloud + Hybrid — không bị lock-in</li>
+      </ul>
+      <p style="margin-top:6px; color:var(--amber)">👉 "Giải pháp thích nghi với hạ tầng của bạn, không phải ngược lại."</p>
+    </div>
+  </div>
+
+  <div class="tp">
+    <div class="tp-num">#2</div>
+    <div>
+      <h4>Ransomware Protection thực sự</h4>
+      <ul>
+        <li>Linux OS giảm attack surface</li>
+        <li>WORM tape + immutable cloud = không thể bị ransomware encrypt backup</li>
+        <li>Malware check trước backup — không backup dữ liệu đã nhiễm</li>
+        <li>Air gap thực sự với tape offline</li>
+        <li>EADR: phục hồi toàn bộ hệ thống không tốn thêm chi phí</li>
+      </ul>
+      <p style="margin-top:6px; color:var(--amber)">👉 "Câu hỏi là bao lâu để phục hồi — Data Protector đảm bảo bạn có clean copy."</p>
+    </div>
+  </div>
+
+  <div class="tp">
+    <div class="tp-num">#3</div>
+    <div>
+      <h4>Performance & Scalability hàng đầu</h4>
+      <ul>
+        <li>Scale bảo vệ hàng nghìn server</li>
+        <li>Parallel + multiplexed data streams</li>
+        <li>Dedup advanced chunking tối ưu storage</li>
+        <li>Scale dedup lên hơn 1 PB</li>
+      </ul>
+      <p style="margin-top:6px; color:var(--amber)">👉 "Không cần thay giải pháp khi doanh nghiệp tăng gấp đôi quy mô."</p>
+    </div>
+  </div>
+
+  <div class="tp">
+    <div class="tp-num">#4</div>
+    <div>
+      <h4>Application Integrations sâu nhất</h4>
+      <ul>
+        <li>Support matrix rộng nhất: SAP HANA, Oracle, SQL, Exchange, SharePoint, DB2...</li>
+        <li>Native integration = application-aware backup = không bị corrupt</li>
+        <li>GRE: phục hồi từng email, file, calendar item — không cần restore cả DB</li>
+        <li>Point-in-time recovery: gần thời điểm cuối trước sự cố</li>
+      </ul>
+      <p style="margin-top:6px; color:var(--amber)">👉 "Khi SAP HANA bị sự cố 2h chiều, bạn có thể phục hồi đến 1h59 — không mất 1 giao dịch nào."</p>
+    </div>
+  </div>
+
+  <div class="tp">
+    <div class="tp-num">#5</div>
+    <div>
+      <h4>Quản lý đơn giản, giảm chi phí vận hành</h4>
+      <ul>
+        <li>Một console duy nhất cho toàn bộ môi trường</li>
+        <li>Self-service restore: app owner tự restore qua GRE</li>
+        <li>Dashboard + predictive analytics: phát hiện vấn đề trước khi xảy ra</li>
+        <li>Licensing đơn giản — không cần chuyên gia đếm license</li>
+      </ul>
+      <p style="margin-top:6px; color:var(--amber)">👉 "Thay vì 3 admin quản lý 3 công cụ, 1 admin quản lý toàn bộ với Data Protector."</p>
+    </div>
+  </div>
+
+  <div class="tp">
+    <div class="tp-num">#6</div>
+    <div>
+      <h4>Modern Workload Ready</h4>
+      <ul>
+        <li>M365 bảo vệ đầy đủ: Exchange Online, SharePoint, Teams, OneDrive</li>
+        <li>Kubernetes, OpenShift, OpenStack container protection</li>
+        <li>Hỗ trợ 8+ hypervisor: VMware, Hyper-V, KVM, AWS EC2, Nutanix...</li>
+        <li>Cloud backup target: Azure, S3, Google Cloud</li>
+      </ul>
+      <p style="margin-top:6px; color:var(--amber)">👉 "Hạ tầng của bạn sẽ tiếp tục thay đổi — Data Protector đã sẵn sàng cho 5 năm tới."</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     SECTION 10 — Q&A
+══════════════════════════════════════════════════════ -->
+<div id="s10" class="section">
+  <p class="page-title">Q&amp;A — Câu hỏi thường gặp từ khách hàng</p>
+  <p class="page-subtitle">Chuẩn bị sẵn câu trả lời cho các objection phổ biến nhất.</p>
+
+  <div class="card card-amber">
+    <h3>❓ "Chúng tôi đang dùng Veeam, sao phải chuyển?"</h3>
+    <ul class="dot" style="margin-top:8px">
+      <li>Veeam mạnh với VMware thuần túy; Data Protector mạnh hơn với <strong>môi trường hybrid phức tạp</strong>: physical server, SAP HANA, Oracle, AS/400</li>
+      <li>DP có native integration sâu hơn với SAP, Oracle — critical cho enterprise</li>
+      <li>Support matrix DP rộng hơn đáng kể (200+ chứng nhận 3rd party)</li>
+      <li>Nếu khách hàng chỉ dùng VMware → Express là lựa chọn tốt với giá cạnh tranh</li>
+    </ul>
+  </div>
+
+  <div class="card card-amber">
+    <h3>❓ "Giá của Data Protector thế nào?"</h3>
+    <ul class="dot" style="margin-top:8px">
+      <li>Express: theo socket — rõ ràng, dễ tính cho môi trường VM</li>
+      <li>Premium: theo TB front-end — pay-as-you-grow, không surprise cost</li>
+      <li>Multiple backup copies không tốn thêm (Premium) — value rõ ràng</li>
+      <li>TCO thấp hơn vì 1 giải pháp thay nhiều tool → ít đào tạo, ít licensing khác nhau</li>
+    </ul>
+  </div>
+
+  <div class="card card-amber">
+    <h3>❓ "Chúng tôi đã có M365, sao cần backup thêm?"</h3>
+    <ul class="dot" style="margin-top:8px">
+      <li>Microsoft chỉ giữ data 30-90 ngày trong recycle bin — không đủ cho compliance</li>
+      <li>M365 không bảo vệ khỏi: accidental deletion, malicious insider, ransomware</li>
+      <li>Không có granular restore (item level) trong M365 native</li>
+      <li>DP4CW backup Exchange Online, SharePoint, Teams, OneDrive đầy đủ, lâu dài</li>
+    </ul>
+  </div>
+
+  <div class="card card-amber">
+    <h3>❓ "Triển khai có phức tạp không?"</h3>
+    <ul class="dot" style="margin-top:8px">
+      <li>Cell Manager cài trên Windows/Linux — standard server, không cần hardware đặc biệt</li>
+      <li>Agent push tự động từ Installation Server — không cần đến từng server cài tay</li>
+      <li>EADR kích hoạt bằng một checkbox trong GUI</li>
+      <li>90 ngày trial để test trước khi cam kết</li>
+    </ul>
+  </div>
+
+  <div class="card card-amber">
+    <h3>❓ "Nếu ransomware tấn công, phục hồi mất bao lâu?"</h3>
+    <ul class="dot" style="margin-top:8px">
+      <li>Phụ thuộc vào chiến lược backup đã thiết lập trước</li>
+      <li>Instant Recovery từ snapshot: phục hồi critical app trong <strong>phút</strong></li>
+      <li>EADR bare-metal: phục hồi toàn bộ server trong <strong>vài giờ</strong></li>
+      <li>Có thể ưu tiên hệ thống nào phục hồi trước (prioritization)</li>
+      <li>Data Protector giảm RTO trung bình 18% theo số liệu thực tế</li>
+    </ul>
+  </div>
+
+  <div class="card card-amber">
+    <h3>❓ "Cloud đã backup rồi cần gì backup nữa?"</h3>
+    <ul class="dot" style="margin-top:8px">
+      <li>Cloud provider SLA về data: thường không cam kết recovery từ user error</li>
+      <li>Cloud không tự bảo vệ khỏi: ransomware (sync ngay vào cloud), xóa nhầm</li>
+      <li>Egress cost khi restore lớn từ cloud có thể rất đắt nếu không có giải pháp đúng</li>
+      <li>Compliance: một số ngành yêu cầu data copy offline / air-gapped</li>
+    </ul>
+  </div>
+
+  <div class="card card-amber">
+    <h3>❓ "Chúng tôi đang dùng SAP HANA, bảo vệ thế nào?"</h3>
+    <ul class="dot" style="margin-top:8px">
+      <li>Native SAP HANA integration — hiểu cấu trúc dữ liệu HANA</li>
+      <li>Backup theo HANA internal schedule, tích hợp HANA Studio</li>
+      <li>Log backup liên tục → point-in-time recovery đến gần thời điểm sự cố</li>
+      <li>ZDB với HPE storage: snapshot HANA không downtime</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="callout-green callout">
+    <p>🏆 <strong>Closing message:</strong> "Data Protector không chỉ là công cụ backup — đó là nền tảng bảo vệ toàn bộ tài sản dữ liệu của doanh nghiệp, với sự tin tưởng của hàng nghìn enterprise toàn cầu trong hơn 33 năm."</p>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<script>
+const sections = ['s0','s1','s2','s3','s4','s5','s6','s7','s8','s9','s10'];
+function show(id) {
+  sections.forEach(s => {
+    document.getElementById(s).classList.remove('active');
+  });
+  document.getElementById(id).classList.add('active');
+  const btns = document.querySelectorAll('.nav-btn');
+  btns.forEach((b, i) => {
+    b.classList.toggle('active', sections[i] === id);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Reading progress bar
+window.addEventListener('scroll', () => {
+  const el = document.getElementById('rp');
+  const doc = document.documentElement;
+  const total = doc.scrollHeight - doc.clientHeight;
+  const pct = total > 0 ? (window.scrollY / total * 100) : 0;
+  el.style.width = pct + '%';
+});
+</script>
+</body>
+</html>

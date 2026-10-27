@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qualys VMDR — Cẩm Nang Bán Hàng</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #090d13;
+            --bg2: #0d1420;
+            --bg3: #111928;
+            --border: rgba(255,255,255,0.07);
+            --accent: #e8372a;
+            --accent2: #ff6b5e;
+            --blue: #2d8eff;
+            --blue2: #5ab0ff;
+            --green: #00e5a0;
+            --text: #e8edf5;
+            --muted: #6b7a96;
+            --card-glow: rgba(45,142,255,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* === NOISE OVERLAY === */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.5;
+        }
+
+        /* === SCAN LINE === */
+        body::after {
+            content: '';
+            position: fixed;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--blue), transparent);
+            animation: scan 6s linear infinite;
+            pointer-events: none;
+            z-index: 999;
+            opacity: 0.3;
+        }
+
+        @keyframes scan {
+            0% { top: -2px; }
+            100% { top: 100%; }
+        }
+
+        /* === SIDE NAV === */
+        .sidenav {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 260px;
+            height: 100vh;
+            background: var(--bg2);
+            border-right: 1px solid var(--border);
+            padding: 40px 0;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .sidenav-logo {
+            padding: 0 28px 32px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sidenav-logo .brand {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .sidenav-logo .product {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .sidenav-logo .product span {
+            color: var(--accent);
+        }
+
+        .sidenav-logo .badge {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 3px 10px;
+            background: rgba(0, 229, 160, 0.1);
+            border: 1px solid rgba(0, 229, 160, 0.3);
+            color: var(--green);
+            font-size: 10px;
+            font-family: 'Space Mono', monospace;
+            letter-spacing: 1px;
+            border-radius: 3px;
+        }
+
+        .nav-section {
+            padding: 24px 28px 0;
+        }
+
+        .nav-section-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 3px;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            border-radius: 6px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 400;
+            transition: all 0.2s;
+            margin-bottom: 2px;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: rgba(45,142,255,0.08);
+            color: var(--text);
+            border-color: rgba(45,142,255,0.2);
+        }
+
+        .nav-item .num {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            color: var(--accent);
+            min-width: 18px;
+        }
+
+        /* === MAIN CONTENT === */
+        .main {
+            margin-left: 260px;
+            min-height: 100vh;
+            padding: 60px 64px;
+            max-width: 1000px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* === HERO === */
+        .hero {
+            margin-bottom: 80px;
+            position: relative;
+        }
+
+        .hero-eyebrow {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 4px;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hero-eyebrow::after {
+            content: '';
+            flex: 1;
+            max-width: 80px;
+            height: 1px;
+            background: var(--accent);
+            opacity: 0.5;
+        }
+
+        .hero h1 {
+            font-size: clamp(36px, 4vw, 54px);
+            font-weight: 700;
+            line-height: 1.15;
+            letter-spacing: -1.5px;
+            margin-bottom: 24px;
+        }
+
+        .hero h1 .line1 { color: var(--text); }
+        .hero h1 .line2 {
+            color: transparent;
+            background: linear-gradient(90deg, var(--blue), var(--green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-desc {
+            font-size: 16px;
+            color: var(--muted);
+            max-width: 560px;
+            line-height: 1.8;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 1px solid var(--border);
+        }
+
+        .stat-item .val {
+            font-family: 'Space Mono', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--blue2);
+            display: block;
+        }
+
+        .stat-item .lbl {
+            font-size: 12px;
+            color: var(--muted);
+            margin-top: 4px;
+        }
+
+        /* === SECTION === */
+        .section {
+            margin-bottom: 72px;
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .section-num {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: var(--accent);
+            background: rgba(232,55,42,0.1);
+            border: 1px solid rgba(232,55,42,0.25);
+            padding: 4px 10px;
+            border-radius: 4px;
+            letter-spacing: 1px;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .section-title .highlight { color: var(--blue2); }
+
+        /* === CARDS === */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+        }
+
+        .card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.25s;
+        }
+
+        .card:hover {
+            border-color: rgba(45,142,255,0.35);
+            background: var(--bg3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 32px rgba(45,142,255,0.1);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--blue), transparent);
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+
+        .card:hover::before { opacity: 1; }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+
+        .icon-red { background: rgba(232,55,42,0.15); }
+        .icon-blue { background: rgba(45,142,255,0.15); }
+        .icon-green { background: rgba(0,229,160,0.15); }
+        .icon-yellow { background: rgba(255,196,0,0.15); }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+            letter-spacing: 0.2px;
+        }
+
+        .card-body {
+            font-size: 13.5px;
+            color: var(--muted);
+            line-height: 1.75;
+        }
+
+        /* === PROBLEM CARDS === */
+        .problem-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .problem-item {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px 24px;
+            display: grid;
+            grid-template-columns: 40px 1fr;
+            gap: 16px;
+            align-items: start;
+            transition: all 0.25s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .problem-item::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--accent);
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+
+        .problem-item:hover::after { opacity: 1; }
+        .problem-item:hover { border-color: rgba(232,55,42,0.3); }
+
+        .problem-icon {
+            font-size: 22px;
+            line-height: 1;
+            margin-top: 2px;
+        }
+
+        .problem-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent2);
+            margin-bottom: 6px;
+        }
+
+        .problem-body {
+            font-size: 13.5px;
+            color: var(--muted);
+            line-height: 1.7;
+        }
+
+        /* === SWOT === */
+        .swot-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .swot-card {
+            border-radius: 10px;
+            padding: 22px;
+            border: 1px solid var(--border);
+        }
+
+        .swot-s { background: rgba(0,229,160,0.05); border-color: rgba(0,229,160,0.2); }
+        .swot-w { background: rgba(232,55,42,0.05); border-color: rgba(232,55,42,0.2); }
+        .swot-o { background: rgba(45,142,255,0.05); border-color: rgba(45,142,255,0.2); }
+        .swot-t { background: rgba(255,196,0,0.05); border-color: rgba(255,196,0,0.2); }
+
+        .swot-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .swot-s .swot-label { color: var(--green); }
+        .swot-w .swot-label { color: var(--accent2); }
+        .swot-o .swot-label { color: var(--blue2); }
+        .swot-t .swot-label { color: #ffc400; }
+
+        .swot-heading {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .swot-points {
+            list-style: none;
+        }
+
+        .swot-points li {
+            font-size: 13px;
+            color: var(--muted);
+            padding-left: 16px;
+            position: relative;
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .swot-points li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--border);
+        }
+
+        /* === COMPETITOR TABLE === */
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13.5px;
+        }
+
+        .compare-table thead tr {
+            background: var(--bg3);
+        }
+
+        .compare-table th {
+            padding: 14px 18px;
+            text-align: left;
+            font-size: 11px;
+            font-family: 'Space Mono', monospace;
+            letter-spacing: 2px;
+            color: var(--muted);
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .compare-table td {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+            color: var(--muted);
+            vertical-align: top;
+            line-height: 1.65;
+        }
+
+        .compare-table tbody tr {
+            transition: background 0.2s;
+        }
+
+        .compare-table tbody tr:hover {
+            background: rgba(45,142,255,0.04);
+        }
+
+        .compare-table td:first-child {
+            color: var(--text);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .tag-yes {
+            display: inline-block;
+            padding: 2px 8px;
+            background: rgba(0,229,160,0.1);
+            color: var(--green);
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .tag-no {
+            display: inline-block;
+            padding: 2px 8px;
+            background: rgba(232,55,42,0.1);
+            color: var(--accent2);
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 700;
+            font-family: 'Space Mono', monospace;
+        }
+
+        /* === USE CASES === */
+        .usecase-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .usecase-item {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 24px 28px;
+            transition: all 0.25s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .usecase-item:hover {
+            border-color: rgba(45,142,255,0.3);
+            box-shadow: 0 4px 20px rgba(45,142,255,0.08);
+        }
+
+        .usecase-num {
+            font-family: 'Space Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: var(--muted);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .usecase-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--blue2);
+            margin-bottom: 10px;
+        }
+
+        .usecase-body {
+            font-size: 13.5px;
+            color: var(--muted);
+            line-height: 1.75;
+        }
+
+        /* === REFERENCE === */
+        .ref-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .ref-card {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 22px 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: all 0.25s;
+        }
+
+        .ref-card:hover {
+            border-color: rgba(0,229,160,0.3);
+            background: rgba(0,229,160,0.03);
+        }
+
+        .ref-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--blue), var(--green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--bg);
+            flex-shrink: 0;
+        }
+
+        .ref-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .ref-tag {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        /* === FAQ === */
+        .faq-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .faq-item {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .faq-q-btn {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.2s;
+        }
+
+        .faq-q-btn:hover { background: rgba(45,142,255,0.05); }
+
+        .faq-q-num {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: var(--accent);
+            flex-shrink: 0;
+            background: rgba(232,55,42,0.1);
+            border: 1px solid rgba(232,55,42,0.25);
+            padding: 3px 9px;
+            border-radius: 4px;
+        }
+
+        .faq-q-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text);
+            flex: 1;
+            line-height: 1.5;
+        }
+
+        .faq-toggle {
+            font-size: 18px;
+            color: var(--muted);
+            flex-shrink: 0;
+            transition: transform 0.2s;
+        }
+
+        .faq-item.open .faq-toggle {
+            transform: rotate(45deg);
+            color: var(--blue2);
+        }
+
+        .faq-item.open {
+            border-color: rgba(45,142,255,0.25);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.35s ease;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 300px;
+        }
+
+        .faq-answer-inner {
+            padding: 0 24px 20px 24px;
+            padding-left: 62px;
+            font-size: 13.5px;
+            color: var(--muted);
+            line-height: 1.8;
+            border-top: 1px solid var(--border);
+            padding-top: 16px;
+        }
+
+        .faq-answer-inner strong {
+            color: var(--text);
+        }
+
+        /* === SEGMENT BOX === */
+        .segment-box {
+            background: var(--bg2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 24px 28px;
+            display: flex;
+            gap: 16px;
+            align-items: start;
+            margin-top: 16px;
+        }
+
+        .segment-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+        .segment-text { font-size: 14px; color: var(--muted); line-height: 1.75; }
+        .segment-text strong { color: var(--text); }
+
+        /* === SCROLLBAR === */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 900px) {
+            .sidenav { display: none; }
+            .main { margin-left: 0; padding: 32px 24px; }
+            .swot-grid { grid-template-columns: 1fr; }
+            .ref-grid { grid-template-columns: 1fr; }
+            .hero-stats { flex-wrap: wrap; gap: 24px; }
+        }
+
+        /* === ANIMATIONS === */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hero { animation: fadeUp 0.6s ease forwards; }
+
+        /* Glow pulse on accent */
+        @keyframes glowPulse {
+            0%, 100% { box-shadow: 0 0 0 rgba(232,55,42,0); }
+            50% { box-shadow: 0 0 20px rgba(232,55,42,0.2); }
+        }
+
+        .section-num { animation: glowPulse 3s ease infinite; }
+    </style>
+</head>
+<body>
+
+<!-- SIDE NAV -->
+<nav class="sidenav">
+    <div class="sidenav-logo">
+        <div class="brand">NTS Hanoi · Sales Toolkit</div>
+        <div class="product"><span>Qualys</span> VMDR</div>
+        <div class="badge">✓ ACTIVE PLAYBOOK</div>
+    </div>
+
+    <div class="nav-section">
+        <div class="nav-section-label">Nội dung</div>
+        <a class="nav-item" href="#s1"><span class="num">01</span>Giới thiệu</a>
+        <a class="nav-item" href="#s2"><span class="num">02</span>Vấn đề hiện trạng</a>
+        <a class="nav-item" href="#s3"><span class="num">03</span>Tính năng cốt lõi</a>
+        <a class="nav-item" href="#s4"><span class="num">04</span>SWOT & Phân khúc</a>
+        <a class="nav-item" href="#s5"><span class="num">05</span>So sánh đối thủ</a>
+        <a class="nav-item" href="#s6"><span class="num">06</span>Use Cases</a>
+        <a class="nav-item" href="#s7"><span class="num">07</span>Khách hàng tham chiếu</a>
+        <a class="nav-item" href="#s8"><span class="num">08</span>FAQs</a>
+    </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+    <!-- HERO -->
+    <div class="hero">
+        <div class="hero-eyebrow">Cẩm nang bán hàng 2025</div>
+        <h1>
+            <div class="line1">Qualys VMDR &</div>
+            <div class="line2">Patch Management</div>
+        </h1>
+        <p class="hero-desc">Giải pháp quản trị rủi ro lỗ hổng toàn diện — Khám phá, đánh giá, ưu tiên và vá tự động trên một nền tảng duy nhất.</p>
+        <div class="hero-stats">
+            <div class="stat-item">
+                <span class="val">10K+</span>
+                <div class="lbl">Khách hàng toàn cầu</div>
+            </div>
+            <div class="stat-item">
+                <span class="val">99.99%</span>
+                <div class="lbl">Độ chính xác rà quét</div>
+            </div>
+            <div class="stat-item">
+                <span class="val">85%</span>
+                <div class="lbl">Giảm lỗ hổng cần ưu tiên</div>
+            </div>
+            <div class="stat-item">
+                <span class="val">&lt;1%</span>
+                <div class="lbl">CPU tiêu thụ / Agent</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 1 -->
+    <div class="section" id="s1">
+        <div class="section-header">
+            <span class="section-num">01</span>
+            <h2 class="section-title">Giới thiệu <span class="highlight">nhanh</span></h2>
+        </div>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-icon icon-red">🏢</div>
+                <div class="card-title">Về Qualys</div>
+                <div class="card-body">Nhà tiên phong về bảo mật cloud-based, phục vụ hơn <strong style="color:var(--text)">10.000 khách hàng</strong> toàn cầu gồm đa số Forbes Global 100 & Fortune 100.</div>
+            </div>
+            <div class="card">
+                <div class="card-icon icon-blue">🛡️</div>
+                <div class="card-title">Giải pháp là gì?</div>
+                <div class="card-body">VMDR + Patch Management: tự động khám phá tài sản → đánh giá lỗ hổng → ưu tiên TruRisk™ → vá tự động. <strong style="color:var(--text)">Một nền tảng, một Agent.</strong></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section" id="s2">
+        <div class="section-header">
+            <span class="section-num">02</span>
+            <h2 class="section-title">Vấn đề <span class="highlight">hiện trạng</span> cần giải quyết</h2>
+        </div>
+        <div class="problem-list">
+            <div class="problem-item">
+                <div class="problem-icon">🌐</div>
+                <div>
+                    <div class="problem-title">Attack Surface phình to</div>
+                    <div class="problem-body">Môi trường on-premises + multi-cloud + container + remote khiến kiểm soát tài sản bất khả thi. Hơn <strong style="color:var(--text)">30% tài sản không được biết đến</strong> hoặc không được quản lý.</div>
+                </div>
+            </div>
+            <div class="problem-item">
+                <div class="problem-icon">⚠️</div>
+                <div>
+                    <div class="problem-title">Vulnerability Fatigue — Quá tải cảnh báo</div>
+                    <div class="problem-body">Giải pháp cũ dùng CVSS đơn thuần → <strong style="color:var(--text)">51% lỗ hổng bị chấm High/Critical</strong>. Đội IT chìm trong cảnh báo, không biết ưu tiên vá gì trước.</div>
+                </div>
+            </div>
+            <div class="problem-item">
+                <div class="problem-icon">🔗</div>
+                <div>
+                    <div class="problem-title">Đứt gãy giữa Security và IT</div>
+                    <div class="problem-body">Security tìm ra lỗ hổng, IT vá bằng SCCM riêng biệt. Rà soát qua bảng tính → MTTR kéo dài → cơ hội cho Ransomware.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section" id="s3">
+        <div class="section-header">
+            <span class="section-num">03</span>
+            <h2 class="section-title">Tính năng <span class="highlight">cốt lõi</span></h2>
+        </div>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-icon icon-green">🔍</div>
+                <div class="card-title">Asset Discovery</div>
+                <div class="card-body">Tự động tìm 100% tài sản kể cả shadow IT, IoT qua Cloud Agent và Passive Sensor (CAPS). Không cần can thiệp hạ tầng mạng.</div>
+            </div>
+            <div class="card">
+                <div class="card-icon icon-blue">📊</div>
+                <div class="card-title">TruRisk™ Prioritization</div>
+                <div class="card-body">Điểm rủi ro 0–1000 dựa trên mức độ khai thác thực tế (CISA KEV, Ransomware) + tầm quan trọng tài sản. Giảm 85% số lỗ hổng cần xử lý.</div>
+            </div>
+            <div class="card">
+                <div class="card-icon icon-yellow">🔧</div>
+                <div class="card-title">Integrated Patch Management</div>
+                <div class="card-body">Tự động khớp lỗ hổng → bản vá. Zero-Touch Patching cho Windows/Linux/Mac + hàng trăm ứng dụng bên thứ 3 (Chrome, Adobe, Zoom) qua Internet, không cần VPN.</div>
+            </div>
+            <div class="card">
+                <div class="card-icon icon-red">⚡</div>
+                <div class="card-title">One Platform · One Agent</div>
+                <div class="card-body">1 Agent duy nhất, siêu nhẹ (&lt;1% CPU), tự động cập nhật. Loại bỏ hàng loạt tool bảo mật rời rạc, đơn giản hoá vận hành toàn diện.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section" id="s4">
+        <div class="section-header">
+            <span class="section-num">04</span>
+            <h2 class="section-title">SWOT & <span class="highlight">Phân khúc</span> khách hàng</h2>
+        </div>
+        <div class="swot-grid">
+            <div class="swot-card swot-s">
+                <div class="swot-label">Strengths · Điểm mạnh</div>
+                <ul class="swot-points">
+                    <li>100% cloud-native, 1 Agent cho mọi tính năng</li>
+                    <li>Độ chính xác Six Sigma 99.99966%</li>
+                    <li>Tích hợp sẵn Patching — đối thủ không có</li>
+                    <li>Leader Forrester Wave CNAPP, Strong Performer ASM</li>
+                </ul>
+            </div>
+            <div class="swot-card swot-w">
+                <div class="swot-label">Weaknesses · Điểm yếu</div>
+                <ul class="swot-points">
+                    <li>Lượng dữ liệu lớn dễ gây ngợp nếu không biết dùng tính năng ưu tiên</li>
+                    <li>Dashboard thỉnh thoảng tải chậm vào giờ cao điểm toàn cầu</li>
+                </ul>
+            </div>
+            <div class="swot-card swot-o">
+                <div class="swot-label">Opportunities · Cơ hội</div>
+                <ul class="swot-points">
+                    <li>Xu hướng WFH → nhu cầu vá lỗi qua Internet bùng nổ</li>
+                    <li>Nhu cầu tự động hóa bảo mật (ROC) thay thế quy trình thủ công</li>
+                </ul>
+            </div>
+            <div class="swot-card swot-t">
+                <div class="swot-label">Threats · Thách thức</div>
+                <ul class="swot-points">
+                    <li>Cạnh tranh mạnh từ Tenable, Rapid7, CrowdStrike</li>
+                </ul>
+            </div>
+        </div>
+        <div class="segment-box">
+            <div class="segment-icon">🎯</div>
+            <div class="segment-text">
+                <strong>Phân khúc mục tiêu:</strong> Mid-market đến Enterprise. Hiệu quả nhất với <strong>Ngân hàng – Tài chính, Y tế, công ty công nghệ hybrid cloud</strong>, và doanh nghiệp có lượng nhân viên remote lớn.
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 5 -->
+    <div class="section" id="s5">
+        <div class="section-header">
+            <span class="section-num">05</span>
+            <h2 class="section-title">So sánh <span class="highlight">đối thủ</span></h2>
+        </div>
+        <div style="overflow-x:auto; border-radius:10px; border:1px solid var(--border);">
+        <table class="compare-table">
+            <thead>
+                <tr>
+                    <th>Tiêu chí</th>
+                    <th>Qualys VMDR</th>
+                    <th>Rapid7 InsightVM</th>
+                    <th>Tenable One</th>
+                    <th>CrowdStrike Spotlight</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Kiến trúc</td>
+                    <td><span class="tag-yes">Cloud-Native</span></td>
+                    <td>Hybrid (On-prem server)</td>
+                    <td>Cloud + Agent</td>
+                    <td>EDR Agent</td>
+                </tr>
+                <tr>
+                    <td>Real-time Agent</td>
+                    <td><span class="tag-yes">✓ Có</span></td>
+                    <td><span class="tag-no">✗ Point-in-time</span></td>
+                    <td>Không thực sự real-time</td>
+                    <td><span class="tag-yes">✓ Có</span></td>
+                </tr>
+                <tr>
+                    <td>Native Patching</td>
+                    <td><span class="tag-yes">✓ Tích hợp sẵn</span></td>
+                    <td><span class="tag-no">✗ Cần BigFix</span></td>
+                    <td><span class="tag-no">✗ Phụ thuộc bên ngoài</span></td>
+                    <td><span class="tag-no">✗ Không có</span></td>
+                </tr>
+                <tr>
+                    <td>Tính phí</td>
+                    <td>Theo IP / Asset</td>
+                    <td>Theo Asset</td>
+                    <td>Theo Asset</td>
+                    <td>Theo Endpoint</td>
+                </tr>
+                <tr>
+                    <td>Rủi ro Patching</td>
+                    <td>TruRisk™ (0-1000)</td>
+                    <td>CVSS cơ bản</td>
+                    <td>Dựa trên CVSS</td>
+                    <td>Phụ thuộc EDR</td>
+                </tr>
+            </tbody>
+        </table>
+        </div>
+    </div>
+
+    <!-- SECTION 6 -->
+    <div class="section" id="s6">
+        <div class="section-header">
+            <span class="section-num">06</span>
+            <h2 class="section-title">Use Cases <span class="highlight">thực tế</span></h2>
+        </div>
+        <div class="usecase-list">
+            <div class="usecase-item">
+                <div class="usecase-num">CASE 01 · Zero-Day Response</div>
+                <div class="usecase-title">⚡ Khắc phục lỗ hổng Zero-Day thần tốc</div>
+                <div class="usecase-body">Khi lỗ hổng ProxyNotShell của Microsoft Exchange nổ ra, khách hàng dùng VMDR tìm ra ngay server dính lỗi. Do chưa có bản vá chính thức, họ dùng tính năng CAR đẩy script cấu hình tạm thời để chặn tấn công, bảo vệ hệ thống ngay lập tức.</div>
+            </div>
+            <div class="usecase-item">
+                <div class="usecase-num">CASE 02 · Automation</div>
+                <div class="usecase-title">🤖 Zero-Touch Patching — Vá tự động không cần IT</div>
+                <div class="usecase-body">Quản trị viên thiết lập rule: <em style="color:var(--text)">"Tự động vá Chrome trên toàn công ty trong vòng 24h nếu có bản vá Critical"</em>. Mọi thứ diễn ra tự động — IT không cần đụng tay.</div>
+            </div>
+            <div class="usecase-item">
+                <div class="usecase-num">CASE 03 · Work From Home</div>
+                <div class="usecase-title">🏠 Vá lỗi máy tính nhân viên WFH — Không cần VPN</div>
+                <div class="usecase-body">Thay vì bắt nhân viên bật VPN gây nghẽn mạng công ty, Qualys Cloud Agent tự động lấy bản vá trực tiếp từ CDN Qualys trên Internet để vá máy tính ở bất cứ đâu.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 7 -->
+    <div class="section" id="s7">
+        <div class="section-header">
+            <span class="section-num">07</span>
+            <h2 class="section-title">Khách hàng <span class="highlight">tham chiếu</span></h2>
+        </div>
+        <div class="ref-grid">
+            <div class="ref-card">
+                <div class="ref-avatar">VG</div>
+                <div>
+                    <div class="ref-name">VinGroup</div>
+                    <div class="ref-tag">Tập đoàn</div>
+                </div>
+            </div>
+            <div class="ref-card">
+                <div class="ref-avatar">NP</div>
+                <div>
+                    <div class="ref-name">NAPAS</div>
+                    <div class="ref-tag">Tài chính – Thanh toán</div>
+                </div>
+            </div>
+            <div class="ref-card">
+                <div class="ref-avatar">OM</div>
+                <div>
+                    <div class="ref-name">One Mount</div>
+                    <div class="ref-tag">Công nghệ</div>
+                </div>
+            </div>
+            <div class="ref-card">
+                <div class="ref-avatar">SH</div>
+                <div>
+                    <div class="ref-name">SHB</div>
+                    <div class="ref-tag">Ngân hàng</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 8 -->
+    <div class="section" id="s8">
+        <div class="section-header">
+            <span class="section-num">08</span>
+            <h2 class="section-title">FAQs — <span class="highlight">Tư vấn thực chiến</span></h2>
+        </div>
+        <div class="faq-list">
+            <div class="faq-item">
+                <button class="faq-q-btn" onclick="toggleFaq(this)">
+                    <span class="faq-q-num">Q1</span>
+                    <span class="faq-q-text">Thông tin cần thiết để sizing và lên BOM là gì?</span>
+                    <span class="faq-toggle">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Cấp license dựa trên <strong>số lượng Tài sản (Assets/IP Addresses)</strong>. Chỉ cần hỏi tổng số Server, Workstation, Cloud Instances cần cài Agent hoặc rà quét → nhân với đơn giá VMDR hoặc add-on Patch Management.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-q-btn" onclick="toggleFaq(this)">
+                    <span class="faq-q-num">Q2</span>
+                    <span class="faq-q-text">Triển khai có phức tạp và ảnh hưởng hệ thống không?</span>
+                    <span class="faq-toggle">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Rất đơn giản — Cloud-Native, <strong>không cần mua server phần cứng hay cài database nội bộ</strong>. Chỉ cần cài 1 Qualys Cloud Agent siêu nhẹ (&lt;1% CPU, có Performance Profile) lên máy trạm/chủ. Giao tiếp an toàn qua port 443 HTTPS.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-q-btn" onclick="toggleFaq(this)">
+                    <span class="faq-q-num">Q3</span>
+                    <span class="faq-q-text">Đã có SCCM/WSUS rồi thì mua Patch Management của Qualys làm gì?</span>
+                    <span class="faq-toggle">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">SCCM mạnh về vá Windows nhưng <strong>yếu vá ứng dụng bên thứ 3</strong> (Chrome, Adobe…) và rất khó vá máy ngoài mạng công ty. Qualys PM bổ trợ hoàn hảo: vá ứng dụng bên thứ 3 dễ dàng, tự động ánh xạ lỗ hổng ↔ bản vá, và vá mọi máy có Internet — không cần VPN.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-q-btn" onclick="toggleFaq(this)">
+                    <span class="faq-q-num">Q4</span>
+                    <span class="faq-q-text">CVSS truyền thống khác TruRisk của Qualys như thế nào?</span>
+                    <span class="faq-toggle">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">CVSS đánh giá lý thuyết thuần túy. <strong>TruRisk (0–1000)</strong> đánh giá rủi ro thực tế: lỗ hổng có mã khai thác chưa? Ransomware nào đang dùng không? Server này quan trọng đến đâu? → Giúp bỏ qua "lỗ hổng ảo", tập trung vào 15% tạo ra 85% rủi ro thực sự.</div>
+                </div>
+            </div>
+            <div class="faq-item">
+                <button class="faq-q-btn" onclick="toggleFaq(this)">
+                    <span class="faq-q-num">Q5</span>
+                    <span class="faq-q-text">Giải pháp có hỗ trợ tuân thủ Compliance không?</span>
+                    <span class="faq-toggle">+</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-inner">Có. VMDR tích hợp đánh giá cấu hình theo <strong>CIS Benchmarks</strong> và tạo báo cáo cho PCI-DSS (tích hợp PCI ASV), SOC 2, HIPAA và nhiều tiêu chuẩn khác.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<script>
+    // FAQ toggle
+    function toggleFaq(btn) {
+        const item = btn.closest('.faq-item');
+        item.classList.toggle('open');
+    }
+
+    // Intersection Observer for section animations
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.section').forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

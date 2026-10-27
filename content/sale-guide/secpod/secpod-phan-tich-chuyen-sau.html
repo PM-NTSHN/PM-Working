@@ -1,0 +1,2518 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phân Tích Chuyên Sâu: Giải Pháp Dò Quét Lỗ Hổng Bảo Mật Mạng</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --bg2: #0f1525;
+    --bg3: #141b2e;
+    --card: #111827;
+    --card2: #1a2235;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --accent3: #10b981;
+    --accent4: #f59e0b;
+    --accent5: #ef4444;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --text3: #64748b;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(0,212,255,0.2);
+    --glow: 0 0 30px rgba(0,212,255,0.15);
+    --tenable: #00d4ff;
+    --rapid7: #f97316;
+    --qualys: #a855f7;
+    --greenbone: #10b981;
+    --microsoft: #3b82f6;
+    --secpod: #e11d48;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── SCANLINE BACKGROUND ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,212,255,0.012) 2px,
+      rgba(0,212,255,0.012) 4px
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 340px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px 60px 50px;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    background: linear-gradient(135deg, #0a0e1a 0%, #0d1628 50%, #0f1a30 100%);
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-glow2 {
+    position: absolute;
+    bottom: -80px; left: 200px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(124,58,237,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,212,255,0.1);
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    padding: 5px 12px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+    margin-bottom: 20px;
+    width: fit-content;
+  }
+
+  .hero-badge::before { content: '●'; font-size: 8px; animation: pulse 2s infinite; }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 900;
+    line-height: 1.15;
+    color: #fff;
+    max-width: 700px;
+    position: relative;
+  }
+
+  .hero h1 span { color: var(--accent); }
+
+  .hero-sub {
+    margin-top: 14px;
+    font-size: 15px;
+    color: var(--text2);
+    max-width: 600px;
+    position: relative;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 30px;
+    margin-top: 30px;
+    position: relative;
+  }
+
+  .hero-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .hero-meta-item .val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--accent);
+  }
+
+  .hero-meta-item .lbl {
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* ── NAV ── */
+  .toc {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,14,26,0.95);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 60px;
+    overflow-x: auto;
+  }
+
+  .toc-inner {
+    display: flex;
+    gap: 0;
+    white-space: nowrap;
+  }
+
+  .toc-item {
+    padding: 14px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text3);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    text-decoration: none;
+    letter-spacing: 0.03em;
+  }
+
+  .toc-item:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ── LAYOUT ── */
+  .main { padding: 0 60px; position: relative; z-index: 1; }
+
+  .section {
+    padding: 60px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section:last-child { border-bottom: none; }
+
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(0,212,255,0.1);
+    border: 1px solid var(--border2);
+    border-radius: 3px;
+    padding: 4px 8px;
+    margin-top: 6px;
+    white-space: nowrap;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    line-height: 1.3;
+  }
+
+  .section-title span { color: var(--accent); }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .card:hover { border-color: var(--border2); transform: translateY(-2px); }
+
+  .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-title::before {
+    content: '';
+    display: inline-block;
+    width: 3px; height: 14px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+
+  /* ── GRIDS ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+  /* ── PAIN POINT ── */
+  .pain-item {
+    display: flex;
+    gap: 16px;
+    padding: 20px 24px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent5);
+    border-radius: 0 8px 8px 0;
+    margin-bottom: 14px;
+  }
+
+  .pain-icon {
+    font-size: 28px;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .pain-title { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 6px; }
+  .pain-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+  /* ── USE CASES ── */
+  .usecase-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .usecase-icon {
+    width: 40px; height: 40px;
+    background: rgba(0,212,255,0.1);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  .usecase-title { font-size: 14px; font-weight: 600; color: #fff; }
+  .usecase-desc { font-size: 12px; color: var(--text2); line-height: 1.6; }
+
+  /* ── VENDOR CARDS ── */
+  .vendor-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.25s;
+  }
+
+  .vendor-card:hover { transform: translateY(-3px); box-shadow: var(--glow); }
+
+  .vendor-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .vendor-logo {
+    width: 44px; height: 44px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -1px;
+    flex-shrink: 0;
+  }
+
+  .vendor-name { font-size: 16px; font-weight: 700; color: #fff; }
+  .vendor-product { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+  .vendor-body { padding: 20px 24px; }
+
+  .vendor-desc { font-size: 13px; color: var(--text2); line-height: 1.65; margin-bottom: 16px; }
+
+  .tag-list { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .tag {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.02em;
+  }
+
+  /* ── FEATURE TABLE ── */
+  .feat-table-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border); }
+
+  .feat-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  .feat-table th {
+    background: var(--bg3);
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text2);
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+
+  .feat-table th:first-child { color: var(--text); }
+
+  .feat-table td {
+    padding: 11px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text2);
+    vertical-align: top;
+  }
+
+  .feat-table tr:last-child td { border-bottom: none; }
+  .feat-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .feat-table td:first-child { color: var(--text); font-weight: 500; }
+
+  .feat-table td.cat {
+    background: var(--bg3);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 8px 16px;
+  }
+
+  .check { color: var(--accent3); font-weight: 600; }
+  .partial { color: var(--accent4); }
+  .cross { color: var(--text3); }
+
+  /* ── SWOT ── */
+  .swot-vendor { margin-bottom: 40px; }
+
+  .swot-vendor-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .swot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .swot-quad {
+    border-radius: 8px;
+    padding: 18px 20px;
+  }
+
+  .swot-quad-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .swot-list { list-style: none; }
+  .swot-list li {
+    font-size: 12px;
+    color: var(--text2);
+    padding: 4px 0;
+    padding-left: 14px;
+    position: relative;
+    line-height: 1.5;
+  }
+  .swot-list li::before {
+    content: '–';
+    position: absolute;
+    left: 0;
+    color: var(--text3);
+  }
+
+  .swot-s { background: rgba(16,185,129,0.07); border: 1px solid rgba(16,185,129,0.15); }
+  .swot-s .swot-quad-title { color: var(--accent3); }
+  .swot-w { background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.15); }
+  .swot-w .swot-quad-title { color: var(--accent5); }
+  .swot-o { background: rgba(0,212,255,0.07); border: 1px solid rgba(0,212,255,0.15); }
+  .swot-o .swot-quad-title { color: var(--accent); }
+  .swot-t { background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.15); }
+  .swot-t .swot-quad-title { color: var(--accent4); }
+
+  /* ── RANKING ── */
+  .rank-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+
+  .rank-table th {
+    background: var(--bg3);
+    padding: 11px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    color: var(--text2);
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .rank-table th:first-child,
+  .rank-table th:nth-child(2) { text-align: left; }
+
+  .rank-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+
+  .rank-table td:first-child,
+  .rank-table td:nth-child(2) {
+    text-align: left;
+    font-family: 'Sora', sans-serif;
+    font-size: 13px;
+  }
+
+  .rank-table td:nth-child(2) { font-weight: 600; color: #fff; }
+
+  .rank-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .rank-1 { background: rgba(245,158,11,0.2); color: #f59e0b; border: 1px solid rgba(245,158,11,0.4); }
+  .rank-2 { background: rgba(148,163,184,0.15); color: #94a3b8; border: 1px solid rgba(148,163,184,0.3); }
+  .rank-3 { background: rgba(180,120,60,0.15); color: #cd7f32; border: 1px solid rgba(180,120,60,0.3); }
+  .rank-other { background: rgba(100,116,139,0.1); color: #64748b; border: 1px solid rgba(100,116,139,0.2); }
+
+  .score-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .score-bar {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .score-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.8s ease;
+  }
+
+  .score-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    min-width: 28px;
+    text-align: right;
+  }
+
+  /* ── LICENSE ── */
+  .license-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .license-header {
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .license-vendor { font-size: 16px; font-weight: 700; }
+  .license-model {
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 4px 10px;
+    border-radius: 3px;
+    background: rgba(0,212,255,0.1);
+    color: var(--accent);
+    border: 1px solid var(--border2);
+  }
+
+  .license-body { padding: 20px 22px; }
+
+  .license-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 13px;
+  }
+
+  .license-row:last-child { border-bottom: none; }
+  .license-row .key { color: var(--text2); }
+  .license-row .val { color: #fff; font-weight: 500; text-align: right; max-width: 60%; }
+
+  /* ── DEPLOY ── */
+  .deploy-model {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .deploy-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .deploy-badge {
+    font-size: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-weight: 500;
+  }
+
+  .deploy-desc { font-size: 13px; color: var(--text2); margin-bottom: 16px; line-height: 1.65; }
+
+  .deploy-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .deploy-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--text2);
+  }
+
+  .step-num {
+    flex-shrink: 0;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: rgba(0,212,255,0.1);
+    border: 1px solid var(--border2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    font-weight: 600;
+    margin-top: 1px;
+  }
+
+  /* ── BENEFIT ── */
+  .benefit-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 20px 22px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .benefit-icon-wrap {
+    width: 44px; height: 44px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .benefit-title { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 6px; }
+  .benefit-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+  /* ── REFS ── */
+  .ref-item {
+    display: flex;
+    gap: 14px;
+    padding: 12px 16px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    align-items: flex-start;
+    transition: border-color 0.2s;
+  }
+
+  .ref-item:hover { border-color: var(--border2); }
+  .ref-item a:hover { color: var(--accent) !important; text-decoration: underline !important; }
+
+  .ref-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(0,212,255,0.1);
+    border: 1px solid var(--border2);
+    border-radius: 3px;
+    padding: 2px 7px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .ref-content { flex: 1; }
+  .ref-title { color: #fff; font-weight: 500; margin-bottom: 3px; }
+  .ref-source { color: var(--text3); font-size: 11px; font-family: 'JetBrains Mono', monospace; }
+
+  /* ── STAT CALLOUT ── */
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+
+  .stat-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 18px;
+    text-align: center;
+  }
+
+  .stat-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-lbl {
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.4;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border2), transparent);
+    margin: 10px 0;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px; top: 6px; bottom: 6px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+  }
+  .tl-item { position: relative; margin-bottom: 20px; }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -25px; top: 6px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+  }
+  .tl-title { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+  .tl-desc { font-size: 13px; color: var(--text2); line-height: 1.6; }
+
+  /* ── MISC ── */
+  .hl { color: var(--accent); font-weight: 600; }
+  .hl-warn { color: var(--accent4); font-weight: 600; }
+  .hl-danger { color: var(--accent5); font-weight: 600; }
+  .hl-green { color: var(--accent3); font-weight: 600; }
+  .hl-purple { color: var(--accent2); font-weight: 600; }
+
+  .note-box {
+    background: rgba(0,212,255,0.05);
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.65;
+    margin-top: 20px;
+  }
+
+  .note-box strong { color: var(--accent); }
+
+  p { font-size: 14px; color: var(--text2); line-height: 1.75; margin-bottom: 14px; }
+  ul { list-style: none; }
+  ul li { font-size: 13px; color: var(--text2); padding: 5px 0 5px 16px; position: relative; line-height: 1.6; }
+  ul li::before { content: '›'; position: absolute; left: 0; color: var(--accent); font-size: 16px; line-height: 1.3; }
+
+  @media (max-width: 900px) {
+    .hero { padding: 40px 24px 36px; }
+    .main { padding: 0 24px; }
+    .toc { padding: 0 24px; }
+    .hero h1 { font-size: 28px; }
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .stat-row { grid-template-columns: 1fr 1fr; }
+    .swot-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-glow2"></div>
+  <div class="hero-badge">SECURITY INTELLIGENCE REPORT · 2025</div>
+  <h1>Phân Tích Chuyên Sâu<br><span>Giải Pháp Dò Quét Lỗ Hổng</span><br>Bảo Mật Mạng</h1>
+  <p class="hero-sub">Network Vulnerability Management — Tổng quan thị trường, tính năng, so sánh và khuyến nghị triển khai cho thị trường Việt Nam</p>
+  <div class="hero-meta">
+    <div class="hero-meta-item">
+      <span class="val">$24.5B</span>
+      <span class="lbl">Thị trường 2030</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="val">8.0%</span>
+      <span class="lbl">CAGR 2025–2030</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="val">6</span>
+      <span class="lbl">Hãng phân tích</span>
+    </div>
+    <div class="hero-meta-item">
+      <span class="val">2025</span>
+      <span class="lbl">Cập nhật</span>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="toc">
+  <div class="toc-inner">
+    <a class="toc-item" href="#s1">01 · Nhu cầu & Pain Points</a>
+    <a class="toc-item" href="#s2">02 · Use Cases</a>
+    <a class="toc-item" href="#s3">03 · Giới thiệu hãng</a>
+    <a class="toc-item" href="#s4">04 · Tính năng chung</a>
+    <a class="toc-item" href="#s5">05 · Tính năng riêng</a>
+    <a class="toc-item" href="#s6">06 · Phân tích SWOT</a>
+    <a class="toc-item" href="#s7">07 · Xếp hạng</a>
+    <a class="toc-item" href="#s8">08 · Lợi ích</a>
+    <a class="toc-item" href="#s9">09 · Licensing</a>
+    <a class="toc-item" href="#s10">10 · Triển khai</a>
+    <a class="toc-item" href="#s11">11 · Tài liệu tham chiếu</a>
+  </div>
+</nav>
+
+<div class="main">
+
+<!-- ════ S1: PAIN POINTS ════ -->
+<section class="section" id="s1">
+  <div class="section-header">
+    <span class="section-num">01</span>
+    <h2 class="section-title">Nhu Cầu Thị Trường &<br><span>Pain Points</span> Của Khách Hàng</h2>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <div class="stat-val">$16.5B</div>
+      <div class="stat-lbl">Quy mô thị trường VM toàn cầu 2024</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val">21,500</div>
+      <div class="stat-lbl">CVE mới được công bố trong H1/2025</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val">28%</div>
+      <div class="stat-lbl">Exploit xảy ra trong vòng 24h sau disclosure</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val">4M+</div>
+      <div class="stat-lbl">Thiếu hụt nhân lực cybersecurity toàn cầu</div>
+    </div>
+  </div>
+
+  <p>Trong bối cảnh các mối đe dọa mạng ngày càng phức tạp và bề mặt tấn công mở rộng nhanh chóng, nhu cầu về giải pháp dò quét lỗ hổng mạng trở thành yêu cầu không thể thiếu đối với mọi tổ chức. Dưới đây là các vấn đề và điểm đau tiêu biểu mà khách hàng đang đối mặt:</p>
+
+  <div class="pain-item">
+    <div class="pain-icon">🕳️</div>
+    <div>
+      <div class="pain-title">Không biết mình đang có bao nhiêu lỗ hổng</div>
+      <div class="pain-desc">Trung bình một tổ chức có <span class="hl-danger">hơn 30% tài sản IT không được quản lý</span> bởi chương trình VM hiện tại. Shadow IT, thiết bị IoT, máy ảo tạm thời — tất cả đều là điểm mù có thể bị kẻ tấn công khai thác. Không quét = không biết = không bảo vệ được.</div>
+    </div>
+  </div>
+
+  <div class="pain-item">
+    <div class="pain-icon">🌊</div>
+    <div>
+      <div class="pain-title">Ngập trong dữ liệu lỗ hổng, không biết xử lý ưu tiên nào</div>
+      <div class="pain-desc">Một lần quét trong môi trường doanh nghiệp điển hình trả về <span class="hl-danger">50,000–100,000 findings</span>. Không có công cụ ưu tiên hóa, đội ngũ bảo mật không thể xác định được đâu là mối nguy cơ thực sự cần xử lý ngay. CVSS score đơn thuần không đủ — cần context về exploitability thực tế.</div>
+    </div>
+  </div>
+
+  <div class="pain-item">
+    <div class="pain-icon">⏱️</div>
+    <div>
+      <div class="pain-title">Thời gian phát hiện và vá lỗ hổng quá chậm</div>
+      <div class="pain-desc">28% các exploit xảy ra <span class="hl-danger">trong vòng 24 giờ</span> sau khi lỗ hổng được công bố. Trong khi đó, chu kỳ quét định kỳ hàng tuần/tháng không thể bắt kịp tốc độ công bố CVE mới. Khoảng cách thời gian từ disclosure đến patch (MTTR) trung bình vẫn còn rất dài.</div>
+    </div>
+  </div>
+
+  <div class="pain-item">
+    <div class="pain-icon">🏗️</div>
+    <div>
+      <div class="pain-title">Hạ tầng ngày càng phức tạp và phân tán</div>
+      <div class="pain-desc">Cloud, hybrid, remote work, BYOD, container, IoT/OT — <span class="hl-warn">89% tổ chức</span> đang vận hành môi trường hybrid hoặc multi-cloud. Các scanner truyền thống không thể quét toàn bộ bề mặt tấn công hiện đại này. Asset mới liên tục xuất hiện và biến mất (VM, container) mà không được inventory kịp thời.</div>
+    </div>
+  </div>
+
+  <div class="pain-item">
+    <div class="pain-icon">📋</div>
+    <div>
+      <div class="pain-title">Áp lực tuân thủ quy định ngày càng tăng</div>
+      <div class="pain-desc">ISO 27001, PCI DSS, GDPR (và Nghị định 13/2023/NĐ-CP tại Việt Nam), DISA STIG, SOC 2 — tất cả đều yêu cầu quản lý lỗ hổng có hệ thống, có báo cáo định kỳ và có bằng chứng về tiến trình khắc phục. Việc thiếu giải pháp chuyên dụng dẫn đến rủi ro không tuân thủ và phạt nặng.</div>
+    </div>
+  </div>
+
+  <div class="pain-item">
+    <div class="pain-icon">🤝</div>
+    <div>
+      <div class="pain-title">Khoảng cách giữa Security và IT Operations</div>
+      <div class="pain-desc">Bộ phận bảo mật tìm ra lỗ hổng nhưng không có cơ chế tự động để đẩy thông tin đến đội IT vá lỗi. Không có SLA remediation, không tracking tiến độ, không đo được hiệu quả cải thiện. Hậu quả là lỗ hổng tồn tại kéo dài dù đã được phát hiện.</div>
+    </div>
+  </div>
+
+  <div class="pain-item">
+    <div class="pain-icon">👥</div>
+    <div>
+      <div class="pain-title">Thiếu hụt nhân lực bảo mật chuyên nghiệp</div>
+      <div class="pain-desc">Thiếu hụt nhân lực cybersecurity toàn cầu vượt <span class="hl-danger">4 triệu người</span>. Tại Việt Nam, tình trạng này càng trầm trọng hơn. Các tổ chức cần giải pháp tự động hóa cao, giảm thiểu sự phụ thuộc vào chuyên gia bảo mật trong từng bước quy trình quản lý lỗ hổng.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ S2: USE CASES ════ -->
+<section class="section" id="s2">
+  <div class="section-header">
+    <span class="section-num">02</span>
+    <h2 class="section-title"><span>Use Cases</span> Của Giải Pháp<br>Dò Quét Lỗ Hổng Mạng</h2>
+  </div>
+
+  <div class="grid-3" style="margin-bottom: 20px;">
+    <div class="usecase-card">
+      <div class="usecase-icon">🔍</div>
+      <div class="usecase-title">Kiểm tra định kỳ hạ tầng mạng nội bộ</div>
+      <div class="usecase-desc">Quét toàn bộ thiết bị mạng, máy chủ, máy trạm trong môi trường nội bộ để phát hiện CVE, misconfig, missing patch. Lên lịch scan tự động theo tuần/tháng và sinh báo cáo tổng hợp.</div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-icon">🚨</div>
+      <div class="usecase-title">Phản ứng nhanh với CVE zero-day mới</div>
+      <div class="usecase-desc">Khi có CVE nghiêm trọng mới (như Log4Shell, PrintNightmare), chạy scan ngay lập tức để xác định có bao nhiêu tài sản bị ảnh hưởng và cần vá gấp — thay vì chờ chu kỳ scan định kỳ.</div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-icon">📊</div>
+      <div class="usecase-title">Kiểm tra tuân thủ (Compliance Audit)</div>
+      <div class="usecase-desc">Audit cấu hình theo CIS Benchmark, DISA STIG, PCI DSS, ISO 27001. Sinh báo cáo sẵn sàng để nộp kiểm toán, chứng minh security posture theo yêu cầu quy định.</div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-icon">🏢</div>
+      <div class="usecase-title">Kiểm tra ATTT trước khi đưa hệ thống mới vào vận hành</div>
+      <div class="usecase-desc">Scan hệ thống, ứng dụng hoặc network segment mới trước khi production. Xác minh không có lỗ hổng nghiêm trọng trước khi chấp nhận hệ thống từ nhà thầu/vendor.</div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-icon">🔐</div>
+      <div class="usecase-title">Kiểm tra sau sự cố (Post-Incident Assessment)</div>
+      <div class="usecase-desc">Sau khi xảy ra breach hoặc sự cố bảo mật, chạy comprehensive scan để xác định entry point, phát hiện các điểm yếu liên quan và đánh giá toàn bộ attack surface.</div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-icon">🛡️</div>
+      <div class="usecase-title">Kiểm tra an toàn thông tin cơ động</div>
+      <div class="usecase-desc">Đội kiểm tra ATTT cơ động đến từng đơn vị để quét tại chỗ mạng nội bộ, phát hiện lỗ hổng và lập báo cáo. Phù hợp với môi trường quân đội/chính phủ không có kết nối internet.</div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-icon">☁️</div>
+      <div class="usecase-title">Quản lý lỗ hổng môi trường cloud/hybrid</div>
+      <div class="usecase-desc">Phát hiện misconfiguration trên AWS, Azure, GCP; kiểm tra container image và workload đang chạy; quản lý risk trên toàn bộ attack surface hybrid.</div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-icon">📈</div>
+      <div class="usecase-title">Theo dõi tiến trình cải thiện security posture</div>
+      <div class="usecase-desc">Đo lường và báo cáo cho lãnh đạo về xu hướng lỗ hổng theo thời gian, tỷ lệ vá lỗ thành công, risk score tổng thể — chứng minh ROI của chương trình bảo mật.</div>
+    </div>
+    <div class="usecase-card">
+      <div class="usecase-icon">🔗</div>
+      <div class="usecase-title">Tích hợp vào quy trình DevSecOps / CI-CD</div>
+      <div class="usecase-desc">Tự động scan container image, IaC template trong pipeline CI/CD. Chặn deploy nếu có lỗ hổng nghiêm trọng — shift-left security vào sớm trong vòng đời phát triển.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ S3: VENDORS ════ -->
+<section class="section" id="s3">
+  <div class="section-header">
+    <span class="section-num">03</span>
+    <h2 class="section-title">Giới Thiệu Các <span>Hãng</span><br>Trên Thị Trường</h2>
+  </div>
+
+  <div class="grid-2" style="margin-bottom: 20px;">
+
+    <!-- TENABLE -->
+    <div class="vendor-card">
+      <div class="vendor-header">
+        <div class="vendor-logo" style="background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.25); color: var(--tenable);">TEN</div>
+        <div>
+          <div class="vendor-name" style="color: var(--tenable);">Tenable</div>
+          <div class="vendor-product">Nessus Professional / Tenable.sc / Tenable One</div>
+        </div>
+      </div>
+      <div class="vendor-body">
+        <p class="vendor-desc">Được thành lập năm 1992, Tenable là <strong>thị phần số 1</strong> trong lĩnh vực vulnerability management với khoảng 43,000 khách hàng trả phí trên toàn cầu. Nessus là công cụ được triển khai rộng rãi nhất thế giới với hơn 2 triệu lượt tải về. Tenable được IDC MarketScape 2025 xếp hạng là Leader trong Exposure Management.</p>
+        <div class="tag-list">
+          <span class="tag" style="background: rgba(0,212,255,0.1); color: var(--tenable); border: 1px solid rgba(0,212,255,0.2);">#1 Market Share</span>
+          <span class="tag" style="background: rgba(0,212,255,0.1); color: var(--tenable); border: 1px solid rgba(0,212,255,0.2);">227K+ Plugins</span>
+          <span class="tag" style="background: rgba(0,212,255,0.1); color: var(--tenable); border: 1px solid rgba(0,212,255,0.2);">Offline/Air-gap</span>
+          <span class="tag" style="background: rgba(0,212,255,0.1); color: var(--tenable); border: 1px solid rgba(0,212,255,0.2);">OT/ICS Support</span>
+          <span class="tag" style="background: rgba(0,212,255,0.1); color: var(--tenable); border: 1px solid rgba(0,212,255,0.2);">IDC Leader 2025</span>
+        </div>
+        <div class="note-box" style="margin-top: 14px; padding: 12px 16px;">
+          <strong>Sản phẩm chính:</strong> Nessus Pro (portable, per scanner) · Tenable Security Center (on-prem enterprise) · Tenable Vulnerability Management (cloud) · Tenable One (platform)
+        </div>
+      </div>
+    </div>
+
+    <!-- RAPID7 -->
+    <div class="vendor-card">
+      <div class="vendor-header">
+        <div class="vendor-logo" style="background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.25); color: var(--rapid7);">R7</div>
+        <div>
+          <div class="vendor-name" style="color: var(--rapid7);">Rapid7</div>
+          <div class="vendor-product">InsightVM / Nexpose</div>
+        </div>
+      </div>
+      <div class="vendor-body">
+        <p class="vendor-desc">Rapid7 là nhà cung cấp giải pháp bảo mật toàn diện với InsightVM là flagship vulnerability management platform. Nổi bật với <strong>Active Risk Score</strong> dùng AI, tích hợp Metasploit để validate exploit thực tế, và Remediation Hub để quản lý workflow vá lỗ. Được Gartner và Forrester xếp hạng cao.</p>
+        <div class="tag-list">
+          <span class="tag" style="background: rgba(249,115,22,0.1); color: var(--rapid7); border: 1px solid rgba(249,115,22,0.2);">Active Risk AI</span>
+          <span class="tag" style="background: rgba(249,115,22,0.1); color: var(--rapid7); border: 1px solid rgba(249,115,22,0.2);">Metasploit Integration</span>
+          <span class="tag" style="background: rgba(249,115,22,0.1); color: var(--rapid7); border: 1px solid rgba(249,115,22,0.2);">500+ Integrations</span>
+          <span class="tag" style="background: rgba(249,115,22,0.1); color: var(--rapid7); border: 1px solid rgba(249,115,22,0.2);">Live Dashboard</span>
+        </div>
+        <div class="note-box" style="margin-top: 14px; padding: 12px 16px; border-color: rgba(249,115,22,0.2); background: rgba(249,115,22,0.05);">
+          <strong style="color: var(--rapid7);">Sản phẩm chính:</strong> InsightVM (cloud-based) · Nexpose (on-prem) · InsightIDR (SIEM) · Metasploit Pro
+        </div>
+      </div>
+    </div>
+
+    <!-- QUALYS -->
+    <div class="vendor-card">
+      <div class="vendor-header">
+        <div class="vendor-logo" style="background: rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.25); color: var(--qualys);">QLS</div>
+        <div>
+          <div class="vendor-name" style="color: var(--qualys);">Qualys</div>
+          <div class="vendor-product">VMDR (Vulnerability Management, Detection & Response)</div>
+        </div>
+      </div>
+      <div class="vendor-body">
+        <p class="vendor-desc">Qualys là pioneer trong cloud-native vulnerability management với hơn 10,000 khách hàng. VMDR cung cấp nền tảng tích hợp từ asset discovery, VM, policy compliance đến patch management trong một platform duy nhất. <strong>TruRisk™</strong> là điểm đặc trưng với thang điểm 0–1000 cho executive reporting.</p>
+        <div class="tag-list">
+          <span class="tag" style="background: rgba(168,85,247,0.1); color: var(--qualys); border: 1px solid rgba(168,85,247,0.2);">Cloud-Native</span>
+          <span class="tag" style="background: rgba(168,85,247,0.1); color: var(--qualys); border: 1px solid rgba(168,85,247,0.2);">TruRisk 0-1000</span>
+          <span class="tag" style="background: rgba(168,85,247,0.1); color: var(--qualys); border: 1px solid rgba(168,85,247,0.2);">MITRE ATT&CK</span>
+          <span class="tag" style="background: rgba(168,85,247,0.1); color: var(--qualys); border: 1px solid rgba(168,85,247,0.2);">Patch Management</span>
+          <span class="tag" style="background: rgba(168,85,247,0.1); color: var(--qualys); border: 1px solid rgba(168,85,247,0.2);">25+ Threat Intel Feeds</span>
+        </div>
+        <div class="note-box" style="margin-top: 14px; padding: 12px 16px; border-color: rgba(168,85,247,0.2); background: rgba(168,85,247,0.05);">
+          <strong style="color: var(--qualys);">Sản phẩm chính:</strong> VMDR · Web Application Scanning · Policy Compliance · TruRisk Platform
+        </div>
+      </div>
+    </div>
+
+    <!-- GREENBONE / OpenVAS -->
+    <div class="vendor-card">
+      <div class="vendor-header">
+        <div class="vendor-logo" style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.25); color: var(--greenbone);">GRN</div>
+        <div>
+          <div class="vendor-name" style="color: var(--greenbone);">Greenbone / OpenVAS</div>
+          <div class="vendor-product">Greenbone Enterprise / Community Edition (OpenVAS)</div>
+        </div>
+      </div>
+      <div class="vendor-body">
+        <p class="vendor-desc">Greenbone duy trì cả phiên bản <strong>open-source (OpenVAS/Community Edition)</strong> và enterprise. Là lựa chọn phổ biến cho tổ chức có ngân sách hạn hẹp hoặc cần tùy biến cao. OpenVAS có 50,000+ NVT (Network Vulnerability Tests), được dùng nhiều trong môi trường học thuật và lab. Enterprise edition thêm management console và professional support.</p>
+        <div class="tag-list">
+          <span class="tag" style="background: rgba(16,185,129,0.1); color: var(--greenbone); border: 1px solid rgba(16,185,129,0.2);">Open-Source Available</span>
+          <span class="tag" style="background: rgba(16,185,129,0.1); color: var(--greenbone); border: 1px solid rgba(16,185,129,0.2);">50K+ NVTs</span>
+          <span class="tag" style="background: rgba(16,185,129,0.1); color: var(--greenbone); border: 1px solid rgba(16,185,129,0.2);">Cost-Effective</span>
+          <span class="tag" style="background: rgba(16,185,129,0.1); color: var(--greenbone); border: 1px solid rgba(16,185,129,0.2);">On-Premise Only</span>
+        </div>
+        <div class="note-box" style="margin-top: 14px; padding: 12px 16px; border-color: rgba(16,185,129,0.2); background: rgba(16,185,129,0.05);">
+          <strong style="color: var(--greenbone);">Sản phẩm chính:</strong> Greenbone Community Edition (miễn phí) · Greenbone Basic / Advanced / Enterprise (trả phí) · OpenVAS Scanner
+        </div>
+      </div>
+    </div>
+
+    <!-- MICROSOFT DEFENDER VM -->
+    <div class="vendor-card" style="grid-column: 1 / -1;">
+      <div class="vendor-header">
+        <div class="vendor-logo" style="background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.25); color: var(--microsoft);">MSFT</div>
+        <div>
+          <div class="vendor-name" style="color: var(--microsoft);">Microsoft Defender Vulnerability Management (MDVM)</div>
+          <div class="vendor-product">Microsoft 365 Defender / Defender for Endpoint P2</div>
+        </div>
+      </div>
+      <div class="vendor-body">
+        <p class="vendor-desc">MDVM là giải pháp "đã có sẵn trong Microsoft license" ngày càng được chú ý như một alternative đáng giá. Tích hợp sâu trong hệ sinh thái Microsoft 365 / Defender for Endpoint, cung cấp continuous asset discovery, vulnerability assessment và misconfiguration management cho môi trường Windows-centric. Phù hợp cho tổ chức đã có Microsoft E3/E5 và muốn tận dụng license hiện có.</p>
+        <div class="tag-list">
+          <span class="tag" style="background: rgba(59,130,246,0.1); color: var(--microsoft); border: 1px solid rgba(59,130,246,0.2);">Included in M365 E5</span>
+          <span class="tag" style="background: rgba(59,130,246,0.1); color: var(--microsoft); border: 1px solid rgba(59,130,246,0.2);">Windows-Native</span>
+          <span class="tag" style="background: rgba(59,130,246,0.1); color: var(--microsoft); border: 1px solid rgba(59,130,246,0.2);">Zero Extra Cost*</span>
+          <span class="tag" style="background: rgba(59,130,246,0.1); color: var(--microsoft); border: 1px solid rgba(59,130,246,0.2);">Intune Integration</span>
+          <span class="tag" style="background: rgba(59,130,246,0.1); color: var(--microsoft); border: 1px solid rgba(59,130,246,0.2);">Agent-based</span>
+        </div>
+        <div class="note-box" style="margin-top: 14px; padding: 12px 16px; border-color: rgba(59,130,246,0.2); background: rgba(59,130,246,0.05);">
+          <strong style="color: var(--microsoft);">Hạn chế:</strong> Yêu cầu Microsoft Defender for Endpoint P2 (hoặc M365 E5). Phạm vi quét giới hạn chủ yếu ở Windows endpoint, kém hơn hẳn với Linux/network device/multi-vendor. Không phù hợp môi trường không cần internet hay non-Windows heavy.
+        </div>
+      </div>
+    </div>
+
+    <!-- SECPOD SANERNOW -->
+    <div class="vendor-card" style="grid-column: 1 / -1;">
+      <div class="vendor-header">
+        <div class="vendor-logo" style="background: rgba(225,29,72,0.1); border: 1px solid rgba(225,29,72,0.25); color: var(--secpod);">SPC</div>
+        <div>
+          <div class="vendor-name" style="color: var(--secpod);">SecPod — SanerNow CVEM</div>
+          <div class="vendor-product">Continuous Vulnerability and Exposure Management (CVEM) Platform</div>
+        </div>
+      </div>
+      <div class="vendor-body">
+        <p class="vendor-desc">Được thành lập năm 2009 tại Bangalore, Ấn Độ, SecPod (Security Podium) định vị SanerNow như nền tảng <strong>all-in-one CVEM</strong> tích hợp 7 module trong một console duy nhất. Điểm khác biệt cốt lõi: scan <strong>dưới 5 phút</strong> nhờ thuật toán thông minh, kho SCAP feed tự xây dựng với 190,000+ checks, và patch management tích hợp sẵn không cần license riêng. SecPod cũng là tổ chức đóng góp vào chuẩn OVAL — ngôn ngữ mô tả lỗ hổng bảo mật quốc tế. Được GigaOm Radar xếp hạng <em>Leader & Outperformer</em> trong mảng Patch Management.</p>
+        <div class="tag-list">
+          <span class="tag" style="background: rgba(225,29,72,0.1); color: var(--secpod); border: 1px solid rgba(225,29,72,0.2);">Scan &lt;5 phút</span>
+          <span class="tag" style="background: rgba(225,29,72,0.1); color: var(--secpod); border: 1px solid rgba(225,29,72,0.2);">190K+ SCAP Checks</span>
+          <span class="tag" style="background: rgba(225,29,72,0.1); color: var(--secpod); border: 1px solid rgba(225,29,72,0.2);">7 Modules In 1</span>
+          <span class="tag" style="background: rgba(225,29,72,0.1); color: var(--secpod); border: 1px solid rgba(225,29,72,0.2);">Patch Mgmt Built-in</span>
+          <span class="tag" style="background: rgba(225,29,72,0.1); color: var(--secpod); border: 1px solid rgba(225,29,72,0.2);">OVAL Contributor</span>
+          <span class="tag" style="background: rgba(225,29,72,0.1); color: var(--secpod); border: 1px solid rgba(225,29,72,0.2);">Cloud + On-Premise</span>
+          <span class="tag" style="background: rgba(225,29,72,0.1); color: var(--secpod); border: 1px solid rgba(225,29,72,0.2);">GigaOm Leader</span>
+          <span class="tag" style="background: rgba(225,29,72,0.1); color: var(--secpod); border: 1px solid rgba(225,29,72,0.2);">TCO Thấp</span>
+        </div>
+        <div class="note-box" style="margin-top: 14px; padding: 12px 16px; border-color: rgba(225,29,72,0.2); background: rgba(225,29,72,0.05);">
+          <strong style="color: var(--secpod);">7 Module SanerNow CVEM:</strong> Vulnerability Management · Patch Management · IT Asset Exposure · Compliance Management · Endpoint Management · Software Deployment &amp; App Control · Continuous Posture Anomaly Management (CPAM)
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════ S4: COMMON FEATURES ════ -->
+<section class="section" id="s4">
+  <div class="section-header">
+    <span class="section-num">04</span>
+    <h2 class="section-title">Tính Năng <span>Chung</span><br>Của Một Giải Pháp Chuẩn</h2>
+  </div>
+
+  <p>Một giải pháp dò quét lỗ hổng bảo mật mạng đạt chuẩn enterprise cần có các tính năng cốt lõi sau:</p>
+
+  <div class="grid-2" style="margin-bottom: 28px;">
+    <div>
+      <div class="card" style="margin-bottom: 16px;">
+        <div class="card-title">Asset Discovery & Inventory</div>
+        <ul>
+          <li>Tự động khám phá toàn bộ tài sản mạng (agentless & agent-based)</li>
+          <li>Host discovery, OS fingerprinting, service enumeration</li>
+          <li>Phát hiện shadow IT và thiết bị không được quản lý</li>
+          <li>Quản lý inventory liên tục khi môi trường thay đổi</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-bottom: 16px;">
+        <div class="card-title">Vulnerability Detection & Assessment</div>
+        <ul>
+          <li>Quét phát hiện CVE, missing patch, misconfiguration</li>
+          <li>Authenticated scan (với credential) và unauthenticated scan</li>
+          <li>Hỗ trợ đa nền tảng: Windows, Linux, macOS, network device, firewall, SCADA</li>
+          <li>Plugin/signature cập nhật thường xuyên (daily update)</li>
+          <li>Quét nhanh và quét chuyên sâu (targeted vs full scan)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Risk Scoring & Prioritization</div>
+        <ul>
+          <li>Tích hợp CVSS v3/v4 cho mức độ nghiêm trọng chuẩn</li>
+          <li>EPSS (Exploit Prediction Scoring System)</li>
+          <li>Risk score dựa trên exploitability thực tế</li>
+          <li>Asset criticality weighting</li>
+          <li>CISA KEV integration (known exploited vulnerabilities)</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom: 16px;">
+        <div class="card-title">Compliance Auditing</div>
+        <ul>
+          <li>CIS Benchmark (Level 1 & Level 2)</li>
+          <li>PCI DSS, HIPAA, SOC 2 scan templates</li>
+          <li>DISA STIG (quan trọng với quân đội/chính phủ)</li>
+          <li>SCAP/OVAL compliance check</li>
+          <li>Audit report theo chuẩn quy định</li>
+        </ul>
+      </div>
+      <div class="card" style="margin-bottom: 16px;">
+        <div class="card-title">Reporting & Dashboards</div>
+        <ul>
+          <li>Export báo cáo: PDF, HTML, CSV, XML, JSON</li>
+          <li>Executive dashboard cho lãnh đạo (high-level)</li>
+          <li>Technical report cho đội IT (chi tiết remediation)</li>
+          <li>Vulnerability trend tracking theo thời gian</li>
+          <li>Custom report templates</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">Remediation Guidance & Integration</div>
+        <ul>
+          <li>Hướng dẫn vá lỗi chi tiết per vulnerability</li>
+          <li>Tích hợp ticketing: Jira, ServiceNow, BMC Remedy</li>
+          <li>API (REST) để tích hợp với SIEM, SOAR</li>
+          <li>Patch management integration</li>
+          <li>Scheduled & on-demand scanning</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ S5: UNIQUE FEATURES ════ -->
+<section class="section" id="s5">
+  <div class="section-header">
+    <span class="section-num">05</span>
+    <h2 class="section-title">Tính Năng <span>Riêng Biệt</span><br>Của Từng Hãng</h2>
+  </div>
+
+  <div class="feat-table-wrap">
+    <table class="feat-table">
+      <thead>
+        <tr>
+          <th style="min-width: 220px;">Tính năng độc đáo</th>
+          <th style="min-width: 150px; color: var(--tenable);">Tenable</th>
+          <th style="min-width: 150px; color: var(--rapid7);">Rapid7</th>
+          <th style="min-width: 150px; color: var(--qualys);">Qualys</th>
+          <th style="min-width: 150px; color: var(--greenbone);">Greenbone</th>
+          <th style="min-width: 150px; color: var(--microsoft);">Microsoft</th>
+          <th style="min-width: 150px; color: var(--secpod);">SecPod</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="cat" colspan="7">SCANNING ENGINE</td></tr>
+        <tr>
+          <td>Plugin/Signature library</td>
+          <td class="check">227,000+ plugins (tốt nhất thị trường)</td>
+          <td>Liên tục cập nhật + Metasploit DB</td>
+          <td>80,000+ signatures + 25 threat feeds</td>
+          <td class="partial">50,000+ NVTs (open-source)</td>
+          <td class="partial">Microsoft threat intel only</td>
+          <td class="check">190,000+ SCAP checks (OVAL contributor)</td>
+        </tr>
+        <tr>
+          <td>False positive rate</td>
+          <td class="check">0.32/million (six sigma — tốt nhất)</td>
+          <td class="partial">Thấp, không công bố số liệu cụ thể</td>
+          <td class="partial">Trung bình (người dùng phản ánh inflated)</td>
+          <td class="cross">Cao hơn commercial</td>
+          <td>Thấp (agent-based, chính xác)</td>
+          <td class="partial">Thấp, cập nhật DB hàng ngày</td>
+        </tr>
+        <tr>
+          <td>Tốc độ scan</td>
+          <td class="partial">Nhanh (phụ thuộc network)</td>
+          <td class="partial">Nhanh</td>
+          <td class="check">6x nhanh hơn competitor</td>
+          <td class="partial">Trung bình</td>
+          <td class="partial">Continuous (agent-based)</td>
+          <td class="check">Nhanh nhất — dưới 5 phút</td>
+        </tr>
+        <tr>
+          <td>Offline / Air-gap support</td>
+          <td class="check">Hoàn toàn offline, plugin update qua file</td>
+          <td class="cross">Yêu cầu Insight Platform (cloud)</td>
+          <td class="cross">Cloud-native, yêu cầu internet</td>
+          <td class="check">On-premise, có thể offline</td>
+          <td class="cross">Yêu cầu cloud connectivity</td>
+          <td class="partial">On-prem option có, cloud là mặc định</td>
+        </tr>
+        <tr>
+          <td>Portable deployment</td>
+          <td class="check">Windows/Linux/macOS/Raspberry Pi</td>
+          <td class="partial">Security Console, cần server</td>
+          <td class="partial">Cloud scanner appliance</td>
+          <td class="check">Appliance hoặc VM</td>
+          <td class="cross">Agent-only, không portable scanner</td>
+          <td class="partial">Agent + Cloud console (không agentless)</td>
+        </tr>
+        <tr><td class="cat" colspan="7">RISK PRIORITIZATION</td></tr>
+        <tr>
+          <td>Proprietary risk scoring</td>
+          <td>Tenable VPR (Vulnerability Priority Rating)</td>
+          <td class="check">Active Risk Score (AI + Metasploit data)</td>
+          <td>TruRisk™ (0–1,000 thang điểm)</td>
+          <td class="partial">CVSS only</td>
+          <td class="partial">Defender risk score</td>
+          <td>Risk score theo severity + exploitability + business context</td>
+        </tr>
+        <tr>
+          <td>Live Results (offline analysis)</td>
+          <td class="check">Có – đánh giá ngay khi plugin update, không cần scan lại</td>
+          <td class="cross">Không có tính năng tương đương</td>
+          <td class="cross">Không</td>
+          <td class="cross">Không</td>
+          <td class="cross">Không</td>
+          <td class="cross">Không</td>
+        </tr>
+        <tr>
+          <td>Threat intelligence integration</td>
+          <td>Tenable Research zero-day feed (24/7)</td>
+          <td class="check">Metasploit live exploit DB + Rapid7 Labs ETR</td>
+          <td class="check">25+ threat feeds + MITRE ATT&CK matrix</td>
+          <td class="partial">Community feeds</td>
+          <td>Microsoft Security Intelligence</td>
+          <td class="partial">SecPod Labs feed, OWASP Top 10, SANS Top 25</td>
+        </tr>
+        <tr><td class="cat" colspan="7">REMEDIATION & WORKFLOW</td></tr>
+        <tr>
+          <td>Remediation workflow</td>
+          <td>Guidance per vuln, patch suggestion</td>
+          <td class="check">Remediation Hub – assign task, track SLA, 500+ integrations</td>
+          <td class="check">TruRisk Eliminate – patchless patching, automated tickets</td>
+          <td class="partial">Cơ bản</td>
+          <td>Intune autopatch integration</td>
+          <td class="check">End-to-end automation scan → patch từ một console</td>
+        </tr>
+        <tr>
+          <td>Built-in patch management</td>
+          <td class="partial">Qua Tenable Patch Management (add-on)</td>
+          <td class="partial">Không built-in, qua integrations</td>
+          <td class="check">VMDR tích hợp Patch Management</td>
+          <td class="cross">Không</td>
+          <td class="check">Intune / WSUS integration native</td>
+          <td class="check">Có sẵn, 550+ 3rd party apps, patch rollback 1-click</td>
+        </tr>
+        <tr><td class="cat" colspan="7">COVERAGE SCOPE</td></tr>
+        <tr>
+          <td>OT/ICS/SCADA support</td>
+          <td class="check">Tenable OT Security (chuyên biệt, tốt nhất)</td>
+          <td class="partial">Hạn chế</td>
+          <td class="partial">Hạn chế</td>
+          <td class="partial">Có, nhưng hạn chế</td>
+          <td class="cross">Không</td>
+          <td class="cross">Không</td>
+        </tr>
+        <tr>
+          <td>Cloud/Container scanning</td>
+          <td>Nessus Expert (IaC, cloud infra)</td>
+          <td class="check">InsightVM + InsightCloudSec</td>
+          <td class="check">Cloud Agent, Container Security</td>
+          <td class="cross">Hạn chế</td>
+          <td>Azure native + container</td>
+          <td class="partial">Cloud asset scanning, container sensor (cơ bản)</td>
+        </tr>
+        <tr>
+          <td>External attack surface</td>
+          <td>Nessus Expert + Tenable ASM</td>
+          <td class="check">Project Sonar (internet-wide scanning)</td>
+          <td class="partial">Perimeter scanning</td>
+          <td class="cross">Không</td>
+          <td class="cross">Hạn chế</td>
+          <td class="cross">Không</td>
+        </tr>
+        <tr><td class="cat" colspan="7">COMPLIANCE & CERTIFICATION</td></tr>
+        <tr>
+          <td>SCAP/OVAL compliance</td>
+          <td class="check">Hỗ trợ đầy đủ</td>
+          <td class="partial">Một phần</td>
+          <td class="check">Hỗ trợ đầy đủ</td>
+          <td class="partial">Một phần</td>
+          <td class="cross">Không</td>
+          <td class="check">SCAP contributor, OVAL native — hỗ trợ đầy đủ</td>
+        </tr>
+        <tr>
+          <td>DoD / Government certified</td>
+          <td class="check">FedRAMP, DoD STIG, dùng trong môi trường quân sự Mỹ</td>
+          <td class="partial">FedRAMP (InsightVM)</td>
+          <td>FedRAMP</td>
+          <td class="cross">Không</td>
+          <td>FedRAMP (Microsoft)</td>
+          <td class="cross">Không có chứng nhận quân sự/DoD</td>
+        </tr>
+        <tr><td class="cat" colspan="7">PRICING MODEL</td></tr>
+        <tr>
+          <td>License model</td>
+          <td class="check">Per scanner (không giới hạn IP)</td>
+          <td class="partial">Per asset/month</td>
+          <td class="partial">Per asset/year</td>
+          <td class="check">Free (Community) / Per appliance</td>
+          <td>Included in M365 E3/E5</td>
+          <td class="partial">Per endpoint/year (custom quote)</td>
+        </tr>
+        <tr>
+          <td>Predictable cost</td>
+          <td class="check">Rất dễ tính (31 scanner = 31 license)</td>
+          <td class="partial">Phụ thuộc số asset</td>
+          <td class="partial">Phụ thuộc số asset</td>
+          <td class="check">Cố định (appliance based)</td>
+          <td>Bundled với MS license</td>
+          <td class="partial">Phụ thuộc số endpoint, modular pricing</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ════ S6: SWOT ════ -->
+<section class="section" id="s6">
+  <div class="section-header">
+    <span class="section-num">06</span>
+    <h2 class="section-title">Phân Tích <span>SWOT</span><br>Từng Hãng</h2>
+  </div>
+
+  <!-- TENABLE SWOT -->
+  <div class="swot-vendor">
+    <div class="swot-vendor-title">
+      <div style="width:36px;height:36px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.25);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--tenable);">TEN</div>
+      <span style="font-size:18px;font-weight:700;color:var(--tenable);">Tenable — Nessus Professional</span>
+    </div>
+    <div class="swot-grid">
+      <div class="swot-quad swot-s">
+        <div class="swot-quad-title">S · STRENGTHS</div>
+        <ul class="swot-list">
+          <li>Thị phần #1, brand được tin tưởng toàn cầu (43K+ khách hàng)</li>
+          <li>Plugin library lớn nhất: 227,000+ plugins</li>
+          <li>False positive rate thấp nhất ngành (six sigma)</li>
+          <li>Hoàn toàn offline/air-gap — không phụ thuộc internet</li>
+          <li>Portable, cài trên laptop dễ dàng</li>
+          <li>SCAP/OVAL support — chuẩn chính phủ/quân đội</li>
+          <li>OT/ICS coverage tốt nhất (Tenable OT)</li>
+          <li>Live Results không cần scan lại</li>
+          <li>License per scanner, chi phí dễ dự đoán</li>
+          <li>Được chứng nhận FedRAMP, dùng trong DoD</li>
+        </ul>
+      </div>
+      <div class="swot-quad swot-w">
+        <div class="swot-quad-title">W · WEAKNESSES</div>
+        <ul class="swot-list">
+          <li>Nessus Pro thiếu central management khi có nhiều scanner</li>
+          <li>Remediation workflow kém hơn Rapid7</li>
+          <li>Cloud-native features kém hơn Qualys</li>
+          <li>Giao diện Nessus Pro có thể cần cải thiện</li>
+          <li>Giá Nessus Expert cao (6,390 USD/năm)</li>
+          <li>Một số tính năng cloud yêu cầu upgrade lên Tenable.sc</li>
+        </ul>
+      </div>
+      <div class="swot-quad swot-o">
+        <div class="swot-quad-title">O · OPPORTUNITIES</div>
+        <ul class="swot-list">
+          <li>Nhu cầu air-gap scanning tăng (chính phủ, quân đội, hạ tầng quan trọng)</li>
+          <li>Thị trường OT/ICS/SCADA đang tăng trưởng mạnh</li>
+          <li>Regulatory compliance yêu cầu VM có chuẩn SCAP</li>
+          <li>Mở rộng Tenable One sang exposure management</li>
+          <li>Đối tác tại Việt Nam trong lĩnh vực quốc phòng/nhà nước</li>
+        </ul>
+      </div>
+      <div class="swot-quad swot-t">
+        <div class="swot-quad-title">T · THREATS</div>
+        <ul class="swot-list">
+          <li>Rapid7 và Qualys có workflow remediation tốt hơn</li>
+          <li>Microsoft MDVM "free" cho khách hàng M365 E5</li>
+          <li>Greenbone/OpenVAS là free alternative đủ dùng cho một số segment</li>
+          <li>Áp lực giá từ per-asset competitors khi scan environment nhỏ</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- RAPID7 SWOT -->
+  <div class="swot-vendor" style="margin-top: 32px;">
+    <div class="swot-vendor-title">
+      <div style="width:36px;height:36px;background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.25);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--rapid7);">R7</div>
+      <span style="font-size:18px;font-weight:700;color:var(--rapid7);">Rapid7 — InsightVM</span>
+    </div>
+    <div class="swot-grid">
+      <div class="swot-quad swot-s">
+        <div class="swot-quad-title">S · STRENGTHS</div>
+        <ul class="swot-list">
+          <li>Active Risk Score AI-powered, gắn với Metasploit data</li>
+          <li>Remediation Hub xuất sắc (gán task, SLA, tracking)</li>
+          <li>500+ native integrations (ITSM, SIEM, DevOps)</li>
+          <li>Insight Agent cho endpoint assessment liên tục</li>
+          <li>Live Dashboard trực quan, dễ dùng cho cả không-kỹ-thuật</li>
+          <li>Project Sonar — internet-wide threat intelligence</li>
+          <li>Tích hợp sâu với Metasploit để validate exploit</li>
+        </ul>
+      </div>
+      <div class="swot-quad swot-w">
+        <div class="swot-quad-title">W · WEAKNESSES</div>
+        <ul class="swot-list">
+          <li>Phụ thuộc Insight Platform (cloud) — không air-gap</li>
+          <li>Security Console nặng, phức tạp hơn Nessus</li>
+          <li>License per-asset — chi phí khó kiểm soát khi scale</li>
+          <li>Setup ban đầu phức tạp hơn Tenable</li>
+          <li>OT/ICS coverage yếu</li>
+          <li>SCAP/OVAL support hạn chế</li>
+        </ul>
+      </div>
+      <div class="swot-quad swot-o">
+        <div class="swot-quad-title">O · OPPORTUNITIES</div>
+        <ul class="swot-list">
+          <li>Nhu cầu tích hợp VM với DevSecOps/CI-CD tăng</li>
+          <li>Doanh nghiệp cần workflow remediation tự động</li>
+          <li>Insight platform mở rộng sang MDR, SIEM</li>
+          <li>Khách hàng cần 25% giảm security incidents (validated ROI)</li>
+        </ul>
+      </div>
+      <div class="swot-quad swot-t">
+        <div class="swot-quad-title">T · THREATS</div>
+        <ul class="swot-list">
+          <li>Tenable mạnh hơn ở air-gap và OT environments</li>
+          <li>Qualys có patch management built-in tốt hơn</li>
+          <li>Môi trường quốc phòng/chính phủ ưu tiên offline</li>
+          <li>Chi phí cloud dependency là rào cản với một số khách hàng</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- QUALYS SWOT -->
+  <div class="swot-vendor" style="margin-top: 32px;">
+    <div class="swot-vendor-title">
+      <div style="width:36px;height:36px;background:rgba(168,85,247,0.1);border:1px solid rgba(168,85,247,0.25);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--qualys);">QLS</div>
+      <span style="font-size:18px;font-weight:700;color:var(--qualys);">Qualys — VMDR</span>
+    </div>
+    <div class="swot-grid">
+      <div class="swot-quad swot-s">
+        <div class="swot-quad-title">S · STRENGTHS</div>
+        <ul class="swot-list">
+          <li>Cloud-native: không cần on-prem infrastructure</li>
+          <li>TruRisk™ 0–1000: rõ ràng nhất cho executive reporting</li>
+          <li>MITRE ATT&CK mapping tích hợp sẵn</li>
+          <li>Patch Management built-in trong VMDR</li>
+          <li>25+ threat intelligence feeds</li>
+          <li>Phát hiện CVE nhanh nhất (6x so với competitors)</li>
+          <li>Phù hợp doanh nghiệp lớn, môi trường hybrid phức tạp</li>
+        </ul>
+      </div>
+      <div class="swot-quad swot-w">
+        <div class="swot-quad-title">W · WEAKNESSES</div>
+        <ul class="swot-list">
+          <li>Cloud-only: không thể air-gap hoặc offline</li>
+          <li>Giao diện phức tạp, học sử dụng khó</li>
+          <li>Báo cáo không trực quan, tốn nhiều công định dạng</li>
+          <li>Hiệu năng chậm (đặc biệt ngoài giờ hành chính)</li>
+          <li>License patching tách biệt, phức tạp</li>
+          <li>False positive rate cao hơn Tenable</li>
+          <li>Giá $199–250/asset/year — đắt hơn với môi trường lớn</li>
+        </ul>
+      </div>
+      <div class="swot-quad swot-o">
+        <div class="swot-quad-title">O · OPPORTUNITIES</div>
+        <ul class="swot-list">
+          <li>Nhu cầu compliance reporting cao từ BFSI, healthcare</li>
+          <li>Executive dashboard chuẩn hóa cho board reporting</li>
+          <li>Tích hợp MITRE ATT&CK ngày càng được yêu cầu</li>
+          <li>Multi-cloud management là thế mạnh</li>
+        </ul>
+      </div>
+      <div class="swot-quad swot-t">
+        <div class="swot-quad-title">T · THREATS</div>
+        <ul class="swot-list">
+          <li>Tenable thống trị phân khúc air-gap/government</li>
+          <li>Rapid7 UX tốt hơn và onboarding dễ hơn</li>
+          <li>Giá cao trong khi tính năng OT yếu</li>
+          <li>Quy định data sovereignty cản trở cloud-only</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- GREENBONE SWOT -->
+  <div class="swot-vendor" style="margin-top: 32px;">
+    <div class="swot-vendor-title">
+      <div style="width:36px;height:36px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--greenbone);">GRN</div>
+      <span style="font-size:18px;font-weight:700;color:var(--greenbone);">Greenbone / OpenVAS</span>
+    </div>
+    <div class="swot-grid">
+      <div class="swot-quad swot-s">
+        <div class="swot-quad-title">S · STRENGTHS</div>
+        <ul class="swot-list">
+          <li>Hoàn toàn miễn phí (Community Edition)</li>
+          <li>On-premise, hoạt động offline</li>
+          <li>Mã nguồn mở, tùy biến cao</li>
+          <li>Cộng đồng lớn, nhiều tài liệu</li>
+          <li>Không lock-in vendor</li>
+        </ul>
+      </div>
+      <div class="swot-quad swot-w">
+        <div class="swot-quad-title">W · WEAKNESSES</div>
+        <ul class="swot-list">
+          <li>Yêu cầu kỹ năng kỹ thuật cao để vận hành</li>
+          <li>False positive rate cao hơn commercial</li>
+          <li>NVT ít hơn (50K vs 227K của Tenable)</li>
+          <li>Không có professional support (Community)</li>
+          <li>Báo cáo kém hơn commercial solutions</li>
+          <li>Không có compliance template phong phú</li>
+        </ul>
+      </div>
+      <div class="swot-quad swot-o">
+        <div class="swot-quad-title">O · OPPORTUNITIES</div>
+        <ul class="swot-list">
+          <li>SMEs và tổ chức ngân sách thấp</li>
+          <li>Lab, học thuật, nghiên cứu bảo mật</li>
+          <li>Làm baseline scanner trước khi đầu tư commercial</li>
+        </ul>
+      </div>
+      <div class="swot-quad swot-t">
+        <div class="swot-quad-title">T · THREATS</div>
+        <ul class="swot-list">
+          <li>Commercial solutions ngày càng giảm giá</li>
+          <li>Chi phí vận hành (nhân lực kỹ thuật) bù lại chi phí license</li>
+          <li>Không đủ để thay thế trong môi trường enterprise critical</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- SECPOD SWOT -->
+  <div class="swot-vendor" style="margin-top: 32px;">
+    <div class="swot-vendor-title">
+      <div style="width:36px;height:36px;background:rgba(225,29,72,0.1);border:1px solid rgba(225,29,72,0.25);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--secpod);">SPC</div>
+      <span style="font-size:18px;font-weight:700;color:var(--secpod);">SecPod — SanerNow CVEM</span>
+    </div>
+    <div class="swot-grid">
+      <div class="swot-quad swot-s">
+        <div class="swot-quad-title">S · STRENGTHS</div>
+        <ul class="swot-list">
+          <li>Scan nhanh nhất thị trường: dưới 5 phút real-time</li>
+          <li>7 module all-in-one: VM + Patch + Compliance + Asset + EDR từ 1 console</li>
+          <li>Patch management built-in với 550+ 3rd party apps, patch rollback 1-click</li>
+          <li>SCAP/OVAL contributor — kho 190,000+ checks, chuẩn mở chính phủ</li>
+          <li>TCO thấp hơn dùng nhiều point solutions riêng lẻ</li>
+          <li>Cloud + On-premise deployment linh hoạt</li>
+          <li>GigaOm Radar Leader & Outperformer về Patch Management</li>
+          <li>Support kỹ thuật mạnh, phản hồi nhanh (đội Ấn Độ)</li>
+          <li>Modular — mua theo module cần thiết</li>
+          <li>End-to-end automation: scan → prioritize → patch tự động</li>
+        </ul>
+      </div>
+      <div class="swot-quad swot-w">
+        <div class="swot-quad-title">W · WEAKNESSES</div>
+        <ul class="swot-list">
+          <li>Brand recognition thấp hơn Tenable/Rapid7/Qualys nhiều</li>
+          <li>UI/UX chưa trực quan, cần nhiều công làm quen ban đầu</li>
+          <li>Agent-dependent: không có agentless scan thuần túy</li>
+          <li>Auto agent deployment qua AD/network discovery cần cải thiện</li>
+          <li>Reporting tuy đủ dùng nhưng không trực quan bằng Rapid7</li>
+          <li>Không có OT/ICS/SCADA coverage</li>
+          <li>Không phù hợp scan agentless trên network segment lạ (cơ động)</li>
+          <li>Ít partner/reseller tại Việt Nam và Đông Nam Á</li>
+          <li>Gartner/IDC chưa xếp hạng (Emerging player)</li>
+          <li>Multi-tenant management cho MSP chưa hoàn thiện</li>
+        </ul>
+      </div>
+      <div class="swot-quad swot-o">
+        <div class="swot-quad-title">O · OPPORTUNITIES</div>
+        <ul class="swot-list">
+          <li>SME và doanh nghiệp cần all-in-one TCO thấp</li>
+          <li>Thị trường cần VM + Patch trong một platform tích hợp</li>
+          <li>Compliance automation ngày càng được quy định yêu cầu</li>
+          <li>Managed Security Service Provider (MSSP) cần multi-tenant VM</li>
+          <li>Tổ chức muốn giảm số lượng vendor từ 3–4 xuống 1</li>
+          <li>Thị trường Asia-Pacific đang tăng trưởng nhanh</li>
+        </ul>
+      </div>
+      <div class="swot-quad swot-t">
+        <div class="swot-quad-title">T · THREATS</div>
+        <ul class="swot-list">
+          <li>Tenable/Qualys/Rapid7 có ecosystem, brand và partner network lớn hơn nhiều</li>
+          <li>Qualys VMDR cũng có patch management built-in</li>
+          <li>Microsoft MDVM miễn phí cho Windows-heavy + M365 E5</li>
+          <li>Mô hình partner chưa hấp dẫn với reseller nhỏ</li>
+          <li>Agentless requirement ngày càng được khách hàng government/quân đội ưu tiên</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ S7: RANKING ════ -->
+<section class="section" id="s7">
+  <div class="section-header">
+    <span class="section-num">07</span>
+    <h2 class="section-title">So Sánh & <span>Xếp Hạng</span><br>Trên Thị Trường</h2>
+  </div>
+
+  <p>Dựa trên đánh giá từ IDC MarketScape 2025, Gartner Peer Insights, G2, và MarketsandMarkets, bảng xếp hạng dưới đây tổng hợp vị thế của các hãng theo từng tiêu chí:</p>
+
+  <div class="feat-table-wrap" style="margin-bottom: 28px;">
+    <table class="rank-table">
+      <thead>
+        <tr>
+          <th style="width:40px; text-align: center;">#</th>
+          <th>Hãng / Sản phẩm</th>
+          <th>Phạm vi quét</th>
+          <th>Độ chính xác</th>
+          <th>Ưu tiên hóa</th>
+          <th>Dễ dùng</th>
+          <th>Offline/Air-gap</th>
+          <th>Compliance</th>
+          <th>Tích hợp</th>
+          <th>Chi phí</th>
+          <th>Tổng điểm</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="text-align:center;"><span class="rank-badge rank-1">1</span></td>
+          <td><span style="color: var(--tenable); font-weight:700;">Tenable Nessus Pro</span></td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:98%; background: var(--tenable);"></div></div>
+              <span class="score-val" style="color: var(--tenable);">9.8</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:97%; background: var(--tenable);"></div></div>
+              <span class="score-val" style="color: var(--tenable);">9.7</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:88%; background: var(--tenable);"></div></div>
+              <span class="score-val" style="color: var(--tenable);">8.8</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:86%; background: var(--tenable);"></div></div>
+              <span class="score-val" style="color: var(--tenable);">8.6</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:100%; background: var(--tenable);"></div></div>
+              <span class="score-val" style="color: var(--tenable);">10</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:95%; background: var(--tenable);"></div></div>
+              <span class="score-val" style="color: var(--tenable);">9.5</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:80%; background: var(--tenable);"></div></div>
+              <span class="score-val" style="color: var(--tenable);">8.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:90%; background: var(--tenable);"></div></div>
+              <span class="score-val" style="color: var(--tenable);">9.0</span>
+            </div>
+          </td>
+          <td style="color: var(--tenable); font-weight:700; font-size:14px;">9.2</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;"><span class="rank-badge rank-2">2</span></td>
+          <td><span style="color: var(--rapid7); font-weight:700;">Rapid7 InsightVM</span></td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:88%; background: var(--rapid7);"></div></div>
+              <span class="score-val" style="color: var(--rapid7);">8.8</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:85%; background: var(--rapid7);"></div></div>
+              <span class="score-val" style="color: var(--rapid7);">8.5</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:95%; background: var(--rapid7);"></div></div>
+              <span class="score-val" style="color: var(--rapid7);">9.5</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:88%; background: var(--rapid7);"></div></div>
+              <span class="score-val" style="color: var(--rapid7);">8.8</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:15%; background: var(--rapid7);"></div></div>
+              <span class="score-val" style="color: var(--rapid7);">1.5</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:80%; background: var(--rapid7);"></div></div>
+              <span class="score-val" style="color: var(--rapid7);">8.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:98%; background: var(--rapid7);"></div></div>
+              <span class="score-val" style="color: var(--rapid7);">9.8</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:75%; background: var(--rapid7);"></div></div>
+              <span class="score-val" style="color: var(--rapid7);">7.5</span>
+            </div>
+          </td>
+          <td style="color: var(--rapid7); font-weight:700; font-size:14px;">8.0</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;"><span class="rank-badge rank-3">3</span></td>
+          <td><span style="color: var(--qualys); font-weight:700;">Qualys VMDR</span></td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:92%; background: var(--qualys);"></div></div>
+              <span class="score-val" style="color: var(--qualys);">9.2</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:80%; background: var(--qualys);"></div></div>
+              <span class="score-val" style="color: var(--qualys);">8.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:92%; background: var(--qualys);"></div></div>
+              <span class="score-val" style="color: var(--qualys);">9.2</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:70%; background: var(--qualys);"></div></div>
+              <span class="score-val" style="color: var(--qualys);">7.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:10%; background: var(--qualys);"></div></div>
+              <span class="score-val" style="color: var(--qualys);">1.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:93%; background: var(--qualys);"></div></div>
+              <span class="score-val" style="color: var(--qualys);">9.3</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:90%; background: var(--qualys);"></div></div>
+              <span class="score-val" style="color: var(--qualys);">9.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:65%; background: var(--qualys);"></div></div>
+              <span class="score-val" style="color: var(--qualys);">6.5</span>
+            </div>
+          </td>
+          <td style="color: var(--qualys); font-weight:700; font-size:14px;">7.7</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;"><span class="rank-badge rank-other">4</span></td>
+          <td><span style="color: var(--microsoft); font-weight:700;">Microsoft MDVM</span></td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:65%; background: var(--microsoft);"></div></div>
+              <span class="score-val" style="color: var(--microsoft);">6.5</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:82%; background: var(--microsoft);"></div></div>
+              <span class="score-val" style="color: var(--microsoft);">8.2</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:78%; background: var(--microsoft);"></div></div>
+              <span class="score-val" style="color: var(--microsoft);">7.8</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:85%; background: var(--microsoft);"></div></div>
+              <span class="score-val" style="color: var(--microsoft);">8.5</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:15%; background: var(--microsoft);"></div></div>
+              <span class="score-val" style="color: var(--microsoft);">1.5</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:72%; background: var(--microsoft);"></div></div>
+              <span class="score-val" style="color: var(--microsoft);">7.2</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:88%; background: var(--microsoft);"></div></div>
+              <span class="score-val" style="color: var(--microsoft);">8.8</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:96%; background: var(--microsoft);"></div></div>
+              <span class="score-val" style="color: var(--microsoft);">9.6</span>
+            </div>
+          </td>
+          <td style="color: var(--microsoft); font-weight:700; font-size:14px;">7.4</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;"><span class="rank-badge rank-other">5</span></td>
+          <td><span style="color: var(--greenbone); font-weight:700;">Greenbone/OpenVAS</span></td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:72%; background: var(--greenbone);"></div></div>
+              <span class="score-val" style="color: var(--greenbone);">7.2</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:65%; background: var(--greenbone);"></div></div>
+              <span class="score-val" style="color: var(--greenbone);">6.5</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:50%; background: var(--greenbone);"></div></div>
+              <span class="score-val" style="color: var(--greenbone);">5.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:55%; background: var(--greenbone);"></div></div>
+              <span class="score-val" style="color: var(--greenbone);">5.5</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:90%; background: var(--greenbone);"></div></div>
+              <span class="score-val" style="color: var(--greenbone);">9.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:60%; background: var(--greenbone);"></div></div>
+              <span class="score-val" style="color: var(--greenbone);">6.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:50%; background: var(--greenbone);"></div></div>
+              <span class="score-val" style="color: var(--greenbone);">5.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:100%; background: var(--greenbone);"></div></div>
+              <span class="score-val" style="color: var(--greenbone);">10</span>
+            </div>
+          </td>
+          <td style="color: var(--greenbone); font-weight:700; font-size:14px;">6.4</td>
+        </tr>
+        <tr>
+          <td style="text-align:center;"><span class="rank-badge rank-other">6</span></td>
+          <td><span style="color: var(--secpod); font-weight:700;">SecPod SanerNow</span></td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:80%; background: var(--secpod);"></div></div>
+              <span class="score-val" style="color: var(--secpod);">8.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:78%; background: var(--secpod);"></div></div>
+              <span class="score-val" style="color: var(--secpod);">7.8</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:78%; background: var(--secpod);"></div></div>
+              <span class="score-val" style="color: var(--secpod);">7.8</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:75%; background: var(--secpod);"></div></div>
+              <span class="score-val" style="color: var(--secpod);">7.5</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:40%; background: var(--secpod);"></div></div>
+              <span class="score-val" style="color: var(--secpod);">4.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:80%; background: var(--secpod);"></div></div>
+              <span class="score-val" style="color: var(--secpod);">8.0</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:65%; background: var(--secpod);"></div></div>
+              <span class="score-val" style="color: var(--secpod);">6.5</span>
+            </div>
+          </td>
+          <td>
+            <div class="score-bar-wrap">
+              <div class="score-bar"><div class="score-fill" style="width:82%; background: var(--secpod);"></div></div>
+              <span class="score-val" style="color: var(--secpod);">8.2</span>
+            </div>
+          </td>
+          <td style="color: var(--secpod); font-weight:700; font-size:14px;">7.2</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note-box">
+    <strong>Lưu ý xếp hạng:</strong> Điểm số phản ánh đánh giá cho use case <strong>dò quét lỗ hổng mạng tổng quát</strong>. Với từng kịch bản cụ thể, thứ hạng có thể thay đổi: Greenbone phù hợp hơn cho tổ chức ngân sách thấp; Microsoft MDVM tốt hơn cho môi trường Windows-heavy đã có M365 E5; Rapid7 dẫn đầu về remediation workflow; Tenable dẫn đầu về air-gap và OT; <strong style="color:var(--secpod);">SecPod nổi bật về tốc độ scan, patch management all-in-one và TCO thấp</strong> — phù hợp doanh nghiệp muốn consolidate tool và tự động hóa end-to-end.
+  </div>
+</section>
+
+<!-- ════ S8: BENEFITS ════ -->
+<section class="section" id="s8">
+  <div class="section-header">
+    <span class="section-num">08</span>
+    <h2 class="section-title">Lợi Ích <span>Mang Lại</span><br>Của Giải Pháp</h2>
+  </div>
+
+  <div class="grid-2">
+    <div class="benefit-item">
+      <div class="benefit-icon-wrap" style="background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.2);">🎯</div>
+      <div>
+        <div class="benefit-title">Giảm thiểu rủi ro breach có thể đo lường được</div>
+        <div class="benefit-desc">Khách hàng Rapid7 báo cáo giảm 25% security incidents trong 6 tháng đầu. Qualys VMDR giúp giảm critical vulnerabilities đến 85%. Phát hiện lỗ hổng sớm trước khi attacker khai thác = ngăn chặn breach tốn kém.</div>
+      </div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon-wrap" style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2);">⚡</div>
+      <div>
+        <div class="benefit-title">Tăng tốc độ phát hiện và vá lỗ hổng 3–5x</div>
+        <div class="benefit-desc">So với quy trình thủ công, VM tự động giúp phát hiện và remediate nhanh hơn 3–5 lần. Rapid7 users báo cáo tiết kiệm €20,000–€50,000/năm từ downtime và ransomware recovery được ngăn chặn.</div>
+      </div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon-wrap" style="background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2);">📋</div>
+      <div>
+        <div class="benefit-title">Chứng minh tuân thủ quy định — giảm chi phí audit</div>
+        <div class="benefit-desc">Compliance reporting tự động tiết kiệm €10,000+/năm chi phí audit bên ngoài. Sinh báo cáo sẵn sàng cho ISO 27001, PCI DSS, Nghị định 13/2023/NĐ-CP theo đúng format yêu cầu của kiểm toán viên.</div>
+      </div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon-wrap" style="background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.2);">🔍</div>
+      <div>
+        <div class="benefit-title">Visibility toàn diện về attack surface</div>
+        <div class="benefit-desc">Khám phá tài sản chưa được biết đến (shadow IT, thiết bị không được quản lý). Hơn 30% assets thường bị bỏ sót trong chương trình VM thủ công. Tạo inventory chính xác là nền tảng cho mọi quyết định bảo mật.</div>
+      </div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon-wrap" style="background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);">🎲</div>
+      <div>
+        <div class="benefit-title">Ưu tiên hóa thông minh — tập trung vào 3% lỗ hổng quan trọng</div>
+        <div class="benefit-desc">VPR/TruRisk/Active Risk giúp lọc từ 100,000 findings xuống còn ~3,000 lỗ hổng thực sự cần xử lý. Giảm alert fatigue 40–50%, đội ngũ nhỏ cũng có thể hoạt động hiệu quả.</div>
+      </div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon-wrap" style="background: rgba(6,182,212,0.1); border: 1px solid rgba(6,182,212,0.2);">📊</div>
+      <div>
+        <div class="benefit-title">Báo cáo rõ ràng cho cả kỹ thuật và lãnh đạo</div>
+        <div class="benefit-desc">Cùng một dữ liệu scan: báo cáo kỹ thuật chi tiết cho đội IT, dashboard executive với security score cho CISO/CEO. Chứng minh ROI của đầu tư bảo mật theo ngôn ngữ business.</div>
+      </div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon-wrap" style="background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2);">🔗</div>
+      <div>
+        <div class="benefit-title">Tự động hóa quy trình, giảm gánh nặng nhân lực</div>
+        <div class="benefit-desc">Lên lịch scan tự động, tự động tạo ticket remediation, tự động track SLA vá lỗ. Đội ngũ 1–2 người có thể quản lý chương trình VM cho môi trường hàng nghìn asset.</div>
+      </div>
+    </div>
+    <div class="benefit-item">
+      <div class="benefit-icon-wrap" style="background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.2);">🛡️</div>
+      <div>
+        <div class="benefit-title">Tăng cường năng lực ứng phó sự cố</div>
+        <div class="benefit-desc">Khi có CVE zero-day mới, quét ngay lập tức để biết tổ chức bị ảnh hưởng ở đâu và cần vá gì — thay vì chờ 1–2 tuần đến chu kỳ scan tiếp theo. Tốc độ phản ứng là yếu tố quyết định khi exploit xảy ra trong 24h.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ S9: LICENSING ════ -->
+<section class="section" id="s9">
+  <div class="section-header">
+    <span class="section-num">09</span>
+    <h2 class="section-title">Cách Tính <span>License</span><br>Của Từng Hãng</h2>
+  </div>
+
+  <div class="grid-2">
+    <!-- TENABLE -->
+    <div class="license-card">
+      <div class="license-header">
+        <div class="license-vendor" style="color: var(--tenable);">Tenable Nessus</div>
+        <span class="license-model">Per Scanner</span>
+      </div>
+      <div class="license-body">
+        <div class="license-row">
+          <span class="key">Mô hình tính phí</span>
+          <span class="val">Per scanner (1 license = 1 máy cài Nessus, quét không giới hạn IP)</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Nessus Professional</span>
+          <span class="val">~$4,390/scanner/năm (US pricing, 1 năm)</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Nessus Expert</span>
+          <span class="val">~$6,390/scanner/năm (thêm web scan, IaC, cloud)</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Multi-year discount</span>
+          <span class="val">Có – mua 3 năm tiết kiệm đáng kể</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Advanced Support</span>
+          <span class="val">Add-on ~$400/năm (24/7 phone + chat)</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Ví dụ BTL86</span>
+          <span class="val">31 scanner × $4,390 = ~$136,090/năm</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Tenable Security Center</span>
+          <span class="val">On-prem enterprise, quote-based theo số asset</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Ưu điểm model</span>
+          <span class="val">Chi phí cố định, không phụ thuộc số lượng IP quét — rất dễ lập kế hoạch ngân sách</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RAPID7 -->
+    <div class="license-card">
+      <div class="license-header">
+        <div class="license-vendor" style="color: var(--rapid7);">Rapid7 InsightVM</div>
+        <span class="license-model" style="border-color: rgba(249,115,22,0.3); color: var(--rapid7); background: rgba(249,115,22,0.1);">Per Asset</span>
+      </div>
+      <div class="license-body">
+        <div class="license-row">
+          <span class="key">Mô hình tính phí</span>
+          <span class="val">Per managed asset/tháng (dựa trên số IP/endpoint quản lý)</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Giá tiêu chuẩn</span>
+          <span class="val">$2.19/asset/tháng (250 assets) → $1.93/asset/tháng (500 assets)</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Volume discount</span>
+          <span class="val">Giảm dần khi số asset tăng (enterprise pricing)</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Tính theo</span>
+          <span class="val">Số asset được quản lý, không phân biệt số lần scan</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Nexpose (on-prem)</span>
+          <span class="val">Quote-based, thường cao hơn InsightVM cloud</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Ví dụ 250 assets</span>
+          <span class="val">250 × $2.19 × 12 = ~$6,570/năm</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Rủi ro model</span>
+          <span class="val">Chi phí tăng theo số asset — khó kiểm soát khi environment phát triển nhanh</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUALYS -->
+    <div class="license-card">
+      <div class="license-header">
+        <div class="license-vendor" style="color: var(--qualys);">Qualys VMDR</div>
+        <span class="license-model" style="border-color: rgba(168,85,247,0.3); color: var(--qualys); background: rgba(168,85,247,0.1);">Per Asset/Year</span>
+      </div>
+      <div class="license-body">
+        <div class="license-row">
+          <span class="key">Mô hình tính phí</span>
+          <span class="val">Per asset/năm (subscriptions theo số lượng endpoints/servers)</span>
+        </div>
+        <div class="license-row">
+          <span class="key">VMDR Base</span>
+          <span class="val">$199–$250/asset/năm (tùy số lượng và tính năng)</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Web App Scanning</span>
+          <span class="val">$1,995/năm cho 25 web applications</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Patch Management</span>
+          <span class="val">License riêng, thêm vào VMDR</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Tiers</span>
+          <span class="val">Essentials → Professional → Enterprise</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Ví dụ 500 assets</span>
+          <span class="val">500 × $200 = ~$100,000/năm</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Lưu ý</span>
+          <span class="val">Patch Management license riêng gây overhead quản lý; giá thực tế qua quote với TAM</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- GREENBONE -->
+    <div class="license-card">
+      <div class="license-header">
+        <div class="license-vendor" style="color: var(--greenbone);">Greenbone / OpenVAS</div>
+        <span class="license-model" style="border-color: rgba(16,185,129,0.3); color: var(--greenbone); background: rgba(16,185,129,0.1);">Free / Per Appliance</span>
+      </div>
+      <div class="license-body">
+        <div class="license-row">
+          <span class="key">Community Edition</span>
+          <span class="val">Miễn phí — open-source, self-managed</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Greenbone Basic</span>
+          <span class="val">~€3,000/năm (virtual appliance, hỗ trợ có hạn)</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Greenbone Advanced</span>
+          <span class="val">~€10,000+/năm (full enterprise support)</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Mô hình tính phí</span>
+          <span class="val">Per appliance — không theo số asset</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Chi phí ẩn</span>
+          <span class="val">Nhân lực kỹ thuật cao để vận hành Community Edition</span>
+        </div>
+        <div class="license-row">
+          <span class="key">Phù hợp</span>
+          <span class="val">Tổ chức có kỹ năng kỹ thuật, budget hạn chế, không cần SLA hỗ trợ</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECPOD -->
+    <div class="license-card" style="grid-column: 1 / -1;">
+      <div class="license-header">
+        <div class="license-vendor" style="color: var(--secpod);">SecPod SanerNow CVEM</div>
+        <span class="license-model" style="border-color: rgba(225,29,72,0.3); color: var(--secpod); background: rgba(225,29,72,0.1);">Per Endpoint / Modular</span>
+      </div>
+      <div class="license-body">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 32px;">
+          <div>
+            <div class="license-row">
+              <span class="key">Mô hình tính phí</span>
+              <span class="val">Per endpoint/year (subscription), modular — chọn module cần thiết</span>
+            </div>
+            <div class="license-row">
+              <span class="key">Pricing</span>
+              <span class="val">Custom quote — liên hệ SecPod (không public list price)</span>
+            </div>
+            <div class="license-row">
+              <span class="key">Deployment options</span>
+              <span class="val">Cloud SaaS (mặc định) hoặc On-Premise</span>
+            </div>
+            <div class="license-row">
+              <span class="key">Trial</span>
+              <span class="val">Free trial 30 ngày có sẵn</span>
+            </div>
+            <div class="license-row">
+              <span class="key">Partner minimum</span>
+              <span class="val">~$200/tháng base fee (theo phản hồi reseller)</span>
+            </div>
+          </div>
+          <div>
+            <div class="license-row">
+              <span class="key">Module mua riêng được</span>
+              <span class="val">VM · Patch Mgmt · Compliance · Asset Exposure · CPAM · EDR · Software Deploy</span>
+            </div>
+            <div class="license-row">
+              <span class="key">Ưu điểm model</span>
+              <span class="val">Mua đúng những gì cần, không trả thừa — TCO thấp hơn mua 3–4 point solutions</span>
+            </div>
+            <div class="license-row">
+              <span class="key">OS support</span>
+              <span class="val">Windows, macOS, Linux (Ubuntu, RHEL, CentOS, Debian), IBM AIX</span>
+            </div>
+            <div class="license-row">
+              <span class="key">3rd party patching</span>
+              <span class="val">550+ ứng dụng — Chrome, Firefox, Java, Adobe, Zoom, Teams...</span>
+            </div>
+            <div class="license-row">
+              <span class="key">So sánh TCO</span>
+              <span class="val">VM + PM + Compliance + Asset = 1 license SecPod vs 3–4 license riêng của Tenable/Qualys/ManageEngine</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note-box" style="margin-top: 24px;">
+    <strong>Lưu ý cho thị trường Việt Nam:</strong> Giá USD ở trên là US list price. Khi mua qua reseller tại Việt Nam (như các đại lý được ủy quyền), giá thực tế có thể cao hơn 10–20% do chi phí distribution và support địa phương. Các dự án chính phủ/quốc phòng thường nhận được giá educational/government discount khi mua số lượng lớn. Tenable cho phép mua đa năm (3–5 năm) với chiết khấu đáng kể.
+  </div>
+</section>
+
+<!-- ════ S10: DEPLOYMENT ════ -->
+<section class="section" id="s10">
+  <div class="section-header">
+    <span class="section-num">10</span>
+    <h2 class="section-title">Mô Hình <span>Triển Khai</span><br>Thực Tế</h2>
+  </div>
+
+  <!-- Model 1 -->
+  <div class="deploy-model">
+    <div class="deploy-title">
+      Mô Hình 1: Cơ Động — Laptop-based Scanner
+      <span class="deploy-badge" style="background: rgba(0,212,255,0.1); color: var(--accent); border: 1px solid rgba(0,212,255,0.2);">Phù hợp BTL86</span>
+    </div>
+    <div class="deploy-desc">
+      Phù hợp với đội kiểm tra ATTT cơ động đến từng đơn vị. Mỗi thành viên đội cài Nessus Professional trên laptop cá nhân. Không cần internet hay infrastructure tập trung. Plugin update được thực hiện trước khi xuất phát (offline bundle), kết quả scan được export file và tổng hợp về trung tâm.
+    </div>
+    <div class="grid-2">
+      <div>
+        <div style="font-size: 12px; color: var(--text2); margin-bottom: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Kiến trúc</div>
+        <div class="deploy-steps">
+          <div class="deploy-step"><div class="step-num">1</div><span>Cài Nessus Pro trên laptop (Windows/Linux/macOS)</span></div>
+          <div class="deploy-step"><div class="step-num">2</div><span>Download offline plugin bundle tại trụ sở trước khi đi</span></div>
+          <div class="deploy-step"><div class="step-num">3</div><span>Kết nối vào mạng nội bộ của đơn vị được kiểm tra</span></div>
+          <div class="deploy-step"><div class="step-num">4</div><span>Chạy scan theo template chuẩn (network, compliance)</span></div>
+          <div class="deploy-step"><div class="step-num">5</div><span>Export báo cáo PDF/HTML, tổng hợp về trung tâm</span></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size: 12px; color: var(--text2); margin-bottom: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Yêu cầu & Lưu ý</div>
+        <ul>
+          <li>1 license Nessus Pro per laptop (31 license cho BTL86)</li>
+          <li>Plugin update mỗi tuần qua offline bundle</li>
+          <li>Cần template scan chuẩn hóa để kết quả đồng nhất</li>
+          <li>Báo cáo nên dùng format thống nhất để so sánh giữa các đơn vị</li>
+          <li>Credential scan yêu cầu có tài khoản admin trên hệ thống đích</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Model 2 -->
+  <div class="deploy-model">
+    <div class="deploy-title">
+      Mô Hình 2: Tập Trung On-Premise (Enterprise)
+      <span class="deploy-badge" style="background: rgba(245,158,11,0.1); color: var(--accent4); border: 1px solid rgba(245,158,11,0.2);">Tenable Security Center / Qualys Appliance</span>
+    </div>
+    <div class="deploy-desc">
+      Triển khai Security Console trên server tập trung tại datacenter. Nhiều Scan Engine phân tán theo các vùng mạng. Tất cả kết quả tập trung về một console duy nhất. Phù hợp cho tổ chức có nhiều văn phòng/chi nhánh cần quản lý tập trung.
+    </div>
+    <div class="deploy-steps">
+      <div class="deploy-step"><div class="step-num">1</div><span><strong>Security Console:</strong> Cài trên server tập trung (8+ core CPU, 32GB RAM, 100GB+ storage)</span></div>
+      <div class="deploy-step"><div class="step-num">2</div><span><strong>Distributed Scan Engines:</strong> Cài tại mỗi vùng mạng/chi nhánh (4+ core, 8GB RAM)</span></div>
+      <div class="deploy-step"><div class="step-num">3</div><span><strong>Scan Policies:</strong> Định nghĩa template, credential, schedule tập trung</span></div>
+      <div class="deploy-step"><div class="step-num">4</div><span><strong>Sites/Zones:</strong> Phân chia môi trường theo nhóm asset, VLAN, business unit</span></div>
+      <div class="deploy-step"><div class="step-num">5</div><span><strong>Reporting:</strong> Dashboard tập trung, tự động gửi báo cáo theo lịch</span></div>
+      <div class="deploy-step"><div class="step-num">6</div><span><strong>SIEM Integration:</strong> Forward events qua Syslog/API tới SIEM (nếu có)</span></div>
+    </div>
+  </div>
+
+  <!-- Model 3 -->
+  <div class="deploy-model">
+    <div class="deploy-title">
+      Mô Hình 3: Cloud + Hybrid (SaaS Management)
+      <span class="deploy-badge" style="background: rgba(168,85,247,0.1); color: var(--qualys); border: 1px solid rgba(168,85,247,0.2);">Qualys VMDR / Rapid7 InsightVM</span>
+    </div>
+    <div class="deploy-desc">
+      Management console hosted trên cloud của vendor. Scan Engines (appliance hoặc agent) cài on-premise. Phù hợp cho doanh nghiệp có kết nối internet ổn định, muốn tối giản infrastructure nhưng cần scan on-premise assets.
+    </div>
+    <div class="deploy-steps">
+      <div class="deploy-step"><div class="step-num">1</div><span><strong>Cloud Console:</strong> Truy cập web portal của vendor (không cần cài đặt)</span></div>
+      <div class="deploy-step"><div class="step-num">2</div><span><strong>Scanner Appliance:</strong> Virtual appliance cài trong môi trường on-prem, tunnel về cloud</span></div>
+      <div class="deploy-step"><div class="step-num">3</div><span><strong>Cloud Agents:</strong> Cài agent nhẹ trên endpoint (server, laptop) để scan liên tục</span></div>
+      <div class="deploy-step"><div class="step-num">4</div><span><strong>Cloud Assets:</strong> API connection tới AWS/Azure/GCP để scan cloud workload</span></div>
+      <div class="deploy-step"><div class="step-num">5</div><span><strong>Data Sovereignty:</strong> Cần xem xét quy định về dữ liệu bảo mật nội bộ được gửi ra cloud</span></div>
+    </div>
+    <div class="note-box" style="margin-top: 16px; padding: 12px 16px;">
+      <strong>⚠ Cảnh báo cho tổ chức Việt Nam:</strong> Theo Nghị định 13/2023/NĐ-CP về bảo vệ dữ liệu cá nhân và các quy định ATTT quốc gia, <strong>dữ liệu kết quả scan (bao gồm danh sách CVE, tên hệ thống, IP address)</strong> của hạ tầng quan trọng/nhà nước không nên được lưu trữ trên cloud nước ngoài. Mô hình on-premise hoàn toàn (Model 1 hoặc 2) được khuyến nghị cho cơ quan nhà nước và tổ chức quân sự.
+    </div>
+  </div>
+
+  <!-- Decision Guide -->
+  <div class="card" style="margin-top: 24px; border-color: rgba(0,212,255,0.2);">
+    <div class="card-title">Hướng dẫn chọn mô hình triển khai</div>
+    <div class="feat-table-wrap">
+      <table class="feat-table">
+        <thead>
+          <tr>
+            <th>Tiêu chí tổ chức</th>
+            <th>Mô hình phù hợp</th>
+            <th>Giải pháp khuyến nghị</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Cơ quan quân đội/quốc phòng, không có internet</td><td class="check">Model 1 (Cơ động)</td><td style="color: var(--tenable);">Tenable Nessus Pro</td></tr>
+          <tr><td>Hạ tầng quan trọng, on-premise bắt buộc</td><td class="check">Model 2 (On-prem tập trung)</td><td style="color: var(--tenable);">Tenable SC / Qualys appliance</td></tr>
+          <tr><td>Doanh nghiệp có internet, cần workflow mạnh</td><td>Model 3 (Cloud hybrid)</td><td style="color: var(--rapid7);">Rapid7 InsightVM</td></tr>
+          <tr><td>Doanh nghiệp lớn, hybrid cloud, cần compliance</td><td>Model 3 (Cloud hybrid)</td><td style="color: var(--qualys);">Qualys VMDR</td></tr>
+          <tr><td>Tổ chức ngân sách thấp, có kỹ thuật cao</td><td>Model 2 (On-prem)</td><td style="color: var(--greenbone);">Greenbone Enterprise</td></tr>
+          <tr><td>Windows-heavy, đã có Microsoft E5</td><td>Model 3 (Cloud)</td><td style="color: var(--microsoft);">Microsoft MDVM</td></tr>
+          <tr><td>Doanh nghiệp cần VM + Patch tích hợp, TCO thấp</td><td>Model 3 (Cloud hybrid)</td><td style="color: var(--secpod);">SecPod SanerNow CVEM</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ════ S11: REFERENCES ════ -->
+<section class="section" id="s11">
+  <div class="section-header">
+    <span class="section-num">11</span>
+    <h2 class="section-title">Tài Liệu <span>Tham Chiếu</span></h2>
+  </div>
+
+  <div class="ref-item"><span class="ref-num">01</span><div class="ref-content"><div class="ref-title"><a href="https://www.idc.com/getdoc.jsp?containerId=US52994525" target="_blank" style="color:#fff;text-decoration:none;">IDC MarketScape: Worldwide Exposure Management, 2025 Vendor Assessment</a></div><div class="ref-source">IDC · Doc #US52994525 · August 2025 · idc.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">02</span><div class="ref-content"><div class="ref-title"><a href="https://www.grandviewresearch.com/industry-analysis/security-and-vulnerability-management-svm-market" target="_blank" style="color:#fff;text-decoration:none;">Global Security and Vulnerability Management Market Report 2024–2030</a></div><div class="ref-source">Grand View Research · 2025 · grandviewresearch.com · Market size: $16.51B (2024) → $24.47B (2030), CAGR 6.8%</div></div></div>
+  <div class="ref-item"><span class="ref-num">03</span><div class="ref-content"><div class="ref-title"><a href="https://www.mordorintelligence.com/industry-reports/vulnerability-management-solutions-market" target="_blank" style="color:#fff;text-decoration:none;">Vulnerability Management Solutions Market Report 2025–2030</a></div><div class="ref-source">Mordor Intelligence · 2025 · mordorintelligence.com · CAGR 8.0%</div></div></div>
+  <div class="ref-item"><span class="ref-num">04</span><div class="ref-content"><div class="ref-title"><a href="https://www.tenable.com/products/nessus/nessus-professional" target="_blank" style="color:#fff;text-decoration:none;">Tenable Nessus Professional — Product Documentation & Data Sheet</a></div><div class="ref-source">Tenable, Inc. · 2025 · tenable.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">05</span><div class="ref-content"><div class="ref-title"><a href="https://docs.tenable.com/nessus/Content/GettingStarted.htm" target="_blank" style="color:#fff;text-decoration:none;">Tenable Nessus 10.12 Release Notes & User Guide</a></div><div class="ref-source">Tenable, Inc. · 2025 · docs.tenable.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">06</span><div class="ref-content"><div class="ref-title"><a href="https://www.rapid7.com/solutions/network-vulnerability-scanner/" target="_blank" style="color:#fff;text-decoration:none;">Rapid7 InsightVM — Network Vulnerability Scanner Features</a></div><div class="ref-source">Rapid7, Inc. · 2025 · rapid7.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">07</span><div class="ref-content"><div class="ref-title"><a href="https://docs.rapid7.com/insightvm/" target="_blank" style="color:#fff;text-decoration:none;">Rapid7 InsightVM Product Documentation</a></div><div class="ref-source">Rapid7, Inc. · 2025 · docs.rapid7.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">08</span><div class="ref-content"><div class="ref-title"><a href="https://www.qualys.com/apps/vulnerability-management-detection-response" target="_blank" style="color:#fff;text-decoration:none;">Qualys VMDR — Vulnerability Management Detection and Response</a></div><div class="ref-source">Qualys, Inc. · 2025 · qualys.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">09</span><div class="ref-content"><div class="ref-title"><a href="https://docs.qualys.com/en/vmdr/latest/about_qualys_vm_vmdr.htm" target="_blank" style="color:#fff;text-decoration:none;">Qualys VMDR Release Notes & Documentation</a></div><div class="ref-source">Qualys, Inc. · 2025 · docs.qualys.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">10</span><div class="ref-content"><div class="ref-title"><a href="https://underdefense.com/industry-pricings/tenable-pricing-2025-ultimate-guide-for-security-products/" target="_blank" style="color:#fff;text-decoration:none;">Tenable Pricing Guide 2025–2026</a></div><div class="ref-source">UnderDefense Research · February 2026 · underdefense.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">11</span><div class="ref-content"><div class="ref-title"><a href="https://underdefense.com/industry-pricings/qualys-pricing-ultimate-guide-for-security-products/" target="_blank" style="color:#fff;text-decoration:none;">Qualys Pricing Guide 2025–2026</a></div><div class="ref-source">UnderDefense Research · 2026 · underdefense.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">12</span><div class="ref-content"><div class="ref-title"><a href="https://technologymatch.com/blog/tenable-vs-qualys-vs-rapid7-vm-platform-comparison" target="_blank" style="color:#fff;text-decoration:none;">Tenable vs Qualys vs Rapid7: IT Leader's Definitive VM Guide</a></div><div class="ref-source">TechnologyMatch · April 2026 · technologymatch.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">13</span><div class="ref-content"><div class="ref-title"><a href="https://www.gartner.com/reviews/market/vulnerability-assessment/compare/rapid7-vs-tenable" target="_blank" style="color:#fff;text-decoration:none;">Rapid7 vs Tenable — Verified User Reviews</a></div><div class="ref-source">Gartner Peer Insights · 2025–2026 · gartner.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">14</span><div class="ref-content"><div class="ref-title"><a href="https://www.gartner.com/reviews/product/qualys-vmdr" target="_blank" style="color:#fff;text-decoration:none;">Qualys VMDR Reviews & Ratings 2026</a></div><div class="ref-source">Gartner Peer Insights · 2026 · gartner.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">15</span><div class="ref-content"><div class="ref-title"><a href="https://medium.com/@scottbolen/the-most-used-enterprise-level-vulnerability-scanning-tools-in-2025-pros-and-cons-1b8c6e914167" target="_blank" style="color:#fff;text-decoration:none;">The Most Used Enterprise Vulnerability Scanning Tools in 2025</a></div><div class="ref-source">Scott Bolen / RONIN OWL CTI · Medium · January 2025</div></div></div>
+  <div class="ref-item"><span class="ref-num">16</span><div class="ref-content"><div class="ref-title"><a href="https://underdefense.com/blog/tenable-alternatives-2026-9-vulnerability-exposure-platforms/" target="_blank" style="color:#fff;text-decoration:none;">9 Tenable Alternatives 2026: Vulnerability & Exposure Platforms</a></div><div class="ref-source">UnderDefense · December 2025 · underdefense.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">17</span><div class="ref-content"><div class="ref-title"><a href="https://www.businesswire.com/news/home/20250401039762/en/Vulnerability-Management-Research-Report-2025-A-Highly-Concentrated-$24.08-Billion-Market-by-2030-with-the-Top-3-Players-Accounting-for-60-Share---ResearchAndMarkets.com" target="_blank" style="color:#fff;text-decoration:none;">Vulnerability Management Market Research Report 2025 — $24.08B by 2030, Top 3 Players Hold 60%</a></div><div class="ref-source">ResearchAndMarkets / BusinessWire · April 2025</div></div></div>
+  <div class="ref-item"><span class="ref-num">18</span><div class="ref-content"><div class="ref-title"><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" style="color:#fff;text-decoration:none;">CISA KEV — Known Exploited Vulnerabilities Catalog</a></div><div class="ref-source">U.S. CISA · cisa.gov</div></div></div>
+  <div class="ref-item"><span class="ref-num">19</span><div class="ref-content"><div class="ref-title"><a href="https://valydex.com/tenable-nessus-review" target="_blank" style="color:#fff;text-decoration:none;">Tenable Nessus Review 2025–2026 (Accuracy & Pricing)</a></div><div class="ref-source">Valydex Research · January 2026 · valydex.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">20</span><div class="ref-content"><div class="ref-title"><a href="https://www.secpod.com/saner-cvem/" target="_blank" style="color:#fff;text-decoration:none;">SecPod SanerNow CVEM — Platform Overview & Features</a></div><div class="ref-source">SecPod Technologies · 2025 · secpod.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">21</span><div class="ref-content"><div class="ref-title"><a href="https://www.secpod.com/vulnerability-management/" target="_blank" style="color:#fff;text-decoration:none;">SecPod SanerNow — Vulnerability Management Module</a></div><div class="ref-source">SecPod Technologies · 2025 · secpod.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">22</span><div class="ref-content"><div class="ref-title"><a href="https://www.gartner.com/reviews/market/vulnerability-assessment/vendor/secpod/product/saner-cvem" target="_blank" style="color:#fff;text-decoration:none;">SecPod Saner CVEM Reviews, Ratings & Features 2025</a></div><div class="ref-source">Gartner Peer Insights · 2025 · gartner.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">23</span><div class="ref-content"><div class="ref-title"><a href="https://www.cyberdefensemagazine.com/innovator-spotlight-secpod/" target="_blank" style="color:#fff;text-decoration:none;">Innovator Spotlight: SecPod SanerNow Platform</a></div><div class="ref-source">Cyber Defense Magazine · August 2024 · cyberdefensemagazine.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">24</span><div class="ref-content"><div class="ref-title"><a href="https://aws.amazon.com/marketplace/pp/prodview-ephqfjxudsp7a" target="_blank" style="color:#fff;text-decoration:none;">Saner CVEM on AWS Marketplace — User Reviews</a></div><div class="ref-source">AWS Marketplace · 2025 · aws.amazon.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">25</span><div class="ref-content"><div class="ref-title"><a href="https://www.comparitech.com/net-admin/sanernow-vulnerability-management-review/" target="_blank" style="color:#fff;text-decoration:none;">SanerNow Vulnerability Management Review 2025</a></div><div class="ref-source">Comparitech · March 2025 · comparitech.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">26</span><div class="ref-content"><div class="ref-title"><a href="https://www.tenable.com/products/competitive-comparison" target="_blank" style="color:#fff;text-decoration:none;">Tenable vs Industry Vulnerability Management Solutions</a></div><div class="ref-source">Tenable, Inc. · 2025 · tenable.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">27</span><div class="ref-content"><div class="ref-title"><a href="https://www.rapid7.com/solutions/vulnerability-management/" target="_blank" style="color:#fff;text-decoration:none;">Rapid7 Vulnerability Management Solutions Overview</a></div><div class="ref-source">Rapid7, Inc. · 2025 · rapid7.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">28</span><div class="ref-content"><div class="ref-title"><a href="https://blog.qualys.com/product-tech/2025/02/24/from-vulnerability-scanning-to-risk-management-the-complete-vmdr-advantage" target="_blank" style="color:#fff;text-decoration:none;">From Vulnerability Scanning to Risk Management: The Complete VMDR Advantage</a></div><div class="ref-source">Qualys Blog · February 2025 · blog.qualys.com</div></div></div>
+  <div class="ref-item"><span class="ref-num">29</span><div class="ref-content"><div class="ref-title"><a href="https://www.vicarius.io/articles/choosing-a-vulnerability-management-solution-market-growth-and-must-have-features-for-2025-and-beyond" target="_blank" style="color:#fff;text-decoration:none;">Choosing a Vulnerability Management Solution: Market Growth and Must-Have Features for 2025</a></div><div class="ref-source">Vicarius · October 2025 · vicarius.io</div></div></div>
+  <div class="ref-item"><span class="ref-num">30</span><div class="ref-content"><div class="ref-title"><a href="https://luatminhkhue.vn/nghi-dinh-13-2023-nd-cp-quy-dinh-ve-bao-ve-du-lieu-ca-nhan.aspx" target="_blank" style="color:#fff;text-decoration:none;">Nghị định 13/2023/NĐ-CP về Bảo vệ Dữ liệu Cá nhân</a></div><div class="ref-source">Chính phủ Việt Nam · Tháng 4/2023 · Có hiệu lực từ 01/07/2023</div></div></div>
+
+  <div class="note-box" style="margin-top: 24px;">
+    <strong>Lưu ý về tài liệu:</strong> Tài liệu này được tổng hợp vào tháng 5/2026 dựa trên thông tin công khai, báo cáo phân tích thị trường và tài liệu kỹ thuật của các hãng. Giá cả và tính năng có thể thay đổi — vui lòng xác nhận với vendor hoặc reseller trước khi ra quyết định mua hàng. Thông tin giá USD là US list price; giá Việt Nam thực tế có thể khác.
+  </div>
+</section>
+
+</div><!-- /main -->
+
+<!-- FOOTER -->
+<footer style="padding: 30px 60px; border-top: 1px solid var(--border); background: var(--bg2); display: flex; justify-content: space-between; align-items: center; flex-wrap: gap; margin-top: 0;">
+  <div style="font-size: 12px; color: var(--text3); font-family: 'JetBrains Mono', monospace;">SECURITY INTELLIGENCE REPORT · DÒ QUÉT LỖ HỔNG BẢO MẬT MẠNG · 2025</div>
+  <div style="font-size: 12px; color: var(--text3);">Tổng hợp bởi Claude Sonnet · Tháng 5/2026</div>
+</footer>
+
+<script>
+  document.querySelectorAll('.score-fill').forEach(el => {
+    el.style.width = '0%';
+    setTimeout(() => {
+      el.style.transition = 'width 1s ease';
+      el.style.width = el.getAttribute('style').match(/width:\s*(\S+)/)?.[1] || '0%';
+    }, 400);
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.score-fill').forEach(el => {
+          const targetWidth = el.dataset.target;
+          if (targetWidth) {
+            el.style.width = targetWidth;
+          }
+        });
+      }
+    });
+  });
+
+  document.querySelectorAll('.rank-table tr').forEach(row => observer.observe(row));
+</script>
+
+</body>
+</html>

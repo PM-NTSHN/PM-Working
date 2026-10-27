@@ -1,0 +1,470 @@
+<!--
+Palette Name: Vibrant Cyber Shield (Slate-900, Cyan-500, Emerald-500, Amber-500)
+Narrative Plan:
+1. Hero/Intro: Hook the sales team with the core value proposition of physical network isolation.
+2. The Problem: Explain IT/OT convergence and why traditional firewalls fail (detailed analysis, no charts).
+3. The Solution & Architecture: Define Optical Diode (USG) and BSG using detailed HTML/CSS flexbox flow diagrams.
+4. Core Features: Highlight key selling points (speed, protocol breaks, integrations) with Unicode icons.
+5. Competitor Comparison: Standard clear comparison table mapping OPSWAT vs Legacy Diodes vs Firewall.
+6. Use Cases & Customers: Target industries and Vietnamese reference cases (EVN, Ministry of Public Security).
+7. Sales FAQ: Essential Q&A covering sizing, lifetime perpetual licensing, and built-in free connectors.
+Visualization Choices:
+- Architecture Diagrams -> Goal: Organize -> Pure HTML/CSS Nodes and Arrows -> Justification: Explains data isolation without SVG or Mermaid.
+- Competitor Matrix -> Goal: Compare -> Responsive HTML Table -> Justification: Offers a highly readable comparison table for sales.
+CONFIRMATION: NEITHER Mermaid JS NOR SVG were used anywhere in the output.
+-->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cẩm Nang Giải Pháp: OPSWAT Optical Diode & BSG</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        .sidebar-link.active {
+            background-color: #0e7490;
+            color: #ffffff;
+        }
+        .accordion-content.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <header class="bg-slate-900 text-white py-10 px-6 border-b-4 border-cyan-500 shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div>
+                <span class="bg-cyan-500 text-slate-950 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">Tài liệu Sales thực chiến</span>
+                <h1 class="text-3xl md:text-5xl font-extrabold mt-2 tracking-tight">Cẩm Nang Giải Pháp OPSWAT</h1>
+                <p class="text-cyan-400 text-lg md:text-xl font-medium mt-1">MetaDefender Optical Diode & Bilateral Security Gateway (BSG)</p>
+            </div>
+            <div class="text-right bg-slate-800 p-4 rounded-lg border border-slate-700">
+                <p class="text-xs text-slate-400">Phiên bản: 2026.1</p>
+                <p class="text-sm font-semibold text-slate-200">Dành riêng cho Đội ngũ Kinh doanh</p>
+                <p class="text-xs text-emerald-400 font-medium flex items-center justify-end gap-1 mt-1">
+                    <span class="inline-block w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse"></span> Sẵn sàng tác chiến
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl w-full mx-auto flex-1 grid grid-cols-1 lg:grid-cols-4 gap-8 py-8 px-6">
+        
+        <aside class="lg:col-span-1 space-y-4">
+            <div class="sticky top-6 bg-white p-4 rounded-xl shadow-md border border-slate-200">
+                <h3 class="text-xs font-bold uppercase text-slate-400 tracking-wider mb-3 px-2">Mục lục nhanh</h3>
+                <nav class="space-y-1">
+                    <a href="#tong-quan" class="block px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 rounded-lg transition">1. Tổng quan Hãng & Giải pháp</a>
+                    <a href="#hien-trang" class="block px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 rounded-lg transition">2. Nỗi đau & Hiện trạng mạng</a>
+                    <a href="#kien-truc" class="block px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 rounded-lg transition">3. Kiến trúc Diode & BSG</a>
+                    <a href="#tinh-nang" class="block px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 rounded-lg transition">4. Tính năng nổi bật cho Sales</a>
+                    <a href="#so-sanh" class="block px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 rounded-lg transition">5. Bảng so sánh Đối thủ</a>
+                    <a href="#usecase" class="block px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 rounded-lg transition">6. Use Cases & Tham chiếu</a>
+                    <a href="#faq" class="block px-3 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-100 rounded-lg transition">7. Hỏi đáp FAQ thực chiến</a>
+                </nav>
+            </div>
+        </aside>
+
+        <section class="lg:col-span-3 space-y-10">
+
+            <div id="tong-quan" class="bg-white p-6 rounded-2xl shadow-md border border-slate-100 scroll-mt-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-3xl">🏢</span>
+                    <h2 class="text-2xl font-bold text-slate-900">1. Giới thiệu nhanh về Hãng và Giải pháp</h2>
+                </div>
+                <p class="text-slate-600 leading-relaxed mb-4">
+                    <strong>OPSWAT</strong> là hãng công nghệ bảo mật hàng đầu thế giới chuyên về bảo vệ hạ tầng trọng yếu (Critical Infrastructure Protection - CIP). Giải pháp phân tách mạng cứng của hãng bao gồm hai dòng sản phẩm chủ lực:
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                    <div class="p-4 bg-cyan-50 rounded-xl border border-cyan-100">
+                        <h3 class="font-bold text-cyan-900 text-lg flex items-center gap-2">
+                            <span>🔵</span> MetaDefender Optical Diode (USG)
+                        </h3>
+                        <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                            Thiết bị cổng an ninh một chiều vật lý. Sử dụng công nghệ diốt quang học (Optical Diode) truyền dữ liệu bằng tia laser để đảm bảo dữ liệu chỉ có thể đi theo duy nhất một chiều từ vùng bảo mật cao (OT) sang vùng bảo mật thấp (IT). Không thể đi ngược lại về mặt vật lý.
+                        </p>
+                    </div>
+                    <div class="p-4 bg-emerald-50 rounded-xl border border-emerald-100">
+                        <h3 class="font-bold text-emerald-900 text-lg flex items-center gap-2">
+                            <span>🟢</span> Bilateral Security Gateway (BSG)
+                        </h3>
+                        <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                            Thiết bị cổng an ninh hai chiều có kiểm soát khắt khe đạt chuẩn IEC 62443. Phục vụ cho các nhu cầu đồng bộ dữ liệu đặc thù đòi hỏi bắt tay tín hiệu (TCP handshake) hoặc phản hồi hai chiều nhưng vẫn đảm bảo cách ly hoàn toàn lớp mạng bên trong, không cho phép lây nhiễm chéo IP/MAC.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="hien-trang" class="bg-white p-6 rounded-2xl shadow-md border border-slate-100 scroll-mt-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-3xl">⚠️</span>
+                    <h2 class="text-2xl font-bold text-slate-900">2. Nỗi đau hiện tại của Khách hàng & Hiện trạng mạng</h2>
+                </div>
+                <p class="text-slate-600 leading-relaxed mb-4 font-semibold text-slate-800">
+                    Để thuyết phục khách hàng chi tiền cho giải pháp an ninh biên cứng, Sales cần chỉ rõ những lỗ hổng chí mạng của hệ thống mạng hiện tại và lý do tại sao họ bắt buộc phải trang bị giải pháp giám sát mạng toàn diện:
+                </p>
+                <div class="space-y-4">
+                    <div class="flex gap-4 p-4 hover:bg-slate-50 rounded-xl transition border border-transparent hover:border-slate-100">
+                        <div class="text-2xl text-rose-500 font-black">01</div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-base">Hội tụ IT/OT phá vỡ hoàn toàn vùng đệm an toàn (Air-Gap)</h4>
+                            <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
+                                Để phục vụ báo cáo số liệu vận hành sản xuất, giám sát thời gian thực và quản lý tập trung, các đơn vị vận hành bắt buộc phải kết nối hệ thống điều khiển công nghiệp (OT/ICS) với mạng văn phòng (IT). Việc xóa bỏ ranh giới vật lý này vô tình mở đường cho tin tặc từ Internet luồn sâu vào hệ thống SCADA/DCS để phá hoại máy móc vật lý.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 p-4 hover:bg-slate-50 rounded-xl transition border border-transparent hover:border-slate-100">
+                        <div class="text-2xl text-rose-500 font-black">02</div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-base">Tường lửa (Firewall) thông thường là phòng tuyến phần mềm dễ tổn thương</h4>
+                            <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
+                                Nhiều đơn vị vẫn tự tin dùng Firewall để chia tách IT/OT. Tuy nhiên, Firewall hoạt động bằng mã lệnh phần mềm (Software-defined). Khi xảy ra lỗ hổng bảo mật Zero-day chưa được vá trên chính Firewall, hoặc khi nhân viên quản trị mắc sai sót trong việc cấu hình mở cổng (Port forwarding), tin tặc lập tức chiếm quyền kiểm soát Firewall và thực hiện di chuyển ngang (Lateral Movement) từ IT sang OT.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 p-4 hover:bg-slate-50 rounded-xl transition border border-transparent hover:border-slate-100">
+                        <div class="text-2xl text-rose-500 font-black">03</div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-base">Rủi ro tê liệt hệ thống do mã độc tống tiền (Ransomware) lây nhiễm chéo</h4>
+                            <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
+                                Mã độc tống tiền thường xâm nhập từ email, thiết bị USB của nhân viên tại mạng IT. Nếu giữa IT và OT tồn tại kết nối mạng hai chiều thông thường qua Firewall, mã độc sẽ tự động quét và lây lan cực nhanh sang các máy chủ vận hành, làm tê liệt toàn bộ nhà máy phát điện, lọc dầu hoặc hệ thống điều phối quốc gia.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4 p-4 hover:bg-slate-50 rounded-xl transition border border-transparent hover:border-slate-100">
+                        <div class="text-2xl text-rose-500 font-black">04</div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 text-base">Yêu cầu khắt khe từ Luật An ninh mạng và Tiêu chuẩn ngành</h4>
+                            <p class="text-sm text-slate-600 mt-1.5 leading-relaxed">
+                                Các hệ thống hạ tầng thông tin trọng yếu quốc gia (Cấp độ 4 và Cấp độ 5 theo Nghị định 85/2016/NĐ-CP) và các tiêu chuẩn an ninh quốc tế (IEC 62443, NERC CIP) nghiêm cấm việc kết nối trực tiếp hoặc chỉ sử dụng các biện pháp bảo mật logic mềm để phân tách mạng. Khách hàng bắt buộc phải có giải pháp cô lập cứng bằng thiết bị chuyên dụng.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="kien-truc" class="bg-white p-6 rounded-2xl shadow-md border border-slate-100 scroll-mt-6">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="text-3xl">📐</span>
+                    <h2 class="text-2xl font-bold text-slate-900">3. Kiến trúc Luồng dữ liệu của Giải pháp</h2>
+                </div>
+                <p class="text-slate-600 leading-relaxed mb-6">
+                    Giải pháp của OPSWAT phân tách triệt để mạng bằng cách sử dụng cấu trúc phần cứng chuyên biệt gồm 2 Node riêng biệt: **Node BLUE (Vùng OT tin cậy)** và **Node RED (Vùng IT bên ngoài)**.
+                </p>
+
+                <div class="space-y-8">
+                    <div class="p-6 bg-slate-900 text-white rounded-xl shadow-inner">
+                        <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-2">
+                            <h3 class="font-bold text-cyan-400">KIẾN TRÚC 1: OPTICAL DIODE (TRUYỀN MỘT CHIỀU VẬT LÝ TUYỆT ĐỐI)</h3>
+                            <span class="text-xs bg-cyan-500/10 text-cyan-400 px-2 py-0.5 rounded border border-cyan-500/20">USG</span>
+                        </div>
+                        <div class="flex flex-col md:flex-row items-center justify-between gap-4 py-4">
+                            <div class="flex flex-col items-center bg-emerald-900/60 p-4 rounded-lg w-full md:w-1/3 border border-emerald-500/30 text-center">
+                                <span class="text-2xl mb-1">🏭</span>
+                                <span class="font-bold text-emerald-400">VÙNG OT (BLUE)</span>
+                                <span class="text-xs text-slate-300 mt-1">Dữ liệu sản xuất, Syslog, OPC UA</span>
+                            </div>
+                            
+                            <div class="flex flex-col items-center justify-center w-full md:w-1/3">
+                                <div class="bg-slate-800 p-3 rounded-lg border border-cyan-500 w-full text-center">
+                                    <span class="text-xs text-slate-400 block mb-1">Cáp quang truyền dẫn đơn hướng</span>
+                                    <div class="flex items-center justify-center gap-2 text-cyan-400 font-extrabold text-lg">
+                                        <span>TX</span>
+                                        <span>⚡────────────────🚥</span>
+                                        <span class="text-red-500 line-through">RX</span>
+                                    </div>
+                                    <span class="text-[10px] text-rose-400 block mt-1 font-semibold">Cắt đứt dây quang nhận (RX) vật lý</span>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col items-center bg-rose-950/60 p-4 rounded-lg w-full md:w-1/3 border border-rose-500/30 text-center">
+                                <span class="text-2xl mb-1">🖥️</span>
+                                <span class="font-bold text-rose-400">VÙNG IT (RED)</span>
+                                <span class="text-xs text-slate-300 mt-1">Phân tích dữ liệu, SIEM/SOC, Cloud</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-400 italic text-center mt-2">
+                            * Nguyên lý: Sợi quang chỉ có đầu phát laser (TX) ở phía OT và đầu thu quang (RX) ở phía IT. Đảm bảo hacker tại vùng IT không có cách nào gửi ngược bất cứ một bit dữ liệu nào về OT.
+                        </p>
+                    </div>
+
+                    <div class="p-6 bg-slate-900 text-white rounded-xl shadow-inner">
+                        <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-2">
+                            <h3 class="font-bold text-emerald-400">KIẾN TRÚC 2: BILATERAL SECURITY GATEWAY (TRUYỀN HAI CHIỀU CÓ KIỂM SOÁT)</h3>
+                            <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-0.5 rounded border border-emerald-500/20">BSG</span>
+                        </div>
+                        <div class="flex flex-col md:flex-row items-center justify-between gap-4 py-4">
+                            <div class="flex flex-col items-center bg-emerald-900/60 p-4 rounded-lg w-full md:w-1/3 border border-emerald-500/30 text-center">
+                                <span class="text-2xl mb-1">🏭</span>
+                                <span class="font-bold text-emerald-400">VÙNG OT (BLUE)</span>
+                                <span class="text-xs text-slate-300 mt-1">SQL Publisher, OPC DA/UA</span>
+                            </div>
+                            
+                            <div class="flex flex-col items-center justify-center w-full md:w-1/3">
+                                <div class="bg-slate-800 p-3 rounded-lg border border-emerald-500 w-full text-center">
+                                    <span class="text-xs text-slate-400 block mb-1">Giao thức không định tuyến chuyên biệt</span>
+                                    <div class="flex items-center justify-center gap-2 text-emerald-400 font-extrabold text-sm">
+                                        <span>Handshake Cô lập</span>
+                                    </div>
+                                    <div class="text-xs text-slate-300 font-mono mt-1">◄ ─── Kênh truyền kín ─── ►</div>
+                                    <span class="text-[10px] text-amber-400 block mt-1 font-semibold">Tự động hủy IP/MAC nguồn - đích</span>
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col items-center bg-rose-950/60 p-4 rounded-lg w-full md:w-1/3 border border-rose-500/30 text-center">
+                                <span class="text-2xl mb-1">🖥️</span>
+                                <span class="font-bold text-rose-400">VÙNG IT (RED)</span>
+                                <span class="text-xs text-slate-300 mt-1">SQL Subscriber, Historian Server</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-400 italic text-center mt-2">
+                            * Nguyên lý: Sử dụng cặp card giao tiếp độc quyền liên kết chặt chẽ qua cáp PCI chuyên dụng. Dữ liệu mạng đầu vào bị bóc tách hoàn toàn lớp IP/MAC, chỉ đóng gói payload truyền qua, ngăn chặn triệt để tấn công định tuyến mạng thông thường.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tinh-nang" class="bg-white p-6 rounded-2xl shadow-md border border-slate-100 scroll-mt-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-3xl">🎯</span>
+                    <h2 class="text-2xl font-bold text-slate-900">4. Tính năng của Giải pháp (Ngắn gọn để tư vấn)</h2>
+                </div>
+                <p class="text-slate-600 leading-relaxed mb-6">
+                    Sales cần trình bày các thế mạnh cốt lõi dưới đây để thuyết phục khách hàng thay thế tường lửa truyền thống bằng OPSWAT Diode/BSG:
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex gap-3">
+                        <span class="text-2xl">⚡</span>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Phá vỡ Giao thức (Protocol Break)</h4>
+                            <p class="text-sm text-slate-600 mt-1">
+                                Chuyển đổi toàn bộ dữ liệu mạng (TCP/IP, v.v.) thành luồng truyền dẫn không định tuyến độc quyền. Triệt tiêu mọi khả năng tin tặc dò quét IP hoặc thiết lập kết nối từ xa vào hệ thống OT.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <span class="text-2xl">🔌</span>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Bản quyền Tích hợp Sẵn Connector</h4>
+                            <p class="text-sm text-slate-600 mt-1">
+                                Hỗ trợ đầy đủ các giao thức truyền thông công nghiệp (OPC UA, Modbus, MQTT, Syslog, SQL, AVEVA/OSI PI...) tích hợp sẵn ngay trong thiết bị, không bắt mua license rời cho từng loại connector.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <span class="text-2xl">⏱️</span>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Hiệu năng Thời gian thực vượt trội</h4>
+                            <p class="text-sm text-slate-600 mt-1">
+                                Băng thông linh hoạt từ 10 Mbps đến 10 Gbps với độ trễ truyền dữ liệu dưới 1ms (đạt mốc cực thấp ~0.6ms), đảm bảo tính liên tục của hệ thống điều khiển công nghiệp.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <span class="text-2xl">🛡️</span>
+                        <div>
+                            <h4 class="font-bold text-slate-900">Chứng nhận Bảo mật Cao nhất</h4>
+                            <p class="text-sm text-slate-600 mt-1">
+                                Đạt chứng chỉ Common Criteria EAL4+ cho dòng Unidirectional Security Gateway (USG) và chứng nhận an ninh công nghiệp chuẩn IEC 62443 cho dòng Bilateral Security Gateway (BSG).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="so-sanh" class="bg-white p-6 rounded-2xl shadow-md border border-slate-100 scroll-mt-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-3xl">📊</span>
+                    <h2 class="text-2xl font-bold text-slate-900">5. So sánh với Đối thủ trên Thị trường</h2>
+                </div>
+                <p class="text-slate-600 leading-relaxed mb-6">
+                    Bảng so sánh trực diện giúp sales chỉ ra điểm yếu của tường lửa thông thường và các thiết bị diốt thế hệ cũ để làm nổi bật vị thế của OPSWAT:
+                </p>
+                
+                <div class="overflow-x-auto rounded-xl border border-slate-200">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-900 text-white text-xs uppercase">
+                            <tr>
+                                <th class="p-4">Tiêu chí so sánh</th>
+                                <th class="p-4 bg-cyan-950 text-cyan-400">OPSWAT Diode / BSG</th>
+                                <th class="p-4">Diodes Thế hệ cũ (Owl, Waterfall...)</th>
+                                <th class="p-4">Tường lửa (Firewall IT/OT)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200">
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-4 font-bold text-slate-900">Phương pháp cách ly</td>
+                                <td class="p-4 bg-cyan-50/50 text-emerald-700 font-semibold">Cứng vật lý một chiều (Laser) & Phá giao thức</td>
+                                <td class="p-4 text-slate-600">Cách ly một chiều quang học</td>
+                                <td class="p-4 text-rose-600 font-semibold">Mềm logic (bằng luật cấu hình phần mềm)</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-4 font-bold text-slate-900">Hỗ trợ Connector</td>
+                                <td class="p-4 bg-cyan-50/50 text-emerald-700 font-semibold">Tích hợp sẵn mọi loại công nghiệp, không tốn thêm tiền license</td>
+                                <td class="p-4 text-rose-600">Phải mua thêm bản quyền rời cho từng giao thức rất đắt đỏ</td>
+                                <td class="p-4 text-slate-600">Hỗ trợ qua cấu hình cổng, nhưng không phá giao thức</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-4 font-bold text-slate-900">Chi phí đầu tư (TCO)</td>
+                                <td class="p-4 bg-cyan-50/50 text-emerald-700 font-semibold">Hợp lý, linh hoạt dòng DIN Rail & 1U, license vĩnh viễn</td>
+                                <td class="p-4 text-rose-600">Cực kỳ đắt đỏ, triển khai phức tạp và khó vận hành</td>
+                                <td class="p-4 text-slate-600">Rẻ hơn lúc đầu nhưng tốn kém vận hành & kiểm định định kỳ</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="p-4 font-bold text-slate-900">Hệ sinh thái An toàn</td>
+                                <td class="p-4 bg-cyan-50/50 text-emerald-700 font-semibold">Kết nối liền mạch với Kiosk, Client, Core diệt virus</td>
+                                <td class="p-4 text-slate-600">Độc lập, không có hệ sinh thái an ninh file đi kèm</td>
+                                <td class="p-4 text-slate-600">Cần mua thêm nhiều module từ nhiều hãng khác nhau</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="usecase" class="bg-white p-6 rounded-2xl shadow-md border border-slate-100 scroll-mt-6">
+                <div class="flex items-center gap-3 mb-4">
+                    <span class="text-3xl">🏭</span>
+                    <h2 class="text-2xl font-bold text-slate-900">6. Các Use Case cụ thể & Khách hàng Tham chiếu</h2>
+                </div>
+                
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-lg mb-3">Các kịch bản ứng dụng thực tế:</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-150">
+                                <h4 class="font-bold text-slate-900">Đồng bộ dữ liệu Historian</h4>
+                                <p class="text-sm text-slate-600 mt-1">
+                                    Đẩy dữ liệu từ hệ thống lưu trữ lịch sử vận hành nhà máy (OSI PI, AVEVA PI, AspenTech IP.21) từ vùng OT ra mạng IT phục vụ phân tích báo cáo cho ban lãnh đạo mà không tạo nguy cơ lây nhiễm ngược mã độc.
+                                </p>
+                            </div>
+                            <div class="p-4 bg-slate-50 rounded-xl border border-slate-150">
+                                <h4 class="font-bold text-slate-900">Giám sát Tập trung SOC (Log Streaming)</h4>
+                                <p class="text-sm text-slate-600 mt-1">
+                                    Thu thập và gửi các luồng Syslog, Windows Event Logs, bản tin SNMP, hoặc luồng dữ liệu giám sát camera từ các thiết bị điều khiển đầu cuối OT ra ngoài trung tâm giám sát an ninh mạng (SOC/SIEM).
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-6 bg-cyan-950 text-white rounded-xl">
+                        <h3 class="font-bold text-cyan-400 text-lg mb-3 flex items-center gap-2">
+                            <span>⭐</span> Danh sách Khách hàng Tham chiếu Uy tín (Dùng để chốt Deal)
+                        </h3>
+                        <p class="text-sm text-slate-300 leading-relaxed mb-4">
+                            Tại thị trường Việt Nam, giải pháp phân tách mạng của OPSWAT đã được tin dùng bởi các đơn vị đặc thù có yêu cầu khắt khe nhất về an toàn thông tin quốc gia:
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm font-semibold">
+                            <div class="p-3 bg-slate-900/50 rounded-lg border border-cyan-800">
+                                👮 Các Cục nghiệp vụ trực thuộc Bộ Công An
+                            </div>
+                            <div class="p-3 bg-slate-900/50 rounded-lg border border-cyan-800">
+                                ⚡ Tập đoàn Điện lực Việt Nam (EVN)
+                            </div>
+                            <div class="p-3 bg-slate-900/50 rounded-lg border border-cyan-800">
+                                💧 Nhiều nhà máy thủy điện, nhiệt điện trên toàn quốc
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="faq" class="bg-white p-6 rounded-2xl shadow-md border border-slate-100 scroll-mt-6">
+                <div class="flex items-center gap-3 mb-6">
+                    <span class="text-3xl">💬</span>
+                    <h2 class="text-2xl font-bold text-slate-900">7. Các câu hỏi thường gặp (FAQ) cho Sales khi đi gặp Khách</h2>
+                </div>
+                
+                <div class="space-y-4">
+                    
+                    <div class="border border-slate-200 rounded-xl overflow-hidden">
+                        <button onclick="toggleAccordion(1)" class="w-full text-left p-4 font-bold text-slate-900 bg-slate-50 hover:bg-slate-100 flex justify-between items-center transition">
+                            <span>Q: Cách định hình cấu hình (Sizing) lên BOM cho một dự án như thế nào?</span>
+                            <span id="icon-1" class="text-slate-400">▼</span>
+                        </button>
+                        <div id="faq-1" class="accordion-content p-4 text-sm text-slate-600 leading-relaxed border-t border-slate-200 bg-white">
+                            <strong>A:</strong> Để lên cấu hình thiết bị cho khách, Sales cần làm rõ các câu hỏi sau:<br>
+                            1. <strong>Chọn loại Thiết bị:</strong> Dòng tủ điện công nghiệp DIN Rail (băng thông nhỏ 10M/50M) hay dòng rackmount 1U (băng thông lớn từ 100M/1G/10G) đặt trong tủ Server.<br>
+                            2. <strong>Chọn loại Gateway:</strong> Unidirectional (Một chiều - USG) hay Bilateral (Hai chiều kiểm soát - BSG) tùy theo luồng dữ liệu của khách hàng.<br>
+                            3. <strong>Số lượng:</strong> Thiết bị luôn đi theo cặp (gồm 1 node Blue và 1 node Red) nên Sales phải báo giá theo cặp thiết bị.<br>
+                            4. <strong>Lựa chọn băng thông phù hợp:</strong> Sizing theo tổng lưu lượng dữ liệu truyền tải thực tế (throughput).
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-xl overflow-hidden">
+                        <button onclick="toggleAccordion(2)" class="w-full text-left p-4 font-bold text-slate-900 bg-slate-50 hover:bg-slate-100 flex justify-between items-center transition">
+                            <span>Q: Cơ chế bản quyền (License) của giải pháp này là gì?</span>
+                            <span id="icon-2" class="text-slate-400">▼</span>
+                        </button>
+                        <div id="faq-2" class="accordion-content p-4 text-sm text-slate-600 leading-relaxed border-t border-slate-200 bg-white">
+                            <strong>A:</strong> OPSWAT cung cấp cơ chế bản quyền tối ưu và đơn giản nhất cho khách hàng:<br>
+                            - <strong>License Vĩnh viễn (Perpetual License):</strong> Khách hàng mua đứt bản quyền thiết bị phần cứng và phần mềm một lần duy nhất, sở hữu trọn đời. Hàng năm chỉ cần đóng phí bảo trì nâng cấp phần mềm và hỗ trợ kỹ thuật (Maintenance/Support). Đây là mô hình bản quyền chuẩn mực và được ưu chuộng tuyệt đối bởi các dự án hạ tầng công cộng, nhà nước tại Việt Nam.<br>
+                            - Bản quyền được tính dựa trên mức băng thông kích hoạt trên thiết bị phần cứng (10M, 50M, 100M, 1G, 10G). Khi khách hàng có nhu cầu nâng cấp băng thông trong tương lai, chỉ cần mua license nâng cấp băng thông bằng phần mềm (Software License Key) để kích hoạt mà không cần phải thay thế hay mua lại thiết bị phần cứng hiện tại.
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-xl overflow-hidden">
+                        <button onclick="toggleAccordion(3)" class="w-full text-left p-4 font-bold text-slate-900 bg-slate-50 hover:bg-slate-100 flex justify-between items-center transition">
+                            <span>Q: Các connector giao thức (OPC UA, Modbus, MQTT...) có phải mua thêm bản quyền không?</span>
+                            <span id="icon-3" class="text-slate-400">▼</span>
+                        </button>
+                        <div id="faq-3" class="accordion-content p-4 text-sm text-slate-600 leading-relaxed border-t border-slate-200 bg-white">
+                            <strong>A:</strong> <strong>HOÀN TOÀN KHÔNG!</strong> Đây là vũ khí cực kỳ sắc bén của OPSWAT khi đấu thầu. Tất cả các connector phổ biến cho mạng công nghiệp và CNTT (Modbus, OPC UA/DA, MQTT, Syslog, SMTP, FTP/FTPS/SFTP, TCP/UDP stream, OSI PI/AVEVA PI...) đều đã <strong>được tích hợp sẵn hoàn toàn miễn phí</strong> đi kèm phần mềm của hệ thống. Khách hàng không cần bỏ thêm bất kỳ một khoản chi phí mua bản quyền phụ trội nào cho các connector này.
+                        </div>
+                    </div>
+
+                    <div class="border border-slate-200 rounded-xl overflow-hidden">
+                        <button onclick="toggleAccordion(4)" class="w-full text-left p-4 font-bold text-slate-900 bg-slate-50 hover:bg-slate-100 flex justify-between items-center transition">
+                            <span>Q: Điểm khác biệt mấu chốt giữa Diode một chiều (USG) và BSG là gì để tư vấn chuẩn xác?</span>
+                            <span id="icon-4" class="text-slate-400">▼</span>
+                        </button>
+                        <div id="faq-4" class="accordion-content p-4 text-sm text-slate-600 leading-relaxed border-t border-slate-200 bg-white">
+                            <strong>A:</strong> Sales cần nắm rõ:<br>
+                            - Chọn <strong>Optical Diode (USG)</strong> khi khách hàng chỉ có luồng dữ liệu hướng ra ngoài và không cần bắt tay phản hồi mức mạng (ví dụ: đẩy tệp tin lưu trữ ra văn phòng IT, gửi luồng Syslog an ninh đến SOC, đẩy thông số đo lường ra internet). Đây là phương án bảo mật vật lý cao nhất.<br>
+                            - Chọn <strong>BSG</strong> khi khách hàng bắt buộc phải dùng các ứng dụng yêu cầu luồng giao tiếp phản hồi hoặc thủ tục bắt tay truyền thông mạng phức tạp nhưng cần đảm bảo an toàn tuyệt đối ở biên giới hạn IT/OT (ví dụ: đồng bộ cơ sở dữ liệu Microsoft SQL Server Transactional Replication, đồng bộ các cơ sở dữ liệu công nghiệp chuyên sâu như AspenTech IP.21).
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </section>
+
+    </div>
+
+    <footer class="bg-slate-950 text-slate-400 py-8 border-t border-slate-800 text-center text-xs">
+        <div class="max-w-7xl mx-auto px-6 space-y-2">
+            <p class="font-bold text-slate-300">TÀI LIỆU BẢO MẬT NỘI BỘ - NGHIÊM CẤM CHIA SẺ RA NGOÀI KHI CHƯA ĐƯỢC PHÉP</p>
+            <p>&copy; 2026 OPSWAT Inc. Mọi quyền được bảo lưu. Bản hướng dẫn thực chiến dành cho Sales và Kỹ sư giải pháp tại thị trường Việt Nam.</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleAccordion(id) {
+            const content = document.getElementById(`faq-${id}`);
+            const icon = document.getElementById(`icon-${id}`);
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.textContent = '▲';
+            } else {
+                content.classList.add('hidden');
+                icon.textContent = '▼';
+            }
+        }
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            for (let i = 1; i <= 4; i++) {
+                const content = document.getElementById(`faq-${i}`);
+                if (content) content.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

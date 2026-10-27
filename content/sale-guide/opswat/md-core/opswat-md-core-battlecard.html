@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OPSWAT MetaDefender Core — Battlecard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --surface: #ffffff;
+    --surface2: #eef0f4;
+    --border: rgba(0,0,0,0.09);
+    --accent: #0077cc;
+    --accent2: #e0263a;
+    --accent3: #6d28d9;
+    --gold: #d4880a;
+    --text: #0d0f12;
+    --muted: #5a6275;
+    --green: #00875a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* ── HERO ───────────────────────────────────────────── */
+  .hero {
+    position: relative;
+    min-height: 340px;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 60px 60px 50px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 90% at 70% 40%, rgba(0,119,204,.08) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 60% at 10% 80%, rgba(109,40,217,.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-grid-bg {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(0,0,0,.05) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0,0,0,.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+  .badge {
+    display: inline-block;
+    background: rgba(0,119,204,.1);
+    border: 1px solid rgba(0,119,204,.3);
+    color: var(--accent);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: 4px 14px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+    width: fit-content;
+  }
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 5vw, 58px);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -.02em;
+    max-width: 700px;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero-sub {
+    margin-top: 14px;
+    font-size: 16px;
+    color: var(--muted);
+    max-width: 520px;
+  }
+  .hero-stats {
+    display: flex; gap: 40px;
+    margin-top: 36px; flex-wrap: wrap;
+  }
+  .stat-item { display: flex; flex-direction: column; gap: 3px; }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 28px; font-weight: 800;
+    color: var(--accent);
+  }
+  .stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+
+  /* ── NAV ────────────────────────────────────────────── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(245,246,248,.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    display: flex; gap: 2px;
+    padding: 0 40px;
+    overflow-x: auto;
+  }
+  nav a {
+    display: flex; align-items: center; gap: 6px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px; font-weight: 500;
+    padding: 14px 16px;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color .2s, border-color .2s;
+  }
+  nav a:hover { color: var(--text); border-color: var(--accent); }
+
+  /* ── LAYOUT ─────────────────────────────────────────── */
+  .container { max-width: 1080px; margin: 0 auto; padding: 0 40px; }
+  section { padding: 64px 0; border-bottom: 1px solid var(--border); }
+  section:last-child { border-bottom: none; }
+  .section-label {
+    font-size: 11px; font-weight: 600; letter-spacing: .15em;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 10px;
+  }
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: 30px; font-weight: 800;
+    letter-spacing: -.02em;
+    margin-bottom: 36px;
+  }
+  h3 { font-family: 'Syne', sans-serif; font-size: 17px; font-weight: 700; margin-bottom: 8px; }
+
+  /* ── CARDS GRID ─────────────────────────────────────── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; }
+  @media (max-width: 760px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .hero { padding: 40px 24px; }
+    .container { padding: 0 20px; }
+    nav { padding: 0 16px; }
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .25s, transform .25s;
+  }
+  .card:hover { border-color: rgba(0,119,204,.3); transform: translateY(-2px); }
+  .card-accent::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+  }
+  .card-red::before { background: linear-gradient(90deg, var(--accent2), var(--gold)); }
+  .card-purple::before { background: linear-gradient(90deg, var(--accent3), var(--accent2)); }
+  .card-green::before { background: linear-gradient(90deg, var(--green), var(--accent)); }
+
+  .icon {
+    width: 42px; height: 42px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; margin-bottom: 16px;
+  }
+  .icon-blue { background: rgba(0,119,204,.1); }
+  .icon-red { background: rgba(224,38,58,.1); }
+  .icon-purple { background: rgba(109,40,217,.1); }
+  .icon-gold { background: rgba(212,136,10,.1); }
+  .icon-green { background: rgba(0,135,90,.1); }
+
+  p.card-desc { color: var(--muted); font-size: 14px; line-height: 1.7; }
+
+  /* ── PAIN POINTS ────────────────────────────────────── */
+  .pain-item {
+    display: flex; gap: 16px; align-items: flex-start;
+    padding: 20px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    transition: border-color .2s;
+  }
+  .pain-item:hover { border-color: rgba(224,38,58,.3); }
+  .pain-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent2);
+    margin-top: 8px; flex-shrink: 0;
+  }
+
+  /* ── FEATURES ───────────────────────────────────────── */
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    display: flex; flex-direction: column; gap: 12px;
+    transition: border-color .25s, transform .25s;
+    position: relative; overflow: hidden;
+  }
+  .feature-card:hover { border-color: rgba(0,119,204,.3); transform: translateY(-2px); }
+  .feature-card::after {
+    content: '';
+    position: absolute; bottom: -20px; right: -20px;
+    width: 80px; height: 80px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,119,204,.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .feature-tag {
+    display: inline-block;
+    font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 100px;
+    background: rgba(0,119,204,.1); color: var(--accent); width: fit-content;
+  }
+  .feature-score {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px; font-weight: 700;
+    color: var(--green);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .feature-score::before { content: '✓'; }
+
+  /* ── USE CASES ──────────────────────────────────────── */
+  .usecase {
+    display: grid; grid-template-columns: 48px 1fr; gap: 20px;
+    align-items: start;
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    transition: all .2s;
+  }
+  .usecase:hover { border-color: rgba(0,119,204,.25); background: var(--surface2); }
+  .usecase-num {
+    width: 48px; height: 48px; border-radius: 12px;
+    background: linear-gradient(135deg, rgba(0,119,204,.12), rgba(109,40,217,.12));
+    border: 1px solid rgba(0,119,204,.2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 800;
+    color: var(--accent);
+  }
+
+  /* ── SWOT ───────────────────────────────────────────── */
+  .swot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .swot-card {
+    padding: 24px; border-radius: 14px;
+    border: 1px solid var(--border);
+  }
+  .swot-s { background: rgba(0,135,90,.06); border-color: rgba(0,135,90,.2); }
+  .swot-w { background: rgba(224,38,58,.06); border-color: rgba(224,38,58,.2); }
+  .swot-o { background: rgba(0,119,204,.06); border-color: rgba(0,119,204,.2); }
+  .swot-t { background: rgba(212,136,10,.06); border-color: rgba(212,136,10,.2); }
+  .swot-label {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px; font-weight: 800;
+    letter-spacing: .08em; text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .swot-s .swot-label { color: var(--green); }
+  .swot-w .swot-label { color: var(--accent2); }
+  .swot-o .swot-label { color: var(--accent); }
+  .swot-t .swot-label { color: var(--gold); }
+  .swot-card ul { padding-left: 18px; color: var(--muted); font-size: 14px; }
+  .swot-card li { margin-bottom: 6px; }
+
+  /* ── COMPARE TABLE ──────────────────────────────────── */
+  .compare-table { width: 100%; border-collapse: collapse; }
+  .compare-table th {
+    background: var(--surface2);
+    padding: 14px 18px;
+    text-align: left;
+    font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .compare-table th:first-child { border-radius: 12px 0 0 0; }
+  .compare-table th:last-child { border-radius: 0 12px 0 0; }
+  .compare-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px; color: var(--muted);
+    vertical-align: top;
+  }
+  .compare-table tr:last-child td { border-bottom: none; }
+  .compare-table tr:hover td { background: var(--surface2); }
+  .compare-table td:first-child { color: var(--text); font-weight: 600; }
+  .highlight-cell { color: var(--accent) !important; font-weight: 600 !important; }
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+  }
+
+  /* ── FAQ ────────────────────────────────────────────── */
+  .faq-item {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    transition: border-color .2s;
+  }
+  .faq-item:hover { border-color: rgba(0,119,204,.25); }
+  .faq-q {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 20px 24px;
+    background: var(--surface);
+    cursor: pointer;
+    gap: 16px;
+  }
+  .faq-q span:first-child { font-weight: 600; font-size: 15px; }
+  .faq-toggle {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: rgba(0,119,204,.08); border: 1px solid rgba(0,119,204,.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: var(--accent); flex-shrink: 0;
+    transition: transform .2s;
+  }
+  .faq-a {
+    display: none;
+    padding: 0 24px 20px;
+    background: var(--surface);
+    color: var(--muted); font-size: 14px; line-height: 1.75;
+  }
+  .faq-item.open .faq-a { display: block; }
+  .faq-item.open .faq-toggle { transform: rotate(45deg); background: rgba(0,119,204,.15); }
+
+  /* ── CUSTOMERS ──────────────────────────────────────── */
+  .customer-list {
+    display: flex; flex-wrap: wrap; gap: 10px;
+  }
+  .customer-tag {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 8px 16px; border-radius: 100px;
+    font-size: 13px; font-weight: 500;
+    display: flex; align-items: center; gap: 8px;
+    transition: border-color .2s;
+  }
+  .customer-tag:hover { border-color: rgba(0,119,204,.3); }
+  .customer-tag .dot { width: 7px; height: 7px; border-radius: 50%; }
+
+  /* ── SIZING TABLE ───────────────────────────────────── */
+  .sizing-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+  }
+  .sizing-header {
+    background: var(--surface2);
+    padding: 16px 20px;
+    display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 12px;
+    font-size: 12px; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--muted);
+    border-bottom: 1px solid var(--border);
+  }
+  .sizing-row {
+    padding: 16px 20px;
+    display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 12px; align-items: center;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    transition: background .2s;
+  }
+  .sizing-row:last-child { border-bottom: none; }
+  .sizing-row:hover { background: var(--surface2); }
+  .sizing-row .engine { font-weight: 600; color: var(--accent); }
+
+  /* ── FOOTER ─────────────────────────────────────────── */
+  footer {
+    padding: 40px 60px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid var(--border);
+    gap: 20px; flex-wrap: wrap;
+  }
+  .footer-brand { font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700; color: var(--muted); }
+  .footer-brand span { color: var(--accent); }
+  .footer-note { font-size: 12px; color: var(--muted); }
+
+  /* ── ANIMATIONS ─────────────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .anim { animation: fadeUp .5s ease both; }
+  .anim-1 { animation-delay: .05s; }
+  .anim-2 { animation-delay: .1s; }
+  .anim-3 { animation-delay: .15s; }
+  .anim-4 { animation-delay: .2s; }
+
+  /* ── CALLOUT ────────────────────────────────────────── */
+  .callout {
+    background: linear-gradient(135deg, rgba(0,119,204,.07) 0%, rgba(109,40,217,.07) 100%);
+    border: 1px solid rgba(0,119,204,.18);
+    border-radius: 16px;
+    padding: 28px 32px;
+    display: flex; gap: 20px; align-items: flex-start;
+  }
+  .callout-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+  .callout-text { font-size: 15px; color: var(--text); line-height: 1.7; }
+  .callout-text strong { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="badge">NTS Hanoi × OPSWAT — Sales Battlecard</div>
+  <h1>MetaDefender<br><span>Core</span></h1>
+  <p class="hero-sub">Nền tảng bảo mật file số 1 thế giới. Zero Trust với mọi tệp tin — không tin, không bỏ qua, không thỏa hiệp.</p>
+  <div class="hero-stats">
+    <div class="stat-item">
+      <span class="stat-num">30+</span>
+      <span class="stat-label">AV Engines song song</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">99.2%</span>
+      <span class="stat-label">Phát hiện mã độc</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">100%</span>
+      <span class="stat-label">CDR — SE Labs</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">200+</span>
+      <span class="stat-label">Định dạng file</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-num">98%</span>
+      <span class="stat-label">Nhà máy hạt nhân Mỹ</span>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#intro">🏢 Giới thiệu</a>
+  <a href="#pain">⚠️ Pain Points</a>
+  <a href="#features">🛡️ Tính năng</a>
+  <a href="#usecases">💡 Use Cases</a>
+  <a href="#compare">⚔️ So sánh</a>
+  <a href="#swot">📊 SWOT</a>
+  <a href="#sizing">🖥️ BOM</a>
+  <a href="#customers">🤝 Reference</a>
+  <a href="#faq">❓ FAQ</a>
+</nav>
+
+<!-- SECTION 1: INTRO -->
+<section id="intro">
+  <div class="container">
+    <div class="section-label">Về hãng</div>
+    <h2>OPSWAT — Thành lập 2002, Bảo vệ hạ tầng trọng yếu toàn cầu</h2>
+    <div class="grid-2">
+      <div class="callout anim anim-1">
+        <div class="callout-icon">🏭</div>
+        <div class="callout-text">
+          Thành lập <strong>2002 tại Mỹ</strong>, OPSWAT là công ty dẫn đầu toàn cầu về an ninh mạng cho cơ sở hạ tầng trọng yếu (IT, OT, ICS). Công nghệ của OPSWAT đang bảo vệ <strong>98% cơ sở điện hạt nhân tại Hoa Kỳ</strong>.
+        </div>
+      </div>
+      <div class="callout anim anim-2">
+        <div class="callout-icon">🔐</div>
+        <div class="callout-text">
+          <strong>MetaDefender Core</strong> hoạt động theo triết lý <strong>Zero Trust</strong> — không tin tưởng bất kỳ file hay thiết bị nào. Bóc tách, diệt sạch, tái tạo file an toàn 100% trước khi người dùng sử dụng.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 2: PAIN POINTS -->
+<section id="pain">
+  <div class="container">
+    <div class="section-label">Vấn đề khách hàng</div>
+    <h2>Pain Points cần giải quyết</h2>
+    <div style="display:flex; flex-direction:column; gap:12px;">
+
+      <div class="pain-item anim anim-1">
+        <div class="pain-dot"></div>
+        <div>
+          <h3>🚫 Anti-Virus truyền thống mù quáng với Zero-day</h3>
+          <p style="color:var(--muted); font-size:14px; margin-top:4px;">AV và sandbox cổ điển nhận diện bằng chữ ký hoặc hành vi đã biết — thường xuyên bỏ lọt mã độc tinh vi và các cuộc tấn công chưa từng thấy.</p>
+        </div>
+      </div>
+
+      <div class="pain-item anim anim-2">
+        <div class="pain-dot"></div>
+        <div>
+          <h3>📎 Mã độc ẩn trong file công việc hàng ngày</h3>
+          <p style="color:var(--muted); font-size:14px; margin-top:4px;">Tội phạm mạng nhúng payload vào Word, Excel, PDF rồi tải lên qua Web Portal, Email, USB — đây là con đường phổ biến nhất để xâm nhập hệ thống.</p>
+        </div>
+      </div>
+
+      <div class="pain-item anim anim-3">
+        <div class="pain-dot"></div>
+        <div>
+          <h3>🏭 Môi trường OT/ICS cách ly (Air-gapped) không an toàn</h3>
+          <p style="color:var(--muted); font-size:14px; margin-top:4px;">Mạng cô lập vẫn bị xuyên thủng bởi nhà thầu, kỹ sư mang USB/thiết bị ngoại vi chứa mã độc cắm trực tiếp vào hệ thống SCADA.</p>
+        </div>
+      </div>
+
+      <div class="pain-item anim anim-4">
+        <div class="pain-dot"></div>
+        <div>
+          <h3>📋 Tuân thủ GDPR, HIPAA, PCI-DSS ngày càng nghiêm ngặt</h3>
+          <p style="color:var(--muted); font-size:14px; margin-top:4px;">Rò rỉ PII, số thẻ tín dụng, hồ sơ y tế dẫn đến phạt nặng và mất uy tín. Cần kiểm soát tự động, không phụ thuộc con người.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 3: FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="section-label">Tính năng cốt lõi</div>
+    <h2>5 Vũ khí của MetaDefender Core</h2>
+    <div class="grid-2" style="gap:16px;">
+
+      <div class="feature-card card-accent anim anim-1">
+        <div class="icon icon-blue">🔪</div>
+        <div class="feature-tag">Deep CDR</div>
+        <h3>Phân tách & Tái cấu trúc nội dung sâu</h3>
+        <p class="card-desc">Mặc định mọi file đều nguy hiểm. "Bóc tách" file, vứt toàn bộ macro, script nhúng, sau đó "xây lại" file sạch giữ nguyên định dạng. Hỗ trợ <strong style="color:var(--text)">200+ định dạng</strong>.</p>
+        <div class="feature-score">Điểm bảo vệ 100% — SE Labs</div>
+      </div>
+
+      <div class="feature-card card-accent anim anim-2">
+        <div class="icon icon-red">🔬</div>
+        <div class="feature-tag">Multiscanning</div>
+        <h3>Quét đa engine song song</h3>
+        <p class="card-desc">Thay vì 1 AV, MetaDefender dùng đồng thời <strong style="color:var(--text)">hơn 30 engine hàng đầu</strong>: CrowdStrike, McAfee, Bitdefender, SentinelOne… Bịt điểm mù của từng hãng.</p>
+        <div class="feature-score">Phát hiện >99.2% mã độc đã biết</div>
+      </div>
+
+      <div class="feature-card card-accent anim anim-3">
+        <div class="icon icon-purple">🧪</div>
+        <div class="feature-tag">Adaptive Sandbox</div>
+        <h3>Hộp cát thế hệ mới — không VM</h3>
+        <p class="card-desc">Không dùng máy ảo truyền thống — mã độc không thể phát hiện môi trường ảo để ẩn mình. Giả lập cấp độ tập lệnh, nhẹ hơn <strong style="color:var(--text)">100×</strong>, nhanh hơn <strong style="color:var(--text)">10×</strong>.</p>
+        <div class="feature-score">Chống sandbox-evasion hoàn toàn</div>
+      </div>
+
+      <div class="feature-card card-accent anim anim-4">
+        <div class="icon icon-gold">🛡️</div>
+        <div class="feature-tag">Proactive DLP</div>
+        <h3>Chống thất thoát dữ liệu chủ động</h3>
+        <p class="card-desc">AI + OCR tự động phát hiện và <strong style="color:var(--text)">bôi đen/che mờ (redact)</strong> số thẻ tín dụng, CCCD, hồ sơ y tế trong file và email trước khi gửi ra ngoài — kể cả trong ảnh.</p>
+        <div class="feature-score">Tuân thủ GDPR, HIPAA, PCI-DSS</div>
+      </div>
+
+      <div class="feature-card card-accent anim anim-1" style="grid-column: span 2;">
+        <div class="icon icon-green">🔍</div>
+        <div class="feature-tag">File-based Vulnerability Assessment</div>
+        <h3>Phát hiện lỗ hổng CVE trước khi cài đặt</h3>
+        <p class="card-desc">Quét bộ cài, file thực thi để tìm lỗ hổng phần mềm (CVE) <strong style="color:var(--text)">trước</strong> khi chúng được deploy vào hệ thống. Phòng ngừa chủ động, không phản ứng bị động.</p>
+        <div class="feature-score">Phân tích static — không cần chạy thực thi</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: USE CASES -->
+<section id="usecases">
+  <div class="container">
+    <div class="section-label">Thực tế triển khai</div>
+    <h2>4 Use Case dễ chốt sale nhất</h2>
+    <div class="grid-2" style="gap:14px;">
+
+      <div class="usecase anim anim-1">
+        <div class="usecase-num">1</div>
+        <div>
+          <h3>🌐 Web Portal Security</h3>
+          <p class="card-desc">Tích hợp qua <strong style="color:var(--text)">REST API</strong>. Người dùng upload hồ sơ (PDF, Word, Ảnh) lên cổng dịch vụ công/ngân hàng → MetaDefender quét + làm sạch ngay lập tức trước khi lưu vào server.</p>
+        </div>
+      </div>
+
+      <div class="usecase anim anim-2">
+        <div class="usecase-num">2</div>
+        <div>
+          <h3>🔗 Network Perimeter</h3>
+          <p class="card-desc">Tích hợp qua <strong style="color:var(--text)">ICAP</strong> với F5 BIG-IP, NGINX, Fortinet WAF. Mọi file qua tường lửa/LB đều bị chặn, gửi sang OPSWAT làm sạch rồi mới qua.</p>
+        </div>
+      </div>
+
+      <div class="usecase anim anim-3">
+        <div class="usecase-num">3</div>
+        <div>
+          <h3>💾 Kiosk & USB — Mạng Air-gapped</h3>
+          <p class="card-desc">Nhà máy điện, OT: kỹ sư cắm USB vào <strong style="color:var(--text)">trạm kiểm tra (Kiosk)</strong> → OPSWAT quét, làm sạch, loại bỏ mã độc → mới cho chuyển file vào hệ thống điều khiển.</p>
+        </div>
+      </div>
+
+      <div class="usecase anim anim-4">
+        <div class="usecase-num">4</div>
+        <div>
+          <h3>🗄️ Storage Security</h3>
+          <p class="card-desc">Quét định kỳ kho dữ liệu dùng chung (<strong style="color:var(--text)">Dell Isilon, Nutanix, AWS S3</strong>) phát hiện mã độc ẩn náu và tự động che mờ tài liệu nhạy cảm.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 5: COMPARE -->
+<section id="compare">
+  <div class="container">
+    <div class="section-label">Đối thủ cạnh tranh</div>
+    <h2>OPSWAT vs Thị trường</h2>
+    <div class="table-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>So với</th>
+            <th>Điểm yếu đối thủ</th>
+            <th>Lợi thế OPSWAT</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>AV truyền thống<br><span style="font-size:12px;color:var(--muted)">Kaspersky, Symantec...</span></td>
+            <td>1 engine duy nhất, nhận diện bằng chữ ký — bỏ lọt Zero-day</td>
+            <td class="highlight-cell">30+ engine song song + Deep CDR chặn 100% kể cả Zero-day không cần chữ ký</td>
+          </tr>
+          <tr>
+            <td>Nền tảng tổng thể<br><span style="font-size:12px;color:var(--muted)">Palo Alto, CrowdStrike...</span></td>
+            <td>Gói all-in-one đắt đỏ cho toàn bộ mạng, khó tách module</td>
+            <td class="highlight-cell">Chuyên sâu "File Security" — giá linh hoạt theo nhu cầu thực tế</td>
+          </tr>
+          <tr>
+            <td>Sandbox truyền thống</td>
+            <td>Tốn tài nguyên, chậm, dễ bị mã độc phát hiện môi trường VM để ẩn mình</td>
+            <td class="highlight-cell">Adaptive Sandbox: giả lập cấp tập lệnh, nhẹ 100×, nhanh 10×, chống evasion hoàn toàn</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 6: SWOT -->
+<section id="swot">
+  <div class="container">
+    <div class="section-label">Phân tích</div>
+    <h2>SWOT & Phân khúc khách hàng</h2>
+    <div class="swot-grid" style="margin-bottom:36px;">
+      <div class="swot-card swot-s anim anim-1">
+        <div class="swot-label">💪 Strengths</div>
+        <ul>
+          <li>30+ AV engine độc quyền song song</li>
+          <li>Deep CDR đạt 100% điểm bảo vệ (SE Labs)</li>
+          <li>Chạy offline/Air-gapped hoàn hảo</li>
+          <li>Tính license đơn giản — chỉ theo module</li>
+          <li>Không giới hạn số lượng file quét hay số lần quét đồng thời</li>
+        </ul>
+      </div>
+      <div class="swot-card swot-w anim anim-2">
+        <div class="swot-label">⚠️ Weaknesses</div>
+        <ul>
+          <li>Chi phí cao hơn AV đơn lẻ</li>
+          <li>Yêu cầu phần cứng server khá mạnh (đặc biệt gói MAX)</li>
+        </ul>
+      </div>
+      <div class="swot-card swot-o anim anim-3">
+        <div class="swot-label">🚀 Opportunities</div>
+        <ul>
+          <li>Chuyển đổi số bùng nổ — Web Portal, Cloud</li>
+          <li>Chính phủ siết bảo mật OT/IT hạ tầng trọng yếu</li>
+          <li>Số hóa quy trình tạo nhu cầu bảo mật file cực lớn</li>
+        </ul>
+      </div>
+      <div class="swot-card swot-t anim anim-4">
+        <div class="swot-label">⚡ Threats</div>
+        <ul>
+          <li>Cạnh tranh từ Palo Alto, CrowdStrike, Check Point</li>
+          <li>Khách hàng nhầm lẫn "đã có Firewall + AV là đủ"</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3 style="margin-bottom:16px; color:var(--muted); font-size:14px; text-transform:uppercase; letter-spacing:.1em;">🎯 Phân khúc khách hàng trọng tâm</h3>
+    <div class="grid-4">
+      <div class="card card-accent">
+        <div class="icon icon-blue">🏛️</div>
+        <h3 style="font-size:15px;">Chính phủ, Bộ ban ngành</h3>
+        <p class="card-desc" style="font-size:13px;">Bảo vệ cổng dịch vụ công, cổng thông tin điện tử quốc gia.</p>
+      </div>
+      <div class="card card-accent">
+        <div class="icon icon-gold">🏦</div>
+        <h3 style="font-size:15px;">Tài chính, Ngân hàng</h3>
+        <p class="card-desc" style="font-size:13px;">Chống rò rỉ dữ liệu và mã độc từ hồ sơ khách hàng tải lên.</p>
+      </div>
+      <div class="card card-accent">
+        <div class="icon icon-red">⚡</div>
+        <h3 style="font-size:15px;">Năng lượng, Dầu khí</h3>
+        <p class="card-desc" style="font-size:13px;">Bảo vệ SCADA/OT, kiểm soát USB và file cập nhật Air-gapped.</p>
+      </div>
+      <div class="card card-accent">
+        <div class="icon icon-green">🏥</div>
+        <h3 style="font-size:15px;">Y tế, Bệnh viện</h3>
+        <p class="card-desc" style="font-size:13px;">Bảo mật dữ liệu bệnh án — tuân thủ HIPAA và quy định nội địa.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 7: SIZING / BOM -->
+<section id="sizing">
+  <div class="container">
+    <div class="section-label">Cấu hình phần cứng</div>
+    <h2>Sizing / BOM tham khảo</h2>
+    <p style="color:var(--muted); margin-bottom:24px; font-size:14px;">Cấu hình tối thiểu theo gói engine. Nếu bổ sung Deep CDR, Proactive DLP hoặc Sandbox: cộng thêm <strong style="color:var(--text)">4 CPU Cores + 8GB RAM</strong>.</p>
+    <div class="sizing-card">
+      <div class="sizing-header">
+        <span>Gói Engine</span>
+        <span>CPU Cores</span>
+        <span>RAM</span>
+        <span>SSD</span>
+      </div>
+      <div class="sizing-row">
+        <span class="engine">8 Engines (Windows)</span>
+        <span>8 Cores</span>
+        <span>8 GB</span>
+        <span>16 GB</span>
+      </div>
+      <div class="sizing-row">
+        <span class="engine">12 Engines</span>
+        <span>12 Cores</span>
+        <span>12 GB</span>
+        <span>30 GB</span>
+      </div>
+      <div class="sizing-row">
+        <span class="engine">16 Engines</span>
+        <span>16 Cores</span>
+        <span>16 GB</span>
+        <span>60 GB</span>
+      </div>
+      <div class="sizing-row">
+        <span class="engine">MAX (30+ Engines)</span>
+        <span>32 Cores</span>
+        <span>32 GB</span>
+        <span>120 GB</span>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:20px;">
+      <div class="callout-icon">💡</div>
+      <div class="callout-text">License theo dạng <strong>Annual Subscription (BYOL)</strong>. Giá phụ thuộc: (1) <strong>Tính năng active</strong> (Deep CDR, DLP, Sandbox) và (2) <strong>Gói engine</strong> chọn. <strong>Không giới hạn số lượng file quét hay số lần quét đồng thời.</strong></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 8: REFERENCE CUSTOMERS -->
+<section id="customers">
+  <div class="container">
+    <div class="section-label">Reference tại Việt Nam</div>
+    <h2>Khách hàng tham chiếu</h2>
+    <div class="customer-list">
+      <div class="customer-tag"><div class="dot" style="background:#4fc3f7"></div>Bộ Công an</div>
+      <div class="customer-tag"><div class="dot" style="background:#4fc3f7"></div>Văn phòng Trung ương Đảng</div>
+      <div class="customer-tag"><div class="dot" style="background:#f5a623"></div>OCB</div>
+      <div class="customer-tag"><div class="dot" style="background:#f5a623"></div>Vietcombank</div>
+      <div class="customer-tag"><div class="dot" style="background:#00e676"></div>EVN</div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 9: FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-label">Hỏi đáp bán hàng</div>
+    <h2>FAQ — Phản bác từ khách hàng</h2>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span>Q1: Cơ chế tính license như thế nào?</span>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-a">
+        Mua theo dạng <strong>Annual Subscription (BYOL)</strong>. Cấu trúc giá phụ thuộc 2 yếu tố: (1) <strong>Tính năng cần active</strong> — Deep CDR, DLP, Sandbox mua kèm theo nhu cầu và (2) <strong>Gói Engine quét</strong> (8, 12, 16, 20 hoặc MAX 30+ engine). <strong>Không giới hạn số lượng file quét hay số lần quét đồng thời.</strong>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span>Q2: "Chúng tôi đã có Firewall và AV, mua thêm OPSWAT làm gì?"</span>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-a">
+        Firewall chặn ở mức mạng. Endpoint AV nhận diện bằng chữ ký. Cả hai đều <strong>không thể</strong> xử lý File-borne malware nhúng trong Word/Excel/PDF. MetaDefender không cố "bắt" mã độc — nó trực tiếp <strong>phân rã file, vứt bỏ mọi thành phần rủi ro (macro, script), xây lại file sạch</strong>. Đây là phòng ngừa chủ động Zero Trust mà các giải pháp cũ không có.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span>Q3: Mạng nội bộ cách ly (Air-gapped) có dùng được không?</span>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-a">
+        <strong>Hoàn toàn được và cực kỳ phù hợp.</strong> MetaDefender Core được thiết kế để deploy On-Premises. Với Air-gapped, tải file cập nhật engine thủ công từ máy có mạng đưa vào nội bộ hàng ngày. Hoặc dùng giải pháp Data Diode/NetWall của OPSWAT để đồng bộ một chiều.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span>Q4: Triển khai có phức tạp, ảnh hưởng hệ thống đang chạy không?</span>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-a">
+        <strong>Không cần đập kiến trúc cũ.</strong> Tích hợp API nhanh vào Web Portal. Nếu dùng F5, Citrix, NGINX — OPSWAT có máy chủ ICAP tích hợp dạng <strong>"Plug-and-Play"</strong> trong chưa đầy 10 phút, không thay đổi routing. Hỗ trợ Container/Docker và Cloud (AWS, Azure).
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggle(this)">
+        <span>Q5: Sizing / BOM phần cứng cần chuẩn bị gì?</span>
+        <div class="faq-toggle">+</div>
+      </div>
+      <div class="faq-a">
+        Hỗ trợ Windows và Linux. Xem bảng BOM ở trên. Lưu ý: nếu bật thêm Deep CDR, DLP hoặc Sandbox thì cộng thêm tối thiểu <strong>4 CPU Cores + 8GB RAM</strong> so với cấu hình gói engine chọn.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">NTS Hanoi × <span>OPSWAT</span> — MetaDefender Core Battlecard</div>
+  <div class="footer-note">Tài liệu nội bộ dành cho đội ngũ Sales. Không phân phối ra ngoài.</div>
+</footer>
+
+<script>
+  function toggle(el) {
+    const item = el.closest('.faq-item');
+    item.classList.toggle('open');
+  }
+
+  // Scroll-trigger animation
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.card, .pain-item, .feature-card, .usecase, .swot-card, .faq-item').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(16px)';
+    el.style.transition = 'opacity .4s ease, transform .4s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>

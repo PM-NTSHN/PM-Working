@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stellar Cyber - Bài Kiểm Tra Đánh Giá Năng Lực Sale</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --bg: #09090b;
+    --surface: #18181b;
+    --surface2: #27272a;
+    --border: #3f3f46;
+    --primary: #3b82f6; /* Blue */
+    --primary-hover: #2563eb;
+    --accent: #8b5cf6; /* Purple */
+    --text: #f4f4f5;
+    --text-muted: #a1a1aa;
+    --success: #10b981;
+    --success-bg: rgba(16, 185, 129, 0.1);
+    --danger: #ef4444;
+    --danger-bg: rgba(239, 68, 68, 0.1);
+    --warning: #f59e0b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    padding-bottom: 5rem;
+  }
+
+  /* Header & Progress */
+  header {
+    background: rgba(24, 24, 27, 0.9);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo { font-size: 1.25rem; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+  .logo span { color: var(--primary); }
+
+  .progress-container { flex: 1; max-width: 400px; margin: 0 2rem; }
+  .progress-bar {
+    height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent));
+    width: 0%; transition: width 0.3s ease;
+  }
+  .progress-text { font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-top: 5px; font-weight: 500;}
+
+  /* Quiz Container */
+  .container { max-width: 800px; margin: 3rem auto; padding: 0 1.5rem; }
+  .intro { text-align: center; margin-bottom: 3rem; }
+  .intro h1 { font-size: 2.2rem; margin-bottom: 0.5rem; background: linear-gradient(90deg, #3b82f6, #8b5cf6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .intro p { color: var(--text-muted); }
+  .pass-req { display: inline-block; padding: 0.3rem 0.8rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 20px; font-size: 0.85rem; font-weight: 600; color: var(--warning); margin-top: 1rem; }
+
+  /* Question Card */
+  .question-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .question-card:hover { border-color: #52525b; box-shadow: 0 8px 30px rgba(0,0,0,0.3); }
+  .question-header { display: flex; gap: 15px; margin-bottom: 1.5rem; }
+  .q-num {
+    background: var(--surface2); color: var(--text); font-weight: 700;
+    width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .q-text { font-size: 1.15rem; font-weight: 600; color: #fff; margin-top: 3px; }
+
+  /* Options */
+  .options-grid { display: flex; flex-direction: column; gap: 0.8rem; }
+  .option-label {
+    display: flex; align-items: flex-start; padding: 1rem 1.2rem;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .option-label:hover { background: #3f3f46; border-color: #52525b; }
+  
+  .option-label input[type="radio"] {
+    appearance: none; width: 20px; height: 20px; border: 2px solid var(--text-muted);
+    border-radius: 50%; margin-right: 12px; margin-top: 2px; flex-shrink: 0;
+    position: relative; transition: all 0.2s; cursor: pointer;
+  }
+  .option-label input[type="radio"]:checked {
+    border-color: var(--primary); background: var(--primary);
+  }
+  .option-label input[type="radio"]:checked::after {
+    content: ''; position: absolute; top: 4px; left: 4px; width: 8px; height: 8px;
+    background: #fff; border-radius: 50%;
+  }
+  .option-label:has(input:checked) {
+    background: rgba(59, 130, 246, 0.1); border-color: var(--primary);
+  }
+  .option-text { font-size: 0.95rem; color: var(--text); line-height: 1.5; }
+
+  /* Review Mode Styles */
+  .option-label.correct { background: var(--success-bg); border-color: var(--success); }
+  .option-label.correct .option-text { color: var(--success); font-weight: 600; }
+  .option-label.wrong { background: var(--danger-bg); border-color: var(--danger); opacity: 0.7; }
+  .option-label.wrong .option-text { color: var(--danger); text-decoration: line-through; }
+  
+  .explanation {
+    margin-top: 1.5rem; padding: 1rem 1.2rem; background: rgba(139, 92, 246, 0.1);
+    border-left: 4px solid var(--accent); border-radius: 0 8px 8px 0;
+    font-size: 0.9rem; color: #cbd5e1; display: none;
+  }
+  .explanation strong { color: #fff; }
+
+  /* Actions */
+  .actions { text-align: center; margin-top: 3rem; }
+  .btn-submit {
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    color: white; border: none; padding: 1rem 3rem; border-radius: 30px;
+    font-size: 1.1rem; font-weight: 700; cursor: pointer;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(59, 130, 246, 0.6); }
+  .btn-submit:disabled { background: var(--surface2); color: var(--text-muted); cursor: not-allowed; box-shadow: none; transform: none; }
+
+  /* Modal Result */
+  .modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.8); backdrop-filter: blur(5px);
+    display: none; align-items: center; justify-content: center; z-index: 1000;
+  }
+  .modal-overlay.active { display: flex; animation: fadeIn 0.3s; }
+  
+  .modal-content {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    padding: 3rem; text-align: center; max-width: 500px; width: 90%;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  }
+
+  .score-ring {
+    width: 150px; height: 150px; border-radius: 50%; margin: 0 auto 1.5rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2.5rem; font-weight: 800; color: #fff; position: relative;
+  }
+  .score-ring::before {
+    content: ''; position: absolute; inset: 10px; background: var(--surface); border-radius: 50%; z-index: 0;
+  }
+  .score-value { position: relative; z-index: 1; font-family: 'JetBrains Mono', monospace;}
+
+  .pass-ring { background: conic-gradient(var(--success) var(--pct), var(--surface2) 0); }
+  .fail-ring { background: conic-gradient(var(--danger) var(--pct), var(--surface2) 0); }
+
+  .res-title { font-size: 1.8rem; margin-bottom: 0.5rem; }
+  .res-desc { color: var(--text-muted); margin-bottom: 2rem; }
+  .btn-review {
+    background: var(--surface2); color: white; border: 1px solid var(--border);
+    padding: 0.8rem 2rem; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s;
+  }
+  .btn-review:hover { background: #3f3f46; border-color: var(--text-muted); }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  @media (max-width: 768px) {
+    header { flex-direction: column; gap: 1rem; padding: 1rem; }
+    .progress-container { width: 100%; margin: 0; }
+    .container { margin-top: 1.5rem; }
+    .modal-content { padding: 2rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    Stellar<span>Cyber</span>
+  </div>
+  <div class="progress-container">
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    <div class="progress-text">Đã trả lời: <span id="answered-count">0</span>/30</div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="intro">
+    <h1>Sales Validation Quiz</h1>
+    <p>Kiểm tra kiến thức sản phẩm, USP và kỹ năng tư vấn giải pháp Stellar Cyber.</p>
+    <div class="pass-req">Mục tiêu: Đạt tối thiểu 75% (23/30 câu) để Pass</div>
+  </div>
+
+  <form id="quiz-form">
+    <div id="questions-container"></div>
+    <div class="actions">
+      <button type="button" class="btn-submit" id="btn-submit" disabled>Nộp Bài Đánh Giá</button>
+    </div>
+  </form>
+</div>
+
+<!-- Result Modal -->
+<div class="modal-overlay" id="result-modal">
+  <div class="modal-content">
+    <div class="score-ring" id="score-ring" style="--pct: 0%;">
+      <span class="score-value"><span id="score-text">0</span>%</span>
+    </div>
+    <h2 class="res-title" id="res-title">Đang chấm điểm...</h2>
+    <p class="res-desc" id="res-desc"></p>
+    <div style="font-size: 1.1rem; margin-bottom: 1.5rem; color: #fff;">
+      Số câu đúng: <strong id="res-correct" style="color: var(--primary);">0</strong> / 30
+    </div>
+    <button class="btn-review" onclick="closeModal()">Xem Lại Đáp Án & Giải Thích</button>
+  </div>
+</div>
+
+<script>
+const quizData = [
+  // Nhóm 1: Tổng quan & Khái niệm
+  {
+    q: "Bản chất nền tảng cốt lõi của giải pháp Stellar Cyber là gì?",
+    options: [
+      "Giải pháp chuyên biệt chặn Virus ở Endpoint (Anti-Virus).",
+      "Nền tảng Open XDR tự động hóa tích hợp NG-SIEM, NDR và AI trong một giao diện duy nhất.",
+      "Tường lửa thế hệ mới (NGFW) bảo vệ biên mạng.",
+      "Công cụ sao lưu và phục hồi dữ liệu đám mây."
+    ],
+    answer: 1,
+    explanation: "Stellar Cyber định vị là nền tảng Open XDR tự động hóa đầu tiên, gom nhiều công cụ (SIEM, NDR, SOAR) vào một nền tảng duy nhất để đơn giản hóa SOC."
+  },
+  {
+    q: "Thuật ngữ 'Open' (Mở) trong khái niệm Open XDR của Stellar Cyber mang ý nghĩa quan trọng nhất nào?",
+    options: [
+      "Mã nguồn mở (Open-source) hoàn toàn miễn phí cho người dùng.",
+      "Chỉ thu thập được dữ liệu từ các thiết bị mã nguồn mở như Linux.",
+      "Khả năng tích hợp linh hoạt với bất kỳ công cụ bảo mật có sẵn nào (Any EDR, Any Firewall) của bên thứ 3.",
+      "Dữ liệu của khách hàng sẽ được mở công khai trên Cloud."
+    ],
+    answer: 2,
+    explanation: "Open XDR không khóa chặt khách hàng vào một hãng (Vendor Lock-in). Khách hàng có thể giữ lại các khoản đầu tư cũ (như Firewall Palo Alto, EDR CrowdStrike) và Stellar sẽ lấy dữ liệu từ đó."
+  },
+  {
+    q: "Chữ 'BYOE' trong chiến lược bán hàng của Stellar Cyber là viết tắt của cụm từ nào?",
+    options: [
+      "Bring Your Own Equipment",
+      "Bring Your Own Encryption",
+      "Bring Your Own Endpoint / EDR",
+      "Build Your Own Environment"
+    ],
+    answer: 2,
+    explanation: "BYOE (Bring Your Own EDR) - Khách hàng không cần mua phần mềm Endpoint của Stellar mà có thể tận dụng lại EDR họ đang sử dụng."
+  },
+  
+  // Nhóm 2: Pain points & Metrics
+  {
+    q: "Theo tài liệu của hãng, Stellar Cyber giúp cải thiện chỉ số MTTD (Thời gian trung bình để phát hiện) gấp bao nhiêu lần?",
+    options: ["2 lần", "10 lần", "20 lần", "50 lần"],
+    answer: 2,
+    explanation: "Stellar Cyber mang lại sự cải thiện 20X về MTTD và 8X về MTTR (Phản hồi)."
+  },
+  {
+    q: "Một trong những 'Nỗi đau' (Pain point) lớn nhất của đội ngũ SOC hiện nay mà Stellar Cyber giúp giải quyết là gì?",
+    options: [
+      "Hệ thống mạng chạy quá chậm do cáp quang đứt.",
+      "Alert Fatigue (Quá tải cảnh báo rác) và thiếu hụt nhân sự chuyên môn sâu.",
+      "Không có chi phí mua Server phần cứng.",
+      "Nhân viên không biết cách sử dụng chuột và bàn phím."
+    ],
+    answer: 1,
+    explanation: "Trung bình một nhân sự mất 3 giờ/ngày chỉ để lọc cảnh báo rác. Sự tự động hóa của AI trong Stellar giúp gom các alert thành 1 Case duy nhất, giảm tải khối lượng công việc."
+  },
+  {
+    q: "Khách hàng nói: 'Công ty tôi quy mô tầm trung (Mid-market), team IT chỉ có 2 người, làm sao vận hành được SOC/XDR?'. Lời giải thích tốt nhất là:",
+    options: [
+      "Stellar Cyber bắt buộc khách hàng phải thuê thêm 5 kỹ sư bảo mật mới vận hành được.",
+      "Tính năng Multi-layer AI hoạt động như một SOC Analyst ảo, tự động phân tích và đưa ra Case Summary rõ ràng, giúp team mỏng vẫn quản lý tốt.",
+      "Anh chị nên mua giải pháp rẻ hơn chỉ có Anti-virus.",
+      "Stellar Cyber sẽ tự động cấp phát nhân sự từ hãng qua ngồi tại văn phòng của khách hàng."
+    ],
+    answer: 1,
+    explanation: "Với sức mạnh của Agentic AI và LLM, hệ thống thay thế con người làm các bước tương quan log thủ công phức tạp, rất phù hợp cho doanh nghiệp thiếu nhân sự chuyên trách."
+  },
+
+  // Nhóm 3: SIEM vs Legacy & Competitive advantage
+  {
+    q: "Điểm yếu lớn nhất của SIEM truyền thống (Legacy SIEM) mà tính năng AI-Driven NG-SIEM của Stellar Cyber khắc phục được là:",
+    options: [
+      "SIEM truyền thống chỉ thu thập log để lưu trữ Compliance, viết rule tương quan thủ công rất phức tạp và chậm chạp.",
+      "SIEM truyền thống có giao diện màu đen khó nhìn.",
+      "SIEM truyền thống phân tích quá nhanh khiến con người không theo kịp.",
+      "SIEM truyền thống miễn phí nên không ai hỗ trợ."
+    ],
+    answer: 0,
+    explanation: "Legacy SIEM phụ thuộc vào con người phải tự định nghĩa rule. Stellar Cyber NG-SIEM dùng Machine Learning và GraphML để tự động gom nhóm sự kiện (Auto-correlation) mà không cần viết rule."
+  },
+  {
+    q: "Đối với thị trường Việt Nam (Khối Chính phủ, Ngân hàng), lợi thế triển khai mang tính 'vũ khí tối thượng' của Stellar Cyber so với nhiều hãng XDR cloud-native khác là gì?",
+    options: [
+      "Giá bán rẻ nhất thị trường thế giới.",
+      "Khả năng triển khai hoàn toàn On-Premise (Lưu trữ nội bộ) đáp ứng quy định không đưa dữ liệu ra nước ngoài.",
+      "Hỗ trợ giao diện tiếng Việt hoàn chỉnh 100%.",
+      "Miễn phí bản quyền trọn đời."
+    ],
+    answer: 1,
+    explanation: "Nhiều hãng XDR/SIEM lớn hiện nay chỉ có bản SaaS (Cloud). Việc Stellar Cyber hỗ trợ On-Prem hoàn toàn (cài trên VMware, KVM, Hardware) là điểm chốt sale cực mạnh tại VN."
+  },
+  {
+    q: "Với tệp khách hàng là MSSP (Nhà cung cấp dịch vụ quản lý bảo mật), tại sao Stellar Cyber lại được 1/3 top 250 MSSP thế giới lựa chọn?",
+    options: [
+      "Vì nó là phần mềm mã nguồn mở.",
+      "Vì có kiến trúc Multi-tenant tự nhiên (quản lý nhiều khách hàng độc lập trên 1 giao diện).",
+      "Vì nó chỉ dùng cho hệ điều hành Windows.",
+      "Vì hãng tặng kèm server phần cứng cho MSSP."
+    ],
+    answer: 1,
+    explanation: "Kiến trúc Multi-tenant cho phép MSSP dễ dàng chia nhỏ tài nguyên, quản lý dữ liệu và cấu hình riêng biệt cho từng khách hàng (Tenant 1, Tenant 2...) rất hiệu quả."
+  },
+
+  // Nhóm 4: Components & Architecture
+  {
+    q: "Thành phần xử lý phân tích dữ liệu trung tâm của Stellar Cyber được gọi là gì?",
+    options: ["Data Processor (DP)", "Network Sensor", "Log Forwarder", "Firewall Appliance"],
+    answer: 0,
+    explanation: "Data Processor (Bộ xử lý dữ liệu) là bộ não của hệ thống, nơi chạy các AI/ML, lưu trữ dữ liệu và cung cấp giao diện quản trị."
+  },
+  {
+    q: "Nhiệm vụ chính của thành phần NDR (Network Detection & Response) trong Stellar Cyber là gì?",
+    options: [
+      "Quét virus trên máy tính người dùng.",
+      "Thu thập và giải mã lưu lượng mạng (Network Traffic) để tìm các mối đe dọa ẩn sâu mà các công cụ khác không thấy.",
+      "Cung cấp Wi-Fi cho doanh nghiệp.",
+      "Lưu trữ dữ liệu đám mây."
+    ],
+    answer: 1,
+    explanation: "NDR hoạt động như một camera giám sát trên hệ thống mạng, bắt các hành vi bất thường (Zero-day, xâm nhập nội bộ) từ băng thông mạng."
+  },
+  {
+    q: "Để thu thập log từ các hệ thống đám mây (Cloud) hoặc ứng dụng SaaS như Office 365, khách hàng cần mua thêm phần cứng nào của Stellar Cyber?",
+    options: [
+      "Phải mua 1 Server vật lý đặt tại hãng.",
+      "Không cần thiết bị vật lý, chỉ cần dùng API Connectors tích hợp sẵn (không mất thêm phí).",
+      "Phải mua Network Sensor 10G.",
+      "Phải kéo cáp quang từ Office 365 về công ty."
+    ],
+    answer: 1,
+    explanation: "Stellar cung cấp hàng trăm API Connectors có sẵn, chỉ cần cấp quyền API là hệ thống tự động kéo log về mà không cần cấu hình phần cứng thêm."
+  },
+  {
+    q: "Thành phần Log Forwarder thường được sử dụng trong trường hợp nào?",
+    options: [
+      "Khi khách hàng muốn chặn truy cập Facebook.",
+      "Để thu thập log từ các hệ thống/thiết bị cũ không có API, chỉ hỗ trợ gửi log qua Syslog.",
+      "Để tăng tốc độ mạng Internet.",
+      "Để kết nối với màn hình máy chiếu."
+    ],
+    answer: 1,
+    explanation: "Log forwarder được dùng để hứng các bản tin Syslog từ Switch, Router, Firewall cũ và đẩy về Data Processor một cách an toàn."
+  },
+
+  // Nhóm 5: Licensing & BOM
+  {
+    q: "Mô hình cấp phép (License) Data Processor của Stellar Cyber được tính giá dựa trên tiêu chí cốt lõi nào?",
+    options: [
+      "Số lượng cảnh báo (Alerts) mỗi ngày.",
+      "Số lượng thiết bị đầu cuối (Nodes/Endpoints).",
+      "Dung lượng xử lý dữ liệu đầu vào (Ingestion) tính bằng GB/Ngày.",
+      "Số lượng kỹ sư IT vận hành phần mềm."
+    ],
+    answer: 2,
+    explanation: "Thay vì tính phí theo EPS (Events Per Second) đắt đỏ và khó đoán như SIEM cũ, Stellar tính theo tổng lượng data đổ vào mỗi ngày (VD: Gói Starter 100GB/Day)."
+  },
+  {
+    q: "Chỉ số nào sau đây Stellar Cyber KHÔNG sử dụng làm cơ sở để tính tiền license?",
+    options: [
+      "Events Per Second (EPS)",
+      "Lưu lượng băng thông mạng (Network Throughput)",
+      "Tổng dung lượng Log GB/Day",
+      "Số lượng gói Data Processor Add-on"
+    ],
+    answer: 0,
+    explanation: "Điểm chốt sale quan trọng: Stellar KHÔNG tính tiền theo EPS. EPS là cách tính truyền thống, rất đắt và không tối ưu cho doanh nghiệp."
+  },
+  {
+    q: "Khách hàng mua gói `Stellar-Starter-Pack-100GB`. Họ muốn dùng tính năng SOAR (Phản hồi tự động) và UEBA (Phân tích hành vi người dùng). Khách có phải mua module rời không?",
+    options: [
+      "Có, mỗi tính năng này được bán rời như các hãng khác.",
+      "Không, mọi tính năng bảo mật (NG-SIEM, NDR, SOAR, UEBA, AI) đều được đóng gói All-in-one trong license này.",
+      "Có, nhưng được giảm giá 50%.",
+      "Phải đợi đến phiên bản năm sau mới có."
+    ],
+    answer: 1,
+    explanation: "Lợi thế cạnh tranh: Bundle All-in-One. Khách hàng không phải đau đầu mua rời từng module, mọi năng lực XDR đều được mở khóa sẵn."
+  },
+  {
+    q: "Khi chào giá tính năng NDR, thông số nào của khách hàng mà Sale cần quan tâm nhất để chọn mã Network Module License?",
+    options: [
+      "Dung lượng ổ cứng của khách hàng.",
+      "Số lượng máy in trong mạng.",
+      "Lưu lượng băng thông mạng cần giám sát (VD: 200M, 500M, 1G, 10G).",
+      "Phiên bản hệ điều hành Windows."
+    ],
+    answer: 2,
+    explanation: "Network Module License (Sensor mạng) được tính dựa trên dung lượng băng thông traffic mà nó phải giải mã và phân tích."
+  },
+  {
+    q: "Gói mở rộng dung lượng nhỏ nhất (Add-on) khi khách hàng vượt quá gói Starter 100GB/Day là bao nhiêu?",
+    options: ["10GB", "25GB", "50GB", "100GB"],
+    answer: 1,
+    explanation: "Các gói Add-on phổ biến là Stellar-25GB-ADD, 50GB-ADD và 100GB-ADD."
+  },
+
+  // Nhóm 6: Xử lý từ chối & Tình huống thực tế
+  {
+    q: "Khách hàng nói: 'Chúng tôi đã đầu tư rất nhiều tiền cho SIEM của Splunk/QRadar rồi, không muốn bỏ'. Phản hồi nào là hợp lý nhất?",
+    options: [
+      "Anh chị phải bỏ ngay vì Splunk rất tệ.",
+      "Stellar Cyber có thể hoạt động song song, nằm trên lớp SIEM hiện tại như một lớp 'Threat Detection & Response' thông minh để lọc nhiễu và bổ sung SOAR/NDR.",
+      "Stellar Cyber rẻ hơn nên anh chị cứ mua bỏ kho cũng được.",
+      "Vậy hẹn anh chị 5 năm nữa khi hết khấu hao SIEM em quay lại."
+    ],
+    answer: 1,
+    explanation: "Stellar Cyber có thể tích hợp với SIEM hiện hữu. Lấy log từ SIEM đó, dùng AI lọc cảnh báo rác, giảm tải cho nhân viên và bổ sung thêm khả năng tự động phản hồi."
+  },
+  {
+    q: "Khách hàng nhầm lẫn Open XDR với phần mềm diệt virus. Open XDR khác EDR (Endpoint Detection & Response) ở điểm cốt lõi nào?",
+    options: [
+      "Open XDR chỉ cài trên điện thoại di động.",
+      "EDR chỉ bảo vệ điểm cuối (máy tính), còn XDR tương quan dữ liệu toàn diện từ Điểm cuối, Mạng, Cloud và Identity để chặn Kill Chain.",
+      "Open XDR là phiên bản giá rẻ của EDR.",
+      "Không có gì khác biệt."
+    ],
+    answer: 1,
+    explanation: "Hacker có thể tấn công qua Cloud, IoT hoặc thiết bị mạng (nơi không thể cài EDR). XDR mang lại bức tranh toàn cảnh thay vì bị 'mù' như EDR."
+  },
+  {
+    q: "Hệ thống Stellar Cyber tự động phản hồi (Response) ngăn chặn mối đe dọa bằng công nghệ nào?",
+    options: [
+      "Cử kỹ sư tới tận văn phòng khách hàng để rút dây mạng.",
+      "Tự động gửi email cảnh báo để IT vào đọc.",
+      "Sử dụng Automated Playbooks (SOAR) để tương tác qua API với tường lửa, AD hoặc EDR (VD: Tự động khóa tài khoản AD, chặn IP trên Firewall).",
+      "Khởi động lại máy tính người dùng."
+    ],
+    answer: 2,
+    explanation: "Chức năng SOAR (Security Orchestration, Automation, and Response) tích hợp sẵn cho phép xây dựng kịch bản tự động hóa xử lý sự cố."
+  },
+  {
+    q: "Trong các dự án đấu thầu hệ thống bảo mật, nếu hồ sơ yêu cầu 'Giải pháp Quản lý sự kiện an toàn thông tin (SIEM) hoặc SOC', chiến lược đưa Stellar Cyber vào là gì?",
+    options: [
+      "Báo khách hàng Stellar Cyber không phải là SIEM nên không tham gia.",
+      "Định vị Stellar là một giải pháp AI-Driven SIEM / All-in-one SOC với mức giá tổng thể tối ưu hơn so với việc phải mua rời rạc nhiều giải pháp.",
+      "Đưa vào chỉ để làm giải pháp dự phòng.",
+      "Yêu cầu khách hàng đổi tên dự án thành mua phần mềm diệt virus."
+    ],
+    answer: 1,
+    explanation: "Vì Stellar bao gồm NG-SIEM, NDR, SOAR trong 1 license nên rất dễ đánh bật các đối thủ truyền thống yêu cầu khách mua rời từng module với giá rất cao."
+  },
+  {
+    q: "Tính năng nào trong giao diện UI của Stellar Cyber giúp tổng hợp các cảnh báo rời rạc (của Firewall, EDR) lại thành một chuỗi tấn công hoàn chỉnh?",
+    options: [
+      "Giao diện màn hình xanh (Blue screen).",
+      "Bảng tính Excel tích hợp.",
+      "Case Management (Quản lý sự cố) và Kill Chain View.",
+      "Giao diện dòng lệnh (CLI)."
+    ],
+    answer: 2,
+    explanation: "Case View tự động tương quan sự kiện, giúp Analyst không phải đi xem từng log riêng lẻ mà nhìn thấy tổng thể quy trình tấn công của Hacker."
+  },
+  {
+    q: "Nếu một khách hàng hỏi: 'Làm sao giải pháp này kết nối được với tường lửa Fortinet của tôi?', Sale sẽ trả lời:",
+    options: [
+      "Anh phải mua thêm thiết bị trung gian của hãng thứ 3.",
+      "Stellar Cyber có API Connectors và Parsers tích hợp sẵn cho Fortinet, chỉ cần cấu hình gửi log qua Syslog/API là hệ thống tự nhận diện.",
+      "Phải nhờ kỹ sư hãng viết code lập trình riêng.",
+      "Stellar Cyber không hỗ trợ Fortinet."
+    ],
+    answer: 1,
+    explanation: "Là nền tảng Open XDR, Stellar hỗ trợ hàng trăm parser và API có sẵn cho hầu hết các hãng bảo mật lớn trên thị trường."
+  },
+  {
+    q: "Khách hàng lo ngại tốn nhiều dung lượng lưu trữ do Log đẩy về quá lớn. Tính năng Data Reduction của Stellar giúp ích gì?",
+    options: [
+      "Xóa ngẫu nhiên 50% dữ liệu mỗi ngày.",
+      "Cho phép cấu hình bộ lọc để loại bỏ các log không cần thiết và sử dụng thuật toán nén hiệu quả trước khi lưu trữ/phân tích.",
+      "Báo lỗi không cho nhận dữ liệu nữa.",
+      "Nén dữ liệu thành file .ZIP và gửi cho khách hàng."
+    ],
+    answer: 1,
+    explanation: "Tính năng Data Reduction giúp tiết kiệm dung lượng license GB/Day bằng cách chỉ lấy những log có giá trị bảo mật, lọc bỏ các log rác."
+  },
+
+  // Nhóm 7: Mix details
+  {
+    q: "Stellar Cyber có giới hạn số lượng tài khoản người dùng (User Accounts) truy cập vào hệ thống quản trị không?",
+    options: [
+      "Có, mỗi User tính phí $1000/năm.",
+      "Không, số lượng User đăng nhập vào UI là không giới hạn và không tính phí.",
+      "Chỉ cho phép tối đa 5 người dùng.",
+      "Chỉ cấp cho giám đốc, nhân viên không được truy cập."
+    ],
+    answer: 1,
+    explanation: "Một lợi thế về chi phí nữa: Không thu phí theo seat (người dùng) hay node (thiết bị)."
+  },
+  {
+    q: "Công nghệ Multi-layer AI của Stellar Cyber gồm sự kết hợp của những thành phần nào?",
+    options: [
+      "Chỉ sử dụng Machine Learning truyền thống.",
+      "Sử dụng công nghệ Blockchain và tiền ảo.",
+      "Agentic AI, LLMs (Mô hình ngôn ngữ lớn), GraphML và Supervised/Unsupervised ML.",
+      "Chỉ dùng các rule tĩnh (Static rules) do con người viết."
+    ],
+    answer: 2,
+    explanation: "Multi-layer AI ám chỉ việc áp dụng nhiều lớp trí tuệ nhân tạo hiện đại khác nhau để nhận diện, tương quan và tự động tạo tóm tắt sự cố."
+  },
+  {
+    q: "Trong quá trình POC (Proof of Concept) hoặc triển khai, phần mềm Server Sensor thường được cài đặt ở đâu?",
+    options: [
+      "Cài trên máy chủ gốc (Linux/Windows) của khách hàng để thu thập dữ liệu hệ thống sâu hơn.",
+      "Cài trên điện thoại cá nhân của nhân viên.",
+      "Cài vào trong phần mềm Word/Excel.",
+      "Gắn ngoài qua cổng USB."
+    ],
+    answer: 0,
+    explanation: "Server Sensor hoạt động như một agent mỏng cài trực tiếp trên các máy chủ quan trọng để lấy log, giám sát tiến trình và network cục bộ."
+  },
+  {
+    q: "Lợi ích của việc có tính năng Threat Hunting tích hợp sẵn trong Stellar Cyber là gì?",
+    options: [
+      "Giúp nhân viên kinh doanh đi săn khách hàng dễ hơn.",
+      "Cho phép Analyst chủ động tìm kiếm các mối đe dọa tiềm ẩn trong hệ thống thông qua các truy vấn đơn giản hoặc lên lịch sẵn.",
+      "Tự động săn lỗi cú pháp trong mã nguồn phần mềm.",
+      "Phát nhạc khi có báo động."
+    ],
+    answer: 1,
+    explanation: "Nền tảng cung cấp giao diện Threat Hunting dễ sử dụng, dữ liệu đã được làm sạch (Enriched & Normalized) giúp việc truy vấn nhanh hơn hàng chục lần."
+  },
+  {
+    q: "Tóm lại, thông điệp 30 giây (Elevator Pitch) hiệu quả nhất dành cho Cấp quản lý (CISO/CIO) về Stellar Cyber là:",
+    options: [
+      "Sản phẩm này rẻ hơn tường lửa của anh chị.",
+      "Đây là phần mềm thay thế hoàn toàn đội ngũ IT của công ty.",
+      "Stellar Cyber là nền tảng XDR tự động hóa hợp nhất mọi công cụ bảo mật hiện có của anh chị, giúp đội SOC làm việc nhanh hơn 8 lần và giảm chi phí đầu tư đến 50%.",
+      "Mua giải pháp này sẽ được tặng kèm phần cứng."
+    ],
+    answer: 2,
+    explanation: "Thông điệp tập trung vào Value: Giữ lại khoản đầu tư cũ, tăng hiệu suất công việc (Automation/AI), giảm chi phí tổng thể (Consolidation)."
+  }
+];
+
+let answers = new Array(quizData.length).fill(null);
+
+const qContainer = document.getElementById('questions-container');
+const btnSubmit = document.getElementById('btn-submit');
+const progressFill = document.getElementById('progress-fill');
+const answeredCount = document.getElementById('answered-count');
+
+// Render Quiz
+quizData.forEach((q, index) => {
+  const card = document.createElement('div');
+  card.className = 'question-card';
+  card.id = `q-card-${index}`;
+
+  let optionsHTML = '';
+  q.options.forEach((opt, optIndex) => {
+    optionsHTML += `
+      <label class="option-label" id="label-${index}-${optIndex}">
+        <input type="radio" name="q${index}" value="${optIndex}" onchange="selectAnswer(${index}, ${optIndex})">
+        <span class="option-text">${opt}</span>
+      </label>
+    `;
+  });
+
+  card.innerHTML = `
+    <div class="question-header">
+      <div class="q-num">${index + 1}</div>
+      <div class="q-text">${q.q}</div>
+    </div>
+    <div class="options-grid">
+      ${optionsHTML}
+    </div>
+    <div class="explanation" id="exp-${index}">
+      <strong>💡 Giải thích:</strong> ${q.explanation}
+    </div>
+  `;
+  qContainer.appendChild(card);
+});
+
+function selectAnswer(qIndex, optIndex) {
+  answers[qIndex] = optIndex;
+  
+  // Update progress
+  const answered = answers.filter(a => a !== null).length;
+  progressFill.style.width = `${(answered / quizData.length) * 100}%`;
+  answeredCount.textContent = answered;
+
+  if (answered === quizData.length) {
+    btnSubmit.removeAttribute('disabled');
+  }
+}
+
+// Evaluate
+btnSubmit.addEventListener('click', () => {
+  let score = 0;
+  
+  quizData.forEach((q, index) => {
+    const userAns = answers[index];
+    const correctAns = q.answer;
+    
+    // Disable inputs
+    const inputs = document.getElementsByName(`q${index}`);
+    inputs.forEach(input => input.disabled = true);
+
+    // Styling
+    const correctLabel = document.getElementById(`label-${index}-${correctAns}`);
+    correctLabel.classList.add('correct');
+
+    if (userAns === correctAns) {
+      score++;
+    } else if (userAns !== null) {
+      const wrongLabel = document.getElementById(`label-${index}-${userAns}`);
+      wrongLabel.classList.add('wrong');
+    }
+
+    // Show explanation
+    document.getElementById(`exp-${index}`).style.display = 'block';
+  });
+
+  showResult(score);
+  btnSubmit.style.display = 'none'; // hide submit button
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+function showResult(score) {
+  const pct = Math.round((score / quizData.length) * 100);
+  const isPass = pct >= 75;
+
+  document.getElementById('score-text').textContent = pct;
+  document.getElementById('res-correct').textContent = score;
+  
+  const ring = document.getElementById('score-ring');
+  ring.style.setProperty('--pct', `${pct}%`);
+  ring.className = `score-ring ${isPass ? 'pass-ring' : 'fail-ring'}`;
+
+  const title = document.getElementById('res-title');
+  const desc = document.getElementById('res-desc');
+
+  if (pct >= 90) {
+    title.textContent = "🏆 Xuất Sắc!";
+    title.style.color = "var(--success)";
+    desc.textContent = "Bạn đã làm chủ hoàn toàn kiến thức về Stellar Cyber. Sẵn sàng tự tin chinh phục mọi khách hàng khó tính nhất!";
+  } else if (isPass) {
+    title.textContent = "🎉 Chúc Mừng! Bạn Đã Pass";
+    title.style.color = "var(--success)";
+    desc.textContent = "Kiến thức bán hàng của bạn rất vững. Hãy xem lại một vài câu sai ở bên dưới để hoàn thiện hơn nhé.";
+  } else {
+    title.textContent = "💪 Cần Ôn Luyện Thêm";
+    title.style.color = "var(--warning)";
+    desc.textContent = "Bạn chưa đạt mức 75%. Hãy dành thời gian đọc lại tài liệu Sales Playbook và làm lại bài test này.";
+  }
+
+  document.getElementById('result-modal').classList.add('active');
+}
+
+function closeModal() {
+  document.getElementById('result-modal').classList.remove('active');
+}
+</script>
+</body>
+</html>

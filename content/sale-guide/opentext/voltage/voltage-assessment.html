@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OpenText Voltage — Bộ Câu Hỏi Đánh Giá Chuyên Sâu</title>
+<style>
+:root {
+  --primary: #002855;
+  --accent: #0072CE;
+  --green: #00A86B;
+  --orange: #E65C00;
+  --red: #CC2929;
+  --yellow: #F5A623;
+  --bg: #F0F4F9;
+  --card: #FFFFFF;
+  --border: #DDE3EA;
+  --text: #1A2332;
+  --muted: #5A6A7E;
+  --correct: #e6f9f0;
+  --correct-b: #00A86B;
+  --wrong: #fdeaea;
+  --wrong-b: #CC2929;
+  --selected: #e3f0fb;
+  --selected-b: #0072CE;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* ── HEADER ── */
+.header{background:linear-gradient(135deg,#001a3d 0%,#002855 55%,#0040a0 100%);color:#fff;padding:36px 32px 28px;border-bottom:4px solid var(--green);}
+.header-badge{display:inline-block;background:var(--green);color:#fff;font-size:11px;font-weight:700;letter-spacing:1.5px;padding:3px 12px;border-radius:20px;text-transform:uppercase;margin-bottom:12px;}
+.header h1{font-size:26px;font-weight:900;line-height:1.25;margin-bottom:8px;}
+.header p{font-size:14px;opacity:.8;max-width:680px;}
+
+/* ── LEVEL TABS ── */
+.level-nav{background:var(--primary);padding:0 32px;display:flex;gap:4px;border-bottom:1px solid rgba(255,255,255,.1);}
+.level-tab{padding:13px 20px;color:rgba(255,255,255,.6);font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;transition:.2s;white-space:nowrap;}
+.level-tab.active,.level-tab:hover{color:#fff;border-color:var(--green);}
+.level-tab .cnt{display:inline-block;background:rgba(255,255,255,.15);border-radius:10px;padding:1px 7px;font-size:11px;margin-left:6px;}
+.level-tab.active .cnt{background:var(--green);}
+
+/* ── PROGRESS BAR ── */
+.progress-wrap{background:var(--primary);padding:10px 32px 14px;}
+.progress-meta{display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,.6);margin-bottom:6px;}
+.progress-meta strong{color:#fff;}
+.progress-bar-bg{height:6px;background:rgba(255,255,255,.15);border-radius:3px;overflow:hidden;}
+.progress-bar-fill{height:100%;background:var(--green);border-radius:3px;transition:width .4s ease;}
+
+/* ── MAIN LAYOUT ── */
+.layout{display:grid;grid-template-columns:260px 1fr;gap:0;min-height:calc(100vh - 220px);}
+@media(max-width:800px){.layout{grid-template-columns:1fr;}}
+
+/* ── SIDEBAR ── */
+.sidebar{background:#f7f9fc;border-right:1px solid var(--border);padding:20px 16px;overflow-y:auto;max-height:calc(100vh - 220px);position:sticky;top:0;}
+.sidebar-title{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;padding-left:4px;}
+.q-nav-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;cursor:pointer;margin-bottom:3px;transition:.15s;font-size:13px;color:var(--muted);}
+.q-nav-item:hover{background:#e8f0fa;color:var(--primary);}
+.q-nav-item.current{background:var(--accent);color:#fff;font-weight:600;}
+.q-nav-item.answered-correct{color:var(--green);}
+.q-nav-item.answered-wrong{color:var(--red);}
+.q-nav-item.answered-correct .q-dot{background:var(--green);}
+.q-nav-item.answered-wrong .q-dot{background:var(--red);}
+.q-dot{width:22px;height:22px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0;color:#fff;}
+.q-nav-item.current .q-dot{background:rgba(255,255,255,.3);}
+.q-label{flex:1;line-height:1.35;}
+
+/* ── QUESTION PANEL ── */
+.qpanel{padding:32px 36px;overflow-y:auto;}
+@media(max-width:600px){.qpanel{padding:20px 16px;}}
+
+.q-header{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+.q-number{font-size:12px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.5px;}
+.q-category{font-size:11px;background:var(--selected);color:var(--accent);padding:3px 10px;border-radius:12px;font-weight:600;}
+.q-difficulty{font-size:11px;padding:3px 10px;border-radius:12px;font-weight:600;}
+.q-difficulty.easy{background:#e6f9f0;color:var(--green);}
+.q-difficulty.medium{background:#fff3e8;color:var(--orange);}
+.q-difficulty.hard{background:#fdeaea;color:var(--red);}
+
+.q-text{font-size:17px;font-weight:700;color:var(--primary);line-height:1.5;margin-bottom:24px;}
+.q-context{background:#f4f7ff;border-left:4px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 16px;font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6;}
+
+/* ── OPTIONS ── */
+.options{display:flex;flex-direction:column;gap:10px;margin-bottom:24px;}
+.option{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:2px solid var(--border);border-radius:10px;cursor:pointer;transition:.15s;background:#fff;}
+.option:hover:not(.disabled){border-color:var(--accent);background:var(--selected);}
+.option.selected{border-color:var(--selected-b);background:var(--selected);}
+.option.correct{border-color:var(--correct-b);background:var(--correct);}
+.option.wrong{border-color:var(--wrong-b);background:var(--wrong);}
+.option.disabled{cursor:default;}
+.opt-letter{width:30px;height:30px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0;color:var(--muted);transition:.15s;}
+.option.selected .opt-letter{background:var(--accent);border-color:var(--accent);color:#fff;}
+.option.correct .opt-letter{background:var(--green);border-color:var(--green);color:#fff;}
+.option.wrong .opt-letter{background:var(--red);border-color:var(--red);color:#fff;}
+.opt-text{font-size:14px;line-height:1.5;padding-top:4px;}
+
+/* ── EXPLANATION ── */
+.explanation{display:none;background:#f0fbf6;border:1px solid #b3e8d0;border-radius:10px;padding:16px 20px;margin-bottom:20px;font-size:14px;line-height:1.7;}
+.explanation.show{display:block;}
+.explanation.wrong-exp{background:#fff5f0;border-color:#f5c6b0;}
+.exp-title{font-weight:800;color:var(--primary);margin-bottom:6px;font-size:13px;display:flex;align-items:center;gap:6px;}
+.explanation a{color:var(--accent);text-decoration:none;}
+.explanation a:hover{text-decoration:underline;}
+
+/* ── NAV BUTTONS ── */
+.nav-buttons{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.btn{padding:10px 22px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;border:none;transition:.15s;}
+.btn-primary{background:var(--accent);color:#fff;}
+.btn-primary:hover{background:#005baa;}
+.btn-secondary{background:var(--border);color:var(--primary);}
+.btn-secondary:hover{background:#cdd5df;}
+.btn-success{background:var(--green);color:#fff;}
+.btn-success:hover{background:#007a4d;}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
+.btn-check{background:var(--primary);color:#fff;}
+.btn-check:hover{background:#001833;}
+
+/* ── SCORE SCREEN ── */
+.score-screen{display:none;padding:40px 36px;text-align:center;}
+.score-screen.show{display:block;}
+.score-circle{width:140px;height:140px;border-radius:50%;margin:0 auto 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:36px;font-weight:900;border:6px solid var(--green);color:var(--primary);background:#f0fbf6;}
+.score-circle.medium-score{border-color:var(--yellow);background:#fffbf0;color:var(--primary);}
+.score-circle.low-score{border-color:var(--red);background:#fdeaea;color:var(--primary);}
+.score-label{font-size:13px;font-weight:600;color:var(--muted);margin-top:4px;}
+.score-title{font-size:24px;font-weight:900;color:var(--primary);margin-bottom:8px;}
+.score-sub{font-size:14px;color:var(--muted);margin-bottom:28px;}
+.score-breakdown{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;max-width:600px;margin:0 auto 32px;text-align:center;}
+@media(max-width:600px){.score-breakdown{grid-template-columns:repeat(2,1fr);}}
+.score-stat{background:#fff;border:1px solid var(--border);border-radius:10px;padding:14px;}
+.score-stat-num{font-size:24px;font-weight:900;color:var(--accent);}
+.score-stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-top:3px;}
+.level-breakdown{display:flex;flex-direction:column;gap:10px;max-width:500px;margin:0 auto 28px;text-align:left;}
+.level-row{display:flex;align-items:center;gap:12px;font-size:14px;}
+.level-name{width:110px;font-weight:600;color:var(--primary);}
+.level-bar-bg{flex:1;height:10px;background:var(--border);border-radius:5px;overflow:hidden;}
+.level-bar-fill{height:100%;border-radius:5px;background:var(--green);transition:width .6s ease;}
+.level-pct{width:45px;text-align:right;font-weight:700;font-size:13px;color:var(--muted);}
+
+/* ── REVIEW SECTION ── */
+.review-section{display:none;padding:32px 36px;}
+.review-section.show{display:block;}
+.review-item{background:#fff;border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:16px;}
+.review-item.rv-correct{border-left:4px solid var(--green);}
+.review-item.rv-wrong{border-left:4px solid var(--red);}
+.review-q{font-size:15px;font-weight:700;color:var(--primary);margin-bottom:10px;}
+.review-meta{font-size:12px;color:var(--muted);margin-bottom:8px;}
+.review-answers{font-size:13px;line-height:1.8;}
+.rv-your{color:var(--red);}
+.rv-correct-ans{color:var(--green);font-weight:600;}
+
+/* ── INTRO SCREEN ── */
+.intro-screen{padding:36px;}
+.intro-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:32px;max-width:720px;margin:0 auto;}
+.intro-title{font-size:22px;font-weight:900;color:var(--primary);margin-bottom:12px;}
+.intro-desc{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:24px;}
+.intro-levels{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px;}
+@media(max-width:500px){.intro-levels{grid-template-columns:1fr;}}
+.intro-level-card{border:2px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:.15s;}
+.intro-level-card:hover,.intro-level-card.sel{border-color:var(--accent);background:var(--selected);}
+.ilc-name{font-weight:800;color:var(--primary);margin-bottom:4px;font-size:15px;}
+.ilc-desc{font-size:12px;color:var(--muted);}
+.ilc-cnt{font-size:22px;font-weight:900;color:var(--accent);margin-bottom:6px;}
+.intro-rules{background:#f4f7ff;border-radius:10px;padding:16px 20px;font-size:13px;color:var(--muted);line-height:1.9;margin-bottom:24px;}
+.intro-rules strong{color:var(--primary);}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-badge">Assessment · OpenText Voltage DPP</div>
+  <h1>Bộ Câu Hỏi Đánh Giá Chuyên Sâu<br>Giải Pháp OpenText Voltage™</h1>
+  <p>Đánh giá toàn diện kiến thức về Data Privacy &amp; Protection — từ kỹ thuật mã hoá đến use case doanh nghiệp, compliance và triển khai thực tế.</p>
+</div>
+
+<!-- LEVEL TABS -->
+<div class="level-nav" id="levelNav">
+  <div class="level-tab active" onclick="switchLevel('all')" id="tab-all">Tất cả <span class="cnt" id="cnt-all">40</span></div>
+  <div class="level-tab" onclick="switchLevel('foundation')" id="tab-foundation">Nền tảng <span class="cnt" id="cnt-foundation">10</span></div>
+  <div class="level-tab" onclick="switchLevel('technical')" id="tab-technical">Kỹ thuật <span class="cnt" id="cnt-technical">12</span></div>
+  <div class="level-tab" onclick="switchLevel('product')" id="tab-product">Sản phẩm <span class="cnt" id="cnt-product">10</span></div>
+  <div class="level-tab" onclick="switchLevel('compliance')" id="tab-compliance">Compliance <span class="cnt" id="cnt-compliance">8</span></div>
+</div>
+
+<!-- PROGRESS -->
+<div class="progress-wrap" id="progressWrap" style="display:none;">
+  <div class="progress-meta">
+    <span>Câu <strong id="pCurrent">1</strong> / <strong id="pTotal">40</strong></span>
+    <span>Đúng: <strong id="pCorrect" style="color:#00e090;">0</strong> &nbsp;|&nbsp; Sai: <strong id="pWrong" style="color:#ff7070;">0</strong></span>
+  </div>
+  <div class="progress-bar-bg"><div class="progress-bar-fill" id="progressFill" style="width:0%"></div></div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="layout" id="mainLayout" style="display:none;">
+  <!-- SIDEBAR -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-title">Danh sách câu hỏi</div>
+    <div id="qNavList"></div>
+  </div>
+  <!-- QUESTION PANEL -->
+  <div class="qpanel" id="qpanel"></div>
+</div>
+
+<!-- INTRO SCREEN -->
+<div class="intro-screen" id="introScreen">
+  <div class="intro-card">
+    <div class="intro-title">🎯 Đánh giá mức độ hiểu biết OpenText Voltage</div>
+    <div class="intro-desc">Bộ câu hỏi gồm <strong>40 câu</strong> phân theo 4 nhóm chủ đề, từ khái niệm nền tảng đến kỹ thuật chuyên sâu và use case thực tế. Mỗi câu có giải thích chi tiết sau khi trả lời.</div>
+    <div class="intro-levels">
+      <div class="intro-level-card sel" id="lc-all" onclick="selectMode('all')">
+        <div class="ilc-cnt">40</div>
+        <div class="ilc-name">🎓 Toàn bộ</div>
+        <div class="ilc-desc">Đánh giá toàn diện tất cả chủ đề</div>
+      </div>
+      <div class="intro-level-card" id="lc-foundation" onclick="selectMode('foundation')">
+        <div class="ilc-cnt">10</div>
+        <div class="ilc-name">📘 Nền tảng</div>
+        <div class="ilc-desc">Tổng quan, lịch sử, sản phẩm</div>
+      </div>
+      <div class="intro-level-card" id="lc-technical" onclick="selectMode('technical')">
+        <div class="ilc-cnt">12</div>
+        <div class="ilc-name">⚙️ Kỹ thuật</div>
+        <div class="ilc-desc">Mã hoá, kiến trúc, API, tích hợp</div>
+      </div>
+      <div class="intro-level-card" id="lc-product" onclick="selectMode('product')">
+        <div class="ilc-cnt">10</div>
+        <div class="ilc-name">📦 Sản phẩm</div>
+        <div class="ilc-desc">Các module, tính năng cụ thể</div>
+      </div>
+      <div class="intro-level-card" id="lc-compliance" onclick="selectMode('compliance')">
+        <div class="ilc-cnt">8</div>
+        <div class="ilc-name">⚖️ Compliance</div>
+        <div class="ilc-desc">GDPR, HIPAA, PCI DSS, use cases</div>
+      </div>
+    </div>
+    <div class="intro-rules">
+      <strong>Hướng dẫn:</strong><br/>
+      • Chọn đáp án rồi nhấn <strong>Kiểm tra</strong> để xem kết quả và giải thích<br/>
+      • Mỗi câu chỉ được trả lời 1 lần<br/>
+      • Có thể điều hướng tự do giữa các câu qua thanh bên trái<br/>
+      • Kết quả chi tiết và phân tích theo nhóm chủ đề hiển thị ở cuối
+    </div>
+    <button class="btn btn-primary" style="font-size:16px;padding:13px 36px;" onclick="startQuiz()">Bắt đầu đánh giá →</button>
+  </div>
+</div>
+
+<!-- SCORE SCREEN -->
+<div class="score-screen" id="scoreScreen">
+  <div id="scoreCircleWrap"></div>
+  <div id="scoreTitleWrap"></div>
+  <div class="score-breakdown" id="scoreBreakdown"></div>
+  <div class="level-breakdown" id="levelBreakdown"></div>
+  <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+    <button class="btn btn-primary" onclick="showReview()">Xem lại tất cả câu hỏi</button>
+    <button class="btn btn-success" onclick="restartQuiz()">Làm lại từ đầu</button>
+  </div>
+</div>
+
+<!-- REVIEW SECTION -->
+<div class="review-section" id="reviewSection">
+  <h2 style="font-size:20px;font-weight:900;color:var(--primary);margin-bottom:20px;">📋 Xem lại toàn bộ câu hỏi</h2>
+  <div id="reviewList"></div>
+  <button class="btn btn-primary" style="margin-top:12px;" onclick="backToScore()">← Quay lại kết quả</button>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+// QUESTION BANK — 40 questions
+// ══════════════════════════════════════════════
+const ALL_QUESTIONS = [
+
+// ── FOUNDATION (10) ──────────────────────────
+{id:1, group:'foundation', difficulty:'easy', category:'Tổng quan',
+ q:'OpenText Voltage hiện được biết đến với tên chính thức là gì trong danh mục sản phẩm của OpenText?',
+ opts:['OpenText Data Security Suite','OpenText Data Privacy & Protection (DPP)','OpenText Encryption Platform','OpenText CyberSecurity Vault'],
+ ans:1,
+ exp:'Kể từ khi OpenText mua lại Micro Focus (2023), Voltage được đổi tên chính thức thành <strong>OpenText Data Privacy & Protection (DPP)</strong>. Tên "Voltage" vẫn được giữ trong tên sản phẩm cụ thể như Voltage SecureData, Voltage Fusion.'
+},
+{id:2, group:'foundation', difficulty:'easy', category:'Lịch sử',
+ q:'OpenText Voltage sở hữu patent cho chuẩn mã hoá nào của NIST?',
+ opts:['AES-256 CBC','AES FF1 (Format-Preserving Encryption)','RSA-2048','ChaCha20-Poly1305'],
+ ans:1,
+ exp:'OpenText là <strong>patent holder và licensor của chuẩn NIST AES FF1</strong>, được công nhận trong NIST SP 800-38G (2016). Đây là nền tảng của toàn bộ công nghệ Format-Preserving Encryption (FPE) trong Voltage.'
+},
+{id:3, group:'foundation', difficulty:'easy', category:'Sản phẩm',
+ q:'Module nào của Voltage chuyên về quản lý trạng thái bảo mật dữ liệu (Data Security Posture Management — DSPM) theo mô hình cloud-native?',
+ opts:['Voltage SecureData Enterprise','Voltage SecureData Sentry','Voltage Fusion Platform','OpenText Atalla HSM'],
+ ans:2,
+ exp:'<strong>Voltage Fusion Platform</strong> là sản phẩm DSPM cloud-native, ra mắt năm 2023, cung cấp 5 trụ cột: Data Discovery, Classification, Risk Insights, Monitoring, và Lifecycle Management.'
+},
+{id:4, group:'foundation', difficulty:'easy', category:'Lịch sử',
+ q:'Công ty nào đã mua lại Voltage Security trước OpenText?',
+ opts:['IBM','Hewlett Packard Enterprise (HPE)','Microsoft','Symantec'],
+ ans:1,
+ exp:'<strong>Hewlett Packard Enterprise (HPE)</strong> mua lại Voltage Security năm 2015, sau đó Micro Focus mua lại mảng Software của HPE năm 2017, và cuối cùng OpenText mua lại Micro Focus năm 2023.'
+},
+{id:5, group:'foundation', difficulty:'medium', category:'Sản phẩm',
+ q:'Module nào trong portfolio Voltage chuyên xử lý giao dịch thanh toán với PCI P2PE certification?',
+ opts:['Voltage SecureData Web','Voltage SecureData Payments','Voltage SecureData Sentry','Voltage Fusion'],
+ ans:1,
+ exp:'<strong>Voltage SecureData Payments</strong> là giải pháp được PCI Security Standards Council chứng nhận cho Point-to-Point Encryption (P2PE), giúp giảm PCI DSS scope lên đến 80% cho merchant.'
+},
+{id:6, group:'foundation', difficulty:'medium', category:'Tổng quan',
+ q:'Khái niệm "data-centric protection" trong Voltage có nghĩa là gì?',
+ opts:['Chỉ bảo vệ perimeter network bằng firewall','Dữ liệu tự mang lớp bảo vệ theo mình dù ở bất kỳ môi trường nào','Mã hoá toàn bộ ổ cứng (full disk encryption)','Kiểm soát truy cập bằng IAM và MFA'],
+ ans:1,
+ exp:'<strong>Data-centric protection</strong> nghĩa là lớp bảo vệ được gắn vào chính dữ liệu (at the field level), không phụ thuộc vào nơi dữ liệu lưu trữ hay di chuyển — at rest, in motion, in use. Đây là triết lý cốt lõi của Voltage, trái ngược với perimeter-based security.'
+},
+{id:7, group:'foundation', difficulty:'easy', category:'Sản phẩm',
+ q:'Module nào của Voltage quản lý vòng đời dữ liệu có cấu trúc (archiving, migration) cho hệ thống ERP như SAP, Oracle?',
+ opts:['Voltage Fusion','Voltage SecureData Enterprise','OpenText Structured Data Manager (SDM)','Voltage SecureData Sentry'],
+ ans:2,
+ exp:'<strong>OpenText Structured Data Manager (SDM)</strong> quản lý vòng đời dữ liệu có cấu trúc. Khi tích hợp với SecureData, SDM tạo thành giải pháp Secure & Compliant Test Data Management — extract, mask, và provision dữ liệu test an toàn.'
+},
+{id:8, group:'foundation', difficulty:'medium', category:'Tổng quan',
+ q:'Voltage Fusion triển khai theo mô hình nào và thời gian deploy ước tính bao lâu?',
+ opts:['On-premises only, 2-4 tuần','Cloud-native SaaS, deploy trong vài giờ','Phải cài agent trên mỗi server, 1-2 ngày','Mainframe-only, 1-2 tuần'],
+ ans:1,
+ exp:'<strong>Voltage Fusion</strong> là cloud-first platform, được thiết kế để <strong>deploy trong vài giờ</strong>. Kiến trúc microservices cloud-native giúp scale tự động và không cần quản lý infrastructure.'
+},
+{id:9, group:'foundation', difficulty:'hard', category:'Tổng quan',
+ q:'Quy định EU nào về Digital Operational Resilience cho ngành tài chính (hiệu lực 17/1/2025) có flyer chuyên biệt từ Voltage Fusion?',
+ opts:['NIS2 Directive','DORA (Digital Operational Resilience Act)','eIDAS 2.0','PSD3'],
+ ans:1,
+ exp:'<strong>DORA (Digital Operational Resilience Act)</strong> hiệu lực 17/1/2025 yêu cầu các tổ chức tài chính EU quản lý rủi ro ICT và bên thứ ba. Voltage Fusion có flyer chuyên biệt đáp ứng DORA thông qua DSPM capabilities.'
+},
+{id:10, group:'foundation', difficulty:'medium', category:'Sản phẩm',
+ q:'Voltage SecureData tích hợp với HSM nào của OpenText để cung cấp root-of-trust cho payments?',
+ opts:['OpenText Voltage HSM','OpenText Atalla HSM','OpenText SafeNet HSM','OpenText Thales HSM'],
+ ans:1,
+ exp:'<strong>OpenText Atalla HSM</strong> (Hardware Security Module) là thiết bị hardware security chuyên dụng cho payment processing, tích hợp với Voltage SecureData để cung cấp FIPS 140-2 Level 3 protection cho master keys.'
+},
+
+// ── TECHNICAL (12) ────────────────────────────
+{id:11, group:'technical', difficulty:'medium', category:'FPE',
+ q:'Format-Preserving Encryption (FPE) khác với AES-CBC như thế nào?',
+ opts:['FPE nhanh hơn AES-CBC 10 lần','FPE mã hoá dữ liệu nhưng giữ nguyên định dạng và độ dài, trong khi AES-CBC thay đổi cả hai','FPE dùng khoá ngắn hơn nên kém bảo mật hơn','FPE là mã hoá đối xứng còn AES-CBC là bất đối xứng'],
+ ans:1,
+ exp:'<strong>FPE (AES FF1)</strong> mã hoá số thẻ 16 chữ số → vẫn ra 16 chữ số. <strong>AES-CBC</strong> sẽ biến 16 chữ số thành chuỗi 32-50 ký tự Base64/Hex, phá vỡ database schema và legacy system. FPE dùng toán học tương đương AES về độ bảo mật.'
+},
+{id:12, group:'technical', difficulty:'hard', category:'FPE',
+ q:'NIST SP 800-38G định nghĩa chuẩn FPE nào mà OpenText là patent holder?',
+ opts:['FF3-1 (BPS scheme)','FF1 (NIST standard)','FPE-AES-256','Format Blind Encryption (FBE)'],
+ ans:1,
+ exp:'<strong>NIST SP 800-38G</strong> định nghĩa hai chế độ FPE: FF1 và FF3-1. OpenText là patent holder của <strong>FF1</strong> — chuẩn phổ biến hơn được dùng trong Voltage SecureData.'
+},
+{id:13, group:'technical', difficulty:'hard', category:'Key Management',
+ q:'Trong kiến trúc Stateless Key Management của Voltage, khoá mã hoá được tạo ra bằng cách nào?',
+ opts:['Được lưu trong database vault và truy xuất khi cần','Được tính toán động bằng Key Derivation Function (KDF) từ seed material và key name','Được inject vào application khi khởi động','Được đồng bộ từ HSM cluster khi có yêu cầu'],
+ ans:1,
+ exp:'<strong>Stateless Key Management</strong>: Khoá được tính <em>on-demand</em> bằng KDF(seed_material + key_name). Không có database vault, không backup khoá. Developer chỉ lưu "key name" (identifier), không bao giờ cầm khoá thực tế. Khoá tạo trong memory và không lưu xuống disk.'
+},
+{id:14, group:'technical', difficulty:'medium', category:'Tokenization',
+ q:'SST (Secure Stateless Tokenization) khác với tokenization truyền thống ở điểm cốt lõi nào?',
+ opts:['SST dùng mã hoá bất đối xứng thay vì đối xứng','SST không cần token vault để lưu bảng ánh xạ token-plaintext','SST nhanh hơn 100 lần so với tokenization thường','SST chỉ hoạt động với số thẻ tín dụng'],
+ ans:1,
+ exp:'<strong>SST</strong> = Stateless: không cần token vault database. Token được tính từ seed material, cho phép scale vô hạn không bị bottleneck. Tokenization truyền thống cần lưu cặp (token, plaintext) trong DB — đây là single point of failure và khó scale.'
+},
+{id:15, group:'technical', difficulty:'hard', category:'Cryptography',
+ q:'Identity-Based Encryption (IBE) trong Voltage cho phép điều gì mà PKI truyền thống không thể?',
+ opts:['Mã hoá nhanh hơn RSA 10 lần','Sử dụng bất kỳ chuỗi ký tự nào (email, user ID) làm public key mà không cần certificate','Mã hoá không cần khoá bí mật','Tích hợp với blockchain để quản lý identity'],
+ ans:1,
+ exp:'<strong>IBE</strong> cho phép dùng email hoặc bất kỳ identifier nào làm public key trực tiếp — không cần CA, không cần certificate, không cần PKI infrastructure phức tạp. Private key được cấp bởi Key Generation Authority (KGA). Đây là nền tảng của Voltage SecureMail.'
+},
+{id:16, group:'technical', difficulty:'medium', category:'FPH',
+ q:'Format-Preserving Hash (FPH) phù hợp nhất với use case nào?',
+ opts:['Mã hoá có thể giải mã khi cần thiết','Pseudonymization theo GDPR — analytics mà không thể reconstruct dữ liệu gốc','Bảo vệ PAN trong giao dịch thanh toán thời gian thực','Mã hoá email và file đính kèm'],
+ ans:1,
+ exp:'<strong>FPH</strong> là hàm một chiều — không thể giải mã ngược. Phù hợp cho <strong>pseudonymization theo GDPR Art.25</strong>: dùng trong analytics, matching, deduplication mà không thể reconstruct dữ liệu gốc. Khác với FPE (reversible).'
+},
+{id:17, group:'technical', difficulty:'medium', category:'API',
+ q:'Voltage cung cấp API nào để tích hợp native với IBM mainframe z/OS COBOL programs?',
+ opts:['JDBC/ODBC API','REST API over TCP','COBOL Language Environment (LE) API + z/FPE tool','JNI Java Bridge for z/OS'],
+ ans:2,
+ exp:'Voltage cung cấp <strong>COBOL LE API</strong> cho phép COBOL programs gọi trực tiếp FPE/SST functions, cùng công cụ <strong>z/FPE</strong> cho bulk encryption của CICS, DB2, IMS, QSAM, VSAM datasets. Đây là điểm khác biệt lớn — hầu hết giải pháp khác không support mainframe native.'
+},
+{id:18, group:'technical', difficulty:'hard', category:'Kiến trúc',
+ q:'ASCII ↔ EBCDIC conversion trong FPE của Voltage giải quyết vấn đề gì?',
+ opts:['Tốc độ mã hoá trên mainframe chậm hơn x86','Dữ liệu được mã hoá ở ASCII có thể được giải mã đúng khi được đọc dưới dạng EBCDIC trên mainframe và ngược lại','Bảo mật giao thức SNA của IBM','Chuyển đổi định dạng file VSAM sang DB2'],
+ ans:1,
+ exp:'Mainframe IBM z/OS dùng <strong>EBCDIC</strong>, trong khi hệ thống phân tán dùng <strong>ASCII</strong>. Voltage FPE hỗ trợ transparent conversion: dữ liệu mã hoá ở một encoding có thể giải mã đúng ở encoding kia. Điều này rất quan trọng cho môi trường hybrid mainframe + distributed.'
+},
+{id:19, group:'technical', difficulty:'medium', category:'Tích hợp',
+ q:'Voltage SecureData Sentry dùng giao thức nào để tích hợp với network infrastructure (proxy, load balancer)?',
+ opts:['SNMP v3','ICAP (Internet Content Adaptation Protocol)','NetFlow/IPFIX','Deep Packet Inspection (DPI)'],
+ ans:1,
+ exp:'<strong>ICAP (Internet Content Adaptation Protocol)</strong> là giao thức chuẩn cho phép Sentry hoạt động như một content adaptor, nhận traffic từ HTTP proxy/load balancer, áp dụng chính sách bảo vệ dữ liệu, rồi trả về. Không cần agent, không cần thay đổi ứng dụng.'
+},
+{id:20, group:'technical', difficulty:'hard', category:'Cloud',
+ q:'Khi tích hợp Voltage với Snowflake, cơ chế nào cho phép chạy FPE/SST ngay trong SQL query?',
+ opts:['External Python UDFs gọi Voltage REST API','Snowflake Native App qua Snowflake Horizon marketplace','JDBC driver wrapper','Stored procedures trong Snowflake Scripting'],
+ ans:1,
+ exp:'Voltage tích hợp với Snowflake qua <strong>Snowflake Horizon</strong> (native app marketplace), cho phép dùng UDFs (User-Defined Functions) gọi FPE/SST trực tiếp trong SQL. Dữ liệu được encrypt/decrypt ngay trong Snowflake engine mà không rời khỏi cloud environment.'
+},
+{id:21, group:'technical', difficulty:'medium', category:'Cloud',
+ q:'Trong Voltage SecureData Cloud & Analytics, streaming platforms nào được hỗ trợ tích hợp native?',
+ opts:['Pulsar và RabbitMQ','Apache Kafka, AWS Kinesis, Azure Event Hubs, Google Dataflow','MQTT và CoAP cho IoT','JMS và IBM MQ'],
+ ans:1,
+ exp:'Voltage SecureData Cloud & Analytics hỗ trợ các streaming platforms: <strong>Apache Kafka, AWS Kinesis, Azure Event Hubs, Google Dataflow, Apache Storm, Apache NiFi</strong> — cho phép tokenize/encrypt dữ liệu real-time trong data pipelines.'
+},
+{id:22, group:'technical', difficulty:'hard', category:'Bảo mật',
+ q:'Quantum-readiness trong Voltage được thể hiện như thế nào trong kiến trúc?',
+ opts:['Dùng RSA-4096 thay vì RSA-2048','Thiết kế kiến trúc hỗ trợ post-quantum algorithms với migration path rõ ràng theo NIST PQC roadmap','Dùng blockchain để phân tán key management','Tăng key length lên 512-bit'],
+ ans:1,
+ exp:'Voltage công bố roadmap <strong>Quantum-Ready</strong> theo NIST Post-Quantum Cryptography (PQC) standardization (NIST 2024). Kiến trúc stateless key management được thiết kế để swap thuật toán mà không cần thay đổi toàn bộ hệ thống — đây là migration path quan trọng.'
+},
+
+// ── PRODUCT (10) ──────────────────────────────
+{id:23, group:'product', difficulty:'easy', category:'SecureData Web',
+ q:'Voltage SecureData Web bảo vệ loại dữ liệu nào trong ứng dụng web?',
+ opts:['Chỉ bảo vệ session cookies và JWT tokens','PII, PHI, ePHI, financial data trong form fields và API payloads','Chỉ bảo vệ password hashing','SSL/TLS certificates cho HTTPS'],
+ ans:1,
+ exp:'<strong>Voltage SecureData Web</strong> bảo vệ <strong>PII, PHI, ePHI</strong> (HIPAA), số tài khoản, số thẻ, và bất kỳ dữ liệu nhạy cảm nào trong form fields, JSON/XML API payloads, và web portal — mã hoá ngay tại điểm nhập trên client trước khi truyền lên server.'
+},
+{id:24, group:'product', difficulty:'medium', category:'SecureData Sentry',
+ q:'Một tổ chức muốn bảo vệ dữ liệu trong ứng dụng Salesforce mà không cần modify code Salesforce. Module nào phù hợp nhất?',
+ opts:['Voltage SecureData Enterprise với REST API','Voltage SecureData Sentry với ICAP integration','Voltage Fusion với data discovery','Voltage SecureData Web với browser plugin'],
+ ans:1,
+ exp:'<strong>Voltage SecureData Sentry</strong> là giải pháp phù hợp nhất vì: (1) không cần agent/code change trong Salesforce, (2) hoạt động qua ICAP proxy intercept traffic, (3) áp dụng policy bảo vệ transparent, (4) enterprise giữ toàn quyền kiểm soát key.'
+},
+{id:25, group:'product', difficulty:'medium', category:'Voltage Fusion',
+ q:'Voltage Fusion phát hiện "dark data" là gì?',
+ opts:['Dữ liệu được mã hoá bằng thuật toán không rõ nguồn gốc','Dữ liệu được thu thập và lưu trữ nhưng không được sử dụng hoặc tổ chức chưa biết đang có','Dữ liệu trên dark web bị rò rỉ','Dữ liệu trong backup offline không được indexing'],
+ ans:1,
+ exp:'"<strong>Dark data</strong>" là dữ liệu mà tổ chức thu thập nhưng không nhận ra hoặc không sử dụng — thường chứa PII tiềm ẩn rủi ro. Voltage Fusion discovery engine quét và xác định dark data này trên tất cả repository: database, file shares, email, SharePoint...'
+},
+{id:26, group:'product', difficulty:'hard', category:'SDM',
+ q:'Tại sao SDM cần bảo toàn "referential integrity" khi masking dữ liệu test?',
+ opts:['Để đảm bảo database index hoạt động nhanh hơn','Vì dữ liệu masked trong bảng chính phải khớp với dữ liệu masked trong bảng liên kết (foreign key) để ứng dụng không bị lỗi','Để tuân thủ chuẩn SQL ANSI','Để giảm storage cost trong môi trường test'],
+ ans:1,
+ exp:'<strong>Referential integrity</strong>: Nếu CustomerID "12345" trong bảng Customers được mask thành "99801", thì tất cả các bảng khác reference CustomerID "12345" (Orders, Invoices...) cũng phải được mask thành "99801" — nhờ tính <em>deterministic</em> của FPE (cùng input → cùng output).'
+},
+{id:27, group:'product', difficulty:'medium', category:'Voltage Fusion',
+ q:'Trong 5 trụ cột của Voltage Fusion DSPM, "Usage Analysis" bao gồm điều gì?',
+ opts:['Phân tích CPU và memory usage của Fusion platform','Theo dõi ai truy cập dữ liệu gì, khi nào, từ đâu thông qua Database Activity Monitoring','Phân tích log của hệ điều hành','Kiểm tra network bandwidth consumption'],
+ ans:1,
+ exp:'<strong>Usage Analysis</strong> trong Fusion DSPM bao gồm <strong>Database Activity Monitoring (DAM)</strong>: theo dõi data access patterns, phát hiện anomaly, xác định permission exposure risks. Đây là nền tảng cho Zero Trust Data Security.'
+},
+{id:28, group:'product', difficulty:'easy', category:'Voltage Fusion',
+ q:'Voltage Fusion có thể phân tích loại dữ liệu không có cấu trúc nào để tìm PII?',
+ opts:['Chỉ text files và CSV','Rich media: hình ảnh, audio, video — nhờ AI analysis','Chỉ database tables và spreadsheets','Chỉ email và calendar files'],
+ ans:1,
+ exp:'Voltage Fusion dùng <strong>AI-powered analysis</strong> để tìm PII trong <strong>rich media: hình ảnh, audio, video</strong> — ví dụ: OCR trên ảnh chứa số CMND, nhận dạng giọng nói trong audio có tên và thông tin cá nhân. Đây là capability nổi bật so với data discovery truyền thống.'
+},
+{id:29, group:'product', difficulty:'medium', category:'SecureData',
+ q:'Trong Voltage SecureData, developer tích hợp API thường làm việc với gì thay vì khoá mã hoá thực tế?',
+ opts:['Hash của khoá mã hoá','Key identifier (tên khoá) — ví dụ: "PAN_KEY", "SSN_KEY"','Certificate thumbprint','Key version number'],
+ ans:1,
+ exp:'Nguyên lý stateless: developer chỉ làm việc với <strong>key name/identifier</strong> (ví dụ: "PAN", "SSN", "SensitiveData"). Khoá thực tế được derive động bởi IKS engine. Developer không bao giờ xử lý raw key material — giảm thiểu rủi ro key leakage.'
+},
+{id:30, group:'product', difficulty:'hard', category:'SDM',
+ q:'SDM 23.2 tích hợp với Voltage Fusion 23.2 để làm gì?',
+ opts:['Chuyển dữ liệu Fusion sang định dạng SAP','Cho phép discover dữ liệu có cấu trúc qua giao diện Fusion và thực thi data lifecycle management từ dashboard thống nhất','Backup tự động Fusion database sang SDM archive','Đồng bộ policy giữa Fusion và Active Directory'],
+ ans:1,
+ exp:'Tích hợp <strong>SDM 23.2 + Voltage Fusion 23.2</strong> tạo unified dashboard: (1) Fusion discover và classify structured data trong database tables, (2) SDM thực thi các tác vụ lifecycle management (archive, mask, migrate) — không cần chuyển đổi giữa hai console.'
+},
+{id:31, group:'product', difficulty:'medium', category:'SecureData',
+ q:'Voltage SecureData Payments bảo vệ cardholder data ở điểm nào trong transaction flow?',
+ opts:['Chỉ bảo vệ khi lưu trữ trong database merchant','Từ điểm đầu tiên tiếp xúc (card reader) cho đến secure decryption tại payment processor — dữ liệu không bao giờ cleartext trên merchant systems','Chỉ bảo vệ trong quá trình network transmission','Chỉ bảo vệ trong cloud data warehouse của processor'],
+ ans:1,
+ exp:'<strong>P2PE (Point-to-Point Encryption)</strong>: cardholder data được mã hoá ngay tại card reader (dip/swipe/NFC), đi qua tất cả merchant systems dưới dạng ciphertext, chỉ được giải mã tại <strong>secure decryption environment</strong> của payment processor — đây là yêu cầu PCI P2PE v2.'
+},
+{id:32, group:'product', difficulty:'hard', category:'Kiến trúc',
+ q:'Tại sao kiến trúc Stateless của Voltage giúp high availability tốt hơn tokenization có vault?',
+ opts:['Stateless dùng ít RAM hơn nên ít crash hơn','Không có single point of failure: mỗi node tính khoá độc lập từ seed, node bị lỗi không ảnh hưởng key availability','Stateless dùng load balancer tốt hơn','Không cần network connection giữa nodes'],
+ ans:1,
+ exp:'<strong>No single point of failure</strong>: Vault-based tokenization = nếu vault DB down → toàn bộ hệ thống không thể tokenize/detokenize. Voltage stateless = mỗi node tự tính khoá từ seed material → node bị lỗi không ảnh hưởng đến nodes khác. Scale-out tuyến tính.'
+},
+
+// ── COMPLIANCE (8) ────────────────────────────
+{id:33, group:'compliance', difficulty:'medium', category:'GDPR',
+ q:'Tính năng nào của Voltage đáp ứng GDPR Article 25 "Data Protection by Design"?',
+ opts:['Audit logging tất cả database queries','FPE và FPH pseudonymization — bảo vệ dữ liệu được tích hợp ngay từ tầng ứng dụng/database','Mã hoá toàn bộ disk (full disk encryption)','Network segmentation và micro-segmentation'],
+ ans:1,
+ exp:'<strong>GDPR Article 25</strong> yêu cầu "data protection by design and by default". Voltage FPE/FPH đáp ứng bằng cách <strong>embed protection vào data pipeline</strong>: dữ liệu được pseudonymize ngay tại nguồn, không phải add-on sau. FPH tạo pseudonym một chiều theo đúng tinh thần GDPR.'
+},
+{id:34, group:'compliance', difficulty:'hard', category:'GDPR',
+ q:'Voltage + SDM đáp ứng GDPR "Right to Erasure" (Right to be Forgotten) như thế nào?',
+ opts:['Xoá toàn bộ database khi có yêu cầu','SDM thực thi automated deletion workflows xoá PII của người dùng từ tất cả hệ thống, kể cả archive','Thay tên người dùng bằng "DELETED_USER"','Block access vào records của người dùng đó'],
+ ans:1,
+ exp:'<strong>GDPR Right to Erasure</strong>: SDM có automated deletion workflows có thể locate và xoá PII của một cá nhân cụ thể trên tất cả hệ thống, archive, backup — kể cả dữ liệu đã được migrate hay archive. Đây là một trong những use cases quan trọng nhất của SDM.'
+},
+{id:35, group:'compliance', difficulty:'medium', category:'PCI DSS',
+ q:'PCI DSS scope reduction 80% của Voltage có nghĩa là gì thực tế?',
+ opts:['Giảm 80% chi phí phần cứng của merchant','80% hệ thống và ứng dụng merchant không còn phải tuân thủ PCI DSS vì chúng không xử lý cleartext cardholder data nữa','Giảm 80% thời gian để complete PCI assessment','Chỉ cần 20% nhân viên cần đào tạo PCI DSS'],
+ ans:1,
+ exp:'Khi P2PE được áp dụng, merchant systems không bao giờ thấy cleartext PAN → <strong>hệ thống đó ra khỏi PCI DSS scope</strong>. "80%" nghĩa là phần lớn hệ thống của merchant không cần qua PCI audit nữa, giảm đáng kể số controls phải implement và cost of compliance.'
+},
+{id:36, group:'compliance', difficulty:'medium', category:'HIPAA',
+ q:'Trong môi trường y tế, "ePHI" mà Voltage SecureData Web bảo vệ là gì?',
+ opts:['Electronic Payment Health Insurance','Electronic Protected Health Information — thông tin sức khoẻ cá nhân dưới dạng điện tử','Encrypted Personal Health Index','Emergency Procedure Health Identifier'],
+ ans:1,
+ exp:'<strong>ePHI (Electronic Protected Health Information)</strong> là mọi thông tin sức khoẻ cá nhân được tạo, lưu trữ, truyền dưới dạng điện tử — tên, địa chỉ, ngày sinh, chẩn đoán, lịch sử khám bệnh, số bảo hiểm. HIPAA Security Rule yêu cầu bảo vệ ePHI với các safeguards kỹ thuật, vật lý và quản trị.'
+},
+{id:37, group:'compliance', difficulty:'hard', category:'PCI DSS',
+ q:'Voltage SecureData Payments được chứng nhận theo chuẩn PCI nào liên quan đến Point-to-Point Encryption?',
+ opts:['PCI DSS v4.0 Level 1 Merchant','PCI P2PE v2 (PCI SSC Point-to-Point Encryption Standard)','PCI PIN v3','PCI 3DS (3D Secure)'],
+ ans:1,
+ exp:'<strong>PCI P2PE v2</strong> là chuẩn của PCI Security Standards Council (PCI SSC) dành riêng cho Point-to-Point Encryption. Voltage SecureData Payments là <strong>listed P2PE solution</strong> — merchant dùng solution này có thể reduce SAQ scope và số lượng applicable controls đáng kể.'
+},
+{id:38, group:'compliance', difficulty:'medium', category:'FIPS',
+ q:'Chứng nhận FIPS 140-2 trong Voltage quan trọng với nhóm khách hàng nào nhất?',
+ opts:['Startups cần nhanh chóng go-to-market','US Federal Government, Defense contractors, và các regulated industries yêu cầu NIST-approved cryptography','Doanh nghiệp Châu Âu tuân thủ GDPR','Tổ chức thương mại điện tử nhỏ'],
+ ans:1,
+ exp:'<strong>FIPS 140-2 certification</strong> là yêu cầu bắt buộc của <strong>US Federal Government</strong> (FISMA, FedRAMP) và các ngành regulated như Defense, Healthcare (VA), Banking. Voltage FIPS 140-2 certified modules cho phép deploy trong môi trường government và regulated industries.'
+},
+{id:39, group:'compliance', difficulty:'hard', category:'Use cases',
+ q:'Trong ngành Telecom, Voltage bảo vệ loại dữ liệu subscriber nào với FPE?',
+ opts:['Chỉ billing records và invoices','MSISDN (số điện thoại), IMEI (thiết bị), location data, CDR (Call Detail Records) trong analytics pipelines','Chỉ mật khẩu WiFi và VPN keys','Email và SMS nội dung'],
+ ans:1,
+ exp:'Ngành Telco có nhiều PII nhạy cảm: <strong>MSISDN</strong> (số điện thoại di động), <strong>IMEI</strong> (device identifier), <strong>location data</strong>, và <strong>CDR (Call Detail Records)</strong>. Voltage FPE tokenize các fields này để billing analytics vẫn chạy được mà không expose subscriber identity.'
+},
+{id:40, group:'compliance', difficulty:'hard', category:'Tổng hợp',
+ q:'Khi một tổ chức tài chính muốn dùng Snowflake cho analytics nhưng lo ngại GDPR vì dữ liệu customer PII phải rời khỏi EU, Voltage giải quyết bằng cách nào?',
+ opts:['Từ chối upload dữ liệu lên Snowflake','Dữ liệu được FPE-tokenize trước khi upload — Snowflake chỉ nhận ciphertext, không có PII plaintext nào rời EU','Dùng Snowflake EU region và không cần mã hoá thêm','Mask dữ liệu bằng random values trước khi upload'],
+ ans:1,
+ exp:'"<strong>Protect Once, Use Everywhere</strong>": PII được FPE-tokenize <strong>trước khi rời on-prem</strong> sang Snowflake. Snowflake nhận ciphertext — không phải PII, do đó không vi phạm GDPR data transfer restriction. Phân tích vẫn chạy được vì ciphertext deterministic (JOIN/GROUP BY hoạt động). Key không bao giờ chia sẻ với Snowflake.'
+}
+];
+
+// ══════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════
+let mode = 'all';
+let questions = [];
+let current = 0;
+let answers = {}; // qid → { chosen, isCorrect }
+let started = false;
+
+function selectMode(m) {
+  mode = m;
+  ['all','foundation','technical','product','compliance'].forEach(k => {
+    document.getElementById('lc-'+k).classList.toggle('sel', k===m);
+  });
+}
+
+function startQuiz() {
+  if (mode === 'all') questions = [...ALL_QUESTIONS];
+  else questions = ALL_QUESTIONS.filter(q => q.group === mode);
+  answers = {};
+  current = 0;
+  started = true;
+  document.getElementById('introScreen').style.display = 'none';
+  document.getElementById('progressWrap').style.display = 'block';
+  document.getElementById('mainLayout').style.display = 'grid';
+  buildSidebar();
+  renderQuestion();
+  updateProgress();
+}
+
+function buildSidebar() {
+  const list = document.getElementById('qNavList');
+  list.innerHTML = '';
+  questions.forEach((q, i) => {
+    const d = document.createElement('div');
+    d.className = 'q-nav-item' + (i === current ? ' current' : '');
+    d.id = 'nav-'+i;
+    d.onclick = () => { current = i; renderQuestion(); updateNav(); };
+    d.innerHTML = `<div class="q-dot">${i+1}</div><div class="q-label">${q.q.substring(0,55)}${q.q.length>55?'…':''}</div>`;
+    list.appendChild(d);
+  });
+}
+
+function updateNav() {
+  questions.forEach((q, i) => {
+    const el = document.getElementById('nav-'+i);
+    if (!el) return;
+    el.className = 'q-nav-item';
+    if (i === current) el.classList.add('current');
+    if (answers[q.id] !== undefined) {
+      el.classList.add(answers[q.id].isCorrect ? 'answered-correct' : 'answered-wrong');
+      el.querySelector('.q-dot').textContent = answers[q.id].isCorrect ? '✓' : '✗';
+    }
+  });
+  const navItem = document.getElementById('nav-'+current);
+  if (navItem) navItem.scrollIntoView({block:'nearest', behavior:'smooth'});
+}
+
+function updateProgress() {
+  const total = questions.length;
+  const answered = Object.keys(answers).length;
+  const correct = Object.values(answers).filter(a=>a.isCorrect).length;
+  const wrong = answered - correct;
+  document.getElementById('pCurrent').textContent = current + 1;
+  document.getElementById('pTotal').textContent = total;
+  document.getElementById('pCorrect').textContent = correct;
+  document.getElementById('pWrong').textContent = wrong;
+  document.getElementById('progressFill').style.width = (answered/total*100)+'%';
+}
+
+function renderQuestion() {
+  const q = questions[current];
+  const panel = document.getElementById('qpanel');
+  const userAns = answers[q.id];
+  const isAnswered = userAns !== undefined;
+  const letters = ['A','B','C','D'];
+  const diffMap = {easy:'Cơ bản', medium:'Nâng cao', hard:'Chuyên sâu'};
+
+  let optsHTML = q.opts.map((o, i) => {
+    let cls = 'option';
+    if (isAnswered) {
+      cls += ' disabled';
+      if (i === q.ans) cls += ' correct';
+      else if (i === userAns.chosen) cls += ' wrong';
+    } else if (false) { /* placeholder */ }
+    return `<div class="${cls}" onclick="${isAnswered ? '' : 'selectOpt('+i+')'}" id="opt-${i}">
+      <div class="opt-letter">${letters[i]}</div>
+      <div class="opt-text">${o}</div>
+    </div>`;
+  }).join('');
+
+  let expHTML = '';
+  if (isAnswered) {
+    const ok = userAns.isCorrect;
+    expHTML = `<div class="explanation show ${ok?'':'wrong-exp'}">
+      <div class="exp-title">${ok ? '✅ Chính xác!' : '❌ Chưa đúng'}</div>
+      <strong>Giải thích:</strong> ${q.exp}
+    </div>`;
+  }
+
+  panel.innerHTML = `
+    <div class="q-header">
+      <div class="q-number">Câu ${current+1} / ${questions.length}</div>
+      <div class="q-category">${q.category}</div>
+      <div class="q-difficulty ${q.difficulty}">${diffMap[q.difficulty]}</div>
+    </div>
+    <div class="q-text">${q.q}</div>
+    <div class="options" id="optList">${optsHTML}</div>
+    ${expHTML}
+    <div class="nav-buttons">
+      <button class="btn btn-secondary" onclick="prevQ()" ${current===0?'disabled':''}>← Trước</button>
+      ${!isAnswered ? `<button class="btn btn-check" id="btnCheck" onclick="checkAnswer()" disabled>Kiểm tra</button>` : ''}
+      ${current < questions.length - 1
+        ? `<button class="btn btn-primary" onclick="nextQ()">Tiếp theo →</button>`
+        : `<button class="btn btn-success" onclick="finishQuiz()">Xem kết quả 🏆</button>`}
+    </div>
+  `;
+
+  // attach click handlers manually for not-answered
+  if (!isAnswered) {
+    q.opts.forEach((_, i) => {
+      document.getElementById('opt-'+i).addEventListener('click', () => selectOpt(i));
+    });
+  }
+
+  updateNav();
+  updateProgress();
+}
+
+let selectedOpt = null;
+function selectOpt(i) {
+  const q = questions[current];
+  if (answers[q.id] !== undefined) return;
+  selectedOpt = i;
+  const letters = ['A','B','C','D'];
+  q.opts.forEach((_, j) => {
+    const el = document.getElementById('opt-'+j);
+    el.className = 'option' + (j === i ? ' selected' : '');
+  });
+  document.getElementById('btnCheck').disabled = false;
+}
+
+function checkAnswer() {
+  const q = questions[current];
+  if (selectedOpt === null) return;
+  const isCorrect = selectedOpt === q.ans;
+  answers[q.id] = { chosen: selectedOpt, isCorrect };
+  selectedOpt = null;
+  renderQuestion();
+}
+
+function prevQ() { if (current > 0) { current--; selectedOpt=null; renderQuestion(); } }
+function nextQ() { if (current < questions.length-1) { current++; selectedOpt=null; renderQuestion(); } }
+
+function finishQuiz() {
+  document.getElementById('mainLayout').style.display = 'none';
+  document.getElementById('progressWrap').style.display = 'none';
+  const scoreScreen = document.getElementById('scoreScreen');
+  scoreScreen.style.display = 'block';
+
+  const total = questions.length;
+  const correct = Object.values(answers).filter(a=>a.isCorrect).length;
+  const pct = Math.round(correct/total*100);
+  const scoreClass = pct >= 80 ? '' : pct >= 60 ? 'medium-score' : 'low-score';
+  const titles = [
+    [90, '🏆 Xuất sắc! Chuyên gia thực thụ', 'Bạn nắm vững toàn diện giải pháp OpenText Voltage ở mức chuyên gia.'],
+    [75, '🎯 Giỏi! Hiểu biết sâu', 'Bạn có hiểu biết tốt về giải pháp. Ôn lại các câu sai để hoàn thiện.'],
+    [60, '📚 Khá. Cần củng cố thêm', 'Nền tảng tốt nhưng còn các góc độ cần đào sâu hơn.'],
+    [0, '💡 Cần học thêm', 'Nên xem lại tài liệu nghiên cứu và thực hành thêm.']
+  ];
+  const [threshold, title, sub] = titles.find(([t]) => pct >= t);
+
+  document.getElementById('scoreCircleWrap').innerHTML = `
+    <div class="score-circle ${scoreClass}">
+      <div>${pct}%</div>
+      <div class="score-label">${correct}/${total} câu</div>
+    </div>`;
+  document.getElementById('scoreTitleWrap').innerHTML = `
+    <div class="score-title">${title}</div>
+    <div class="score-sub">${sub}</div>`;
+
+  const groups = {foundation:'Nền tảng', technical:'Kỹ thuật', product:'Sản phẩm', compliance:'Compliance'};
+  let breakdownHTML = `
+    <div class="score-stat"><div class="score-stat-num">${correct}</div><div class="score-stat-label">Câu đúng</div></div>
+    <div class="score-stat"><div class="score-stat-num" style="color:var(--red)">${total-correct}</div><div class="score-stat-label">Câu sai</div></div>
+    <div class="score-stat"><div class="score-stat-num">${pct}%</div><div class="score-stat-label">Tỉ lệ đúng</div></div>
+    <div class="score-stat"><div class="score-stat-num">${Object.keys(answers).length}</div><div class="score-stat-label">Đã trả lời</div></div>`;
+  document.getElementById('scoreBreakdown').innerHTML = breakdownHTML;
+
+  let levelHTML = '';
+  Object.entries(groups).forEach(([gk, gn]) => {
+    const gqs = questions.filter(q => q.group === gk);
+    if (gqs.length === 0) return;
+    const gc = gqs.filter(q => answers[q.id]?.isCorrect).length;
+    const gp = Math.round(gc / gqs.length * 100);
+    const barColor = gp >= 80 ? 'var(--green)' : gp >= 60 ? 'var(--yellow)' : 'var(--red)';
+    levelHTML += `<div class="level-row">
+      <div class="level-name">${gn}</div>
+      <div class="level-bar-bg"><div class="level-bar-fill" style="width:${gp}%;background:${barColor}"></div></div>
+      <div class="level-pct">${gp}%</div>
+    </div>`;
+  });
+  document.getElementById('levelBreakdown').innerHTML = levelHTML;
+}
+
+function showReview() {
+  document.getElementById('scoreScreen').style.display = 'none';
+  const rs = document.getElementById('reviewSection');
+  rs.style.display = 'block';
+  rs.classList.add('show');
+  const letters = ['A','B','C','D'];
+  const diffMap = {easy:'Cơ bản', medium:'Nâng cao', hard:'Chuyên sâu'};
+  let html = '';
+  questions.forEach((q, i) => {
+    const ua = answers[q.id];
+    const ok = ua?.isCorrect;
+    const statusClass = ok ? 'rv-correct' : 'rv-wrong';
+    const statusIcon = ok ? '✅' : '❌';
+    html += `<div class="review-item ${statusClass}">
+      <div class="review-q">${statusIcon} Câu ${i+1}: ${q.q}</div>
+      <div class="review-meta">[${q.category}] · ${diffMap[q.difficulty]}</div>
+      <div class="review-answers">`;
+    if (ua && !ok) {
+      html += `<span class="rv-your">Bạn chọn: ${letters[ua.chosen]}. ${q.opts[ua.chosen]}</span><br/>`;
+    }
+    html += `<span class="rv-correct-ans">Đáp án đúng: ${letters[q.ans]}. ${q.opts[q.ans]}</span><br/>
+      <span style="color:var(--muted);font-size:13px;margin-top:4px;display:block;">📌 ${q.exp}</span>
+      </div></div>`;
+  });
+  document.getElementById('reviewList').innerHTML = html;
+}
+
+function backToScore() {
+  document.getElementById('reviewSection').style.display = 'none';
+  document.getElementById('scoreScreen').style.display = 'block';
+}
+
+function restartQuiz() {
+  document.getElementById('scoreScreen').style.display = 'none';
+  document.getElementById('reviewSection').style.display = 'none';
+  document.getElementById('introScreen').style.display = 'block';
+  answers = {};
+  current = 0;
+  started = false;
+}
+
+function switchLevel(lv) {
+  ['all','foundation','technical','product','compliance'].forEach(k => {
+    document.getElementById('tab-'+k).classList.toggle('active', k===lv);
+  });
+  if (started) {
+    // filter questions view
+    if (lv === 'all') questions = [...ALL_QUESTIONS];
+    else questions = ALL_QUESTIONS.filter(q => q.group === lv);
+    current = 0;
+    buildSidebar();
+    renderQuestion();
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1837 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cẩm nang giải pháp KEMP hỗ trợ sale bán hàng</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #00875A;
+    --primary-dark: #005C3A;
+    --primary-light: #E3F5EE;
+    --accent: #FF6B35;
+    --accent2: #0066CC;
+    --dark: #0D1B2A;
+    --gray: #64748B;
+    --light-gray: #F1F5F9;
+    --border: #E2E8F0;
+    --white: #FFFFFF;
+    --warning: #F59E0B;
+    --danger: #EF4444;
+    --success: #10B981;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    background: #F8FAFC;
+    color: var(--dark);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  .site-header {
+    background: linear-gradient(135deg, var(--dark) 0%, #1a3a5c 50%, var(--primary-dark) 100%);
+    color: white;
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+  }
+  .header-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 32px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .logo-area { display: flex; align-items: center; gap: 12px; }
+  .logo-badge {
+    background: var(--primary);
+    color: white;
+    font-weight: 800;
+    font-size: 18px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    letter-spacing: 1px;
+  }
+  .header-title { font-size: 15px; font-weight: 600; opacity: 0.9; }
+  .header-subtitle { font-size: 11px; opacity: 0.6; }
+  .header-meta { font-size: 11px; opacity: 0.5; font-family: 'JetBrains Mono', monospace; }
+
+  /* NAV */
+  .main-nav {
+    display: flex;
+    overflow-x: auto;
+    padding: 0 32px;
+    gap: 0;
+    scrollbar-width: none;
+  }
+  .main-nav::-webkit-scrollbar { display: none; }
+  .nav-btn {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.65);
+    padding: 10px 16px;
+    cursor: pointer;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .nav-btn:hover, .nav-btn.active {
+    color: white;
+    border-bottom-color: var(--primary);
+  }
+  .nav-btn.active { color: #6EE7B7; }
+
+  /* LAYOUT */
+  .container { max-width: 1280px; margin: 0 auto; padding: 28px 32px; }
+
+  /* SECTIONS */
+  .section { display: none; animation: fadeIn 0.3s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-icon {
+    width: 42px; height: 42px;
+    background: var(--primary);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .section-title { font-size: 20px; font-weight: 800; color: var(--dark); }
+  .section-desc { font-size: 12px; color: var(--gray); margin-top: 2px; }
+
+  /* CARDS */
+  .card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  }
+  .card-title {
+    font-size: 14px; font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-title .icon { font-size: 16px; }
+
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .badge-green { background: #D1FAE5; color: #065F46; }
+  .badge-blue { background: #DBEAFE; color: #1E40AF; }
+  .badge-orange { background: #FEF3C7; color: #92400E; }
+  .badge-red { background: #FEE2E2; color: #991B1B; }
+  .badge-gray { background: #F1F5F9; color: #475569; }
+
+  /* FEATURE LIST */
+  .feature-list { list-style: none; }
+  .feature-list li {
+    padding: 6px 0;
+    border-bottom: 1px solid var(--light-gray);
+    display: flex; align-items: flex-start; gap: 8px;
+    font-size: 13px;
+  }
+  .feature-list li:last-child { border-bottom: none; }
+  .feature-list li::before {
+    content: '✓';
+    color: var(--primary);
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  /* HIGHLIGHT BOX */
+  .highlight-box {
+    background: linear-gradient(135deg, var(--primary-light) 0%, #E8F5E9 100%);
+    border-left: 4px solid var(--primary);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+  }
+  .highlight-box.blue {
+    background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+    border-left-color: var(--accent2);
+  }
+  .highlight-box.orange {
+    background: linear-gradient(135deg, #FFFBEB 0%, #FEF3C7 100%);
+    border-left-color: var(--warning);
+  }
+  .highlight-box.red {
+    background: linear-gradient(135deg, #FFF5F5 0%, #FEE2E2 100%);
+    border-left-color: var(--danger);
+  }
+
+  /* PROBLEM CARD */
+  .problem-card {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-top: 3px solid var(--danger);
+  }
+  .problem-card .problem-icon { font-size: 28px; margin-bottom: 8px; }
+  .problem-card h4 { font-size: 13px; font-weight: 700; color: var(--danger); margin-bottom: 6px; }
+  .problem-card p { font-size: 12px; color: var(--gray); }
+
+  /* SOLUTION ARROW */
+  .solution-arrow {
+    text-align: center;
+    padding: 16px 0;
+    font-size: 28px;
+  }
+
+  /* FEATURE MODULE */
+  .feature-module {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-top: 3px solid var(--primary);
+  }
+  .feature-module h4 { font-size: 13px; font-weight: 700; color: var(--primary-dark); margin-bottom: 8px; }
+  .feature-module .tag {
+    display: inline-block;
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin: 2px;
+    font-weight: 500;
+  }
+
+  /* SURVEY QUESTIONS */
+  .q-item {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .q-num {
+    background: var(--primary);
+    color: white;
+    width: 26px; height: 26px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .q-num.red { background: var(--danger); }
+  .q-content { flex: 1; }
+  .q-text { font-weight: 600; font-size: 13px; color: var(--dark); margin-bottom: 4px; }
+  .q-hint { font-size: 12px; color: var(--gray); }
+
+  /* SWOT */
+  .swot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .swot-box { border-radius: 10px; padding: 16px; }
+  .swot-box.s { background: #D1FAE5; border: 1px solid #6EE7B7; }
+  .swot-box.w { background: #FEE2E2; border: 1px solid #FCA5A5; }
+  .swot-box.o { background: #DBEAFE; border: 1px solid #93C5FD; }
+  .swot-box.t { background: #FEF3C7; border: 1px solid #FCD34D; }
+  .swot-label { font-size: 11px; font-weight: 800; letter-spacing: 1px; margin-bottom: 8px; opacity: 0.7; }
+  .swot-box.s .swot-label { color: #065F46; }
+  .swot-box.w .swot-label { color: #991B1B; }
+  .swot-box.o .swot-label { color: #1E40AF; }
+  .swot-box.t .swot-label { color: #92400E; }
+  .swot-box ul { list-style: none; }
+  .swot-box ul li { font-size: 12px; padding: 3px 0; padding-left: 14px; position: relative; color: var(--dark); }
+  .swot-box ul li::before { content: '•'; position: absolute; left: 0; }
+
+  /* LICENSE TABLE */
+  .lic-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .lic-table th {
+    background: var(--dark);
+    color: white;
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 11px;
+  }
+  .lic-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  .lic-table tr:nth-child(even) td { background: var(--light-gray); }
+  .lic-table tr:hover td { background: var(--primary-light); }
+  .check { color: var(--primary); font-weight: 700; }
+  .cross { color: #CBD5E1; }
+
+  /* COMPARE TABLE */
+  .cmp-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .cmp-table th {
+    background: var(--dark);
+    color: white;
+    padding: 10px 14px;
+    text-align: center;
+    font-weight: 600;
+  }
+  .cmp-table th:first-child { text-align: left; }
+  .cmp-table th.kemp-col { background: var(--primary); }
+  .cmp-table td { padding: 9px 14px; border-bottom: 1px solid var(--border); text-align: center; }
+  .cmp-table td:first-child { text-align: left; font-weight: 500; }
+  .cmp-table tr:nth-child(even) td { background: var(--light-gray); }
+  .cmp-table .win { color: var(--primary); font-weight: 700; }
+  .cmp-table .neutral { color: var(--gray); }
+  .cmp-table .lose { color: var(--danger); }
+
+  /* USE CASE */
+  .usecase-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .usecase-header {
+    background: linear-gradient(90deg, var(--dark) 0%, #1a3a5c 100%);
+    color: white;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .usecase-icon { font-size: 24px; }
+  .usecase-title { font-size: 15px; font-weight: 700; }
+  .usecase-body { padding: 16px 20px; }
+  .usecase-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .usecase-col h5 { font-size: 11px; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+  .usecase-col ul { list-style: none; }
+  .usecase-col ul li { font-size: 12px; padding: 3px 0; color: var(--dark); padding-left: 12px; position: relative; }
+  .usecase-col ul li::before { content: '›'; position: absolute; left: 0; color: var(--primary); font-weight: 700; }
+
+  /* CUSTOMER REF */
+  .ref-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .ref-item {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 12px;
+    text-align: center;
+    color: var(--dark);
+    font-weight: 500;
+    line-height: 1.3;
+    transition: all 0.15s;
+    cursor: default;
+  }
+  .ref-item:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,135,90,0.15);
+  }
+  .ref-cat {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--gray);
+    font-weight: 600;
+    margin-bottom: 12px;
+    margin-top: 20px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* KEY SELLING */
+  .ksp-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 18px 20px;
+    margin-bottom: 12px;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    transition: all 0.2s;
+  }
+  .ksp-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); transform: translateY(-2px); }
+  .ksp-num {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 800;
+    flex-shrink: 0;
+  }
+  .ksp-content h4 { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 4px; }
+  .ksp-content p { font-size: 12px; color: var(--gray); margin-bottom: 8px; }
+  .ksp-script {
+    background: #FFFBEB;
+    border-left: 3px solid var(--warning);
+    padding: 8px 12px;
+    border-radius: 0 6px 6px 0;
+    font-size: 12px;
+    color: #92400E;
+    font-style: italic;
+  }
+  .ksp-script::before { content: '💬 Script: '; font-weight: 700; font-style: normal; }
+
+  /* FAQ */
+  .faq-item {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    background: white;
+  }
+  .faq-q {
+    padding: 14px 18px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 13px;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .faq-q:hover { background: var(--light-gray); }
+  .faq-q.open { background: var(--primary-light); color: var(--primary-dark); }
+  .faq-arrow { font-size: 10px; transition: transform 0.2s; flex-shrink: 0; margin-left: 12px; }
+  .faq-q.open .faq-arrow { transform: rotate(180deg); }
+  .faq-a {
+    display: none;
+    padding: 14px 18px;
+    font-size: 13px;
+    color: var(--dark);
+    border-top: 1px solid var(--border);
+    background: #FAFAFA;
+    line-height: 1.7;
+  }
+  .faq-a.show { display: block; }
+  .faq-a ul { list-style: disc; padding-left: 18px; margin-top: 6px; }
+  .faq-a ul li { margin-bottom: 4px; }
+  .faq-cat-label {
+    font-size: 10px; font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--gray);
+    margin: 20px 0 8px;
+    padding: 0 2px;
+  }
+
+  /* RATING */
+  .rating-box {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 20px;
+    text-align: center;
+  }
+  .rating-score { font-size: 48px; font-weight: 800; color: var(--primary); line-height: 1; }
+  .rating-stars { font-size: 20px; color: #F59E0B; margin: 6px 0; }
+  .rating-label { font-size: 12px; color: var(--gray); }
+  .rating-detail { margin-top: 14px; }
+  .rating-bar { display: flex; align-items: center; gap: 8px; margin: 4px 0; font-size: 11px; }
+  .rating-bar-bg { flex: 1; background: #E2E8F0; border-radius: 4px; height: 6px; }
+  .rating-bar-fill { height: 6px; background: var(--primary); border-radius: 4px; }
+  .rating-pct { width: 32px; text-align: right; color: var(--gray); font-family: 'JetBrains Mono', monospace; }
+
+  /* SEGMENT */
+  .seg-card {
+    background: white;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    padding: 16px;
+    border-left: 4px solid var(--accent2);
+  }
+  .seg-card h4 { font-size: 13px; font-weight: 700; color: var(--accent2); margin-bottom: 8px; }
+
+  /* PERF TABLE */
+  .perf-table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .perf-table th {
+    background: var(--dark); color: white;
+    padding: 7px 10px; text-align: center;
+    font-weight: 600; font-size: 11px;
+  }
+  .perf-table th:first-child { text-align: left; }
+  .perf-table td { padding: 6px 10px; border-bottom: 1px solid var(--border); text-align: center; }
+  .perf-table td:first-child { text-align: left; font-weight: 500; }
+  .perf-table tr:nth-child(even) td { background: var(--light-gray); }
+
+  /* SCROLL TO TOP */
+  .scroll-top {
+    position: fixed;
+    bottom: 24px; right: 24px;
+    background: var(--primary);
+    color: white;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,135,90,0.3);
+    transition: all 0.2s;
+    z-index: 999;
+  }
+  .scroll-top:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,135,90,0.4); }
+
+  @media (max-width: 768px) {
+    .container { padding: 16px; }
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .swot-grid { grid-template-columns: 1fr; }
+    .usecase-row { grid-template-columns: 1fr; }
+    .ref-grid { grid-template-columns: repeat(2, 1fr); }
+    .header-top { padding: 10px 16px; }
+    .main-nav { padding: 0 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-top">
+    <div class="logo-area">
+      <div class="logo-badge">KEMP</div>
+      <div>
+        <div class="header-title">Cẩm nang giải pháp KEMP hỗ trợ sale bán hàng</div>
+        <div class="header-subtitle">Progress Kemp LoadMaster · Application Delivery Controller (ADC)</div>
+      </div>
+    </div>
+    <div class="header-meta">Rev. 2025 · Internal Use Only</div>
+  </div>
+  <nav class="main-nav">
+    <button class="nav-btn active" onclick="showSection('intro', this)">🏢 Giới thiệu</button>
+    <button class="nav-btn" onclick="showSection('problems', this)">⚠️ Hiện trạng</button>
+    <button class="nav-btn" onclick="showSection('features', this)">⚙️ Tính năng</button>
+    <button class="nav-btn" onclick="showSection('survey', this)">📋 Câu hỏi Survey</button>
+    <button class="nav-btn" onclick="showSection('swot', this)">📊 SWOT & Phân khúc</button>
+    <button class="nav-btn" onclick="showSection('license', this)">🔑 License</button>
+    <button class="nav-btn" onclick="showSection('compare', this)">⚖️ So sánh đối thủ</button>
+    <button class="nav-btn" onclick="showSection('selling', this)">💡 Key Selling Points</button>
+    <button class="nav-btn" onclick="showSection('usecase', this)">🏥 Use Cases</button>
+    <button class="nav-btn" onclick="showSection('customers', this)">🤝 Khách hàng tham chiếu</button>
+    <button class="nav-btn" onclick="showSection('faq', this)">❓ FAQ</button>
+  </nav>
+</header>
+
+<div class="container">
+
+  <!-- ===================== INTRO ===================== -->
+  <div id="intro" class="section active">
+    <div class="section-header">
+      <div class="section-icon">🏢</div>
+      <div>
+        <div class="section-title">Giới thiệu Progress Kemp & Giải pháp ADC</div>
+        <div class="section-desc">Hiểu về hãng và sản phẩm trước khi gặp khách hàng</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title"><span class="icon">🌐</span> Progress Software & Kemp là ai?</div>
+        <p style="font-size:13px; color:#475569; margin-bottom:12px;">
+          <strong>Progress Software Corporation</strong> là công ty phần mềm Mỹ (Nasdaq: PRGS), sở hữu thương hiệu <strong>Kemp Technologies</strong> – nhà cung cấp giải pháp <strong>Application Delivery Controller (ADC)</strong> và <strong>Load Balancer</strong> hàng đầu thế giới.
+        </p>
+        <ul class="feature-list">
+          <li>Được xếp hạng <strong>Leader</strong> trên G2 Grid Report – Load Balancing Winter 2025</li>
+          <li>Đánh giá <strong>4.9/5</strong> từ 370+ reviews trên G2 (97% sẵn sàng giới thiệu)</li>
+          <li>Phục vụ hàng chục nghìn tổ chức toàn cầu từ SMB đến Enterprise</li>
+          <li>Cam kết price/performance tốt nhất thị trường so với F5, Citrix</li>
+          <li>Sản phẩm: <strong>LoadMaster Hardware</strong>, <strong>Virtual LoadMaster</strong>, Cloud (AWS/Azure)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">🎯</span> ADC là gì? Giải thích đơn giản cho khách hàng</div>
+        <div class="highlight-box">
+          <strong>Định nghĩa đơn giản:</strong> ADC (Application Delivery Controller) là thiết bị/phần mềm đứng giữa người dùng và hệ thống máy chủ, phân phối tải thông minh, bảo mật ứng dụng, và đảm bảo dịch vụ luôn hoạt động liên tục.
+        </div>
+        <ul class="feature-list">
+          <li><strong>SLB (Server Load Balancing):</strong> Chia đều traffic đến nhiều server – tránh quá tải 1 server</li>
+          <li><strong>VIP/VS:</strong> Một địa chỉ IP đại diện cho toàn bộ cụm server phía sau</li>
+          <li><strong>Real Server (RS):</strong> Các server thật đứng sau ADC xử lý request</li>
+          <li><strong>SSL Offload:</strong> LoadMaster xử lý mã hóa/giải mã TLS thay vì server – giảm tải CPU</li>
+          <li><strong>WAF:</strong> Tường lửa ứng dụng web – chặn tấn công SQL injection, XSS…</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📐</span> Kiến trúc tổng quan LoadMaster</div>
+      <div style="background: linear-gradient(135deg, #0D1B2A 0%, #1a3a5c 100%); border-radius: 10px; padding: 24px; color: white; text-align: center; position: relative; overflow: hidden;">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 0; flex-wrap: wrap;">
+          <div style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 12px 16px; text-align: center; min-width: 100px;">
+            <div style="font-size: 28px;">👥</div>
+            <div style="font-size: 11px; margin-top: 4px; opacity: 0.8;">Users / Clients</div>
+            <div style="font-size: 10px; opacity: 0.5;">Internet</div>
+          </div>
+          <div style="font-size: 24px; padding: 0 12px; opacity: 0.6;">→</div>
+          <div style="background: rgba(0,135,90,0.4); border: 2px solid #00875A; border-radius: 8px; padding: 12px 16px; text-align: center; min-width: 140px;">
+            <div style="font-size: 28px;">🛡️</div>
+            <div style="font-size: 12px; font-weight: 700; margin-top: 4px;">KEMP LoadMaster</div>
+            <div style="font-size: 10px; opacity: 0.7; margin-top: 2px;">ADC · WAF · SSL · GSLB</div>
+            <div style="font-size: 10px; opacity: 0.5; margin-top: 2px;">VIP / Virtual Server</div>
+          </div>
+          <div style="font-size: 24px; padding: 0 12px; opacity: 0.6;">→</div>
+          <div style="display: flex; flex-direction: column; gap: 6px;">
+            <div style="background: rgba(255,255,255,0.1); border-radius: 6px; padding: 8px 12px; text-align: center; font-size: 11px;">
+              <div>🖥️ Server 1 (Real Server)</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.1); border-radius: 6px; padding: 8px 12px; text-align: center; font-size: 11px;">
+              <div>🖥️ Server 2 (Real Server)</div>
+            </div>
+            <div style="background: rgba(255,255,255,0.1); border-radius: 6px; padding: 8px 12px; text-align: center; font-size: 11px;">
+              <div>🖥️ Server N (Real Server)</div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top: 16px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+          <span style="background: rgba(0,135,90,0.3); border: 1px solid #00875A; padding: 4px 10px; border-radius: 4px; font-size: 11px;">✔ Load Balancing</span>
+          <span style="background: rgba(0,135,90,0.3); border: 1px solid #00875A; padding: 4px 10px; border-radius: 4px; font-size: 11px;">✔ High Availability</span>
+          <span style="background: rgba(0,135,90,0.3); border: 1px solid #00875A; padding: 4px 10px; border-radius: 4px; font-size: 11px;">✔ WAF Security</span>
+          <span style="background: rgba(0,135,90,0.3); border: 1px solid #00875A; padding: 4px 10px; border-radius: 4px; font-size: 11px;">✔ SSL Offload</span>
+          <span style="background: rgba(0,135,90,0.3); border: 1px solid #00875A; padding: 4px 10px; border-radius: 4px; font-size: 11px;">✔ DDoS Mitigation</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="highlight-box">
+        <strong>🏆 G2 Winter 2025:</strong> Xếp hạng Leader – Load Balancing Software. Đứng đầu quadrant về Market Presence & Satisfaction.
+      </div>
+      <div class="highlight-box blue">
+        <strong>⭐ 4.9/5 trên G2</strong> – 370 đánh giá, 89% cho 5 sao. 97% người dùng sẵn sàng giới thiệu cho đồng nghiệp.
+      </div>
+      <div class="highlight-box orange">
+        <strong>💰 TCO thấp hơn F5 đến 70%</strong> – Tính năng tương đương hoặc vượt trội nhưng giá cả cạnh tranh hơn nhiều.
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== PROBLEMS ===================== -->
+  <div id="problems" class="section">
+    <div class="section-header">
+      <div class="section-icon">⚠️</div>
+      <div>
+        <div class="section-title">Hiện trạng & Vấn đề thúc đẩy nhu cầu</div>
+        <div class="section-desc">Các vấn đề điển hình trong tổ chức khách hàng – dùng để "khơi gợi" nhu cầu</div>
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-bottom:16px;">
+      <div class="problem-card">
+        <div class="problem-icon">💥</div>
+        <h4>Server quá tải, downtime thường xuyên</h4>
+        <p>Chỉ có 1–2 server xử lý toàn bộ traffic. Khi cao điểm (khai trường, nộp hồ sơ, đầu tháng lương...) hệ thống sập, người dùng không truy cập được.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🔓</div>
+        <h4>Ứng dụng web bị tấn công liên tục</h4>
+        <p>Website, cổng dịch vụ công, hệ thống nội bộ bị SQL injection, XSS, DDoS. Mất dữ liệu, bị deface, ảnh hưởng uy tín tổ chức.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🐢</div>
+        <h4>Hiệu năng SSL/TLS kém</h4>
+        <p>Máy chủ phải tự xử lý mã hóa HTTPS làm tiêu tốn 30-40% CPU. Khi nhiều kết nối SSL đồng thời, response time tăng vọt.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🌍</div>
+        <h4>Hệ thống phân tán, thiếu GSLB</h4>
+        <p>Data center ở nhiều tỉnh/vùng nhưng không có cơ chế điều hướng thông minh. Một DC sập là người dùng toàn vùng mất truy cập.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">🔑</div>
+        <h4>Xác thực phân tán, không đồng bộ</h4>
+        <p>Người dùng phải đăng nhập nhiều lần khi dùng nhiều ứng dụng. Thiếu SSO, không tích hợp được Active Directory với ứng dụng web.</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-icon">📊</div>
+        <h4>Thiếu visibility, khó giám sát</h4>
+        <p>Không biết traffic phân bổ ra sao, server nào đang quá tải, ứng dụng nào phản hồi chậm. Khi sự cố xảy ra, debug mất rất nhiều thời gian.</p>
+      </div>
+    </div>
+
+    <div class="solution-arrow">⬇️</div>
+
+    <div class="highlight-box" style="margin-top:0;">
+      <strong>✅ Giải pháp:</strong> Triển khai <strong>Progress Kemp LoadMaster ADC</strong> – một nền tảng tích hợp đầy đủ Load Balancing, WAF, SSL Offload, GSLB, Edge Security Pack, IPS/DDoS Mitigation, và Network Telemetry. Một thiết bị giải quyết toàn bộ bài toán trên.
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📈</span> Xu hướng thị trường thúc đẩy nhu cầu ADC</div>
+      <div class="grid-4">
+        <div style="text-align:center; padding:12px;">
+          <div style="font-size:32px; font-weight:800; color:var(--primary);">85%</div>
+          <div style="font-size:11px; color:var(--gray);">Tổ chức chuyển sang mô hình hybrid/multi-cloud</div>
+        </div>
+        <div style="text-align:center; padding:12px;">
+          <div style="font-size:32px; font-weight:800; color:var(--accent);">3x</div>
+          <div style="font-size:11px; color:var(--gray);">Gia tăng tấn công ứng dụng web mỗi năm</div>
+        </div>
+        <div style="text-align:center; padding:12px;">
+          <div style="font-size:32px; font-weight:800; color:var(--accent2);">99.99%</div>
+          <div style="font-size:11px; color:var(--gray);">SLA yêu cầu uptime từ các tổ chức chính phủ, ngân hàng</div>
+        </div>
+        <div style="text-align:center; padding:12px;">
+          <div style="font-size:32px; font-weight:800; color:var(--warning);">PCI-DSS</div>
+          <div style="font-size:11px; color:var(--gray);">Yêu cầu bảo mật WAF bắt buộc theo tiêu chuẩn</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== FEATURES ===================== -->
+  <div id="features" class="section">
+    <div class="section-header">
+      <div class="section-icon">⚙️</div>
+      <div>
+        <div class="section-title">Tính năng Giải pháp LoadMaster</div>
+        <div class="section-desc">Giải thích ngắn gọn, dễ hiểu cho sale để tư vấn khách hàng</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="feature-module">
+        <h4>⚖️ Server Load Balancing (SLB) – Cân bằng tải L4/L7</h4>
+        <p style="font-size:12px; color:#475569; margin-bottom:10px;">Phân phối traffic thông minh đến nhiều server theo nhiều thuật toán, tự động phát hiện server chết và ngừng gửi traffic.</p>
+        <div>
+          <span class="tag">Round Robin</span>
+          <span class="tag">Least Connection</span>
+          <span class="tag">Weighted RR</span>
+          <span class="tag">Source-IP Hash</span>
+          <span class="tag">Agent-Based Adaptive</span>
+          <span class="tag">Layer 7 Content Switching</span>
+          <span class="tag">Chained Failover</span>
+        </div>
+        <div class="highlight-box" style="margin-top:10px;">
+          <strong>Nói với KH:</strong> "Hệ thống tự động điều phối traffic, khi 1 server chết – LoadMaster tức thì chuyển sang server khác, user không cảm nhận được gián đoạn."
+        </div>
+      </div>
+
+      <div class="feature-module">
+        <h4>🛡️ Web Application Firewall (WAF) – Bảo vệ ứng dụng web</h4>
+        <p style="font-size:12px; color:#475569; margin-bottom:10px;">Tích hợp WAF đầy đủ, cập nhật threat data hàng ngày, tuân thủ OWASP Top 10 và PCI-DSS Section 6.6.</p>
+        <div>
+          <span class="tag">OWASP Top 10</span>
+          <span class="tag">SQL Injection</span>
+          <span class="tag">XSS</span>
+          <span class="tag">CSRF</span>
+          <span class="tag">Data Loss Prevention</span>
+          <span class="tag">Cookie Tampering</span>
+          <span class="tag">IP Reputation (daily update)</span>
+          <span class="tag">PCI-DSS 6.6</span>
+        </div>
+        <div class="highlight-box" style="margin-top:10px;">
+          <strong>Nói với KH:</strong> "WAF tích hợp sẵn trong ADC – không cần mua thêm thiết bị bảo mật riêng, tiết kiệm chi phí và đơn giản hoá hạ tầng."
+        </div>
+      </div>
+
+      <div class="feature-module">
+        <h4>🔒 SSL/TLS Offload – Giảm tải mã hóa</h4>
+        <p style="font-size:12px; color:#475569; margin-bottom:10px;">LoadMaster xử lý toàn bộ SSL/TLS thay máy chủ, hỗ trợ đến 1.000 certificate, FIPS 140-2 Level 1.</p>
+        <div>
+          <span class="tag">TLS 1.0/1.1/1.2/1.3</span>
+          <span class="tag">SNI Support</span>
+          <span class="tag">OCSP Validation</span>
+          <span class="tag">FIPS 140-2</span>
+          <span class="tag">EV Certificates</span>
+          <span class="tag">STARTTLS (POP3/SMTP/IMAP)</span>
+          <span class="tag">1.000 SSL certs</span>
+        </div>
+        <div class="highlight-box" style="margin-top:10px;">
+          <strong>Nói với KH:</strong> "Server của bạn không cần xử lý SSL nữa – CPU freed up hoàn toàn cho business logic, tốc độ tăng đáng kể."
+        </div>
+      </div>
+
+      <div class="feature-module">
+        <h4>🌐 Global Server Load Balancing (GSLB/GEO) – Phân tán địa lý</h4>
+        <p style="font-size:12px; color:#475569; margin-bottom:10px;">Điều hướng người dùng đến data center gần nhất/khỏe nhất dựa trên vị trí địa lý, tình trạng server.</p>
+        <div>
+          <span class="tag">Location-Based Routing</span>
+          <span class="tag">Round Robin / Chained Failover</span>
+          <span class="tag">EDNS Support</span>
+          <span class="tag">256 nodes/FQDN</span>
+          <span class="tag">Active/Active HA</span>
+          <span class="tag">DNS Health Checking</span>
+        </div>
+        <div class="highlight-box" style="margin-top:10px;">
+          <strong>Nói với KH:</strong> "Triển khai DC Hà Nội + HCM, khi Hà Nội sập – user tự động được chuyển về HCM, service 100% uptime."
+        </div>
+      </div>
+
+      <div class="feature-module">
+        <h4>🔑 Edge Security Pack (ESP) – Xác thực & SSO</h4>
+        <p style="font-size:12px; color:#475569; margin-bottom:10px;">Thay thế Microsoft TMG, cung cấp pre-authentication, SSO, 2FA tích hợp với AD/LDAP/RADIUS.</p>
+        <div>
+          <span class="tag">Active Directory / LDAP</span>
+          <span class="tag">RADIUS</span>
+          <span class="tag">SAML / OIDC</span>
+          <span class="tag">Two-Factor Auth</span>
+          <span class="tag">Single Sign-On (SSO)</span>
+          <span class="tag">X.509 Client Cert</span>
+          <span class="tag">Kerberos (KCD)</span>
+          <span class="tag">Pre-Authentication</span>
+        </div>
+        <div class="highlight-box" style="margin-top:10px;">
+          <strong>Nói với KH:</strong> "Chặn người dùng trái phép ngay tại LoadMaster, không cần request đến server – bảo mật từ lớp đầu tiên."
+        </div>
+      </div>
+
+      <div class="feature-module">
+        <h4>🚨 IPS & DDoS Mitigation – Phòng chống xâm nhập</h4>
+        <p style="font-size:12px; color:#475569; margin-bottom:10px;">Hệ thống IPS tương thích Snort rules, chống DDoS L4/L7 rate-based, ACL, IP Reputation filtering.</p>
+        <div>
+          <span class="tag">Snort-Compatible IPS</span>
+          <span class="tag">L4 DDoS Mitigation</span>
+          <span class="tag">L7 Rate-Based DDoS</span>
+          <span class="tag">IP Allow/Deny List</span>
+          <span class="tag">ACL per VS</span>
+          <span class="tag">IP Reputation (daily)</span>
+          <span class="tag">Botnet Detection</span>
+        </div>
+        <div class="highlight-box" style="margin-top:10px;">
+          <strong>Nói với KH:</strong> "Tích hợp IPS với Snort rules – đội SOC có thể import rules tự có, không phụ thuộc vendor cho security updates."
+        </div>
+      </div>
+
+      <div class="feature-module">
+        <h4>📊 Network Telemetry & Monitoring – Giám sát toàn diện</h4>
+        <p style="font-size:12px; color:#475569; margin-bottom:10px;">Export flow data theo chuẩn IPFIX đến Flowmon Collector, SNMP, Syslog, real-time dashboard.</p>
+        <div>
+          <span class="tag">IPFIX Protocol</span>
+          <span class="tag">Flowmon Integration</span>
+          <span class="tag">SNMP</span>
+          <span class="tag">Remote Syslog</span>
+          <span class="tag">Real-time Dashboard</span>
+          <span class="tag">Change Auditing</span>
+          <span class="tag">REST API</span>
+        </div>
+        <div class="highlight-box" style="margin-top:10px;">
+          <strong>Nói với KH:</strong> "Biết ngay server nào chậm, ứng dụng nào bị bottleneck – MTTD (Mean Time to Detect) giảm từ giờ xuống phút."
+        </div>
+      </div>
+
+      <div class="feature-module">
+        <h4>⚡ High Availability & Clustering – Đảm bảo liên tục</h4>
+        <p style="font-size:12px; color:#475569; margin-bottom:10px;">HA pair Active/Active hoặc Active/Standby, stateful failover, scale-out clustering.</p>
+        <div>
+          <span class="tag">Active/Active HA</span>
+          <span class="tag">Active/Standby HA</span>
+          <span class="tag">Stateful Failover</span>
+          <span class="tag">Scale-out Clustering</span>
+          <span class="tag">Hot-Swap PSU & Disk</span>
+          <span class="tag">Connection Draining</span>
+        </div>
+        <div class="highlight-box" style="margin-top:10px;">
+          <strong>Nói với KH:</strong> "Deploy 2 LoadMaster HA pair – một cái chết, cái kia tiếp quản trong mili-giây, session không bị gián đoạn."
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:8px;">
+      <div class="card-title"><span class="icon">📋</span> Bảng thông số Hardware (Model tham khảo nhanh)</div>
+      <div style="overflow-x:auto;">
+        <table class="perf-table">
+          <thead>
+            <tr>
+              <th>Model</th>
+              <th>Throughput L7</th>
+              <th>SSL TPS (2K)</th>
+              <th>L4 Conn (triệu)</th>
+              <th>L7 HTTP req/s</th>
+              <th>RAM</th>
+              <th>Rack</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>LM-X1</td><td>1 Gbps</td><td>1,000</td><td>4</td><td>70,000</td><td>4GB</td><td>1U</td></tr>
+            <tr><td>LM-X3-NG</td><td>3.4 Gbps</td><td>1,700</td><td>8.6</td><td>300,000</td><td>8GB</td><td>1U</td></tr>
+            <tr><td><strong>LM-X15-NG</strong></td><td><strong>15 Gbps</strong></td><td><strong>15,000</strong></td><td><strong>35</strong></td><td><strong>1,000,000</strong></td><td><strong>32GB</strong></td><td><strong>1U</strong></td></tr>
+            <tr><td>LM-XHC20-NG</td><td>20 Gbps</td><td>9,000</td><td>17.2</td><td>800,000</td><td>16GB</td><td>1U</td></tr>
+            <tr><td>LM-X25-NG</td><td>25 Gbps</td><td>25,000</td><td>75.8</td><td>1,000,000</td><td>64GB</td><td>2U</td></tr>
+            <tr><td>LM-XHC30-NG</td><td>30 Gbps</td><td>25,000</td><td>75.8</td><td>525,000</td><td>64GB</td><td>2U</td></tr>
+            <tr><td>LM-XHC55-NG</td><td>55 Gbps</td><td>40,000</td><td>151.6</td><td>1,500,000</td><td>128GB</td><td>2U</td></tr>
+            <tr><td>LM-XHC100-NG</td><td>90 Gbps</td><td>45,000</td><td>151.6</td><td>1,500,000</td><td>128GB</td><td>2U</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:11px; color:var(--gray); margin-top:8px;">* Model LM-X15-NG thường được chào cho tầm trung (15 Gbps). Sample BOM đi kèm part LM-X15-NG + ENP-LM-X15-NG (Enterprise Plus Sub) + SFP module.</p>
+    </div>
+  </div>
+
+  <!-- ===================== SURVEY ===================== -->
+  <div id="survey" class="section">
+    <div class="section-header">
+      <div class="section-icon">📋</div>
+      <div>
+        <div class="section-title">Câu hỏi Survey Khách hàng</div>
+        <div class="section-desc">Dùng để thu thập thông tin hiện trạng, sizing và lên BOM chính xác</div>
+      </div>
+    </div>
+
+    <div class="highlight-box orange" style="margin-bottom:20px;">
+      <strong>💡 Mục tiêu survey:</strong> Hiểu rõ nhu cầu KH trước khi propose để đề xuất đúng model, đúng license tier. Các câu đỏ là <strong>bắt buộc phải hỏi</strong> để sizing.
+    </div>
+
+    <div style="font-size:11px; font-weight:700; color:var(--gray); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;">🔴 THÔNG TIN BẮT BUỘC – SIZING & BOM</div>
+
+    <div class="q-item">
+      <div class="q-num red">1</div>
+      <div class="q-content">
+        <div class="q-text">Yêu cầu Throughput cho cân bằng tải ứng dụng là bao nhiêu?</div>
+        <div class="q-hint">Gợi ý: 1G / 3G / 15G / 25G / 40G? → Quyết định model hardware hoặc virtual. Hỏi cả throughput hiện tại và dự kiến 3-5 năm tới.</div>
+      </div>
+    </div>
+    <div class="q-item">
+      <div class="q-num red">2</div>
+      <div class="q-content">
+        <div class="q-text">Triển khai Hardware Appliance hay Virtual (VM)?</div>
+        <div class="q-hint">Hardware → LoadMaster LM-Xxx-NG. Virtual → VLM trên VMware/Hyper-V/KVM/Cloud (AWS, Azure). Ảnh hưởng đến part number và giá.</div>
+      </div>
+    </div>
+    <div class="q-item">
+      <div class="q-num red">3</div>
+      <div class="q-content">
+        <div class="q-text">Số lượng Appliance cần (Hardware/Virtual)?</div>
+        <div class="q-hint">Thường deploy theo cặp HA (2 thiết bị). Hỏi xem KH muốn Active/Standby hay Active/Active HA.</div>
+      </div>
+    </div>
+    <div class="q-item">
+      <div class="q-num red">4</div>
+      <div class="q-content">
+        <div class="q-text">License support bao nhiêu năm?</div>
+        <div class="q-hint">1 năm hay 3 năm? Enterprise Plus subscription bao gồm WAF + GSLB + 24x7 support. Enterprise chỉ 10x5 và không có WAF.</div>
+      </div>
+    </div>
+    <div class="q-item">
+      <div class="q-num red">5</div>
+      <div class="q-content">
+        <div class="q-text">Khách hàng có nhu cầu tính năng nâng cao như WAF, GSLB không?</div>
+        <div class="q-hint">Nếu có → phải chọn Enterprise Plus subscription. WAF và GSLB không có trong Standard hay Enterprise.</div>
+      </div>
+    </div>
+    <div class="q-item">
+      <div class="q-num red">9</div>
+      <div class="q-content">
+        <div class="q-text">Các yêu cầu về performance: Concurrent connection, Total user, SSL TPS, SSL throughput?</div>
+        <div class="q-hint">SSL TPS quyết định có cần chọn model có SSL acceleration cao hơn không. Concurrent connections ảnh hưởng model hardware. Cần số liệu cụ thể để map vào spec sheet.</div>
+      </div>
+    </div>
+
+    <div style="font-size:11px; font-weight:700; color:var(--gray); text-transform:uppercase; letter-spacing:0.5px; margin: 20px 0 10px;">🔵 THÔNG TIN BỔ SUNG – GIẢI PHÁP & TRIỂN KHAI</div>
+
+    <div class="q-item">
+      <div class="q-num">6</div>
+      <div class="q-content">
+        <div class="q-text">Mục tiêu trang bị giải pháp ADC cho hệ thống của khách hàng là gì?</div>
+        <div class="q-hint">High Availability? Tăng performance? Bảo mật ứng dụng? Compliance PCI-DSS? → Giúp định hướng đề xuất đúng tính năng.</div>
+      </div>
+    </div>
+    <div class="q-item">
+      <div class="q-num">7</div>
+      <div class="q-content">
+        <div class="q-text">Hiện trạng hệ thống KH đã sử dụng giải pháp ADC chưa? Nếu có, của hãng nào?</div>
+        <div class="q-hint">F5 BIG-IP → opportunity to replace/TCO argument. Chưa có → greenfield, cần educate nhiều hơn. Citrix ADC → phân tích migration path.</div>
+      </div>
+    </div>
+    <div class="q-item">
+      <div class="q-num">8</div>
+      <div class="q-content">
+        <div class="q-text">Các tính năng cân bằng tải mà khách hàng yêu cầu cụ thể?</div>
+        <div class="q-hint">L4 hay L7 load balancing? Content switching? Session persistence? Ghi lại chi tiết để map vào VIP configuration sau.</div>
+      </div>
+    </div>
+    <div class="q-item">
+      <div class="q-num">10</div>
+      <div class="q-content">
+        <div class="q-text">Khách hàng cung cấp Sơ đồ hệ thống để triển khai giải pháp cân bằng tải?</div>
+        <div class="q-hint">Network topology, IP scheme, số lượng Real Server, ứng dụng nào cần LB → cần thiết cho pre-sales design và sizing chính xác.</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:16px;">
+      <div class="card-title"><span class="icon">📝</span> Câu hỏi bổ sung thường hỏi thêm</div>
+      <div class="grid-2">
+        <div>
+          <ul class="feature-list">
+            <li>Hệ điều hành và hypervisor đang dùng? (VMware, Hyper-V, KVM...)</li>
+            <li>Số lượng Virtual Server (VIP) cần cấu hình?</li>
+            <li>Số lượng Real Server phía sau mỗi VIP?</li>
+            <li>Ứng dụng nào cần bảo vệ WAF (website, portal, API...)?</li>
+          </ul>
+        </div>
+        <div>
+          <ul class="feature-list">
+            <li>Yêu cầu tích hợp Active Directory / LDAP không?</li>
+            <li>Có cần GSLB / Multi-site không?</li>
+            <li>Yêu cầu compliance: PCI-DSS, ISO 27001, FIPS?</li>
+            <li>Timeline triển khai và ngân sách dự kiến?</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SWOT ===================== -->
+  <div id="swot" class="section">
+    <div class="section-header">
+      <div class="section-icon">📊</div>
+      <div>
+        <div class="section-title">Phân tích SWOT & Phân khúc Khách hàng</div>
+        <div class="section-desc">Đánh giá khách quan để tư vấn đúng đối tượng</div>
+      </div>
+    </div>
+
+    <div class="swot-grid" style="margin-bottom:24px;">
+      <div class="swot-box s">
+        <div class="swot-label">💪 STRENGTHS – ĐIỂM MẠNH</div>
+        <ul>
+          <li>Price/Performance vượt trội – TCO thấp hơn F5 đến 70%</li>
+          <li>All-in-one: ADC + WAF + GSLB + ESP tích hợp sẵn</li>
+          <li>G2 Leader Winter 2025, rating 4.9/5 (370 reviews)</li>
+          <li>Deploy đa nền tảng: Hardware, VM, Cloud (AWS/Azure)</li>
+          <li>Hỗ trợ FIPS 140-2, PCI-DSS, Common Criteria</li>
+          <li>Application templates – triển khai nhanh, ít lỗi</li>
+          <li>Subscription linh hoạt (1/3 năm), có Pooled Licensing</li>
+          <li>Đã có 30+ khách hàng reference tại Việt Nam</li>
+        </ul>
+      </div>
+      <div class="swot-box w">
+        <div class="swot-label">⚠️ WEAKNESSES – ĐIỂM YẾU</div>
+        <ul>
+          <li>Ít nhận diện thương hiệu hơn F5 tại các enterprise lớn</li>
+          <li>Hệ sinh thái partner/integrator ở VN còn nhỏ hơn F5</li>
+          <li>WAF/GSLB chỉ có ở Enterprise Plus – tier cao nhất</li>
+          <li>Một số tính năng enterprise rất cao cấp của F5 chưa có</li>
+          <li>Tài liệu tiếng Việt còn hạn chế</li>
+        </ul>
+      </div>
+      <div class="swot-box o">
+        <div class="swot-label">🚀 OPPORTUNITIES – CƠ HỘI</div>
+        <ul>
+          <li>Chuyển đổi số mạnh mẽ tại cơ quan nhà nước, bệnh viện</li>
+          <li>Yêu cầu an toàn thông tin (ATTT) ngày càng cao tại VN</li>
+          <li>Nhiều tổ chức đang dùng F5 cũ, muốn thay thế cost-effective</li>
+          <li>Xu hướng hybrid cloud = cần ADC đa nền tảng</li>
+          <li>Ngân hàng, tài chính cần PCI-DSS compliance</li>
+          <li>Trường học/y tế đang số hoá mạnh – nhu cầu ADC nhỏ/vừa</li>
+        </ul>
+      </div>
+      <div class="swot-box t">
+        <div class="swot-label">🎯 THREATS – THÁCH THỨC</div>
+        <ul>
+          <li>F5 BIG-IP có brand awareness mạnh tại enterprise</li>
+          <li>Các đối thủ giá rẻ từ Trung Quốc (Sangfor, Array)</li>
+          <li>AWS/Azure built-in load balancer cạnh tranh ở cloud-native</li>
+          <li>HAProxy/Nginx free alternatives cho SMB</li>
+          <li>Chu kỳ mua sắm chính phủ chậm, thủ tục đấu thầu phức tạp</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-header" style="margin-top:24px;">
+      <div class="section-icon" style="background:var(--accent2);">🎯</div>
+      <div>
+        <div class="section-title" style="font-size:17px;">Phân khúc Khách hàng Phù hợp</div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="seg-card">
+        <h4>🏛️ Cơ quan Chính phủ, Bộ ngành, Sở ban ngành</h4>
+        <ul class="feature-list">
+          <li>Cổng dịch vụ công cần HA cao, uptime 99.99%</li>
+          <li>Hệ thống quản lý văn bản, tài nguyên môi trường</li>
+          <li>Yêu cầu bảo mật ATTT, có kinh phí đầu tư rõ ràng</li>
+          <li><strong>Model phù hợp:</strong> LM-X15-NG hoặc LM-X25-NG + ENP Sub</li>
+        </ul>
+      </div>
+      <div class="seg-card">
+        <h4>🏦 Ngân hàng, Tài chính, Bảo hiểm</h4>
+        <ul class="feature-list">
+          <li>Yêu cầu PCI-DSS, ISO 27001 – WAF là bắt buộc</li>
+          <li>SSL TPS cao, concurrent connections lớn</li>
+          <li>Cần GSLB cho disaster recovery đa DC</li>
+          <li><strong>Model phù hợp:</strong> LM-X25-NG trở lên + Enterprise Plus</li>
+        </ul>
+      </div>
+      <div class="seg-card">
+        <h4>🏥 Bệnh viện, Y tế</h4>
+        <ul class="feature-list">
+          <li>HIS, EMR, cổng đặt lịch khám – cần HA 24/7</li>
+          <li>Ngân sách vừa phải, ưu tiên cost-effective</li>
+          <li>Cần WAF bảo vệ dữ liệu bệnh nhân</li>
+          <li><strong>Model phù hợp:</strong> LM-X3-NG hoặc LM-X15-NG</li>
+        </ul>
+      </div>
+      <div class="seg-card">
+        <h4>🎓 Trường Đại học, Giáo dục</h4>
+        <ul class="feature-list">
+          <li>Cổng sinh viên, LMS, hệ thống thi online</li>
+          <li>Traffic spike mùa thi, mùa nhập học</li>
+          <li>Ngân sách hạn chế → chào VLM hoặc LM-X3-NG</li>
+          <li><strong>Model phù hợp:</strong> VLM-1G/5G hoặc LM-X1/X3</li>
+        </ul>
+      </div>
+      <div class="seg-card">
+        <h4>🏭 Doanh nghiệp Vừa & Lớn</h4>
+        <ul class="feature-list">
+          <li>ERP, CRM, hệ thống nội bộ, ứng dụng web</li>
+          <li>Cần SSL offload cho Microsoft Exchange/SharePoint</li>
+          <li>Tích hợp Active Directory → dùng ESP/SSO</li>
+          <li><strong>Model phù hợp:</strong> VLM hoặc LM-X3/X15-NG</li>
+        </ul>
+      </div>
+      <div class="seg-card">
+        <h4>☁️ MSP / Nhà cung cấp dịch vụ Cloud</h4>
+        <ul class="feature-list">
+          <li>Cần license linh hoạt, multi-tenant</li>
+          <li>SPLA monthly hoặc Pooled Licensing</li>
+          <li>Deploy nhanh trên cloud, scale theo nhu cầu</li>
+          <li><strong>Model phù hợp:</strong> VLM SPLA hoặc PAYG (AWS/Azure)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== LICENSE ===================== -->
+  <div id="license" class="section">
+    <div class="section-header">
+      <div class="section-icon">🔑</div>
+      <div>
+        <div class="section-title">Cơ chế License – Cách tính & So sánh Tier</div>
+        <div class="section-desc">Hiểu rõ để tư vấn đúng license và lên BOM chính xác</div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-title"><span class="icon">📦</span> Hardware Appliance – License Perpetual</div>
+        <p style="font-size:12px; color:var(--gray); margin-bottom:12px;">Mua một lần, license vĩnh viễn. Thêm subscription hàng năm để unlock tính năng và nhận support.</p>
+        <table class="lic-table">
+          <thead><tr><th>Thành phần</th><th>Mô tả</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Hardware Appliance</strong></td><td>Mua một lần, license perpetual theo model</td></tr>
+            <tr><td><strong>Support Subscription</strong></td><td>Mua hàng năm (1 hoặc 3 năm), chọn tier</td></tr>
+            <tr><td>Standard</td><td>10x5 support, L4-L7, Network Telemetry, IPS</td></tr>
+            <tr><td>Enterprise</td><td>24x7 support + Edge Security Pack (ESP/SSO)</td></tr>
+            <tr><td><strong>Enterprise Plus ✨</strong></td><td>24x7 + ESP + <strong>WAF + GSLB + Floating License</strong></td></tr>
+          </tbody>
+        </table>
+        <div class="highlight-box orange" style="margin-top:10px;">
+          <strong>⚠️ Quan trọng:</strong> WAF và GSLB chỉ hoạt động với <strong>Enterprise Plus</strong>. Nếu KH cần WAF – phải quote ENP subscription.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span class="icon">☁️</span> Virtual LoadMaster – Các hình thức License</div>
+        <table class="lic-table" style="margin-bottom:10px;">
+          <thead><tr><th>Loại</th><th>Mô tả</th><th>Phù hợp</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Perpetual</strong></td><td>Mua 1 lần, áp dụng subscription</td><td>On-prem VM</td></tr>
+            <tr><td><strong>Subscription</strong></td><td>1 hoặc 3 năm, ENP default</td><td>Cloud/Hypervisor</td></tr>
+            <tr><td><strong>Pooled</strong></td><td>Pool bandwidth, deploy nhiều instances</td><td>DevOps, multi-site</td></tr>
+            <tr><td><strong>PAYG</strong></td><td>Tính theo giờ, không cần mua trước</td><td>AWS/Azure test/prod</td></tr>
+            <tr><td><strong>SPLA</strong></td><td>Tính theo tháng cho MSP</td><td>Service Provider</td></tr>
+          </tbody>
+        </table>
+        <div class="highlight-box blue">
+          <strong>💡 PAYG AWS/Azure:</strong> Bao gồm WAF + GSLB + ESP mặc định, không cần subscription riêng – tiện cho PoC và triển khai nhanh.
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📊</span> So sánh Subscription Tier – Tính năng theo tier</div>
+      <div style="overflow-x:auto;">
+        <table class="lic-table">
+          <thead>
+            <tr>
+              <th style="width:200px;">Tính năng</th>
+              <th>Standard</th>
+              <th>Enterprise</th>
+              <th style="background:var(--primary);">Enterprise Plus ⭐</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Support Hours</td><td>10x5</td><td class="check">24x7</td><td class="check">24x7x365</td></tr>
+            <tr><td>Software Updates</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><td>Security Patches</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><td>L4-L7 App Delivery</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><td>Network Telemetry (IPFIX)</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><td>Intrusion Prevention (IPS)</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><td>Edge Security Pack (ESP/SSO)</td><td class="cross">—</td><td class="check">✓</td><td class="check">✓</td></tr>
+            <tr><td>Web Application Firewall (WAF)</td><td class="cross">—</td><td class="cross">—</td><td class="check" style="font-weight:700;color:var(--primary);">✓ (daily update)</td></tr>
+            <tr><td>GSLB (daily reputation update)</td><td class="cross">—</td><td class="cross">—</td><td class="check" style="font-weight:700;color:var(--primary);">✓ (daily update)</td></tr>
+            <tr><td>Floating License</td><td class="cross">—</td><td class="cross">—</td><td class="check">✓</td></tr>
+            <tr><td>In-Advance Hardware Replacement</td><td class="cross">—</td><td class="cross">—</td><td class="check">✓</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📝</span> Sample BOM – LM-X15-NG (15 Gbps)</div>
+      <table class="lic-table">
+        <thead><tr><th>STT</th><th>Part#</th><th>Mô tả</th><th>SL</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>1</td><td><strong>LM-X15-NG</strong></td>
+            <td>Hardware Appliance: 16x 1GbE + 4x 10GbE ports, 32GB RAM, Redundant PSU & Disk, 15 Gbps throughput, 12,000 SSL TPS (2K), 1U rack</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>2</td><td><strong>ENP-LM-X15-NG</strong></td>
+            <td>1 Year Enterprise Plus Subscription: 24x7 support, WAF + GSLB daily update, ESP/SSO, In-advance hardware replacement, software updates</td>
+            <td>1</td>
+          </tr>
+          <tr>
+            <td>3</td><td><strong>X15-NG-SFP-SR</strong></td>
+            <td>SFP+ SR 10GBase-SR Transceiver (850nm, up to 300m) – bundle 4 transceivers cho LM-X15-NG</td>
+            <td>1</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="font-size:11px; color:var(--gray); margin-top:8px;">* Thông thường quote 2 units (HA pair). Nhân đôi part 1 và 2. SFP tuỳ yêu cầu kết nối uplink.</p>
+    </div>
+  </div>
+
+  <!-- ===================== COMPARE ===================== -->
+  <div id="compare" class="section">
+    <div class="section-header">
+      <div class="section-icon">⚖️</div>
+      <div>
+        <div class="section-title">So sánh với Đối thủ Cạnh tranh</div>
+        <div class="section-desc">Phân tích khách quan để có luận điểm thuyết phục khi gặp KH dùng competitor</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title"><span class="icon">📊</span> Bảng so sánh tính năng chính</div>
+      <div style="overflow-x:auto;">
+        <table class="cmp-table">
+          <thead>
+            <tr>
+              <th style="width:200px;">Tiêu chí</th>
+              <th class="kemp-col">✅ KEMP LoadMaster</th>
+              <th>F5 BIG-IP</th>
+              <th>Citrix ADC</th>
+              <th>HAProxy (Free)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>L4-L7 Load Balancing</td>
+              <td class="win">✓ Đầy đủ</td>
+              <td class="win">✓ Đầy đủ</td>
+              <td class="win">✓ Đầy đủ</td>
+              <td class="neutral">✓ L4/L7 cơ bản</td>
+            </tr>
+            <tr>
+              <td>WAF tích hợp</td>
+              <td class="win">✓ ENP Sub</td>
+              <td class="win">✓ ASM (thêm phí)</td>
+              <td class="win">✓ AppFW</td>
+              <td class="lose">✗ Không có</td>
+            </tr>
+            <tr>
+              <td>SSL Offload</td>
+              <td class="win">✓ FIPS 140-2</td>
+              <td class="win">✓ FIPS</td>
+              <td class="win">✓</td>
+              <td class="neutral">Hạn chế</td>
+            </tr>
+            <tr>
+              <td>GSLB</td>
+              <td class="win">✓ ENP Sub</td>
+              <td class="win">✓ GTM</td>
+              <td class="win">✓</td>
+              <td class="lose">✗</td>
+            </tr>
+            <tr>
+              <td>Edge Security / SSO</td>
+              <td class="win">✓ ESP built-in</td>
+              <td class="neutral">APM (thêm phí)</td>
+              <td class="neutral">Gateway</td>
+              <td class="lose">✗</td>
+            </tr>
+            <tr>
+              <td>IPS (Snort)</td>
+              <td class="win">✓ Standard+</td>
+              <td class="neutral">Advanced FW add-on</td>
+              <td class="neutral">Add-on</td>
+              <td class="lose">✗</td>
+            </tr>
+            <tr>
+              <td>Giá tham chiếu (15 Gbps)</td>
+              <td class="win" style="color:var(--primary);">💰 Thấp nhất</td>
+              <td class="lose">💰💰💰 Cao nhất</td>
+              <td class="neutral">💰💰 Trung bình-cao</td>
+              <td class="win">Free (OSS)</td>
+            </tr>
+            <tr>
+              <td>TCO 3 năm</td>
+              <td class="win">Thấp (~70% so F5)</td>
+              <td class="lose">Rất cao</td>
+              <td class="neutral">Cao</td>
+              <td class="neutral">Thấp nhưng cần dev</td>
+            </tr>
+            <tr>
+              <td>G2 Rating</td>
+              <td class="win">⭐ 4.9/5 (370 reviews)</td>
+              <td class="neutral">4.6/5 (281 reviews)</td>
+              <td class="neutral">4.3/5</td>
+              <td class="neutral">4.2/5</td>
+            </tr>
+            <tr>
+              <td>Hỗ trợ Việt Nam</td>
+              <td class="win">✓ Partner local</td>
+              <td class="win">✓ F5 VN office</td>
+              <td class="neutral">Hạn chế</td>
+              <td class="lose">Cộng đồng</td>
+            </tr>
+            <tr>
+              <td>Deploy Virtual/Cloud</td>
+              <td class="win">VMware/HyperV/KVM/AWS/Azure</td>
+              <td class="win">VE/Cloud</td>
+              <td class="win">VPX/Cloud</td>
+              <td class="win">Container/VM</td>
+            </tr>
+            <tr>
+              <td>Ease of Use (G2)</td>
+              <td class="win">⭐ Rất cao</td>
+              <td class="neutral">Phức tạp, cần chuyên gia</td>
+              <td class="neutral">Trung bình</td>
+              <td class="lose">Cần dev skilled</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:16px;">
+      <div class="card" style="border-top: 3px solid var(--danger);">
+        <div class="card-title"><span class="icon">🥊</span> KEMP vs F5 BIG-IP</div>
+        <div class="highlight-box red">
+          <strong>Luận điểm chính:</strong> "F5 tính năng rất mạnh nhưng chi phí đầu tư và vận hành cao gấp 3-5 lần KEMP. Với hầu hết use case của doanh nghiệp vừa và nhà nước, KEMP cung cấp đầy đủ tính năng cần thiết với TCO thấp hơn đáng kể."
+        </div>
+        <ul class="feature-list">
+          <li>KEMP rating G2: 4.9 vs F5: 4.6 – KH satisfy hơn</li>
+          <li>97% recommend KEMP vs 86% recommend F5</li>
+          <li>KEMP WAF + GSLB trong 1 subscription, F5 cần mua add-on ASM + GTM riêng</li>
+          <li>KEMP dễ quản lý hơn – không cần chuyên gia F5 mức cao</li>
+        </ul>
+      </div>
+      <div class="card" style="border-top: 3px solid var(--warning);">
+        <div class="card-title"><span class="icon">🏆</span> Xếp hạng thị trường</div>
+        <div class="rating-box">
+          <div class="rating-score">4.9</div>
+          <div class="rating-stars">★★★★★</div>
+          <div class="rating-label">G2 Grid Report – Load Balancing Winter 2025</div>
+          <div class="rating-detail">
+            <div class="rating-bar"><span style="width:28px;font-size:11px;">5★</span><div class="rating-bar-bg"><div class="rating-bar-fill" style="width:89%"></div></div><div class="rating-pct">89%</div></div>
+            <div class="rating-bar"><span style="width:28px;font-size:11px;">4★</span><div class="rating-bar-bg"><div class="rating-bar-fill" style="width:10%;background:#F59E0B"></div></div><div class="rating-pct">10%</div></div>
+            <div class="rating-bar"><span style="width:28px;font-size:11px;">3★</span><div class="rating-bar-bg"><div class="rating-bar-fill" style="width:1%;background:#EF4444"></div></div><div class="rating-pct">1%</div></div>
+          </div>
+          <div style="margin-top:12px; padding:10px; background:var(--primary-light); border-radius:6px; font-size:12px;">
+            <strong>370 reviews</strong> · <strong>97%</strong> sẵn sàng giới thiệu<br>
+            Xếp hạng <strong>Leader</strong> – G2 Grid Winter 2025
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== KEY SELLING ===================== -->
+  <div id="selling" class="section">
+    <div class="section-header">
+      <div class="section-icon">💡</div>
+      <div>
+        <div class="section-title">Key Selling Points cho Sale</div>
+        <div class="section-desc">Script tư vấn nhanh khi gặp khách hàng – đã được kiểm chứng hiệu quả</div>
+      </div>
+    </div>
+
+    <div class="ksp-card">
+      <div class="ksp-num">1</div>
+      <div class="ksp-content">
+        <h4>💰 Giá trị tốt nhất thị trường – TCO thấp hơn F5 đến 70%</h4>
+        <p>Tính năng tương đương hoặc vượt trội nhưng tổng chi phí sở hữu thấp hơn đáng kể. Phù hợp ngân sách cơ quan nhà nước và doanh nghiệp vừa.</p>
+        <div class="ksp-script">"Với cùng ngân sách deploy F5, anh/chị có thể deploy KEMP với đầy đủ tính năng WAF + GSLB + SSL Offload và còn dư ngân sách để đầu tư hạ tầng khác."</div>
+      </div>
+    </div>
+
+    <div class="ksp-card">
+      <div class="ksp-num">2</div>
+      <div class="ksp-content">
+        <h4>🛡️ All-in-One Platform – Một thiết bị thay thế nhiều giải pháp</h4>
+        <p>LoadMaster tích hợp ADC + WAF + GSLB + ESP/SSO + IPS + DDoS Mitigation trong một appliance. Không cần mua thêm WAF riêng, APM riêng.</p>
+        <div class="ksp-script">"KEMP LoadMaster một mình thay được: Load Balancer + WAF + GSLB + SSO Gateway + IPS. Thay vì 4-5 thiết bị riêng lẻ, anh/chị chỉ cần quản lý 1 hệ thống."</div>
+      </div>
+    </div>
+
+    <div class="ksp-card">
+      <div class="ksp-num">3</div>
+      <div class="ksp-content">
+        <h4>⭐ Đánh giá người dùng cao nhất thị trường – 4.9/5 trên G2</h4>
+        <p>370 reviews thực tế, 97% sẵn sàng giới thiệu. Xếp hạng Leader G2 Winter 2025. So với F5: 4.6/5, 86% recommend.</p>
+        <div class="ksp-script">"Đây không phải vendor nói về mình – đây là 370 khách hàng thực tế đánh giá. 97% họ recommend KEMP cho đồng nghiệp. F5 chỉ đạt 86%."</div>
+      </div>
+    </div>
+
+    <div class="ksp-card">
+      <div class="ksp-num">4</div>
+      <div class="ksp-content">
+        <h4>🚀 Triển khai nhanh – Application Templates sẵn có</h4>
+        <p>Template có sẵn cho Microsoft Exchange, SharePoint, Lync, VMware, RDS... Deploy trong giờ thay vì ngày. Ít lỗi cấu hình hơn.</p>
+        <div class="ksp-script">"Với Exchange 2019, anh/chị import template có sẵn là xong – không cần chuyên gia cấu hình cao cấp. Triển khai trong 2-4 tiếng là live."</div>
+      </div>
+    </div>
+
+    <div class="ksp-card">
+      <div class="ksp-num">5</div>
+      <div class="ksp-content">
+        <h4>🌐 Hybrid Ready – On-prem, VM, Cloud tất cả đều chạy được</h4>
+        <p>Deploy trên Hardware, VMware, Hyper-V, KVM, AWS, Azure với cùng giao diện quản lý. Đồng nhất cấu hình giúp migrate cloud dễ dàng.</p>
+        <div class="ksp-script">"Hiện tại anh/chị on-prem, sau này migrate AWS – vẫn dùng KEMP, cùng giao diện, cùng config. Không cần re-train team hoặc re-architect."</div>
+      </div>
+    </div>
+
+    <div class="ksp-card">
+      <div class="ksp-num">6</div>
+      <div class="ksp-content">
+        <h4>🏛️ Reference Việt Nam phong phú – Chính phủ, EVN, Công an</h4>
+        <p>30+ khách hàng reference tại Việt Nam bao gồm EVN NPC, EVN NPT, Bộ TN&MT, Công an các tỉnh, Bộ Quốc Phòng, Agribank...</p>
+        <div class="ksp-script">"Giải pháp đã được EVN NPT, Bộ Tài nguyên Môi trường, Công an Hà Nội tin dùng. Tôi có thể sắp xếp buổi trao đổi với KH tham chiếu nếu anh/chị cần."</div>
+      </div>
+    </div>
+
+    <div class="ksp-card">
+      <div class="ksp-num">7</div>
+      <div class="ksp-content">
+        <h4>🔒 Bảo mật chuẩn quốc tế – FIPS 140-2, Common Criteria, PCI-DSS</h4>
+        <p>Đạt chứng nhận FIPS 140-2 Level 1, Common Criteria (ISO/IEC 15408), PCI-DSS Section 6.6. Đáp ứng yêu cầu compliance của ngân hàng, chính phủ.</p>
+        <div class="ksp-script">"Nếu anh/chị cần đáp ứng PCI-DSS hay tiêu chuẩn bảo mật nhà nước – KEMP đã được cấp chứng chỉ FIPS 140-2 và Common Criteria, không cần add-on thêm."</div>
+      </div>
+    </div>
+
+    <div class="ksp-card">
+      <div class="ksp-num">8</div>
+      <div class="ksp-content">
+        <h4>📊 Visibility đầy đủ – IPFIX Telemetry + Real-time Dashboard</h4>
+        <p>Export flow data theo IPFIX đến Flowmon Collector. Real-time dashboard, SNMP, Syslog. Biết ngay server nào chậm, ứng dụng nào có vấn đề.</p>
+        <div class="ksp-script">"Khi có incident, team của anh/chị không phải ngồi đoán mò. KEMP hiển thị real-time đường đi của mọi request, xác định bottleneck trong phút."</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== USE CASES ===================== -->
+  <div id="usecase" class="section">
+    <div class="section-header">
+      <div class="section-icon">🏥</div>
+      <div>
+        <div class="section-title">Use Cases Thực tế theo Ngành</div>
+        <div class="section-desc">Ví dụ cụ thể để trình bày với khách hàng từng ngành</div>
+      </div>
+    </div>
+
+    <div class="usecase-card">
+      <div class="usecase-header">
+        <div class="usecase-icon">🏛️</div>
+        <div>
+          <div class="usecase-title">Sở Khoa học và Công nghệ tỉnh</div>
+          <div style="font-size:12px; opacity:0.7;">Mô hình điển hình: Cổng dịch vụ công + Hệ thống quản lý văn bản + Portal nội bộ</div>
+        </div>
+      </div>
+      <div class="usecase-body">
+        <div class="usecase-row">
+          <div class="usecase-col">
+            <h5>🔴 Hiện trạng / Vấn đề</h5>
+            <ul>
+              <li>Cổng DVC nghẽn vào giờ cao điểm nộp hồ sơ</li>
+              <li>Chỉ có 1 web server – single point of failure</li>
+              <li>Ứng dụng web bị tấn công SQL injection nhiều lần</li>
+              <li>Không có cơ chế DR khi DC chính gặp sự cố</li>
+            </ul>
+          </div>
+          <div class="usecase-col">
+            <h5>🟢 Giải pháp KEMP Deploy</h5>
+            <ul>
+              <li>LM-X3-NG HA pair (2 units) – Active/Standby</li>
+              <li>4 Real Servers phía sau, LB theo Least Connection</li>
+              <li>WAF bật OWASP Top 10 cho cổng DVC</li>
+              <li>SSL Offload HTTPS → giải phóng CPU servers</li>
+              <li>Enterprise Plus subscription 3 năm</li>
+            </ul>
+          </div>
+          <div class="usecase-col">
+            <h5>✅ Kết quả đạt được</h5>
+            <ul>
+              <li>Uptime 99.99% – không downtime vào mùa cao điểm</li>
+              <li>Tấn công web bị chặn tự động 24/7</li>
+              <li>Response time giảm 40% nhờ SSL Offload</li>
+              <li>Tuân thủ yêu cầu ATTT của Bộ TT&TT</li>
+            </ul>
+          </div>
+        </div>
+        <div style="margin-top:10px; padding:10px; background:var(--light-gray); border-radius:6px; font-size:12px;">
+          <strong>💼 BOM tham khảo:</strong> 2x LM-X3-NG + 2x ENP-LM-X3-NG (3yr) | Throughput: 3.4 Gbps mỗi unit | Budget estimate: Tầm trung
+        </div>
+      </div>
+    </div>
+
+    <div class="usecase-card">
+      <div class="usecase-header">
+        <div class="usecase-icon">🏥</div>
+        <div>
+          <div class="usecase-title">Bệnh viện Đa khoa Tỉnh / Bệnh viện Tuyến Trung ương</div>
+          <div style="font-size:12px; opacity:0.7;">HIS, EMR, Cổng đặt lịch khám trực tuyến, PACS (hình ảnh y tế)</div>
+        </div>
+      </div>
+      <div class="usecase-body">
+        <div class="usecase-row">
+          <div class="usecase-col">
+            <h5>🔴 Hiện trạng / Vấn đề</h5>
+            <ul>
+              <li>HIS sập vào giờ khám – bác sĩ không kê đơn được</li>
+              <li>Cổng đặt lịch nghẽn sáng sớm (7-8h)</li>
+              <li>Dữ liệu bệnh nhân bị đe dọa từ web attack</li>
+              <li>Mỗi ứng dụng một SSL cert riêng – khó quản lý</li>
+            </ul>
+          </div>
+          <div class="usecase-col">
+            <h5>🟢 Giải pháp KEMP Deploy</h5>
+            <ul>
+              <li>LM-X3-NG hoặc VLM-5G – phù hợp ngân sách BV</li>
+              <li>Virtual Server riêng cho HIS, EMR, đặt lịch</li>
+              <li>SSL centralized – quản lý 1 điểm, auto renewal</li>
+              <li>WAF bảo vệ cổng đặt lịch + HIS web interface</li>
+              <li>Health check L7 – tự động failover khi server lỗi</li>
+            </ul>
+          </div>
+          <div class="usecase-col">
+            <h5>✅ Kết quả đạt được</h5>
+            <ul>
+              <li>HIS available 24/7 – bác sĩ không bị gián đoạn</li>
+              <li>Cổng đặt lịch scale tự động peak morning</li>
+              <li>Quản lý tập trung SSL của toàn bộ ứng dụng</li>
+              <li>Dữ liệu bệnh nhân được bảo vệ theo chuẩn</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="usecase-card">
+      <div class="usecase-header">
+        <div class="usecase-icon">🎓</div>
+        <div>
+          <div class="usecase-title">Trường Đại học / Học viện</div>
+          <div style="font-size:12px; opacity:0.7;">Cổng sinh viên, LMS (Moodle/Canvas), hệ thống thi online, email sinh viên</div>
+        </div>
+      </div>
+      <div class="usecase-body">
+        <div class="usecase-row">
+          <div class="usecase-col">
+            <h5>🔴 Hiện trạng / Vấn đề</h5>
+            <ul>
+              <li>Sập hệ thống đăng ký học phần đầu học kỳ</li>
+              <li>Thi online lag do nhiều sinh viên thi đồng thời</li>
+              <li>Không có SSO – sinh viên login nhiều hệ thống</li>
+              <li>Email/Portal bị spam, DDoS từ bên ngoài</li>
+            </ul>
+          </div>
+          <div class="usecase-col">
+            <h5>🟢 Giải pháp KEMP Deploy</h5>
+            <ul>
+              <li>VLM-5G hoặc LM-X1 – chi phí thấp phù hợp trường học</li>
+              <li>LB cho server pool đăng ký học phần</li>
+              <li>ESP/SSO tích hợp với Active Directory của trường</li>
+              <li>Rate limiting chặn DDoS vào mùa thi</li>
+              <li>Content switching: /lms → LMS servers, /mail → Exchange</li>
+            </ul>
+          </div>
+          <div class="usecase-col">
+            <h5>✅ Kết quả đạt được</h5>
+            <ul>
+              <li>Đăng ký học phần không sập dù 10,000 SV online cùng lúc</li>
+              <li>Sinh viên chỉ login 1 lần – truy cập tất cả hệ thống</li>
+              <li>DDoS mùa thi được mitigate tự động</li>
+              <li>Chi phí thấp phù hợp ngân sách giáo dục</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="usecase-card">
+      <div class="usecase-header">
+        <div class="usecase-icon">🏢</div>
+        <div>
+          <div class="usecase-title">Doanh nghiệp Sản xuất / Thương mại cỡ Vừa & Lớn</div>
+          <div style="font-size:12px; opacity:0.7;">ERP (SAP/Oracle), CRM, E-commerce, Microsoft Exchange, SharePoint, Remote Access</div>
+        </div>
+      </div>
+      <div class="usecase-body">
+        <div class="usecase-row">
+          <div class="usecase-col">
+            <h5>🔴 Hiện trạng / Vấn đề</h5>
+            <ul>
+              <li>Exchange Server quá tải khi nhiều nhân viên check mail</li>
+              <li>VPN tự xây dựng kém bảo mật, remote access chậm</li>
+              <li>E-commerce sập mùa sale/campaign lớn</li>
+              <li>IT phải quản lý nhiều SSL cert riêng lẻ</li>
+            </ul>
+          </div>
+          <div class="usecase-col">
+            <h5>🟢 Giải pháp KEMP Deploy</h5>
+            <ul>
+              <li>LM-X15-NG HA pair</li>
+              <li>Exchange template sẵn có – deploy Exchange LB nhanh</li>
+              <li>ESP/SSO: nhân viên remote auth qua LoadMaster</li>
+              <li>E-commerce: Auto-scale real servers theo traffic</li>
+              <li>Centralized SSL management cho toàn bộ domain</li>
+            </ul>
+          </div>
+          <div class="usecase-col">
+            <h5>✅ Kết quả đạt được</h5>
+            <ul>
+              <li>Exchange response time giảm 50%+ nhờ SSL offload</li>
+              <li>Remote access bảo mật, pre-auth tại LoadMaster</li>
+              <li>E-commerce scale tự động – không miss revenue</li>
+              <li>IT giảm workload quản lý cert/security</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== CUSTOMERS ===================== -->
+  <div id="customers" class="section">
+    <div class="section-header">
+      <div class="section-icon">🤝</div>
+      <div>
+        <div class="section-title">Khách hàng Tham chiếu tại Việt Nam</div>
+        <div class="section-desc">32+ tổ chức đã triển khai Progress Kemp LoadMaster – dùng để reference khi tư vấn</div>
+      </div>
+    </div>
+
+    <div class="highlight-box" style="margin-bottom:20px;">
+      <strong>💡 Cách dùng:</strong> Khi KH hỏi "đã có ai dùng chưa?" – tham chiếu các tên phù hợp ngành của họ. Ví dụ: gặp Công an tỉnh → dẫn Công an Bến Tre, Phú Thọ, Hà Nội. Gặp EVN → dẫn EVN NPC, EVN NPT.
+    </div>
+
+    <div class="ref-cat">⚡ Năng lượng – Điện lực</div>
+    <div class="ref-grid">
+      <div class="ref-item">Trung tâm CSKH Tổng công ty Điện lực Miền Bắc (EVN NPC)</div>
+      <div class="ref-item">Tổng công ty truyền tải điện quốc gia (EVN NPT)</div>
+    </div>
+
+    <div class="ref-cat">🏛️ Cơ quan Nhà nước – Bộ ngành Trung ương</div>
+    <div class="ref-grid">
+      <div class="ref-item">Ủy ban Dân tộc</div>
+      <div class="ref-item">Cục Bản đồ</div>
+      <div class="ref-item">Bộ Tài nguyên Môi trường (MONRE)</div>
+      <div class="ref-item">Văn phòng Trung ương Đảng</div>
+      <div class="ref-item">Sở Dân tộc</div>
+      <div class="ref-item">Cục Đường bộ</div>
+      <div class="ref-item">Đại học Thủ đô (HN)</div>
+    </div>
+
+    <div class="ref-cat">🏙️ Sở Thông tin & Truyền thông các tỉnh</div>
+    <div class="ref-grid">
+      <div class="ref-item">Sở TT&TT tỉnh Lai Châu</div>
+      <div class="ref-item">Sở TT&TT tỉnh Đồng Tháp</div>
+      <div class="ref-item">Sở TT&TT tỉnh Quảng Ninh</div>
+      <div class="ref-item">Sở TT&TT tỉnh Hải Phòng</div>
+      <div class="ref-item">Sở TT&TT tỉnh Hà Nội</div>
+    </div>
+
+    <div class="ref-cat">🚔 An ninh – Quốc phòng</div>
+    <div class="ref-grid">
+      <div class="ref-item">Công an tỉnh Bến Tre</div>
+      <div class="ref-item">Công an tỉnh Phú Thọ</div>
+      <div class="ref-item">Công an Hà Nội</div>
+      <div class="ref-item">Nhà máy Z-121 Bộ Quốc Phòng</div>
+      <div class="ref-item">V06 – Cục Hồ sơ Nghiệp vụ</div>
+      <div class="ref-item">V04 – Bộ Công An</div>
+    </div>
+
+    <div class="ref-cat">🏦 Ngân hàng & Tài chính</div>
+    <div class="ref-grid">
+      <div class="ref-item">Ngân hàng Agribank</div>
+    </div>
+
+    <div class="ref-cat">💼 Doanh nghiệp & Công nghệ</div>
+    <div class="ref-grid">
+      <div class="ref-item">IBM Việt Nam</div>
+      <div class="ref-item">Công ty CP CN Tin học EFY Việt Nam</div>
+      <div class="ref-item">Công ty CP Quốc tế Sơn Hà</div>
+      <div class="ref-item">Công ty CP Dược phẩm Pharmacity</div>
+      <div class="ref-item">GAEA Global</div>
+      <div class="ref-item">GDS Global</div>
+      <div class="ref-item">Công ty CP hệ thống CN ETC</div>
+    </div>
+
+    <div class="ref-cat">🎓 Giáo dục – Đại học</div>
+    <div class="ref-grid">
+      <div class="ref-item">Trường ĐH Tài chính – QTKD</div>
+      <div class="ref-item">Trường ĐH Thủy Lợi</div>
+      <div class="ref-item">Trường ĐH Hồng Đức</div>
+      <div class="ref-item">Trường ĐH Duy Tân</div>
+    </div>
+  </div>
+
+  <!-- ===================== FAQ ===================== -->
+  <div id="faq" class="section">
+    <div class="section-header">
+      <div class="section-icon">❓</div>
+      <div>
+        <div class="section-title">Câu hỏi Thường gặp (FAQ)</div>
+        <div class="section-desc">Câu hỏi KH hay hỏi và cách trả lời – click để mở</div>
+      </div>
+    </div>
+
+    <div class="faq-cat-label">📦 Tính năng sản phẩm</div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">KEMP LoadMaster khác gì so với một load balancer thông thường như HAProxy hay Nginx? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">KEMP LoadMaster là một <strong>Application Delivery Controller (ADC)</strong> đầy đủ tính năng, không chỉ là load balancer. So với HAProxy/Nginx miễn phí:<ul><li><strong>WAF tích hợp</strong> – HAProxy/Nginx không có, phải ghép thêm ModSecurity</li><li><strong>SSL Offload chuyên dụng</strong> – hiệu năng cao hơn, hỗ trợ FIPS 140-2</li><li><strong>GSLB/GEO Routing</strong> – cân bằng tải giữa nhiều data center</li><li><strong>ESP/SSO</strong> – xác thực tập trung tích hợp Active Directory</li><li><strong>Support 24x7x365</strong> có SLA rõ ràng, có người chịu trách nhiệm</li><li><strong>GUI quản lý trực quan</strong> – không cần sửa config file thủ công</li></ul></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">WAF của KEMP có thực sự hiệu quả không? Cập nhật rules như thế nào? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">KEMP WAF dựa trên <strong>engine rules công nghiệp</strong>, che phủ toàn bộ OWASP Top 10 và các mối đe dọa ứng dụng web hiện đại. Về cập nhật:<ul><li><strong>Cập nhật threat data hàng ngày</strong> (với Enterprise Plus subscription)</li><li>Bao gồm: IP Reputation, Botnet detection, Web malware, WebShell/Backdoor</li><li>HTTP DoS detection, SQL Injection, XSS, CSRF, Cookie Tampering</li><li>Tích hợp Snort-compatible IPS rules – team SOC tự import rules được</li><li>Có thể custom rules theo yêu cầu đặc thù của tổ chức</li></ul><strong>Lưu ý:</strong> WAF chỉ có ở gói Enterprise Plus subscription.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">LoadMaster có hỗ trợ GSLB và Disaster Recovery đa data center không? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Có. KEMP GSLB (Global Server Load Balancing) hỗ trợ đầy đủ:<ul><li>Điều hướng DNS-based theo vị trí địa lý, tình trạng server</li><li>Scale đến 256 nodes per FQDN</li><li>Hỗ trợ EDNS để định vị client chính xác hơn</li><li>Các thuật toán: Round Robin, Weighted, Location-Based, Real Server Load, Chained Failover</li><li>Health check tự động – khi 1 DC sập, DNS tự chuyển về DC khác</li><li>Active/Active hoặc Active/Passive DR configuration</li></ul>GSLB cần gói <strong>Enterprise Plus subscription</strong>.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">LoadMaster hỗ trợ những phương thức xác thực nào? Có tích hợp được với AD của chúng tôi không? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">LoadMaster hỗ trợ đa dạng phương thức xác thực qua Edge Security Pack (ESP):<ul><li><strong>Active Directory / LDAP</strong> – tích hợp trực tiếp với AD domain</li><li><strong>RADIUS</strong> – cho hệ thống 2FA existing</li><li><strong>SAML 2.0 / OIDC</strong> – federation với IdP hiện đại</li><li><strong>Two-Factor Authentication (2FA)</strong> – RSA SecurID, TOTP</li><li><strong>Kerberos Constrained Delegation (KCD)</strong> – SSO Windows native</li><li><strong>X.509 Client Certificate</strong> – xác thực bằng certificate</li><li><strong>Forms-based Authentication</strong> – custom login page</li></ul>SSO domain cho phép user chỉ login 1 lần, truy cập nhiều ứng dụng.</div>
+    </div>
+
+    <div class="faq-cat-label">💻 Triển khai & Vận hành</div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Mất bao lâu để triển khai LoadMaster? Cần kỹ năng gì? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">KEMP được thiết kế để triển khai nhanh:<ul><li><strong>Basic Load Balancing:</strong> 2-4 tiếng (cài đặt, cấu hình VIP, Real Servers, health check)</li><li><strong>Với Application Template</strong> (Exchange, SharePoint, RDS...): 30-60 phút là xong</li><li><strong>HA pair:</strong> Thêm 1-2 tiếng để sync config</li><li><strong>Kỹ năng cần:</strong> Network admin cơ bản, không cần chuyên gia F5 hay Citrix cao cấp</li><li><strong>Giao diện WUI</strong> trực quan, có context-sensitive help ngay trên màn hình</li></ul>So với F5 BIG-IP thường mất 2-5 ngày để cấu hình đầy đủ và cần chuyên gia TMOS.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">LoadMaster có thể chạy trên VMware hoặc cloud không? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Có, Virtual LoadMaster (VLM) hỗ trợ đa nền tảng:<ul><li><strong>Hypervisor:</strong> VMware vSphere, Microsoft Hyper-V, KVM, Nutanix, XEN, VirtualBox</li><li><strong>Public Cloud:</strong> AWS (BYOL + PAYG), Microsoft Azure (BYOL + PAYG), và các phiên bản Government</li><li>Cùng giao diện quản lý, cùng tính năng trên tất cả platform</li><li><strong>Migration dễ dàng:</strong> Config từ on-prem → cloud gần như không cần thay đổi</li></ul>Điểm cộng lớn: team không cần học lại khi migrate workload lên cloud.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">HA (High Availability) hoạt động như thế nào? Failover mất bao lâu? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">LoadMaster HA hoạt động theo cơ chế Stateful Failover:<ul><li><strong>Stateful Failover:</strong> Session table được đồng bộ giữa 2 nodes – user không bị disconnect khi failover</li><li><strong>Thời gian failover:</strong> Mili-giây (dưới 1 giây trong điều kiện bình thường)</li><li><strong>Modes:</strong> Active/Standby (1 active, 1 standby) hoặc Active/Active (cả 2 xử lý traffic)</li><li><strong>Health monitoring:</strong> Tự detect primary fail qua heartbeat</li><li><strong>Hardware:</strong> Hot-Swap PSU và Disk (model từ X15-NG trở lên) – thay PSU không cần tắt máy</li></ul></div>
+    </div>
+
+    <div class="faq-cat-label">🔑 License & Pricing</div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Sự khác biệt giữa Standard, Enterprise và Enterprise Plus là gì? Nên chọn tier nào? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a"><ul><li><strong>Standard:</strong> 10x5 support, L4-L7 LB, Telemetry, IPS. → Dùng cho hệ thống không quan trọng, ngân sách hạn chế.</li><li><strong>Enterprise:</strong> 24x7 support + Edge Security Pack (ESP/SSO). → Dùng khi cần SSO, pre-auth, Active Directory integration.</li><li><strong>Enterprise Plus ⭐ (khuyến nghị):</strong> 24x7 + ESP + WAF (daily update) + GSLB (daily update) + In-advance hardware replacement + Floating License. → Khuyến nghị cho hầu hết khách hàng muốn đầy đủ tính năng bảo mật.</li></ul><strong>Lời khuyên cho sale:</strong> Mặc định quote Enterprise Plus – giải thích giá trị WAF và GSLB included. Nếu KH muốn giảm giá thì mới xem xét xuống Enterprise.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Mua phần cứng rồi có cần mua thêm gì nữa không? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Có. Với Hardware Appliance:<ul><li><strong>Hardware:</strong> Mua một lần, bao gồm license Balancer Throughput và SSL TPS cơ bản</li><li><strong>Support Subscription:</strong> Mua hàng năm (bắt buộc nếu muốn WAF, support, updates)</li><li><strong>SFP Module:</strong> Nếu cần kết nối 10GbE fiber – mua thêm SFP transceiver tương ứng</li></ul>BOM thường gồm: [Hardware part] + [ENP-Hardware part] + [SFP module nếu cần]<br><br><em>Ví dụ:</em> LM-X15-NG + ENP-LM-X15-NG (1 year) + X15-NG-SFP-SR (nếu dùng fiber 10G)</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">KEMP có licensing theo user hay theo throughput? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">KEMP license theo <strong>throughput (bandwidth)</strong>, không theo user hay concurrent connection:<ul><li>Hardware: License gắn với model (LM-X1 = 1Gbps, LM-X15 = 15Gbps...)</li><li>Virtual: Chọn tier bandwidth (VLM-1G = 1Gbps, VLM-5G = 5Gbps, VLM-MAX = uncapped)</li><li>Không giới hạn số user, số VIP hay Real Server (tối đa 1.000 VIP và 1.000 RS)</li></ul>Đây là lợi thế lớn: một license dùng được cho unlimited users và applications, miễn không vượt throughput tối đa.</div>
+    </div>
+
+    <div class="faq-cat-label">⚖️ So sánh & Cạnh tranh</div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Tại sao chọn KEMP thay vì F5 BIG-IP mà khách hàng đã biết tên? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a"><strong>3 luận điểm chính:</strong><ul><li><strong>Giá trị tốt hơn:</strong> TCO thấp hơn 50-70%, tính năng tương đương cho hầu hết use case. WAF + GSLB + ESP trong 1 subscription; F5 phải mua ASM + GTM + APM riêng.</li><li><strong>Rating người dùng cao hơn:</strong> G2 4.9/5 (97% recommend) vs F5 4.6/5 (86% recommend). Người dùng thực tế đánh giá KEMP dễ dùng và satisfy hơn.</li><li><strong>Vị trí thị trường:</strong> G2 Winter 2025 – KEMP xếp Leader, F5 thấp hơn về satisfaction score.</li></ul>F5 phù hợp cho tổ chức có yêu cầu rất cao cấp, scripting phức tạp (iRules). Với 90% use case điển hình – KEMP đủ sức và kinh tế hơn.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">KEMP có thể replace Microsoft TMG không? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Có. Đây là một điểm mạnh rõ ràng của KEMP – Edge Security Pack (ESP) được thiết kế để <strong>thay thế Microsoft Forefront TMG</strong> (đã end-of-life từ 2012):<ul><li>Pre-authentication cho các ứng dụng published ra Internet</li><li>Reverse proxy với SSL bridging</li><li>Active Directory / Kerberos authentication</li><li>Forms-based authentication</li><li>SSO qua nhiều published applications</li><li>SMTP domain filtering</li></ul>Nhiều tổ chức vẫn dùng TMG hoặc giải pháp self-built thay thế – đây là cơ hội bán KEMP với ESP.</div>
+    </div>
+
+    <div class="faq-cat-label">🔐 Bảo mật & Compliance</div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">KEMP có đạt chứng chỉ bảo mật quốc tế nào không? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">Có, LoadMaster đạt nhiều chứng chỉ quan trọng:<ul><li><strong>FIPS 140-2 Level 1</strong> – tiêu chuẩn mã hóa của Chính phủ Mỹ (dùng SSL/TLS)</li><li><strong>Common Criteria (ISO/IEC 15408)</strong> – chứng nhận bảo mật quốc tế</li><li><strong>USGv6 Certified</strong> – chuẩn IPv6 của US Government</li><li><strong>PCI-DSS Section 6.6 Compliance</strong> – WAF đáp ứng yêu cầu thanh toán thẻ</li></ul>Với tổ chức chính phủ hoặc ngân hàng cần compliance – KEMP đáp ứng được mà không cần add-on.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">DDoS mitigation của KEMP hoạt động như thế nào? Chặn được ở cấp độ nào? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">KEMP LoadMaster có DDoS mitigation đa lớp:<ul><li><strong>Layer 4 DDoS:</strong> SYN flood, UDP flood – chặn tại transport layer</li><li><strong>Layer 7 DDoS:</strong> HTTP flood, Slowloris, rate-based L7 attacks</li><li><strong>IP Reputation:</strong> Tự động block IP độc hại được cập nhật hàng ngày</li><li><strong>Rate Limiting:</strong> Giới hạn số request per second per IP hoặc global</li><li><strong>ACL (Access Control List):</strong> Allow/Deny theo IP, subnet, geo</li><li><strong>IPS (Snort Rules):</strong> Detect và block attack patterns</li></ul><strong>Lưu ý:</strong> Với volumetric DDoS quy mô lớn (Gbps), vẫn cần upstream ISP-level scrubbing kết hợp. KEMP xử lý tốt application-layer DDoS và targeted attacks.</div>
+    </div>
+
+    <div class="faq-cat-label">📐 Sizing & BOM</div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Làm thế nào để chọn đúng model cho khách hàng? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a"><strong>Quy trình sizing đơn giản 3 bước:</strong><br><br><strong>Bước 1 – Xác định throughput:</strong> Hỏi bandwidth Internet hiện tại và dự kiến. Rule of thumb: chọn model có throughput ít nhất = 2x Internet bandwidth hiện tại.<br><br><strong>Bước 2 – Kiểm tra SSL TPS:</strong> Hỏi số concurrent HTTPS sessions. Nếu >10,000 SSL TPS – cần model X25-NG trở lên.<br><br><strong>Bước 3 – Xác nhận tính năng:</strong> Cần WAF/GSLB → Enterprise Plus. Chỉ cần SSO → Enterprise. Cơ bản → Standard.<br><br><strong>Reference nhanh:</strong><ul><li>Sở/Ban nhỏ: LM-X3-NG + ENP</li><li>Bộ/Tỉnh lớn: LM-X15-NG + ENP</li><li>Doanh nghiệp vừa: VLM-5G hoặc LM-X15-NG</li><li>Ngân hàng, DC lớn: LM-X25-NG trở lên</li></ul></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">Có cần SFP module không? Khi nào thì cần? <span class="faq-arrow">▼</span></div>
+      <div class="faq-a">SFP module cần khi kết nối uplink qua cáp quang (fiber):<ul><li><strong>Kết nối 10GbE qua fiber:</strong> Cần SFP+ transceiver (ví dụ X15-NG-SFP-SR cho SR 850nm, tối đa 300m)</li><li><strong>Kết nối 10GbE qua DAC/Direct Attach Cable:</strong> Không cần SFP riêng</li><li><strong>Kết nối 1GbE RJ45:</strong> Không cần SFP</li></ul>Hỏi KH: Switch uplink là loại nào? Nếu dùng fiber SFP+ port trên switch → cần quote SFP module tương ứng theo distance (SR 300m, LR 10km...). Bundle X15-NG-SFP-SR gồm 4 transceivers.</div>
+    </div>
+
+  </div><!-- end FAQ -->
+
+</div><!-- end container -->
+
+<button class="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+function showSection(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(btn) btn.classList.add('active');
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+function toggleFaq(el) {
+  const ans = el.nextElementSibling;
+  el.classList.toggle('open');
+  ans.classList.toggle('show');
+}
+</script>
+</body>
+</html>

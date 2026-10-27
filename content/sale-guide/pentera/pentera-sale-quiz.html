@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Training Quiz – Pentera Automated Security Validation</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0e1a;
+  --surface: #111827;
+  --surface2: #1a2235;
+  --border: #1e2d45;
+  --accent: #00d4ff;
+  --accent-light: rgba(0, 212, 255, 0.1);
+  --accent2: #ff6b35;
+  --green: #4ade80;
+  --red: #ef4444;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --gold: #fbbf24;
+  --shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+.quiz-container {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  width: 100%;
+  max-width: 800px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  position: relative;
+}
+
+.quiz-header {
+  padding: 2rem;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+.quiz-header h1 {
+  font-family: 'Playfair Display', serif;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+}
+.quiz-header p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+.progress-bar {
+  height: 6px;
+  background: var(--border);
+  width: 100%;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--accent);
+  width: 0%;
+  transition: width 0.4s ease;
+}
+
+.quiz-body {
+  padding: 2.5rem 2rem;
+}
+
+.question-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.question-text {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 2rem;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.option {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: rgba(255,255,255,0.02);
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.option:hover {
+  background: var(--accent-light);
+  border-color: var(--accent);
+}
+.option.selected {
+  background: var(--accent-light);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.option.correct {
+  background: rgba(74, 222, 128, 0.1);
+  border-color: var(--green);
+}
+.option.wrong {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: var(--red);
+}
+
+.radio-custom {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--text-muted);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.option.selected .radio-custom {
+  border-color: var(--accent);
+}
+.option.selected .radio-custom::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.explanation {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  border-radius: 8px;
+  background: var(--surface2);
+  border-left: 4px solid var(--accent2);
+  display: none;
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+.explanation.show {
+  display: block;
+}
+
+.quiz-footer {
+  padding: 1.5rem 2rem;
+  background: var(--surface2);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+}
+
+button {
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+}
+.btn-primary:hover {
+  background: #00b8e6;
+  transform: translateY(-2px);
+}
+.btn-primary:disabled {
+  background: var(--text-muted);
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Result Overlay */
+.overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+}
+.overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.result-ring {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  background: conic-gradient(var(--accent) 0%, var(--surface2) 0%);
+  position: relative;
+}
+.result-ring::before {
+  content: '';
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  background: var(--surface);
+  border-radius: 50%;
+}
+.result-score { position: relative; z-index: 1; }
+
+.lvl-a { color: var(--green); background: conic-gradient(var(--green) 0%, var(--surface2) 0%); }
+.lvl-b { color: var(--gold); background: conic-gradient(var(--gold) 0%, var(--surface2) 0%); }
+.lvl-c { color: var(--accent2); background: conic-gradient(var(--accent2) 0%, var(--surface2) 0%); }
+.lvl-d { color: var(--red); background: conic-gradient(var(--red) 0%, var(--surface2) 0%); }
+
+.res-grade { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text); }
+.res-title { font-size: 1.25rem; font-family: 'Playfair Display', serif; color: var(--gold); margin-bottom: 1rem; }
+.res-sub { color: var(--text-muted); max-width: 500px; margin-bottom: 2rem; }
+
+</style>
+</head>
+<body>
+
+<div class="quiz-container">
+  <div class="quiz-header">
+    <h1>Pentera Sales Playbook Quiz</h1>
+    <p>Bài kiểm tra đánh giá năng lực tư vấn & chốt sale giải pháp Pentera</p>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+  
+  <div class="quiz-body" id="quiz-area">
+    <div class="question-meta">Câu hỏi <span id="q-num">1</span> / 30</div>
+    <div class="question-text" id="q-text">Loading question...</div>
+    <div class="options" id="options-container"></div>
+    <div class="explanation" id="explanation"></div>
+  </div>
+
+  <div class="quiz-footer">
+    <button class="btn-primary" id="btn-next" disabled>Xác nhận</button>
+  </div>
+
+  <div class="overlay" id="overlay">
+    <div class="result-ring" id="res-ring"><span class="result-score" id="res-pct">0%</span></div>
+    <div class="res-grade" id="res-grade">Grade</div>
+    <div class="res-title" id="res-title">Title</div>
+    <div class="res-sub" id="res-sub">Subtitle</div>
+    <p style="margin-bottom: 2rem; font-weight: bold;">Yêu cầu đỗ (Pass mark): > 75%</p>
+    <button class="btn-primary" onclick="location.reload()">Làm Lại Bài Kiểm Tra</button>
+  </div>
+</div>
+
+<script>
+const quizData = [
+  {
+    q: "Pentera định vị mình trên thị trường an toàn thông tin là nền tảng gì?",
+    opts: [
+      "A. Vulnerability Scanner (VA)",
+      "B. Automated Security Validation (ASV)",
+      "C. Extended Detection and Response (XDR)",
+      "D. Breach and Attack Simulation (BAS)"
+    ],
+    ans: 1,
+    exp: "Pentera đi tiên phong trong danh mục Automated Security Validation (Thẩm định An toàn Tự động), khác biệt với VA (chỉ quét) và BAS (chỉ giả lập)."
+  },
+  {
+    q: "Một trong những lợi điểm bán hàng độc nhất (USP) cốt lõi của Pentera Core về mặt triển khai là gì?",
+    opts: [
+      "A. Yêu cầu cài đặt agent rất nhẹ trên mỗi máy",
+      "B. Hoạt động 100% trên môi trường Public Cloud",
+      "C. Triển khai Agentless (Không cần cài đặt Agent)",
+      "D. Phải tích hợp trực tiếp vào nhân của Switch/Router"
+    ],
+    ans: 2,
+    exp: "Pentera Core là Agentless. Điều này mang lại Time-to-value rất nhanh vì khách hàng không phải cài đặt, bảo trì hay cập nhật agent trên hàng ngàn endpoint."
+  },
+  {
+    q: "Nguyên lý 'Safe-by-Design' của Pentera cam kết điều gì với khách hàng?",
+    opts: [
+      "A. Khai thác lỗ hổng bằng kỹ thuật an toàn, không làm sập (crash) hệ thống Production",
+      "B. Tự động mã hóa toàn bộ dữ liệu của công ty để chống lại Hacker",
+      "C. Đảm bảo hệ thống khách hàng an toàn 100% không bao giờ bị hack",
+      "D. Tự động cài đặt bản vá (patch) ngay khi phát hiện lỗ hổng"
+    ],
+    ans: 0,
+    exp: "Safe-by-Design đảm bảo rằng các hành động khai thác (như thử nghiệm malware, rò rỉ dữ liệu) được thực hiện một cách có kiểm soát và an toàn, không phá vỡ hoạt động kinh doanh (business continuity)."
+  },
+  {
+    q: "Khái niệm 'Surgical Remediation' (Khắc phục trúng đích) trong báo cáo của Pentera mang lại giá trị gì?",
+    opts: [
+      "A. Tự động cách ly các máy tính bị nhiễm virus khỏi mạng",
+      "B. Liệt kê toàn bộ hàng ngàn lỗ hổng để IT tự tìm cách vá",
+      "C. Chỉ ra 'Root Cause' (Lỗ hổng gốc rễ) để bẻ gãy toàn bộ chuỗi tấn công (Kill-chain)",
+      "D. Phẫu thuật phần cứng của server để loại bỏ chip độc hại"
+    ],
+    ans: 2,
+    exp: "Surgical Remediation giúp IT tập trung vào lỗ hổng quan trọng nhất. Vá 1 lỗ hổng Root Cause có thể chặt đứt con đường tiếp cận của hacker tới hàng loạt tài sản khác."
+  },
+  {
+    q: "Nỗi đau 'Alert Fatigue' (Quá tải cảnh báo) thường gặp ở khách hàng đang dùng công cụ nào mà Pentera có thể giải quyết?",
+    opts: [
+      "A. Firewall thế hệ mới (NGFW)",
+      "B. Nền tảng quản lý danh tính (IAM)",
+      "C. Các công cụ dò quét lỗ hổng truyền thống (VA - Vulnerability Scanners)",
+      "D. Hệ thống chống thất thoát dữ liệu (DLP)"
+    ],
+    ans: 2,
+    exp: "Công cụ VA thường trả về hàng ngàn lỗ hổng dựa trên chữ ký (CVSS), tạo ra 'Alert Fatigue'. Pentera giải quyết bằng cách xác thực lỗ hổng nào thực sự khai thác được để ưu tiên xử lý."
+  },
+  {
+    q: "Pentera Surface tập trung vào việc quản lý và đánh giá rủi ro trên bề mặt nào?",
+    opts: [
+      "A. Mạng nội bộ (LAN)",
+      "B. Các thiết bị lưu trữ vật lý",
+      "C. Hệ thống SCADA/OT trong nhà máy",
+      "D. Các tài sản tiếp xúc với Internet (External Attack Surface)"
+    ],
+    ans: 3,
+    exp: "Pentera Surface là giải pháp Outside-In (từ ngoài vào trong), chuyên tìm kiếm và xác thực lỗ hổng trên các tài sản public ra Internet."
+  },
+  {
+    q: "Thuật ngữ 'Shadow IT' trong ngữ cảnh bán Pentera Surface thường ám chỉ điều gì?",
+    opts: [
+      "A. Các tin tặc mũ đen hoạt động trên Darkweb",
+      "B. Các cổng thông tin, tên miền hoặc VPN cũ tiếp xúc với Internet mà đội IT đã lãng quên",
+      "C. Chế độ ẩn danh (Incognito) trên trình duyệt của nhân viên",
+      "D. Đội ngũ IT nội bộ làm việc vào ca đêm"
+    ],
+    ans: 1,
+    exp: "Shadow IT là các tài nguyên hạ tầng bị bỏ quên hoặc lập ra ngoài tầm kiểm soát của bộ phận bảo mật, là mồi ngon cho hacker từ bên ngoài."
+  },
+  {
+    q: "Sự khác biệt cốt lõi giữa Pentera Surface và các công cụ EASM (External Attack Surface Management) truyền thống là gì?",
+    opts: [
+      "A. Pentera Surface rẻ hơn rất nhiều",
+      "B. Pentera Surface yêu cầu cài đặt Agent trên Web Server",
+      "C. EASM chỉ lập danh sách tài sản (Inventory), Pentera Surface tiến hành khai thác và xác thực (Validate) lỗ hổng trên tài sản đó",
+      "D. EASM quét nhanh hơn Pentera"
+    ],
+    ans: 2,
+    exp: "EASM chỉ nói cho bạn biết bạn có những 'cánh cửa sổ' nào. Pentera Surface sẽ 'thử đẩy' xem cửa sổ nào chưa khóa và dẫn vào phòng chứa két sắt."
+  },
+  {
+    q: "Điểm độc đáo (USP) mạnh mẽ nhất của Pentera Cloud trong môi trường lai (Hybrid) là gì?",
+    opts: [
+      "A. Vẽ ra đường dẫn tấn công liên kết (Lateral attack paths) từ Cloud đánh ngược về On-premises hoặc ngược lại",
+      "B. Tự động cấu hình lại các quy tắc (Rules) của AWS Security Group",
+      "C. Chạy chung một giao diện với phần mềm kế toán của doanh nghiệp",
+      "D. Tặng kèm dung lượng lưu trữ S3 không giới hạn"
+    ],
+    ans: 0,
+    exp: "Rất ít giải pháp có thể mô phỏng một cuộc tấn công vắt chéo từ Cloud xuống mạng On-prem nội bộ. Đây là USP 'chốt hạ' của nền tảng Pentera."
+  },
+  {
+    q: "Trong môi trường Cloud, Pentera đặc biệt chú trọng vào việc kiểm chứng nguy cơ nào phổ biến hơn cả Zero-day?",
+    opts: [
+      "A. Virus lây qua USB",
+      "B. Tấn công vật lý vào Datacenter",
+      "C. Cấu hình sai (Misconfigurations) và lạm dụng quyền IAM",
+      "D. Lỗ hổng trong mã nguồn của hệ điều hành Windows"
+    ],
+    ans: 2,
+    exp: "Trên Cloud, các vụ rò rỉ dữ liệu lớn nhất thường đến từ việc cấu hình sai quyền IAM hoặc hở S3 bucket, thay vì các lỗ hổng phần mềm phức tạp."
+  },
+  {
+    q: "Khi khách hàng nói: 'Chúng tôi đã thuê Red Team làm Pen-test 2 lần một năm rồi, không cần Pentera', Sales nên trả lời thế nào?",
+    opts: [
+      "A. 'Pen-test thủ công hiện nay hoàn toàn vô dụng, anh chị nên bỏ đi.'",
+      "B. 'Hệ thống mạng thay đổi mỗi ngày. Pentera cung cấp khả năng kiểm tra liên tục (Continuous) để lấp đầy khoảng mù thông tin giữa 2 lần Pen-test.'",
+      "C. 'Pentera có giá rẻ hơn 1 nửa so với chi phí thuê Red Team.'",
+      "D. 'Red Team của bên thứ 3 thường hay lấy trộm dữ liệu của công ty.'"
+    ],
+    ans: 1,
+    exp: "Sự liên tục (Continuous) là chìa khóa. Hạ tầng IT luôn thay đổi, cấu hình mới luôn được tạo ra, việc kiểm tra 2 lần/năm (point-in-time) không còn đủ an toàn."
+  },
+  {
+    q: "Pentera giúp giải quyết mạnh mẽ nhất các yêu cầu của tiêu chuẩn tuân thủ (Compliance) nào sau đây?",
+    opts: [
+      "A. ISO 9001",
+      "B. PCI-DSS (Đặc biệt Yêu cầu 11.3 về Penetration Testing)",
+      "C. Tiêu chuẩn kế toán IFRS",
+      "D. Quy định về An toàn lao động OSHA"
+    ],
+    ans: 1,
+    exp: "Báo cáo của Pentera có thể được sử dụng trực tiếp để chứng minh tuân thủ với các Auditor đối với chuẩn PCI-DSS (Thẻ thanh toán)."
+  },
+  {
+    q: "Làm thế nào Pentera có thể loại bỏ gần như 100% cảnh báo giả (False Positives)?",
+    opts: [
+      "A. Bằng cách sử dụng cơ sở dữ liệu của Cục tình báo trung ương Mỹ",
+      "B. Bằng cách xóa ngẫu nhiên 50% số lượng cảnh báo",
+      "C. Thông qua việc thực sự khai thác (Exploit) lỗ hổng đó để chứng minh nó có thể bị lợi dụng trong thực tế",
+      "D. Yêu cầu người dùng tự click xác nhận từng cảnh báo một"
+    ],
+    ans: 2,
+    exp: "Real Exploitation (Khai thác thật) là cách duy nhất để chứng minh 1 lỗ hổng không phải là cảnh báo giả. Nếu Pentera lấy được cờ (flag), lỗ hổng đó là thật."
+  },
+  {
+    q: "Thuật ngữ 'Lateral Movement' (Di chuyển ngang) trong báo cáo của Pentera Core ám chỉ hành vi nào của Hacker?",
+    opts: [
+      "A. Tải thêm mã độc từ máy chủ C&C trên Internet",
+      "B. Di chuyển dữ liệu từ máy chủ này sang máy chủ khác để sao lưu",
+      "C. Từ một máy tính bị xâm nhập ban đầu, tìm cách lây lan và kiểm soát các máy khác trong cùng mạng lưới",
+      "D. Xóa log hệ thống để che giấu dấu vết"
+    ],
+    ans: 2,
+    exp: "Di chuyển ngang là bước quan trọng trong Kill-chain để leo thang đặc quyền và tìm kiếm máy chủ chứa dữ liệu nhạy cảm."
+  },
+  {
+    q: "Sự khác biệt cốt lõi giữa Pentera và nền tảng BAS (Breach and Attack Simulation) là gì?",
+    opts: [
+      "A. BAS không có giao diện đồ họa",
+      "B. BAS chỉ chạy theo các kịch bản tĩnh (Playbook) giả định, trong khi Pentera tự động tư duy, tìm đường và khai thác như một Hacker thực thụ",
+      "C. BAS rẻ hơn Pentera rất nhiều",
+      "D. BAS là sản phẩm mã nguồn mở miễn phí"
+    ],
+    ans: 1,
+    exp: "BAS (như AttackIQ, Cymulate) chơi 'trò chơi giả lập' dựa trên kịch bản. Pentera sử dụng thuật toán để tự động hóa tư duy thực tế của hacker."
+  },
+  {
+    q: "Tính năng RansomwareReady™ của Pentera mang lại khả năng gì cho tổ chức?",
+    opts: [
+      "A. Đóng băng hệ thống tự động khi phát hiện Ransomware",
+      "B. Thương lượng tiền chuộc bằng Bitcoin với Hacker",
+      "C. Giả lập một chiến dịch tống tiền an toàn để xem hệ thống phòng thủ có thể cản được đến bước nào",
+      "D. Mã hóa lại dữ liệu đã bị tống tiền để cứu vãn"
+    ],
+    ans: 2,
+    exp: "RansomwareReady cho phép CISO trả lời câu hỏi: 'Liệu các giải pháp EDR/Firewall hiện tại có chặn được Ransomware trước khi dữ liệu bị mã hóa không?'"
+  },
+  {
+    q: "Trong Pentera Cloud, quá trình 'Secrets harvesting' có nghĩa là gì?",
+    opts: [
+      "A. Đọc trộm email cá nhân của nhân viên",
+      "B. Trích xuất các thông tin bí mật (như API keys, Access tokens) từ các tài sản Cloud đã bị xâm nhập để tiếp tục tấn công",
+      "C. Tìm kiếm các tệp tin ẩn trên máy tính cục bộ",
+      "D. Quét mã nguồn mở để tìm mật khẩu"
+    ],
+    ans: 1,
+    exp: "Trong môi trường Cloud, việc lấy được API Keys hoặc Access tokens thường là chìa khóa để chiếm quyền kiểm soát toàn bộ hạ tầng."
+  },
+  {
+    q: "Nếu hệ thống quét VA (Tenable/Qualys) báo một lỗ hổng có điểm CVSS 10 trên một máy chủ hoàn toàn bị cô lập, Pentera sẽ ứng xử thế nào?",
+    opts: [
+      "A. Yêu cầu IT phải vá ngay lập tức trong 24h",
+      "B. Hạ cấp rủi ro hoặc loại bỏ khỏi ưu tiên vá lỗi vì Hacker không có con đường nào (Attack path) để tiếp cận máy chủ đó",
+      "C. Cảnh báo mức độ Đỏ (Critical) trên toàn hệ thống",
+      "D. Đề xuất mua thêm Firewall để bảo vệ máy chủ đó"
+    ],
+    ans: 1,
+    exp: "Pentera đánh giá rủi ro dựa trên 'Context' (Ngữ cảnh) và khả năng khai thác thực tế (Exploitability), chứ không chỉ dựa trên lý thuyết CVSS."
+  },
+  {
+    q: "Pentera sử dụng Framework nổi tiếng nào làm tiêu chuẩn để ánh xạ (map) các kỹ thuật tấn công?",
+    opts: [
+      "A. ISO 27001",
+      "B. OWASP Top 10",
+      "C. NIST Cybersecurity Framework",
+      "D. MITRE ATT&CK"
+    ],
+    ans: 3,
+    exp: "Báo cáo của Pentera ánh xạ trực tiếp các chiến thuật và kỹ thuật (TTPs) của nó với khung MITRE ATT&CK tiêu chuẩn ngành."
+  },
+  {
+    q: "Bước 'Clean up' (Dọn dẹp) vào cuối chu trình kiểm thử của Pentera Core có tác dụng gì?",
+    opts: [
+      "A. Tối ưu hóa dung lượng RAM cho máy tính của người dùng",
+      "B. Xóa lịch sử trình duyệt web",
+      "C. Trả môi trường về trạng thái nguyên thủy, loại bỏ mọi malware giả lập và payload đã sử dụng để không để lại 'rác' bảo mật",
+      "D. Làm sạch định dạng của file báo cáo PDF xuất ra"
+    ],
+    ans: 2,
+    exp: "Để đảm bảo an toàn (Safe-by-design), Pentera cam kết dọn sạch mọi dấu vết (footprints) sau khi bài test hoàn tất."
+  },
+  {
+    q: "Tính năng 'Approval process' (Quy trình phê duyệt) giải quyết nỗi lo nào của khách hàng?",
+    opts: [
+      "A. Sợ ngân sách bị đội lên cao",
+      "B. Sợ hệ thống tự động chạy các mã khai thác nguy hiểm làm sập Server Production",
+      "C. Sợ báo cáo quá dài không ai đọc",
+      "D. Sợ nhân viên bỏ việc do áp lực vá lỗi"
+    ],
+    ans: 1,
+    exp: "Khách hàng có thể cấu hình Pentera tạm dừng trước mỗi bước khai thác (Exploit) và yêu cầu phê duyệt bằng tay (Approve) để kiểm soát rủi ro tuyệt đối."
+  },
+  {
+    q: "Khách hàng hỏi: 'Phần mềm Pentera Surface của các bạn có yêu cầu phần cứng mạnh để cài đặt nội bộ không?'. Bạn trả lời:",
+    opts: [
+      "A. 'Có, yêu cầu máy chủ ít nhất 64GB RAM.'",
+      "B. 'Không, Pentera Surface là nền tảng 100% SaaS (Cloud), chỉ cần cung cấp Tên miền (Domain) để bắt đầu.'",
+      "C. 'Có, yêu cầu phải gắn trực tiếp vào Core Switch.'",
+      "D. 'Không, nó cài đặt như một Extension trên Google Chrome.'"
+    ],
+    ans: 1,
+    exp: "Surface hoạt động theo mô hình Outside-In nên được cung cấp hoàn toàn dưới dạng dịch vụ SaaS trên đám mây của Pentera."
+  },
+  {
+    q: "Sự 'Ảo tưởng về an toàn' (Illusion of security) mà Elevator Pitch của Pentera thường nhắc tới là gì?",
+    opts: [
+      "A. Tin rằng máy Mac không bao giờ bị nhiễm virus",
+      "B. Doanh nghiệp mua rất nhiều giải pháp (Firewall, EDR) nhưng không có cách nào kiểm chứng xem chúng có được cấu hình đúng và hoạt động khi bị tấn công thật hay không",
+      "C. Tin rằng nhân viên IT không bao giờ mắc lỗi",
+      "D. Cho rằng sử dụng phần mềm bẻ khóa (crack) là an toàn"
+    ],
+    ans: 1,
+    exp: "Rất nhiều doanh nghiệp bị hack dù sở hữu các tool bảo mật đắt tiền nhất, lý do đơn giản là cấu hình sai hoặc thiếu sự phối hợp giữa các lớp phòng thủ."
+  },
+  {
+    q: "Trong quá trình 'Endpoint Resiliency', Pentera sử dụng công cụ gì để kiểm tra các phần mềm diệt virus/EDR?",
+    opts: [
+      "A. Sử dụng virus WannaCry thật tải từ Darkweb",
+      "B. Gửi email lừa đảo (Phishing) tới CEO",
+      "C. Sử dụng các bản sao Malware an toàn (Safe malware replicas) để kiểm tra khả năng chặn bắt",
+      "D. Tắt hoàn toàn phần mềm EDR"
+    ],
+    ans: 2,
+    exp: "Pentera sử dụng các kỹ thuật trích xuất đặc điểm của malware thật nhưng bẻ gãy khả năng phá hoại của chúng, tạo thành malware an toàn để thử lửa EDR."
+  },
+  {
+    q: "Khách hàng nào sau đây là đối tượng mục tiêu (Target Persona) tốt nhất để Sales tiếp cận chào bán Pentera?",
+    opts: [
+      "A. Trưởng phòng Marketing (CMO)",
+      "B. Giám đốc Tài chính (CFO)",
+      "C. Giám đốc An toàn Thông tin (CISO) hoặc Quản lý SOC/IT",
+      "D. Trưởng phòng Nhân sự (HR)"
+    ],
+    ans: 2,
+    exp: "CISO và SOC Lead là những người chịu áp lực trực tiếp về việc bảo vệ hệ thống và giải quyết lượng lớn cảnh báo lỗi mỗi ngày."
+  },
+  {
+    q: "Khách hàng nói 'Chúng tôi đã mua tool CSPM để quản lý cấu hình Cloud rồi'. Sales nên xử lý thế nào?",
+    opts: [
+      "A. CSPM chỉ kiểm tra cấu hình trên giấy tờ. Pentera Cloud sẽ 'khai thác thực chứng' (Evidence-based) xem cấu hình sai đó có thực sự bị hacker lợi dụng được không.",
+      "B. CSPM không tốt, hãy gỡ cài đặt và dùng Pentera.",
+      "C. Pentera Cloud rẻ hơn CSPM rất nhiều.",
+      "D. CSPM chỉ dùng cho AWS, còn Pentera dùng cho cả Azure."
+    ],
+    ans: 0,
+    exp: "Compliance (Trạng thái tuân thủ) trên CSPM khác với Exploitability (Khả năng bị khai thác thực tế). Pentera bù đắp mảnh ghép thực chứng này."
+  },
+  {
+    q: "Lợi ích lớn nhất đối với hiệu suất làm việc của đội IT/SOC khi áp dụng Pentera là gì?",
+    opts: [
+      "A. Họ có thời gian rảnh rỗi để chơi game",
+      "B. Giảm sự phụ thuộc hoàn toàn vào kỹ năng cá nhân của một chuyên gia Red Team bên thứ 3",
+      "C. Máy chủ sẽ chạy nhanh hơn 20%",
+      "D. Không cần dùng mật khẩu để đăng nhập nữa"
+    ],
+    ans: 1,
+    exp: "Pentera tự động hóa các kỹ năng Pentest cao cấp, cho phép vận hành liên tục mà không cần phụ thuộc vào nguồn lực đắt đỏ và khan hiếm của chuyên gia Red Team bên ngoài."
+  },
+  {
+    q: "Trong Attack Kill-chain, bước 'Data Exfiltration' của Pentera nhằm mục đích kiểm tra hệ thống nào?",
+    opts: [
+      "A. Hệ thống làm mát của máy chủ",
+      "B. Tốc độ đường truyền Internet",
+      "C. Hệ thống chống thất thoát dữ liệu (DLP) có ngăn chặn được luồng dữ liệu bị đẩy ra ngoài trái phép không",
+      "D. Chống tấn công từ chối dịch vụ (DDoS)"
+    ],
+    ans: 2,
+    exp: "Pentera sẽ thử 'rò rỉ' một số dữ liệu mẫu (dummy data) ra bên ngoài xem giải pháp DLP (Data Loss Prevention) của khách hàng có cảnh báo/chặn không."
+  },
+  {
+    q: "Thuật ngữ 'Ethical Attack' (Tấn công có đạo đức) trong tài liệu Pentera mang ý nghĩa gì?",
+    opts: [
+      "A. Hackers chỉ làm việc trong giờ hành chính",
+      "B. Sử dụng tư duy và công cụ của Hacker để tìm lỗ hổng trước khi kẻ xấu lợi dụng, với mục đích bảo vệ tổ chức",
+      "C. Xin phép hacker trước khi vá lỗi",
+      "D. Không tấn công vào các tổ chức phi lợi nhuận"
+    ],
+    ans: 1,
+    exp: "Tấn công có đạo đức (Ethical Hacking) là nền tảng cốt lõi của Pentera, giả lập tư duy kẻ tấn công vì mục đích tốt."
+  },
+  {
+    q: "Tóm lại, thông điệp cốt lõi mạnh nhất (Value Proposition) mà bạn nên dùng để chốt Sale Pentera là:",
+    opts: [
+      "A. Phần mềm diệt virus tốt nhất thế giới",
+      "B. Nền tảng thẩm định an toàn tự động, chứng minh lỗ hổng bằng khai thác an toàn, giúp IT vá đúng lỗi và tự tin trước các cuộc tấn công",
+      "C. Công cụ quản lý mật khẩu giá rẻ",
+      "D. Giải pháp tường lửa không thể bị xuyên thủng"
+    ],
+    ans: 1,
+    exp: "Thông điệp chuẩn xác bao hàm 3 yếu tố: Tự động hóa - Khai thác an toàn - Ưu tiên vá lỗi chính xác."
+  }
+];
+
+let currentQ = 0;
+let score = 0;
+let answered = false;
+let userAnswers = new Array(quizData.length).fill(null);
+
+const qNumEl = document.getElementById('q-num');
+const qTextEl = document.getElementById('q-text');
+const optionsEl = document.getElementById('options-container');
+const explainEl = document.getElementById('explanation');
+const btnNext = document.getElementById('btn-next');
+const progressFill = document.getElementById('progress');
+
+function loadQuestion() {
+  answered = false;
+  btnNext.disabled = true;
+  btnNext.textContent = currentQ === quizData.length - 1 ? 'Xem Kết Quả' : 'Xác nhận';
+  explainEl.className = 'explanation';
+  explainEl.innerHTML = '';
+  
+  const q = quizData[currentQ];
+  qNumEl.textContent = currentQ + 1;
+  qTextEl.textContent = q.q;
+  
+  progressFill.style.width = `${(currentQ / quizData.length) * 100}%`;
+
+  optionsEl.innerHTML = '';
+  q.opts.forEach((opt, idx) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.innerHTML = `<div class="radio-custom"></div><div>${opt}</div>`;
+    div.onclick = () => selectOption(idx, div);
+    optionsEl.appendChild(div);
+  });
+}
+
+function selectOption(idx, el) {
+  if (answered) return;
+  document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  userAnswers[currentQ] = idx;
+  btnNext.disabled = false;
+}
+
+btnNext.addEventListener('click', () => {
+  if (!answered) {
+    // Check answer
+    answered = true;
+    const correctIdx = quizData[currentQ].ans;
+    const selectedIdx = userAnswers[currentQ];
+    const opts = document.querySelectorAll('.option');
+    
+    if (selectedIdx === correctIdx) {
+      score++;
+      opts[selectedIdx].classList.add('correct');
+    } else {
+      opts[selectedIdx].classList.add('wrong');
+      opts[correctIdx].classList.add('correct');
+    }
+    
+    explainEl.innerHTML = `<strong>Giải thích:</strong> ${quizData[currentQ].exp}`;
+    explainEl.classList.add('show');
+    btnNext.textContent = currentQ === quizData.length - 1 ? 'Hoàn tất' : 'Câu tiếp theo';
+  } else {
+    // Move to next
+    if (currentQ < quizData.length - 1) {
+      currentQ++;
+      loadQuestion();
+    } else {
+      showResult();
+    }
+  }
+});
+
+function showResult() {
+  progressFill.style.width = '100%';
+  const pct = Math.round((score / quizData.length) * 100);
+  
+  // Custom Ring Background dynamically
+  const ring = document.getElementById('res-ring');
+  const resPct = document.getElementById('res-pct');
+  resPct.textContent = pct + '%';
+  
+  let grade, title, sub, colorClass;
+  
+  // Passing criteria is > 75%
+  if (pct >= 90) {
+    grade = 'XUẤT SẮC'; title = '🏆 Sát thủ chốt Sale!';
+    sub = 'Bạn nắm vững mọi ngóc ngách của Pentera. Sẵn sàng mang giải pháp này tới bất kỳ CISO khó tính nào!';
+    colorClass = 'lvl-a';
+  } else if (pct > 75) {
+    grade = 'ĐẠT (PASS)'; title = '👍 Sẵn sàng ra trận!';
+    sub = 'Kiến thức sản phẩm rất tốt. Bạn đã đủ điều kiện để tự tin tư vấn cho khách hàng.';
+    colorClass = 'lvl-b';
+  } else if (pct >= 50) {
+    grade = 'CHƯA ĐẠT'; title = '📚 Cần ôn luyện thêm';
+    sub = 'Bạn đã nắm được ý chính nhưng chưa đủ sâu để xử lý từ chối. Hãy đọc lại Sales Playbook (nhất là phần phân biệt với BAS/VA).';
+    colorClass = 'lvl-c';
+  } else {
+    grade = 'CẦN CỐ GẮNG NHIỀU'; title = '💪 Hãy xem lại tài liệu!';
+    sub = 'Đừng vội gặp khách hàng. Hãy đọc kỹ lại cơ chế Safe-by-Design, USP của Core và Cloud trước khi làm lại bài test.';
+    colorClass = 'lvl-d';
+  }
+
+  ring.className = `result-ring ${colorClass}`;
+  
+  let colorVar;
+  if(colorClass === 'lvl-a') colorVar = 'var(--green)';
+  else if(colorClass === 'lvl-b') colorVar = 'var(--gold)';
+  else if(colorClass === 'lvl-c') colorVar = 'var(--accent2)';
+  else colorVar = 'var(--red)';
+  
+  ring.style.background = `conic-gradient(${colorVar} ${pct}%, var(--surface2) ${pct}%)`;
+
+  document.getElementById('res-grade').textContent = grade;
+  document.getElementById('res-title').textContent = title;
+  document.getElementById('res-sub').textContent = sub;
+  
+  document.getElementById('overlay').classList.add('show');
+}
+
+// Init
+loadQuestion();
+</script>
+</body>
+</html>

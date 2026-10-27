@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proofpoint Sales Playbook - Tài Liệu Dành Cho Sales</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap');
+
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1e2d45;
+    --accent: #0ea5e9; /* Proofpoint Blue */
+    --accent2: #f59e0b; /* Warning/Orange */
+    --accent3: #10b981; /* Success/Green */
+    --accent4: #8b5cf6; /* Purple for AI */
+    --text: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* Header */
+  header {
+    background: rgba(17, 24, 39, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 40px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .header-titles h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    background: linear-gradient(90deg, #fff, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 4px;
+  }
+
+  .header-titles p {
+    color: var(--accent);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .badge {
+    background: rgba(14, 165, 233, 0.1);
+    color: var(--accent);
+    border: 1px solid rgba(14, 165, 233, 0.3);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  /* Layout */
+  .container {
+    display: flex;
+    max-width: 1440px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  /* Sidebar (TOC) */
+  .sidebar {
+    width: 280px;
+    flex-shrink: 0;
+    padding: 40px 20px 40px 40px;
+    position: sticky;
+    top: 85px;
+    height: calc(100vh - 85px);
+    overflow-y: auto;
+    border-right: 1px solid var(--border);
+  }
+
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 4px; }
+
+  .toc-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    letter-spacing: 1.5px;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+
+  .toc ul { list-style: none; }
+  .toc li { margin-bottom: 12px; }
+  .toc a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    display: block;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    border-left: 2px solid transparent;
+  }
+
+  .toc a:hover {
+    color: var(--text);
+    background: var(--surface);
+  }
+
+  .toc a.active {
+    color: var(--accent);
+    background: rgba(14, 165, 233, 0.05);
+    border-left-color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* Main Content */
+  .content {
+    flex-grow: 1;
+    padding: 40px 60px 100px;
+    max-width: 1000px;
+  }
+
+  section {
+    margin-bottom: 80px;
+    scroll-margin-top: 120px;
+  }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    color: #fff;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+
+  h2::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  h3 {
+    font-size: 20px;
+    color: #fff;
+    margin: 32px 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  h3::before {
+    content: '▹';
+    color: var(--accent);
+  }
+
+  p {
+    margin-bottom: 16px;
+    color: var(--text-muted);
+  }
+
+  strong { color: #fff; }
+
+  /* Cards Grid */
+  .grid-2, .grid-3, .grid-4 {
+    display: grid;
+    gap: 20px;
+    margin: 24px 0;
+  }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+
+  .card-icon {
+    font-size: 28px;
+    margin-bottom: 16px;
+    display: inline-block;
+  }
+
+  .card h4 {
+    color: #fff;
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .card p {
+    font-size: 14px;
+    margin: 0;
+  }
+
+  /* Stats Block */
+  .stats-banner {
+    display: flex;
+    background: linear-gradient(135deg, var(--surface), var(--surface2));
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 30px;
+    justify-content: space-around;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  .stat-item h3 {
+    font-size: 36px;
+    color: var(--accent);
+    margin: 0 0 8px 0;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .stat-item h3::before { display: none; }
+  
+  .stat-item p {
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+    margin: 0;
+  }
+
+  /* Battlecard / Objections */
+  .objection-box {
+    background: rgba(245, 158, 11, 0.05);
+    border-left: 4px solid var(--accent2);
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 0 8px 8px 0;
+  }
+
+  .objection-box .customer-says {
+    font-style: italic;
+    color: #fff;
+    font-weight: 500;
+    margin-bottom: 12px;
+  }
+
+  .objection-box .customer-says::before {
+    content: 'Khách hàng: ';
+    color: var(--accent2);
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  .objection-box .sales-response {
+    color: var(--text-muted);
+    font-size: 15px;
+  }
+  
+  .objection-box .sales-response strong {
+    color: var(--accent3);
+  }
+
+  /* Tech Specs / Lists */
+  ul.tech-list {
+    list-style: none;
+    margin-bottom: 24px;
+  }
+
+  ul.tech-list li {
+    position: relative;
+    padding-left: 24px;
+    margin-bottom: 12px;
+    color: var(--text-muted);
+  }
+
+  ul.tech-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--accent3);
+    font-weight: bold;
+  }
+
+  /* Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+    font-size: 14px;
+  }
+  
+  th, td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+
+  th {
+    background: var(--surface);
+    color: var(--accent);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 12px;
+  }
+
+  tr:hover td {
+    background: rgba(255,255,255,0.02);
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    padding: 40px;
+    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 14px;
+    margin-top: 40px;
+  }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .container { flex-direction: column; }
+    .sidebar { 
+      width: 100%; 
+      height: auto; 
+      position: static; 
+      border-right: none; 
+      border-bottom: 1px solid var(--border);
+      padding: 20px;
+    }
+    .content { padding: 30px 20px; }
+    .grid-4, .grid-3 { grid-template-columns: 1fr 1fr; }
+    .stats-banner { flex-wrap: wrap; gap: 20px; }
+  }
+
+  @media (max-width: 600px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    header { padding: 16px; flex-direction: column; align-items: flex-start; gap: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-titles">
+    <h1>Proofpoint Sales Playbook</h1>
+    <p>Human-Centric Security Solution</p>
+  </div>
+  <div class="badge">Lưu hành nội bộ - Team Sales</div>
+</header>
+
+<div class="container">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+    <div class="toc-title">Mục lục nội dung</div>
+    <nav class="toc">
+      <ul>
+        <li><a href="#overview">1. Tổng quan & Vị thế Thị trường</a></li>
+        <li><a href="#painpoints">2. Nỗi đau Khách hàng (Pain Points)</a></li>
+        <li><a href="#architecture">3. Cấu trúc Giải pháp (Products)</a></li>
+        <li><a href="#usps">4. Lợi thế cạnh tranh (USPs)</a></li>
+        <li><a href="#battlecard">5. Xử lý Từ chối & Cạnh tranh</a></li>
+        <li><a href="#licensing">6. Đóng gói License (Packages)</a></li>
+        <li><a href="#faq">7. FAQ & Triển khai PoC</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="content">
+    
+    <!-- 1. TỔNG QUAN -->
+    <section id="overview">
+      <h2>1. Tổng quan & Vị thế Thị trường</h2>
+      <p><strong>Proofpoint</strong> là giải pháp bảo mật hàng đầu thế giới với triết lý <strong>"Human-centric Security"</strong> (Bảo mật lấy con người làm trung tâm). Thay vì chỉ bảo vệ hạ tầng mạng hay thiết bị, Proofpoint bảo vệ điểm yếu lớn nhất của tổ chức: <strong>Con người</strong> và <strong>Dữ liệu</strong> họ tạo ra.</p>
+      
+      <div class="stats-banner">
+        <div class="stat-item">
+          <h3>$2.03B</h3>
+          <p>Doanh thu</p>
+        </div>
+        <div class="stat-item">
+          <h3>85%</h3>
+          <p>Fortune 100 sử dụng</p>
+        </div>
+        <div class="stat-item">
+          <h3>#1</h3>
+          <p>Thị phần DLP Toàn cầu</p>
+        </div>
+        <div class="stat-item">
+          <h3>98%</h3>
+          <p>Tỷ lệ gia hạn (Retention)</p>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-icon">🛡️</div>
+          <h4>People Protection</h4>
+          <p>Ngăn chặn Initial Compromise (Xâm nhập bước đầu) thông qua Email, Cloud, và SMS. Bảo vệ nhân viên khỏi Phishing, BEC, Ransomware.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🔐</div>
+          <h4>Information Protection</h4>
+          <p>Ngăn chặn rò rỉ dữ liệu (Data Loss) do vô tình hoặc cố ý từ người dùng nội bộ (Insider Threats) trên Endpoint, Email, Web.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. NỖI ĐAU -->
+    <section id="painpoints">
+      <h2>2. Nỗi đau Khách hàng (Pain Points)</h2>
+      <p>Khi tiếp cận khách hàng (đặc biệt C-level, CISO), hãy xoáy sâu vào các thực trạng sau:</p>
+      
+      <div class="grid-3">
+        <div class="card" style="border-top: 3px solid var(--accent2);">
+          <h4>94% Cuộc tấn công bắt đầu từ Email</h4>
+          <p>Hacker không còn cố gắng hack hạ tầng tường lửa. Chúng "hack" con người thông qua lừa đảo email, lợi dụng lòng tin để đánh cắp thông tin đăng nhập.</p>
+        </div>
+        <div class="card" style="border-top: 3px solid var(--accent2);">
+          <h4>Mối đe dọa từ GenAI</h4>
+          <p>Sự bùng nổ của Generative AI (ChatGPT) giúp kẻ tấn công tạo ra các email lừa đảo (BEC - Business Email Compromise) hoàn hảo, không có lỗi chính tả, cá nhân hóa cao độ.</p>
+        </div>
+        <div class="card" style="border-top: 3px solid var(--accent2);">
+          <h4>Rủi ro từ người dùng nội bộ</h4>
+          <p>Nhân viên nghỉ việc copy dữ liệu ra USB, hoặc nhân viên vô tình gửi nhầm file nhạy cảm. Quản trị viên thiếu công cụ để <strong>nhìn thấy toàn cảnh</strong> hành vi người dùng (User Activity).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SẢN PHẨM -->
+    <section id="architecture">
+      <h2>3. Các Modules Giải pháp Chính</h2>
+      <p>Hệ sinh thái Proofpoint bao phủ toàn diện từ cổng Email đến Thiết bị người dùng.</p>
+
+      <h3>A. Core Email Protection & TAP</h3>
+      <ul class="tech-list">
+        <li><strong>Email Protection:</strong> Chống spam, virus, malware, kiểm soát luồng mail với độ chính xác cao.</li>
+        <li><strong>TAP (Targeted Attack Protection):</strong> Cách ly URL và File đính kèm độc hại. Sử dụng Sandbox để phân tích hành vi của mã độc chưa từng biết đến (Zero-day).</li>
+        <li><strong>Nexus Threat Graph:</strong> Mạng lưới tình báo mối đe dọa thu thập từ hơn 200,000 khách hàng toàn cầu, AI tự động nhận diện và chặn mối đe dọa theo thời gian thực.</li>
+      </ul>
+
+      <h3>B. Security Awareness Training (PSAT)</h3>
+      <ul class="tech-list">
+        <li>Nền tảng đào tạo nâng cao nhận thức bảo mật. Hơn 300+ modules học liệu.</li>
+        <li><strong>Phishing Simulations:</strong> Gửi email lừa đảo giả lập để kiểm tra nhân viên.</li>
+        <li><strong>CLEAR Workflow:</strong> Nhân viên báo cáo email đáng ngờ bằng 1 nút bấm (PhishAlarm). Hệ thống tự động phân tích và xóa email độc hại khỏi hòm thư của toàn bộ nhân viên.</li>
+      </ul>
+
+      <h3>C. Endpoint DLP & Insider Threat Management (ITM)</h3>
+      <ul class="tech-list">
+        <li>Quản lý rò rỉ dữ liệu tại thiết bị đầu cuối (Endpoint). Hơn 100+ cảnh báo hành vi người dùng.</li>
+        <li><strong>File Tracking:</strong> Theo dõi đường đi của file (vd: tải từ Web -> Copy ra USB, hoặc Web -> Web).</li>
+        <li><strong>Screen Capture:</strong> Quay màn hình làm bằng chứng không thể chối cãi khi người dùng có hành vi vi phạm (hữu ích cho HR và Pháp chế).</li>
+      </ul>
+
+      <h3>D. Proofpoint Capture & Archiving</h3>
+      <ul class="tech-list">
+        <li>Ghi nhận và lưu trữ toàn bộ giao tiếp từ Teams, Slack, Zoom, WhatsApp... phục vụ mục đích tuân thủ luật pháp (Compliance & e-discovery).</li>
+      </ul>
+    </section>
+
+    <!-- 4. USPS -->
+    <section id="usps">
+      <h2>4. Lợi thế Công nghệ (USPs) so với thị trường</h2>
+      <p>Sử dụng các điểm sáng công nghệ sau đây để chứng minh sự vượt trội của Proofpoint trong các buổi Pitch/Demo:</p>
+      
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-icon">🧠</div>
+          <h4>Nexus Language Model (LM) & AI</h4>
+          <p>Không chỉ dùng Signature, Proofpoint tích hợp LLM (Mô hình ngôn ngữ lớn) để phân tích "Ý định" (Intent), tính cấp bách (Urgency) trong câu chữ để chặn các cuộc lừa đảo BEC không chứa mã độc.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">👁️</div>
+          <h4>Computer Vision (Nhận diện hình ảnh)</h4>
+          <p>Công nghệ thị giác máy tính độc quyền giúp quét và bóc tách các mã <strong>QR Code độc hại (Quishing)</strong> được chèn lén lút trong nội dung Email - tính năng mà đa số SEG khác bỏ sót.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🕸️</div>
+          <h4>Relationship Graph (Phân tích mối quan hệ)</h4>
+          <p>Biết được người gửi là ai, họ có thường xuyên giao tiếp với người nhận không, domain mới tạo hay đã lâu để đưa ra quyết định đánh giá rủi ro chính xác.</p>
+        </div>
+        <div class="card">
+          <div class="card-icon">🎯</div>
+          <h4>VAP (Very Attacked People)</h4>
+          <p>Chỉ điểm chính xác "Ai trong công ty đang bị hacker tấn công nhiều nhất" để CISO áp dụng chính sách bảo mật chặt chẽ hơn cho cá nhân đó (Thay vì cấm đoán toàn bộ công ty).</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. BATTLECARD -->
+    <section id="battlecard">
+      <h2>5. Xử lý Từ chối & Cạnh tranh (Battlecard)</h2>
+      
+      <div class="objection-box">
+        <div class="customer-says">"Chúng tôi đang dùng Default Security của Microsoft 365 (E3/E5) rồi, đủ tốt rồi."</div>
+        <div class="sales-response">
+          <strong>Cách phản hồi:</strong> Đồng ý là MS365 có bảo mật cơ bản. NHƯNG bảo mật "mặc định" không đủ. MS365 là mục tiêu số 1 của Hacker. Dùng Proofpoint giúp: 
+          <br>1. Ngăn chặn luồng đe dọa <strong>trước khi</strong> nó chạm đến hạ tầng MS. 
+          <br>2. Cung cấp tầm nhìn rõ ràng về ai là người bị tấn công (VAP) mà MS không có.
+          <br>3. Chống lại mã độc mã hóa tệp và lừa đảo BEC tinh vi mà Defender thường lọt lưới.
+        </div>
+      </div>
+
+      <div class="objection-box">
+        <div class="customer-says">"Giải pháp SEG khác (như Cisco, FortiMail, Mimecast) cũng check các tính năng y hệt trên giấy, nhưng giá rẻ hơn."</div>
+        <div class="sales-response">
+          <strong>Cách phản hồi:</strong> Checkbox trên giấy không phản ánh khả năng bảo vệ thực tế (Checking boxes doesn't equal same protection). Các hãng SEG cũ tiếp cận theo hướng "Infrastructure-centric", trong khi Proofpoint là "Human-centric" áp dụng AI/ML (LLM, Computer Vision) ở cấp độ cao nhất. 
+          <br>👉 <strong>Hành động:</strong> Đề xuất chạy PoC (Proof of Concept) song song. Proofpoint sẽ bắt được những mối đe dọa mà giải pháp rẻ tiền để lọt lưới.
+        </div>
+      </div>
+
+      <div class="objection-box">
+        <div class="customer-says">"Tôi thích một giải pháp chỉ dùng API (ICES) cho nhẹ nhàng, không muốn đổi MX record."</div>
+        <div class="sales-response">
+          <strong>Cách phản hồi:</strong> Proofpoint <strong>có hỗ trợ triển khai qua API</strong> nếu khách hàng muốn. Tuy nhiên, giải pháp API-only (như Abnormal, Avanan) có rào cản là tầm nhìn hẹp, chỉ giải quyết một lát cắt nhỏ của các mối đe dọa và không thể cách ly mối đe dọa trước khi vào Inbox. Chặn tại Gateway (MX) vẫn là lớp phòng thủ vững chắc nhất, kết hợp API để bảo vệ toàn diện.
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. LICENSING -->
+    <section id="licensing">
+      <h2>6. Đóng gói & License</h2>
+      <p>Proofpoint cấp phép dựa trên số lượng người dùng (Users), không tính theo số lượng thiết bị hay máy chủ. Dưới đây là tham khảo phân lớp gói <strong>Security Awareness Training (PSAT)</strong>:</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Tính năng (Features)</th>
+            <th>Gói STANDARD</th>
+            <th>Gói ENTERPRISE</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Phishing & USB Simulations</td>
+            <td>✓</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>Knowledge Assessments</td>
+            <td>✓</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>Training Modules</td>
+            <td>104 Core modules</td>
+            <td>Toàn bộ 300+ modules</td>
+          </tr>
+          <tr>
+            <td>Hỗ trợ đa ngôn ngữ</td>
+            <td>English + 3 ngôn ngữ chọn thêm</td>
+            <td>Hơn 40+ ngôn ngữ</td>
+          </tr>
+          <tr>
+            <td><strong>TAP Guided Training</strong> (Tự động gửi bài học cho người vừa bị tấn công)</td>
+            <td>❌</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td><strong>CLEAR (Automated Email Remediation)</strong> (Nút báo cáo & tự động xóa mail)</td>
+            <td>❌</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td><strong>Nexus People Risk Explorer</strong> (Phân tích rủi ro con người)</td>
+            <td>❌</td>
+            <td>✓</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 7. FAQ -->
+    <section id="faq">
+      <h2>7. Câu hỏi thường gặp (FAQ cho Sales)</h2>
+      
+      <ul class="tech-list" style="margin-top: 20px;">
+        <li>
+          <strong style="color:var(--accent); font-size: 16px;">Proofpoint Endpoint DLP có nặng máy không?</strong><br>
+          Agent của Proofpoint ITM/DLP hoạt động ở mức User-mode, tối ưu tài nguyên cực thấp (chỉ ~1-2% CPU), không gây xung đột (Blue screen) như các giải pháp DLP Kernel-mode cũ (như Symantec, McAfee).
+        </li>
+        <li>
+          <strong style="color:var(--accent); font-size: 16px;">Làm thế nào để bắt đầu một deal Proofpoint?</strong><br>
+          Offer khách hàng thực hiện chương trình <strong>Email Rapid Risk Assessment (ERRA)</strong> hoặc chạy <strong>Phishing Simulation miễn phí</strong>. Điều này giúp phát hiện lỗ hổng thực tế đang tồn tại trong hệ thống của họ để tạo lý do mua hàng (Business case).
+        </li>
+        <li>
+          <strong style="color:var(--accent); font-size: 16px;">Khách hàng mục tiêu của Proofpoint là ai?</strong><br>
+          Phù hợp nhất với Khối Tài chính - Ngân hàng (FSI), Y tế, Sản xuất, Tập đoàn đa quốc gia. Đặc biệt là những tổ chức đang dùng Microsoft 365, cần tuân thủ bảo mật khắt khe và bảo vệ dữ liệu nhạy cảm.
+        </li>
+      </ul>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <p>© 2026 Proofpoint, Inc. - Internal Sales Enablement Material.</p>
+  <p style="margin-top:8px">Tài liệu tham khảo dựa trên: Slide giải pháp, Data Sheet Capture 2024, Endpoint DLP/ITM Brief, Battlecard Alternative SEGs, API Sales Narrative & PSAT 2021.</p>
+  <p style="margin-top:8px;color:var(--text-muted)">Version 1.0 – Dành cho mục đích đào tạo nội bộ và tư vấn khách hàng.</p>
+</footer>
+
+<script>
+// Smooth scroll for TOC
+document.querySelectorAll('.toc a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// Highlight active TOC item based on scroll position
+const sections = document.querySelectorAll('section[id]');
+const tocLinks = document.querySelectorAll('.toc a');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
+      if (active) {
+        active.classList.add('active');
+      }
+    }
+  });
+}, { rootMargin: '-15% 0px -80% 0px' });
+
+sections.forEach(sec => observer.observe(sec));
+</script>
+
+</body>
+</html>

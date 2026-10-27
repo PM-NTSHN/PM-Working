@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OpenText Voltage — Nghiên Cứu Chuyên Sâu Giải Pháp Bảo Mật Dữ Liệu</title>
+<style>
+  :root {
+    --primary: #003366;
+    --accent: #0077cc;
+    --accent2: #00a86b;
+    --warn: #e65c00;
+    --bg: #f4f7fa;
+    --card: #ffffff;
+    --border: #dde3ea;
+    --text: #1a2332;
+    --muted: #5a6a7e;
+    --tag-blue: #e3f0fb;
+    --tag-green: #e3f7ef;
+    --tag-orange: #fff3e8;
+    --tag-purple: #f0eafa;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 15px; }
+
+  /* ─── HEADER ─── */
+  .site-header {
+    background: linear-gradient(135deg, #001e4a 0%, #003a80 60%, #0055a5 100%);
+    color: white; padding: 48px 40px 36px;
+    border-bottom: 4px solid var(--accent2);
+  }
+  .site-header .badge { display: inline-block; background: var(--accent2); color: white; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; margin-bottom: 14px; }
+  .site-header h1 { font-size: 32px; font-weight: 800; margin-bottom: 10px; line-height: 1.2; }
+  .site-header .subtitle { font-size: 15px; opacity: .82; max-width: 750px; }
+  .meta-row { margin-top: 20px; display: flex; gap: 24px; flex-wrap: wrap; font-size: 13px; opacity: .75; }
+  .meta-row span::before { content: '● '; color: var(--accent2); }
+
+  /* ─── NAV TOC ─── */
+  .toc-wrap { background: var(--primary); color: white; padding: 18px 40px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,.2); }
+  .toc-wrap nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+  .toc-wrap a { color: rgba(255,255,255,.8); text-decoration: none; font-size: 13px; font-weight: 500; padding: 4px 0; border-bottom: 2px solid transparent; transition: .2s; }
+  .toc-wrap a:hover { color: var(--accent2); border-color: var(--accent2); }
+
+  /* ─── MAIN LAYOUT ─── */
+  .container { max-width: 1200px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* ─── SECTION ─── */
+  .section { margin-bottom: 56px; }
+  .section-header { display: flex; align-items: center; gap: 14px; margin-bottom: 28px; padding-bottom: 14px; border-bottom: 3px solid var(--accent); }
+  .section-number { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; flex-shrink: 0; }
+  .section-title { font-size: 22px; font-weight: 800; color: var(--primary); }
+  .section-sub { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+  h3 { font-size: 17px; font-weight: 700; color: var(--primary); margin: 28px 0 12px; padding-left: 12px; border-left: 4px solid var(--accent2); }
+  h4 { font-size: 15px; font-weight: 700; color: var(--accent); margin: 18px 0 8px; }
+  p { margin-bottom: 12px; color: var(--text); }
+
+  /* ─── CARDS ─── */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 22px 26px; margin-bottom: 18px; box-shadow: 0 2px 6px rgba(0,0,0,.04); }
+  .card-title { font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+  .card.accent-left { border-left: 4px solid var(--accent); }
+  .card.green-left { border-left: 4px solid var(--accent2); }
+  .card.orange-left { border-left: 4px solid var(--warn); }
+
+  /* ─── GRID ─── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  @media(max-width: 900px) { .grid-3, .grid-4 { grid-template-columns: 1fr 1fr; } }
+  @media(max-width: 600px) { .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; } }
+
+  /* ─── TAGS ─── */
+  .tag { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 600; margin: 3px 3px 3px 0; }
+  .tag-blue { background: var(--tag-blue); color: #0055aa; }
+  .tag-green { background: var(--tag-green); color: #007a4d; }
+  .tag-orange { background: var(--tag-orange); color: #b84a00; }
+  .tag-purple { background: var(--tag-purple); color: #6633aa; }
+
+  /* ─── TABLE ─── */
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 16px 0; }
+  th { background: var(--primary); color: white; padding: 11px 14px; text-align: left; font-size: 13px; font-weight: 600; letter-spacing: .3px; }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) td { background: #f8fafc; }
+  tr:hover td { background: #eef5ff; }
+
+  /* ─── HIGHLIGHT BOX ─── */
+  .highlight { background: linear-gradient(135deg, #e8f4ff, #f0fbf6); border: 1px solid #b8d8f0; border-radius: 10px; padding: 20px 24px; margin: 18px 0; }
+  .highlight.warn { background: linear-gradient(135deg, #fff5e8, #fff8e3); border-color: #f5cfa0; }
+  .highlight-title { font-weight: 800; color: var(--primary); font-size: 14px; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+
+  /* ─── FEATURE LIST ─── */
+  .feat-list { list-style: none; padding: 0; }
+  .feat-list li { padding: 7px 0 7px 26px; position: relative; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .feat-list li:last-child { border-bottom: none; }
+  .feat-list li::before { content: '✓'; position: absolute; left: 0; color: var(--accent2); font-weight: 800; }
+
+  /* ─── ARCH DIAGRAM ─── */
+  .arch-box { background: #001e4a; border-radius: 12px; padding: 28px; color: white; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; }
+  .arch-layer { border: 1px solid rgba(255,255,255,.2); border-radius: 8px; padding: 12px 16px; margin: 8px 0; background: rgba(255,255,255,.05); }
+  .arch-layer-title { font-weight: 700; color: var(--accent2); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* ─── PRODUCT BADGE ─── */
+  .product-card { background: var(--card); border: 2px solid var(--border); border-radius: 12px; padding: 24px; transition: .2s; }
+  .product-card:hover { border-color: var(--accent); box-shadow: 0 4px 16px rgba(0,119,204,.12); }
+  .product-icon { width: 48px; height: 48px; border-radius: 10px; background: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 14px; }
+  .product-name { font-size: 16px; font-weight: 800; color: var(--primary); margin-bottom: 6px; }
+  .product-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* ─── STAT BOXES ─── */
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin: 20px 0; }
+  @media(max-width: 800px) { .stat-grid { grid-template-columns: repeat(2, 1fr); } }
+  .stat-box { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; text-align: center; }
+  .stat-number { font-size: 28px; font-weight: 900; color: var(--accent); line-height: 1; margin-bottom: 6px; }
+  .stat-label { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+
+  /* ─── TIMELINE ─── */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: var(--border); }
+  .timeline-item { position: relative; margin-bottom: 22px; }
+  .timeline-item::before { content: ''; position: absolute; left: -24px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--accent); border: 2px solid white; box-shadow: 0 0 0 2px var(--accent); }
+  .timeline-date { font-size: 12px; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: .5px; }
+  .timeline-title { font-weight: 700; margin: 4px 0 6px; }
+
+  /* ─── FOOTER ─── */
+  .site-footer { background: var(--primary); color: rgba(255,255,255,.7); padding: 28px 40px; font-size: 13px; text-align: center; margin-top: 60px; }
+  .site-footer a { color: var(--accent2); text-decoration: none; }
+
+  /* ─── DIVIDER ─── */
+  .divider { border: none; border-top: 2px solid var(--border); margin: 32px 0; }
+
+  /* ─── CALLOUT ─── */
+  .callout { background: #e8f4ff; border-left: 5px solid var(--accent); border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 16px 0; font-size: 14px; }
+  .callout.green { background: #e3f7ef; border-color: var(--accent2); }
+  .callout.warn { background: #fff3e8; border-color: var(--warn); }
+
+  /* ─── PRINT ─── */
+  @media print {
+    .toc-wrap { position: static; }
+    .site-header { background: var(--primary) !important; }
+    .section { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header class="site-header">
+  <span class="badge">Research Report · April 2026</span>
+  <h1>OpenText Voltage™ — Nghiên Cứu Chuyên Sâu<br>Giải Pháp Bảo Mật &amp; Bảo Vệ Dữ Liệu</h1>
+  <p class="subtitle">Phân tích toàn diện nền tảng Data Privacy &amp; Protection (DPP) — từ kiến trúc mã hoá, quản lý khoá, đến các module sản phẩm và use case triển khai thực tế cho chuyên gia và khách hàng doanh nghiệp.</p>
+  <div class="meta-row">
+    <span>Tổng hợp từ tài liệu chính thức OpenText</span>
+    <span>Bao gồm: Handbook, Whitepaper, Datasheet, Brochure, Community Docs</span>
+    <span>Cập nhật: Tháng 4 năm 2026</span>
+  </div>
+</header>
+
+<!-- ═══ TOC ═══ -->
+<div class="toc-wrap">
+  <nav>
+    <a href="#overview">1. Tổng quan</a>
+    <a href="#architecture">2. Kiến trúc & Công nghệ</a>
+    <a href="#securedata">3. Voltage SecureData</a>
+    <a href="#modules">4. Các Module</a>
+    <a href="#sdm">5. Structured Data Manager</a>
+    <a href="#fusion">6. Voltage Fusion (DSPM)</a>
+    <a href="#cloud">7. Cloud & Analytics</a>
+    <a href="#payments">8. Payments & PCI</a>
+    <a href="#compliance">9. Tuân thủ & Pháp lý</a>
+    <a href="#usecases">10. Use Cases</a>
+    <a href="#deployment">11. Triển khai</a>
+    <a href="#compare">12. So sánh &amp; Định vị</a>
+    <a href="#sources">Tài liệu tham khảo</a>
+  </nav>
+</div>
+
+<div class="container">
+
+<!-- ═══ 1. TỔNG QUAN ═══ -->
+<section class="section" id="overview">
+  <div class="section-header">
+    <div class="section-number">1</div>
+    <div>
+      <div class="section-title">Tổng Quan Giải Pháp OpenText Voltage</div>
+      <div class="section-sub">Định vị thị trường · Lịch sử phát triển · Danh mục sản phẩm</div>
+    </div>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-box">
+      <div class="stat-number">NIST</div>
+      <div class="stat-label">Patent Holder<br>AES FF1 FPE Standard</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">FIPS</div>
+      <div class="stat-label">140-2 &amp; Common Criteria<br>Certified</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">80%</div>
+      <div class="stat-label">Giảm PCI DSS Scope<br>cho Merchants</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number">5+</div>
+      <div class="stat-label">Quy định toàn cầu<br>được hỗ trợ</div>
+    </div>
+  </div>
+
+  <div class="card accent-left" style="margin-top:18px;">
+    <div class="card-title">🔐 OpenText Voltage là gì?</div>
+    <p><strong>OpenText Voltage</strong> (chính thức: <em>OpenText™ Data Privacy &amp; Protection — DPP</em>) là nền tảng bảo mật dữ liệu doanh nghiệp hàng đầu, được xây dựng trên nền tảng sở hữu trí tuệ độc quyền về mã hoá bảo toàn định dạng (Format-Preserving Encryption — FPE) và quản lý khoá không trạng thái (Stateless Key Management).</p>
+    <p>OpenText là <strong>patent holder và licensor của chuẩn NIST AES FF1</strong> — tiêu chuẩn mã hoá FPE được áp dụng rộng rãi nhất trên thế giới. Giải pháp này giúp tổ chức <strong>bảo vệ dữ liệu nhạy cảm mà không phá vỡ quy trình kinh doanh, ứng dụng hay analytics</strong>.</p>
+  </div>
+
+  <h3>Lịch Sử Phát Triển</h3>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-date">2005</div>
+      <div class="timeline-title">Voltage Security được thành lập tại Palo Alto, California</div>
+      <p style="font-size:13px;color:var(--muted)">Tiên phong nghiên cứu Identity-Based Encryption (IBE) và Format-Preserving Encryption (FPE)</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2012</div>
+      <div class="timeline-title">NIST công nhận AES FF1 — chuẩn mã hoá FPE dựa trên nghiên cứu của Voltage</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2015</div>
+      <div class="timeline-title">Hewlett Packard Enterprise (HPE) mua lại Voltage Security</div>
+      <p style="font-size:13px;color:var(--muted)">Tích hợp vào danh mục HPE Security</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2017</div>
+      <div class="timeline-title">Micro Focus mua lại mảng Software của HPE, bao gồm Voltage</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2023</div>
+      <div class="timeline-title">OpenText hoàn tất mua lại Micro Focus — Voltage trở thành OpenText DPP</div>
+      <p style="font-size:13px;color:var(--muted)">Ra mắt Voltage Fusion — nền tảng DSPM thế hệ mới</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date">2025–2026</div>
+      <div class="timeline-title">OpenText Data Security Handbook (April 2025) — roadmap Quantum-Ready</div>
+    </div>
+  </div>
+
+  <h3>Danh Mục Sản Phẩm Voltage</h3>
+  <div class="grid-3">
+    <div class="product-card">
+      <div class="product-icon">🔒</div>
+      <div class="product-name">Voltage SecureData Enterprise</div>
+      <div class="product-desc">Core engine: FPE, SST tokenization, stateless key management. Nền tảng trung tâm cho tất cả giải pháp bảo vệ dữ liệu.</div>
+      <div style="margin-top:10px;">
+        <span class="tag tag-blue">Core Product</span>
+        <span class="tag tag-green">On-Prem / Cloud</span>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-icon">🌐</div>
+      <div class="product-name">Voltage SecureData Web</div>
+      <div class="product-desc">Bảo vệ PII/PHI trong ứng dụng web, REST API, form fields qua HTTPS. Không cần thay đổi code ứng dụng.</div>
+      <div style="margin-top:10px;">
+        <span class="tag tag-blue">Web Apps</span>
+        <span class="tag tag-orange">HIPAA / PII</span>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-icon">🛡️</div>
+      <div class="product-name">Voltage SecureData Sentry</div>
+      <div class="product-desc">Transparent data protection qua ICAP proxy. Bảo vệ dữ liệu qua SaaS, COTS apps mà không cần agent.</div>
+      <div style="margin-top:10px;">
+        <span class="tag tag-blue">Agentless</span>
+        <span class="tag tag-purple">SaaS Protection</span>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-icon">💳</div>
+      <div class="product-name">Voltage SecureData Payments</div>
+      <div class="product-desc">P2PE + SST tokenization cho giao dịch thanh toán. Giảm PCI DSS scope lên đến 80% cho merchant.</div>
+      <div style="margin-top:10px;">
+        <span class="tag tag-green">PCI P2PE</span>
+        <span class="tag tag-orange">Payments</span>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-icon">🗃️</div>
+      <div class="product-name">Structured Data Manager (SDM)</div>
+      <div class="product-desc">Quản lý vòng đời dữ liệu có cấu trúc (archiving, migration, masking) tích hợp với SecureData.</div>
+      <div style="margin-top:10px;">
+        <span class="tag tag-blue">Data Lifecycle</span>
+        <span class="tag tag-green">Test Data Mgmt</span>
+      </div>
+    </div>
+    <div class="product-card">
+      <div class="product-icon">☁️</div>
+      <div class="product-name">Voltage Fusion Platform</div>
+      <div class="product-desc">DSPM cloud-native: data discovery, classification, risk insights, monitoring, governance. Ra mắt 2023.</div>
+      <div style="margin-top:10px;">
+        <span class="tag tag-purple">DSPM</span>
+        <span class="tag tag-blue">Cloud-Native</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 2. KIẾN TRÚC & CÔNG NGHỆ ═══ -->
+<section class="section" id="architecture">
+  <div class="section-header">
+    <div class="section-number">2</div>
+    <div>
+      <div class="section-title">Kiến Trúc Công Nghệ Lõi</div>
+      <div class="section-sub">Format-Preserving Encryption · Stateless Key Management · IBE · SST · FPH</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Nguyên lý cốt lõi:</strong> Voltage bảo vệ dữ liệu theo kiểu <em>data-centric</em> — dữ liệu tự mang lớp bảo vệ theo mình dù nằm ở đâu (at rest, in motion, in use), thay vì chỉ bảo vệ perimeter.
+  </div>
+
+  <h3>2.1 Format-Preserving Encryption (FPE)</h3>
+  <div class="grid-2">
+    <div class="card green-left">
+      <div class="card-title">Định nghĩa kỹ thuật</div>
+      <p>FPE là chế độ của AES (Advanced Encryption Standard) cho phép mã hoá dữ liệu <strong>trong khi giữ nguyên định dạng và độ dài</strong> của bản rõ (plaintext). Cụ thể: số thẻ 16 chữ số → vẫn ra 16 chữ số sau mã hoá.</p>
+      <p>OpenText là <strong>patent holder của NIST AES FF1</strong> — tiêu chuẩn FPE được NIST chính thức công nhận trong SP 800-38G (2016).</p>
+    </div>
+    <div class="card green-left">
+      <div class="card-title">Tại sao FPE quan trọng?</div>
+      <ul class="feat-list">
+        <li>Legacy systems (mainframe, COBOL, IBM DB2) không cần thay đổi schema</li>
+        <li>Ứng dụng hiện tại không cần refactor</li>
+        <li>Dữ liệu được mã hoá vẫn dùng được trong analytics</li>
+        <li>Database field length không thay đổi</li>
+        <li>Hỗ trợ chuyển đổi ASCII ↔ EBCDIC (mainframe interop)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>2.2 Secure Stateless Tokenization (SST)</h3>
+  <div class="card">
+    <p><strong>SST</strong> thay thế dữ liệu nhạy cảm bằng token không có ý nghĩa, theo cơ chế <em>stateless</em> — không cần lưu bảng ánh xạ token (token vault), token được tính toán từ seed material bằng Key Derivation Function (KDF).</p>
+    <div class="grid-2" style="margin-top:14px;">
+      <div>
+        <h4>So sánh với Tokenization truyền thống</h4>
+        <table>
+          <tr><th>Tiêu chí</th><th>Truyền thống</th><th>Voltage SST</th></tr>
+          <tr><td>Token vault</td><td>Cần lưu trữ</td><td>Không cần</td></tr>
+          <tr><td>Khả năng mở rộng</td><td>Bị giới hạn bởi DB</td><td>Vô hạn, tuyến tính</td></tr>
+          <tr><td>Single point of failure</td><td>Có (vault DB)</td><td>Không</td></tr>
+          <tr><td>Backup/Replication</td><td>Phức tạp</td><td>Không cần</td></tr>
+        </table>
+      </div>
+      <div>
+        <h4>Ứng dụng SST</h4>
+        <ul class="feat-list">
+          <li>Tokenization số thẻ PAN (PCI DSS)</li>
+          <li>Bảo vệ SSN, số CMND</li>
+          <li>Card-present (CP) và Card-not-present (CNP)</li>
+          <li>Referential integrity: cùng giá trị → cùng token</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h3>2.3 Stateless Key Management (IKS)</h3>
+  <div class="highlight">
+    <div class="highlight-title">💡 Nguyên lý Stateless Key Management</div>
+    <p>Thay vì lưu trữ và quản lý khoá mã hoá trong database hay HSM vault phức tạp, Voltage <strong>tính toán khoá theo yêu cầu (on-demand)</strong> bằng cách kết hợp seed material với tên khoá thông qua Key Derivation Function (KDF).</p>
+    <p style="margin-top:8px;"><strong>Developer không bao giờ cầm khoá</strong> — chỉ cầm "tên khoá" (key identifier). Khoá thực tế được tạo động trong memory khi cần và không bao giờ lưu xuống disk.</p>
+  </div>
+  <div class="grid-3">
+    <div class="card">
+      <h4>Lợi ích Operational</h4>
+      <ul class="feat-list">
+        <li>Không cần backup khoá</li>
+        <li>Không cần replication</li>
+        <li>Không single point of failure</li>
+        <li>Key rotation đơn giản</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Tích hợp IAM</h4>
+      <ul class="feat-list">
+        <li>Active Directory / LDAP</li>
+        <li>OpenID Connect</li>
+        <li>SAML 2.0</li>
+        <li>Certified HSMs (root of trust)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Quantum-Readiness</h4>
+      <ul class="feat-list">
+        <li>Thiết kế kháng lượng tử</li>
+        <li>Hỗ trợ post-quantum algorithms</li>
+        <li>Roadmap NIST PQC 2024+</li>
+        <li>Migration path rõ ràng</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>2.4 Format-Preserving Hash (FPH)</h3>
+  <p>FPH tạo ra giá trị hash <strong>một chiều</strong> (không thể giải mã ngược) nhưng vẫn bảo toàn định dạng. Phù hợp cho:</p>
+  <ul class="feat-list" style="max-width:600px;">
+    <li>Pseudonymization theo GDPR</li>
+    <li>Matching/deduplication mà không cần lưu bản rõ</li>
+    <li>Analytics trên dữ liệu ẩn danh hoá</li>
+  </ul>
+
+  <h3>2.5 Identity-Based Encryption (IBE)</h3>
+  <div class="card accent-left">
+    <div class="card-title">Nền tảng mật mã học gốc của Voltage</div>
+    <p>IBE cho phép sử dụng <strong>bất kỳ chuỗi ký tự nào</strong> (email, user ID, role name) làm public key để mã hoá. Private key được cấp phát bởi Key Generation Authority (KGA) — loại bỏ hoàn toàn cơ sở hạ tầng PKI truyền thống phức tạp.</p>
+    <p>Điều này là nền tảng cho <strong>SecureMail</strong> (email encryption) và các giải pháp bảo mật thông điệp của Voltage.</p>
+  </div>
+
+  <h3>2.6 Kiến Trúc Tổng Thể Nền Tảng</h3>
+  <div class="arch-box">
+    <div class="arch-layer">
+      <div class="arch-layer-title">Layer 7: Compliance &amp; Reporting</div>
+      GDPR | HIPAA | PCI-DSS | CPRA | DORA | ISO 27001 | SOC 2
+    </div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">Layer 6: Voltage Fusion — DSPM Platform (Cloud-Native)</div>
+      Data Discovery | Risk Classification | Data Monitoring | Access Governance | Lifecycle Mgmt
+    </div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">Layer 5: Application Integration</div>
+      SecureData Web | SecureData Sentry (ICAP) | REST/SOAP API | JDBC/ODBC Interceptor | SDM
+    </div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">Layer 4: Protection Methods</div>
+      FPE (AES FF1) | SST Tokenization | FPH Hash | IBE Encryption | Data Masking
+    </div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">Layer 3: Stateless Key Management (IKS)</div>
+      KDF-based Key Derivation | HSM Root-of-Trust | AD/LDAP/OpenID Policy Enforcement
+    </div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">Layer 2: Data Sources</div>
+      Databases (Oracle, SQL, DB2, MySQL) | Mainframe (z/OS, CICS, IMS, VSAM) | Cloud (AWS, Azure, GCP) | SaaS | Files
+    </div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">Layer 1: Sensitive Data</div>
+      PII | PAN/Card Data | PHI | Financial Data | IP | Credentials | Dark Data
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 3. VOLTAGE SECUREDATA ═══ -->
+<section class="section" id="securedata">
+  <div class="section-header">
+    <div class="section-number">3</div>
+    <div>
+      <div class="section-title">Voltage SecureData Enterprise</div>
+      <div class="section-sub">Core Engine · Data-centric protection at scale</div>
+    </div>
+  </div>
+
+  <div class="callout green">
+    <strong>SecureData Enterprise</strong> là trái tim của toàn bộ nền tảng Voltage — cung cấp engine mã hoá, tokenization, hashing và API tích hợp cho tất cả các sản phẩm khác trong portfolio.
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h3>3.1 Năng Lực Bảo Vệ Dữ Liệu</h3>
+      <table>
+        <tr><th>Phương thức</th><th>Thuật toán</th><th>Đặc điểm</th></tr>
+        <tr><td><strong>FPE Encryption</strong></td><td>AES FF1 (NIST)</td><td>Bảo toàn định dạng, reversible</td></tr>
+        <tr><td><strong>SST Tokenization</strong></td><td>KDF-based</td><td>No vault, stateless, reversible</td></tr>
+        <tr><td><strong>FPH Hashing</strong></td><td>One-way FPE</td><td>Không thể giải mã, dùng cho analytics</td></tr>
+        <tr><td><strong>Data Masking</strong></td><td>Static/Dynamic</td><td>Thay thế giá trị thật bằng dữ liệu giả</td></tr>
+        <tr><td><strong>IBE Encryption</strong></td><td>Pairing-based</td><td>Email &amp; message encryption</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3>3.2 Interfaces &amp; APIs</h3>
+      <ul class="feat-list">
+        <li><strong>REST API</strong> — tích hợp với bất kỳ ứng dụng modern nào</li>
+        <li><strong>Simple API</strong> — nhẹ hơn, phù hợp microservices</li>
+        <li><strong>JDBC/ODBC</strong> — tích hợp thẳng vào database layer</li>
+        <li><strong>COBOL API</strong> — native cho IBM mainframe z/OS</li>
+        <li><strong>z/FPE</strong> — bulk encryption tool cho mainframe (CICS, DB2, IMS, VSAM)</li>
+        <li><strong>SDKs</strong> — Java, .NET, C/C++, Python</li>
+        <li><strong>Pre-built connectors</strong> — Teradata, Oracle, SQL Server, Snowflake, Hadoop</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>3.3 Hỗ Trợ Mainframe &amp; Legacy Systems</h3>
+  <div class="card orange-left">
+    <div class="card-title">z/OS Mainframe — Điểm khác biệt lớn của Voltage</div>
+    <p>Trong khi hầu hết giải pháp bảo mật dữ liệu bỏ qua mainframe, Voltage cung cấp <strong>API native cho COBOL và Language Environment (LE)</strong> trên z/OS, cùng công cụ <code>z/FPE</code> cho phép bulk encryption tất cả loại dataset IBM:</p>
+    <div class="grid-2" style="margin-top:12px;">
+      <ul class="feat-list">
+        <li>CICS transactions</li>
+        <li>DB2 for z/OS</li>
+        <li>IMS database</li>
+      </ul>
+      <ul class="feat-list">
+        <li>QSAM datasets</li>
+        <li>VSAM files</li>
+        <li>ASCII ↔ EBCDIC transparent conversion</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>3.4 Hiệu Năng &amp; Khả Năng Mở Rộng</h3>
+  <div class="grid-3">
+    <div class="card">
+      <h4>Throughput</h4>
+      <p>Thiết kế cho workload doanh nghiệp lớn — xử lý hàng triệu records/giây với kiến trúc stateless không bị bottleneck bởi database vault.</p>
+    </div>
+    <div class="card">
+      <h4>Horizontal Scaling</h4>
+      <p>Không cần đồng bộ state giữa các instance — mỗi node hoạt động độc lập, scale out tuyến tính với workload.</p>
+    </div>
+    <div class="card">
+      <h4>High Availability</h4>
+      <p>Không single point of failure. Một node bị lỗi không ảnh hưởng đến key availability vì khoá được tính toán lại từ seed.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 4. CÁC MODULE ═══ -->
+<section class="section" id="modules">
+  <div class="section-header">
+    <div class="section-number">4</div>
+    <div>
+      <div class="section-title">Các Module Sản Phẩm Chi Tiết</div>
+      <div class="section-sub">SecureData Web · SecureData Sentry · Integration Points</div>
+    </div>
+  </div>
+
+  <h3>4.1 Voltage SecureData Web</h3>
+  <div class="grid-2">
+    <div class="card green-left">
+      <div class="card-title">Mục đích &amp; Cách hoạt động</div>
+      <p>SecureData Web bảo vệ dữ liệu nhạy cảm trong <strong>ứng dụng web và REST API</strong> bằng cách mã hoá dữ liệu ngay tại điểm nhập (point of entry) — trình duyệt hoặc mobile client — trước khi truyền lên server.</p>
+      <p>Dữ liệu được mã hoá trong transit và at rest. Server-side application nhận được dữ liệu đã mã hoá, không cần truy cập plaintext trừ khi có quyền giải mã.</p>
+    </div>
+    <div class="card green-left">
+      <div class="card-title">Ứng dụng &amp; Loại dữ liệu bảo vệ</div>
+      <ul class="feat-list">
+        <li>PII — Personally Identifiable Information</li>
+        <li>PHI — Personal Health Information</li>
+        <li>ePHI — Electronic PHI (HIPAA)</li>
+        <li>Financial data — account numbers, credit card</li>
+        <li>Form fields trong web portal, mobile app</li>
+        <li>API payloads (JSON, XML)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>4.2 Voltage SecureData Sentry</h3>
+  <div class="callout">
+    <strong>Sentry</strong> là giải pháp bảo vệ dữ liệu <em>trong suốt</em> (transparent) — không cần thay đổi ứng dụng, không cần agent cài trên máy chủ. Hoạt động như một <strong>Data Protection Broker</strong> tại tầng mạng.
+  </div>
+  <div class="grid-2">
+    <div>
+      <h4>Kiến trúc Triển khai</h4>
+      <div class="arch-box" style="font-size:12px; padding:18px;">
+        <div style="margin-bottom:10px; color:#aad4ff;">CLIENT / BROWSER / APP</div>
+        <div style="text-align:center; color:#aaa; margin:4px 0;">↓ HTTP/HTTPS Traffic</div>
+        <div style="background:rgba(0,200,100,.15); border:1px solid #00a86b; padding:10px 14px; border-radius:6px; margin:6px 0;">
+          <div style="color:#00e090; font-weight:bold; font-size:11px;">VOLTAGE SECUREDATA SENTRY</div>
+          <div style="color:#ccc; font-size:11px;">ICAP Protocol ← → HTTP Proxy / Load Balancer</div>
+          <div style="color:#ccc; font-size:11px;">JDBC/ODBC Interceptor ← → Database</div>
+        </div>
+        <div style="text-align:center; color:#aaa; margin:4px 0;">↓ Protected / Masked Data</div>
+        <div style="margin-top:10px; color:#aad4ff;">SaaS APP / COTS / On-Prem App / Database</div>
+      </div>
+    </div>
+    <div>
+      <h4>Tính năng chính</h4>
+      <ul class="feat-list">
+        <li><strong>ICAP integration</strong>: Tích hợp với proxy, load balancer, reverse proxy</li>
+        <li><strong>JDBC/ODBC interception</strong>: Chặn và bảo vệ database calls</li>
+        <li><strong>Inspection mode</strong>: Nhắm đúng field và file attachment nhạy cảm</li>
+        <li><strong>SaaS protection</strong>: Salesforce, ServiceNow, SAP và các COTS apps</li>
+        <li><strong>No shared keys</strong>: Doanh nghiệp toàn quyền kiểm soát key</li>
+        <li><strong>On-prem &amp; Cloud</strong>: Deploy linh hoạt hai môi trường</li>
+        <li><strong>Policy enforcement</strong>: Real-time, field-level security policy</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 5. SDM ═══ -->
+<section class="section" id="sdm">
+  <div class="section-header">
+    <div class="section-number">5</div>
+    <div>
+      <div class="section-title">OpenText Structured Data Manager (SDM)</div>
+      <div class="section-sub">Data Lifecycle · Secure Test Data Management · Cloud Migration</div>
+    </div>
+  </div>
+
+  <div class="card accent-left">
+    <div class="card-title">SDM là gì trong hệ sinh thái Voltage?</div>
+    <p><strong>Structured Data Manager</strong> quản lý <em>vòng đời dữ liệu có cấu trúc</em> (archiving, tiering, migration, retirement) cho các hệ thống ERP lớn như SAP, Oracle E-Business Suite, PeopleSoft. Khi tích hợp với Voltage SecureData, SDM trở thành nền tảng <strong>Secure &amp; Compliant Test Data Management</strong> hoàn chỉnh.</p>
+  </div>
+
+  <h3>5.1 Kiến Trúc Tích Hợp SDM + SecureData</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h4>Luồng xử lý</h4>
+      <ol style="padding-left:18px; font-size:14px; line-height:2;">
+        <li>SDM <strong>khám phá</strong> dữ liệu nhạy cảm trong database</li>
+        <li>Xác định tables chứa PII, PHI, PAN</li>
+        <li>SecureData <strong>mã hoá / mask</strong> dữ liệu theo policy</li>
+        <li>SDM <strong>migrate</strong> dữ liệu đã được bảo vệ lên cloud / archive</li>
+        <li>Schema và format <strong>không thay đổi</strong> nhờ FPE</li>
+        <li>Referential integrity <strong>được bảo toàn</strong> (deterministic)</li>
+      </ol>
+    </div>
+    <div class="card">
+      <h4>Use Cases chính</h4>
+      <ul class="feat-list">
+        <li><strong>Cloud migration</strong>: Chuyển dữ liệu nhạy cảm lên cloud an toàn</li>
+        <li><strong>Test Data Management</strong>: Tạo môi trường test với dữ liệu masked</li>
+        <li><strong>Data archiving</strong>: Lưu trữ dài hạn với dữ liệu được mã hoá</li>
+        <li><strong>ERP decommission</strong>: Retire SAP/Oracle an toàn</li>
+        <li><strong>GDPR right-to-erasure</strong>: Xoá dữ liệu cá nhân khỏi archive</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>5.2 Secure &amp; Compliant Test Data Management</h3>
+  <div class="highlight warn">
+    <div class="highlight-title">⚠️ Thách thức phổ biến trong doanh nghiệp</div>
+    <p>Nhiều tổ chức copy dữ liệu production thật (có PII/PHI thật) vào môi trường dev/test — vi phạm GDPR, HIPAA và tạo rủi ro lộ lọt nghiêm trọng. Vault mật mã không đủ để bảo vệ khi developer có quyền truy cập database test.</p>
+  </div>
+  <div class="grid-3">
+    <div class="card">
+      <h4>Bước 1: Discovery</h4>
+      <p>SDM + Voltage Fusion tự động quét toàn bộ schema, xác định cột chứa dữ liệu nhạy cảm (PII, PAN, SSN...).</p>
+    </div>
+    <div class="card">
+      <h4>Bước 2: Protection</h4>
+      <p>SecureData áp dụng FPE / SST / Masking theo policy, bảo toàn referential integrity giữa các bảng liên kết.</p>
+    </div>
+    <div class="card">
+      <h4>Bước 3: Provisioning</h4>
+      <p>SDM cung cấp môi trường test với dữ liệu đã được bảo vệ — developer không bao giờ thấy plaintext PII.</p>
+    </div>
+  </div>
+
+  <h3>5.3 Tích hợp SDM với Voltage Fusion</h3>
+  <p>Kể từ phiên bản SDM 23.2, có tích hợp trực tiếp giữa <strong>Voltage SDM data discovery</strong> và <strong>Voltage Fusion 23.2</strong>: customer có thể khám phá dữ liệu có cấu trúc (tables) qua giao diện Fusion và thực thi các tác vụ data lifecycle management từ một dashboard thống nhất.</p>
+</section>
+
+<!-- ═══ 6. VOLTAGE FUSION ═══ -->
+<section class="section" id="fusion">
+  <div class="section-header">
+    <div class="section-number">6</div>
+    <div>
+      <div class="section-title">Voltage Fusion — Nền Tảng DSPM Thế Hệ Mới</div>
+      <div class="section-sub">Data Security Posture Management · Cloud-Native · AI-Powered</div>
+    </div>
+  </div>
+
+  <div class="callout green">
+    <strong>Voltage Fusion</strong> là bước tiến vượt bậc của OpenText: từ "bảo vệ dữ liệu" sang <strong>quản lý toàn diện trạng thái bảo mật dữ liệu</strong> (Data Security Posture Management — DSPM) trong môi trường hybrid/multi-cloud.
+  </div>
+
+  <h3>6.1 Năm Trụ Cột của Voltage Fusion</h3>
+  <div class="grid-3" style="gap:14px;">
+    <div class="card" style="background: linear-gradient(135deg,#f0f8ff,#fff);">
+      <div style="font-size:28px;margin-bottom:8px;">🔍</div>
+      <div class="card-title">1. Data Discovery</div>
+      <p style="font-size:13px;">Khám phá dữ liệu nhạy cảm trong tất cả repository: databases, file shares, SharePoint, M365, Exchange, Google Drive, ECM, Documentum. Bao gồm "dark data" — dữ liệu được thu thập nhưng chưa biết.</p>
+    </div>
+    <div class="card" style="background: linear-gradient(135deg,#f0fff4,#fff);">
+      <div style="font-size:28px;margin-bottom:8px;">🏷️</div>
+      <div class="card-title">2. Data Classification</div>
+      <p style="font-size:13px;">Phân loại dữ liệu theo loại, mức độ nhạy cảm và tác động tài chính nếu bị lộ. AI-powered: hỗ trợ phân tích rich media (hình ảnh, audio, video) để tìm PII.</p>
+    </div>
+    <div class="card" style="background: linear-gradient(135deg,#fff8f0,#fff);">
+      <div style="font-size:28px;margin-bottom:8px;">⚡</div>
+      <div class="card-title">3. Risk Insights</div>
+      <p style="font-size:13px;">Đánh giá rủi ro tài chính, compliance gap, permission exposure. Contextual insights dựa trên AI giúp prioritize các hành động khắc phục.</p>
+    </div>
+    <div class="card" style="background: linear-gradient(135deg,#f5f0ff,#fff);">
+      <div style="font-size:28px;margin-bottom:8px;">👁️</div>
+      <div class="card-title">4. Data Monitoring</div>
+      <p style="font-size:13px;">Database Activity Monitoring (DAM): theo dõi ai truy cập dữ liệu nào, khi nào, từ đâu. Phát hiện anomaly, bất thường trong data access patterns.</p>
+    </div>
+    <div class="card" style="background: linear-gradient(135deg,#f0fffc,#fff);">
+      <div style="font-size:28px;margin-bottom:8px;">🔄</div>
+      <div class="card-title">5. Data Lifecycle Management</div>
+      <p style="font-size:13px;">Quản lý vòng đời dữ liệu: từ tạo ra → sử dụng → archive → xoá. Tích hợp với SDM để thực thi GDPR right-to-erasure và retention policies.</p>
+    </div>
+    <div class="card" style="background: linear-gradient(135deg,#fff0f0,#fff);">
+      <div style="font-size:28px;margin-bottom:8px;">🔐</div>
+      <div class="card-title">+ Data Protection</div>
+      <p style="font-size:13px;">Kết nối trực tiếp với SecureData Engine để tự động áp dụng FPE/SST/Masking cho dữ liệu vừa được discover và classify.</p>
+    </div>
+  </div>
+
+  <h3>6.2 DSPM — Data Security Posture Management</h3>
+  <div class="grid-2">
+    <div class="card accent-left">
+      <div class="card-title">Vòng lặp DSPM trong Voltage Fusion</div>
+      <ol style="padding-left:18px; font-size:14px; line-height:2.2;">
+        <li><strong>Discovery</strong>: Tìm dữ liệu nhạy cảm ở đâu</li>
+        <li><strong>Risk Assessment</strong>: Mức độ rủi ro, financial impact</li>
+        <li><strong>Usage Analysis</strong>: Ai đang dùng, dùng thế nào</li>
+        <li><strong>Remediation</strong>: Áp dụng bảo vệ, revoke access</li>
+        <li><strong>Validation</strong>: Kiểm tra findings còn đúng không</li>
+        <li><strong>Continuous Monitoring</strong>: Lặp lại liên tục</li>
+      </ol>
+    </div>
+    <div class="card accent-left">
+      <div class="card-title">Data Sources được hỗ trợ</div>
+      <div class="grid-2" style="gap:8px; margin-top:8px;">
+        <div>
+          <p style="font-size:12px; font-weight:700; color:var(--accent); margin-bottom:4px;">STRUCTURED</p>
+          <ul class="feat-list" style="font-size:13px;">
+            <li>Oracle, SQL Server, MySQL, PostgreSQL</li>
+            <li>IBM DB2, Teradata</li>
+            <li>Snowflake, BigQuery, Synapse</li>
+            <li>SAP HANA</li>
+          </ul>
+        </div>
+        <div>
+          <p style="font-size:12px; font-weight:700; color:var(--accent); margin-bottom:4px;">UNSTRUCTURED</p>
+          <ul class="feat-list" style="font-size:13px;">
+            <li>File shares (NFS, SMB)</li>
+            <li>SharePoint, M365, OneDrive</li>
+            <li>Exchange, Gmail</li>
+            <li>Google Drive, Box, Dropbox</li>
+            <li>OpenText ECM, Documentum</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>6.3 Hỗ trợ DORA Compliance</h3>
+  <div class="callout warn">
+    Voltage Fusion có flyer chuyên biệt cho <strong>DORA (Digital Operational Resilience Act)</strong> — quy định mới của EU cho ngành tài chính (hiệu lực 17/1/2025). Fusion cung cấp data discovery và risk assessment phù hợp với yêu cầu quản lý rủi ro ICT của DORA.
+  </div>
+</section>
+
+<!-- ═══ 7. CLOUD & ANALYTICS ═══ -->
+<section class="section" id="cloud">
+  <div class="section-header">
+    <div class="section-number">7</div>
+    <div>
+      <div class="section-title">Cloud &amp; Analytics Integration</div>
+      <div class="section-sub">AWS · Azure · GCP · Snowflake · Kafka · Hadoop</div>
+    </div>
+  </div>
+
+  <p>Đây là một trong những điểm mạnh lớn nhất của Voltage — khả năng bảo vệ dữ liệu <strong>xuyên suốt pipeline analytics hiện đại</strong> mà không làm mất đi khả năng phân tích.</p>
+
+  <h3>7.1 Mô Hình "Protect Once, Use Everywhere"</h3>
+  <div class="highlight">
+    <div class="highlight-title">💡 Khái niệm cốt lõi</div>
+    <p>Dữ liệu được mã hoá/tokenize <strong>một lần</strong> tại nguồn, và có thể được sử dụng trong analytics, ML, reporting mà không cần giải mã. FPE đảm bảo dữ liệu protected vẫn có thể JOIN, GROUP BY, aggregate bình thường.</p>
+  </div>
+
+  <h3>7.2 Tích Hợp theo Loại Công Nghệ</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h4>ETL / Data Integration</h4>
+      <table style="font-size:13px;">
+        <tr><th>Platform</th><th>Tích hợp</th></tr>
+        <tr><td>AWS Glue</td><td>Native connector</td></tr>
+        <tr><td>Azure Data Factory</td><td>Native connector</td></tr>
+        <tr><td>Google Data Fusion</td><td>Native connector</td></tr>
+        <tr><td>Apache NiFi</td><td>Custom processor</td></tr>
+        <tr><td>Talend, Informatica</td><td>Plugin/API</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h4>Streaming Platforms</h4>
+      <table style="font-size:13px;">
+        <tr><th>Platform</th><th>Tích hợp</th></tr>
+        <tr><td>Apache Kafka</td><td>Producer/Consumer hooks</td></tr>
+        <tr><td>AWS Kinesis</td><td>Lambda integration</td></tr>
+        <tr><td>Azure Event Hubs</td><td>Stream processing</td></tr>
+        <tr><td>Google Dataflow</td><td>Pipeline plugin</td></tr>
+        <tr><td>Apache Storm</td><td>Bolt integration</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h4>Data Warehouses &amp; Lakes</h4>
+      <table style="font-size:13px;">
+        <tr><th>Platform</th><th>Ghi chú</th></tr>
+        <tr><td>Snowflake</td><td>UDF + Horizon integration</td></tr>
+        <tr><td>Google BigQuery</td><td>Remote functions</td></tr>
+        <tr><td>AWS S3 / Redshift</td><td>Pre/post processing</td></tr>
+        <tr><td>Azure Synapse / ADLS</td><td>SDK integration</td></tr>
+        <tr><td>Databricks</td><td>Spark connector</td></tr>
+        <tr><td>Cloudera / Hadoop</td><td>MapReduce hooks</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h4>Analytics &amp; BI</h4>
+      <table style="font-size:13px;">
+        <tr><th>Platform</th><th>Ghi chú</th></tr>
+        <tr><td>Teradata</td><td>UDF native</td></tr>
+        <tr><td>Vertica</td><td>UDx integration</td></tr>
+        <tr><td>Teradata Aster</td><td>Scalar UDF</td></tr>
+        <tr><td>SAP HANA</td><td>Procedure plugin</td></tr>
+        <tr><td>AWS EMR</td><td>Hadoop on cloud</td></tr>
+        <tr><td>Azure HDInsight</td><td>Hadoop on Azure</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <h3>7.3 Snowflake — Case Study Tích Hợp Sâu</h3>
+  <div class="card green-left">
+    <div class="card-title">Voltage SecureData + Snowflake Horizon</div>
+    <p>OpenText và Snowflake cung cấp tích hợp sâu qua <strong>Snowflake Horizon</strong> (native app marketplace):</p>
+    <ul class="feat-list" style="margin-top:10px;">
+      <li>Mã hoá / tokenize data <strong>trước khi load</strong> vào Snowflake</li>
+      <li>UDFs (User-Defined Functions) để encrypt/decrypt ngay trong SQL</li>
+      <li>Analytics trên protected data — GROUP BY, JOIN, aggregation hoạt động bình thường</li>
+      <li>Không cần chia sẻ key với Snowflake — tổ chức giữ toàn quyền kiểm soát</li>
+      <li>Hỗ trợ Snowflake Data Clean Room cho data collaboration an toàn</li>
+    </ul>
+  </div>
+
+  <h3>7.4 Azure Integrations (v23.2)</h3>
+  <div class="grid-3">
+    <div class="card"><h4>Azure Data Factory</h4><p style="font-size:13px;">Tích hợp FPE/SST trong ETL pipeline — protect data trong quá trình chuyển đổi.</p></div>
+    <div class="card"><h4>Azure Synapse</h4><p style="font-size:13px;">Analytics trên dữ liệu đã được bảo vệ — không cần decrypt trước khi query.</p></div>
+    <div class="card"><h4>Azure Databricks</h4><p style="font-size:13px;">Spark jobs xử lý protected data — ML training trên tokenized PII.</p></div>
+    <div class="card"><h4>Azure Blob Storage</h4><p style="font-size:13px;">Dữ liệu được encrypt trước khi ghi vào blob — client-side encryption.</p></div>
+    <div class="card"><h4>Azure Event Hubs</h4><p style="font-size:13px;">Stream processing với real-time tokenization trên Kafka-compatible API.</p></div>
+    <div class="card"><h4>Azure SQL / Synapse DW</h4><p style="font-size:13px;">Column-level FPE trong relational database — bảo toàn schema.</p></div>
+  </div>
+</section>
+
+<!-- ═══ 8. PAYMENTS ═══ -->
+<section class="section" id="payments">
+  <div class="section-header">
+    <div class="section-number">8</div>
+    <div>
+      <div class="section-title">Voltage SecureData Payments &amp; PCI Security</div>
+      <div class="section-sub">P2PE · PCI DSS Scope Reduction · Tokenization for Payments</div>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <strong>Bối cảnh:</strong> PCI DSS v4.0 (hiệu lực 3/2024) yêu cầu bảo vệ cardholder data nghiêm ngặt hơn. Voltage SecureData Payments là giải pháp được <strong>PCI Security Standards Council chứng nhận P2PE</strong>.
+  </div>
+
+  <div class="grid-2">
+    <div class="card orange-left">
+      <div class="card-title">Point-to-Point Encryption (P2PE)</div>
+      <p>Mã hoá dữ liệu thẻ <strong>từ điểm đầu tiên tiếp xúc</strong> (card reader, POS terminal) cho đến khi giải mã tại secure decryption environment của processor. Cardholder data <strong>không bao giờ xuất hiện dưới dạng cleartext</strong> trên hệ thống merchant.</p>
+      <p style="margin-top:8px;"><strong>Hỗ trợ tất cả hình thức thanh toán:</strong> Dip (chip), Swipe (magnetic), Keyed entry, NFC/contactless.</p>
+    </div>
+    <div class="card orange-left">
+      <div class="card-title">Giảm PCI DSS Scope lên đến 80%</div>
+      <p>Nhờ P2PE, các hệ thống và ứng dụng merchant <strong>không còn nằm trong scope PCI DSS</strong> vì chúng không xử lý hay lưu trữ cardholder data dưới dạng cleartext nữa.</p>
+      <p style="margin-top:8px;">Giảm đáng kể số lượng SAQ (Self-Assessment Questionnaire) controls cần tuân thủ — tiết kiệm chi phí audit và vận hành.</p>
+    </div>
+  </div>
+
+  <h3>8.1 Luồng Giao Dịch Thanh Toán với Voltage</h3>
+  <div class="arch-box" style="font-size:12px;">
+    <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+      <div style="background:rgba(255,150,50,.15);border:1px solid rgba(255,150,50,.4);padding:10px;border-radius:6px;min-width:130px;text-align:center;">
+        <div style="color:#ffaa55;font-weight:bold;">CARD READER / POS</div>
+        <div style="color:#aaa;font-size:11px;margin-top:4px;">FPE tại điểm quẹt thẻ<br/>Cleartext → Encrypted</div>
+      </div>
+      <div style="display:flex;align-items:center;color:#555;">→</div>
+      <div style="background:rgba(0,200,100,.1);border:1px solid rgba(0,200,100,.3);padding:10px;border-radius:6px;min-width:130px;text-align:center;">
+        <div style="color:#00e090;font-weight:bold;">MERCHANT SYSTEMS</div>
+        <div style="color:#aaa;font-size:11px;margin-top:4px;">Chỉ thấy encrypted PAN<br/>Out of PCI scope</div>
+      </div>
+      <div style="display:flex;align-items:center;color:#555;">→</div>
+      <div style="background:rgba(100,150,255,.1);border:1px solid rgba(100,150,255,.3);padding:10px;border-radius:6px;min-width:130px;text-align:center;">
+        <div style="color:#88aaff;font-weight:bold;">PAYMENT PROCESSOR</div>
+        <div style="color:#aaa;font-size:11px;margin-top:4px;">Decrypt + Authorize<br/>SST Token → Merchant</div>
+      </div>
+      <div style="display:flex;align-items:center;color:#555;">→</div>
+      <div style="background:rgba(200,100,255,.1);border:1px solid rgba(200,100,255,.3);padding:10px;border-radius:6px;min-width:130px;text-align:center;">
+        <div style="color:#cc88ff;font-weight:bold;">POST-AUTHORIZATION</div>
+        <div style="color:#aaa;font-size:11px;margin-top:4px;">SST Token replaces PAN<br/>Refunds, reporting: Token</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>8.2 Atalla HSM Integration</h3>
+  <div class="card">
+    <div class="card-title">Voltage SecureData + OpenText Atalla HSM</div>
+    <p>Voltage SecureData tích hợp với <strong>OpenText Atalla HSM</strong> (Hardware Security Module) để cung cấp root-of-trust hardware-based cho payments:</p>
+    <ul class="feat-list" style="margin-top:10px;">
+      <li>FIPS 140-2 Level 3 hardware protection cho master keys</li>
+      <li>Atalla là HSM tiêu chuẩn ngành cho payment processing</li>
+      <li>Tích hợp với Visa, Mastercard key injection infrastructure</li>
+      <li>PCI PTS (Pin Transaction Security) certified</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══ 9. COMPLIANCE ═══ -->
+<section class="section" id="compliance">
+  <div class="section-header">
+    <div class="section-number">9</div>
+    <div>
+      <div class="section-title">Khung Tuân Thủ &amp; Pháp Lý</div>
+      <div class="section-sub">GDPR · HIPAA · PCI DSS · CPRA · DORA · ISO · SOC 2</div>
+    </div>
+  </div>
+
+  <h3>9.1 Chứng chỉ Kỹ thuật</h3>
+  <div class="grid-4">
+    <div class="card" style="text-align:center;padding:16px;">
+      <div style="font-size:22px;">🏆</div>
+      <div style="font-weight:800;color:var(--primary);margin:6px 0;">FIPS 140-2</div>
+      <div style="font-size:12px;color:var(--muted);">Certified cryptographic modules — US Gov standard</div>
+    </div>
+    <div class="card" style="text-align:center;padding:16px;">
+      <div style="font-size:22px;">🏆</div>
+      <div style="font-weight:800;color:var(--primary);margin:6px 0;">Common Criteria</div>
+      <div style="font-size:12px;color:var(--muted);">EAL evaluation — international security standard</div>
+    </div>
+    <div class="card" style="text-align:center;padding:16px;">
+      <div style="font-size:22px;">🏆</div>
+      <div style="font-weight:800;color:var(--primary);margin:6px 0;">NIST AES FF1</div>
+      <div style="font-size:12px;color:var(--muted);">Patent holder — SP 800-38G standard</div>
+    </div>
+    <div class="card" style="text-align:center;padding:16px;">
+      <div style="font-size:22px;">🏆</div>
+      <div style="font-weight:800;color:var(--primary);margin:6px 0;">PCI P2PE</div>
+      <div style="font-size:12px;color:var(--muted);">PCI SSC certified solution for payments</div>
+    </div>
+  </div>
+
+  <h3>9.2 Ánh Xạ Quy Định → Tính Năng Voltage</h3>
+  <table>
+    <tr>
+      <th>Quy định</th>
+      <th>Yêu cầu liên quan</th>
+      <th>Tính năng Voltage đáp ứng</th>
+      <th>Module</th>
+    </tr>
+    <tr>
+      <td><strong>GDPR</strong><br/><span style="font-size:11px;color:var(--muted);">EU - Toàn cầu</span></td>
+      <td>Pseudonymization (Art.25), Right to erasure (Art.17), Data minimization</td>
+      <td>FPE + FPH pseudonymization; SDM lifecycle deletion; classification xác định minimal PII</td>
+      <td><span class="tag tag-blue">SecureData</span><span class="tag tag-green">SDM</span><span class="tag tag-purple">Fusion</span></td>
+    </tr>
+    <tr>
+      <td><strong>HIPAA</strong><br/><span style="font-size:11px;color:var(--muted);">USA - Healthcare</span></td>
+      <td>PHI/ePHI protection (Security Rule), Safeguards (Technical, Physical, Administrative)</td>
+      <td>FPE bảo vệ PHI/ePHI; SecureData Web cho web apps; Sentry cho SaaS healthcare apps</td>
+      <td><span class="tag tag-blue">SecureData Web</span><span class="tag tag-green">Sentry</span></td>
+    </tr>
+    <tr>
+      <td><strong>PCI DSS v4.0</strong><br/><span style="font-size:11px;color:var(--muted);">Global - Payments</span></td>
+      <td>Req 3: Protect stored cardholder data; Req 4: Encrypt in transit; P2PE scope reduction</td>
+      <td>SST thay thế PAN; P2PE end-to-end; giảm scope 80%; Atalla HSM cho key security</td>
+      <td><span class="tag tag-orange">Payments</span><span class="tag tag-blue">SecureData</span></td>
+    </tr>
+    <tr>
+      <td><strong>CPRA/CCPA</strong><br/><span style="font-size:11px;color:var(--muted);">California, USA</span></td>
+      <td>Consumer right to deletion, Sensitive PI protection, Opt-out of sale</td>
+      <td>FPH anonymization; SDM deletion workflows; Fusion discovery xác định CA residents data</td>
+      <td><span class="tag tag-green">SDM</span><span class="tag tag-purple">Fusion</span></td>
+    </tr>
+    <tr>
+      <td><strong>DORA</strong><br/><span style="font-size:11px;color:var(--muted);">EU - Financial Services</span></td>
+      <td>ICT risk management, Resilience testing, Third-party risk</td>
+      <td>Fusion DSPM cho ICT risk posture; data discovery trong third-party integrations</td>
+      <td><span class="tag tag-purple">Voltage Fusion</span></td>
+    </tr>
+    <tr>
+      <td><strong>ISO 27001 / SOC 2</strong></td>
+      <td>Annex A controls: Cryptography (A.10), Access control (A.9)</td>
+      <td>FIPS 140-2 modules; IAM integration; audit logs qua Data Monitoring</td>
+      <td><span class="tag tag-blue">All Modules</span></td>
+    </tr>
+  </table>
+</section>
+
+<!-- ═══ 10. USE CASES ═══ -->
+<section class="section" id="usecases">
+  <div class="section-header">
+    <div class="section-number">10</div>
+    <div>
+      <div class="section-title">Use Cases Theo Ngành</div>
+      <div class="section-sub">Banking · Healthcare · Retail · Insurance · Telecom · Government</div>
+    </div>
+  </div>
+
+  <h3>10.1 Ngân Hàng &amp; Tài Chính</h3>
+  <div class="card accent-left">
+    <div class="grid-2">
+      <div>
+        <h4>Bảo vệ dữ liệu khách hàng</h4>
+        <ul class="feat-list">
+          <li>Mã hoá số tài khoản, số thẻ (PAN) bằng FPE</li>
+          <li>SSN / số CMND customers được tokenize</li>
+          <li>Dữ liệu vẫn phân tích được trong data warehouse</li>
+          <li>Fraud detection models chạy trên tokenized data</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Tuân thủ &amp; Giảm rủi ro</h4>
+        <ul class="feat-list">
+          <li>PCI DSS scope reduction cho internet banking</li>
+          <li>DORA compliance qua Fusion DSPM</li>
+          <li>SOX data governance &amp; audit trails</li>
+          <li>Open Banking API — bảo vệ PII trong API calls</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h3>10.2 Y Tế &amp; Bảo Hiểm</h3>
+  <div class="card green-left">
+    <div class="grid-2">
+      <div>
+        <h4>Bảo vệ PHI/ePHI</h4>
+        <ul class="feat-list">
+          <li>SecureData Web bảo vệ patient portals</li>
+          <li>Sentry protect EHR/EMR SaaS apps (Epic, Cerner)</li>
+          <li>Clinical trial data — pseudonymized cho research</li>
+          <li>Medical imaging metadata (DICOM) de-identification</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Analytics &amp; AI trên dữ liệu y tế</h4>
+        <ul class="feat-list">
+          <li>ML model training trên FPE-protected patient records</li>
+          <li>Population health analytics không expose PII</li>
+          <li>Data sharing giữa hospitals với pseudonymization</li>
+          <li>Claims processing — bảo vệ dữ liệu bảo hiểm</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h3>10.3 Bán Lẻ &amp; Thương Mại Điện Tử</h3>
+  <div class="card orange-left">
+    <div class="grid-2">
+      <div>
+        <h4>Payment Security</h4>
+        <ul class="feat-list">
+          <li>P2PE từ POS terminal đến processor</li>
+          <li>Tokenization thẻ cho recurring payments</li>
+          <li>E-commerce checkout — SecureData Web</li>
+          <li>PCI DSS scope giảm 80% → tiết kiệm audit cost</li>
+        </ul>
+      </div>
+      <div>
+        <h4>Customer Data</h4>
+        <ul class="feat-list">
+          <li>Loyalty program PII protection</li>
+          <li>Personalization analytics trên anonymized profiles</li>
+          <li>CRM data — Sentry bảo vệ Salesforce integration</li>
+          <li>GDPR/CPRA right to erasure cho customer records</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h3>10.4 Telco &amp; Công nghệ</h3>
+  <div class="card">
+    <ul class="feat-list">
+      <li><strong>Subscriber data</strong>: MSISDN, IMEI, location data được FPE-protected</li>
+      <li><strong>CDR (Call Detail Records)</strong>: Tokenization cho billing analytics</li>
+      <li><strong>IoT data</strong>: Device identity protection trong streaming pipelines (Kafka)</li>
+      <li><strong>5G core network data</strong>: PII protection trong network function databases</li>
+      <li><strong>Developer platforms</strong>: Secure test data management cho CI/CD pipelines</li>
+    </ul>
+  </div>
+
+  <h3>10.5 Chính Phủ &amp; Công Vụ</h3>
+  <div class="card">
+    <ul class="feat-list">
+      <li><strong>FIPS 140-2 certified</strong>: Đáp ứng yêu cầu US Federal Government</li>
+      <li><strong>Citizen data protection</strong>: Bảo vệ SSN, tax ID, biometric data</li>
+      <li><strong>Cross-agency data sharing</strong>: Pseudonymization giúp chia sẻ dữ liệu an toàn</li>
+      <li><strong>Mainframe z/OS</strong>: Nhiều cơ quan chính phủ vẫn dùng mainframe IBM</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══ 11. TRIỂN KHAI ═══ -->
+<section class="section" id="deployment">
+  <div class="section-header">
+    <div class="section-number">11</div>
+    <div>
+      <div class="section-title">Mô Hình Triển Khai</div>
+      <div class="section-sub">On-Premises · Cloud · Hybrid · SaaS</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <h4>🏢 On-Premises</h4>
+      <ul class="feat-list">
+        <li>Full control: key management, data, network</li>
+        <li>Phù hợp: regulated industries, air-gapped environments</li>
+        <li>SecureData Enterprise Server on-prem</li>
+        <li>Sentry on-prem với ICAP proxy</li>
+        <li>Native mainframe (z/OS) deployment</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>☁️ Cloud (SaaS)</h4>
+      <ul class="feat-list">
+        <li>Voltage Fusion: cloud-native, deploy trong vài giờ</li>
+        <li>SecureData Cloud integrations (AWS, Azure, GCP)</li>
+        <li>Phù hợp: SME, cloud-first organizations</li>
+        <li>Không cần quản lý infrastructure</li>
+        <li>Auto-scaling theo workload</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>🔀 Hybrid</h4>
+      <ul class="feat-list">
+        <li>Key management on-prem, workloads trên cloud</li>
+        <li>SecureData Enterprise on-prem + Cloud connectors</li>
+        <li>Phù hợp: doanh nghiệp đang migrate lên cloud</li>
+        <li>Consistent policy across environments</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>🌐 Multi-Cloud</h4>
+      <ul class="feat-list">
+        <li>Platform-agnostic encryption: dữ liệu bảo vệ không bị lock-in</li>
+        <li>Cùng key management cho AWS + Azure + GCP</li>
+        <li>Nhất quán policy giữa các cloud providers</li>
+        <li>Phù hợp: enterprise với nhiều cloud strategy</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>11.1 Checklist Triển Khai</h3>
+  <table>
+    <tr><th>Phase</th><th>Hoạt động</th><th>Công cụ / Module</th></tr>
+    <tr><td><strong>1. Discovery</strong></td><td>Quét &amp; xác định tất cả dữ liệu nhạy cảm</td><td>Voltage Fusion, SDM</td></tr>
+    <tr><td><strong>2. Classification</strong></td><td>Phân loại theo loại dữ liệu, mức độ rủi ro</td><td>Voltage Fusion</td></tr>
+    <tr><td><strong>3. Policy Design</strong></td><td>Xác định ai được giải mã, khi nào, ở đâu</td><td>IKS Key Management</td></tr>
+    <tr><td><strong>4. Protection</strong></td><td>Áp dụng FPE/SST/FPH theo policy</td><td>SecureData Enterprise</td></tr>
+    <tr><td><strong>5. Integration</strong></td><td>Kết nối với apps, databases, cloud platforms</td><td>Sentry, Web, APIs</td></tr>
+    <tr><td><strong>6. Monitoring</strong></td><td>Theo dõi access, phát hiện anomaly</td><td>Fusion Data Monitoring</td></tr>
+    <tr><td><strong>7. Compliance</strong></td><td>Reporting, audit trail, risk assessment</td><td>Fusion DSPM Dashboard</td></tr>
+  </table>
+</section>
+
+<!-- ═══ 12. SO SÁNH ═══ -->
+<section class="section" id="compare">
+  <div class="section-header">
+    <div class="section-number">12</div>
+    <div>
+      <div class="section-title">Định Vị Thị Trường &amp; Điểm Khác Biệt</div>
+      <div class="section-sub">Competitive Differentiation · Why Voltage</div>
+    </div>
+  </div>
+
+  <h3>12.1 So Sánh với Giải Pháp Cạnh Tranh</h3>
+  <table>
+    <tr>
+      <th>Tiêu chí</th>
+      <th>OpenText Voltage</th>
+      <th>Thales (CipherTrust)</th>
+      <th>IBM Guardium</th>
+      <th>Protegrity</th>
+    </tr>
+    <tr>
+      <td>FPE (Patent holder)</td>
+      <td style="color:var(--accent2)"><strong>✓ NIST patent</strong></td>
+      <td>✓ Licensed</td>
+      <td>Limited</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td>Stateless Key Mgmt</td>
+      <td style="color:var(--accent2)"><strong>✓ Core architecture</strong></td>
+      <td>Partial</td>
+      <td>✗</td>
+      <td>Partial</td>
+    </tr>
+    <tr>
+      <td>Mainframe (z/OS)</td>
+      <td style="color:var(--accent2)"><strong>✓ Native COBOL API</strong></td>
+      <td>Limited</td>
+      <td>✓ (IBM native)</td>
+      <td>Limited</td>
+    </tr>
+    <tr>
+      <td>DSPM Platform</td>
+      <td style="color:var(--accent2)"><strong>✓ Voltage Fusion</strong></td>
+      <td>Partial (CipherTrust)</td>
+      <td>✓ (Guardium)</td>
+      <td>Limited</td>
+    </tr>
+    <tr>
+      <td>Payments / P2PE</td>
+      <td style="color:var(--accent2)"><strong>✓ PCI certified</strong></td>
+      <td>✓</td>
+      <td>Limited</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td>Cloud Analytics</td>
+      <td style="color:var(--accent2)"><strong>✓ Snowflake/BQ native</strong></td>
+      <td>✓</td>
+      <td>Limited</td>
+      <td>✓</td>
+    </tr>
+    <tr>
+      <td>Quantum-Ready</td>
+      <td style="color:var(--accent2)"><strong>✓ Roadmap explicit</strong></td>
+      <td>✓</td>
+      <td>In progress</td>
+      <td>Limited</td>
+    </tr>
+  </table>
+
+  <h3>12.2 Lý Do Chọn Voltage — Top 7 Điểm Khác Biệt</h3>
+  <div class="grid-2">
+    <div>
+      <ul class="feat-list">
+        <li><strong>Patent holder AES FF1</strong>: Không phải ai cũng sở hữu chuẩn mà họ implement</li>
+        <li><strong>Stateless architecture</strong>: Không token vault, không single point of failure, scale vô hạn</li>
+        <li><strong>Bảo vệ mà không phá vỡ workflows</strong>: FPE giữ nguyên format — zero application changes</li>
+        <li><strong>Mainframe native</strong>: Duy nhất trong market có COBOL API + z/FPE tool</li>
+      </ul>
+    </div>
+    <div>
+      <ul class="feat-list">
+        <li><strong>End-to-end portfolio</strong>: Từ discovery (Fusion) → protection (SecureData) → lifecycle (SDM)</li>
+        <li><strong>Payments certified</strong>: PCI P2PE v2 certified — không phải giải pháp generic</li>
+        <li><strong>Quantum-ready</strong>: Roadmap rõ ràng cho post-quantum cryptography</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>12.3 Vị Trí Gartner &amp; Analyst Recognition</h3>
+  <div class="callout green">
+    OpenText Voltage SecureData Enterprise được <strong>Gartner Peer Insights</strong> đánh giá trong thị trường <em>Data Masking</em> với nhận xét tích cực về độ tin cậy, khả năng tích hợp mainframe và performance tokenization ở scale lớn.
+  </div>
+</section>
+
+<!-- ═══ SOURCES ═══ -->
+<section class="section" id="sources">
+  <div class="section-header">
+    <div class="section-number">📚</div>
+    <div>
+      <div class="section-title">Tài Liệu Tham Khảo Chính Thức</div>
+      <div class="section-sub">Tất cả nguồn từ OpenText, Micro Focus, Gartner</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h3>Handbook &amp; Overview</h3>
+      <ul style="padding-left:18px; line-height:2.2; font-size:14px;">
+        <li><a href="https://www.opentext.com/media/handbook/opentext-data-security-handbook-en.pdf" style="color:var(--accent);">OpenText Data Security Handbook (April 2025)</a></li>
+        <li><a href="https://www.opentext.com/media/product-overview/opentext-data-privacy-and-protection-foundation-po-en.pdf" style="color:var(--accent);">Product Overview – DPP Foundation</a></li>
+        <li><a href="https://www.microfocus.com/media/data-sheet/voltage_securedata_security_ds.pdf" style="color:var(--accent);">Product Overview – DPP Foundation (Micro Focus)</a></li>
+      </ul>
+      <h3>Whitepaper</h3>
+      <ul style="padding-left:18px; line-height:2.2; font-size:14px;">
+        <li><a href="https://www.opentext.com/assets/documents/en-US/pdf/voltage-securedata-cloud-wp.pdf" style="color:var(--accent);">Voltage SecureData Cloud &amp; Analytics White Paper</a></li>
+        <li><a href="https://www.opentext.com/en/media/white-paper/opentext-data-privacy-and-protection-cloud-and-analytics-wp-en.pdf" style="color:var(--accent);">DPP Cloud &amp; Analytics White Paper (Updated)</a></li>
+        <li><a href="https://www.opentext.com/en/media/white-paper/data-protection-and-pci-scope-reduction-for-todays-businesses-wp-en.pdf" style="color:var(--accent);">PCI Scope Reduction White Paper</a></li>
+        <li><a href="https://www.microfocus.com/media/white-paper/voltage_securedata_payments_for_pci_p2pe_v2_wp.pdf" style="color:var(--accent);">Voltage Payments for PCI P2PE v2 White Paper</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Datasheets</h3>
+      <ul style="padding-left:18px; line-height:2.2; font-size:14px;">
+        <li><a href="https://www.opentext.com/assets/documents/en-US/pdf/voltage-securedata-web-ds-en.pdf" style="color:var(--accent);">SecureData Web Datasheet</a></li>
+        <li><a href="https://www.opentext.com/media/data-sheet/opentext-data-privacy-and-protection-sentry-ds-en.pdf" style="color:var(--accent);">SecureData Sentry Datasheet</a></li>
+        <li><a href="https://www.microfocus.com/media/data-sheet/voltage_securedata_payments_ds.pdf" style="color:var(--accent);">SecureData Payments Datasheet</a></li>
+        <li><a href="https://www.opentext.com/assets/documents/en-US/pdf/voltage-fusion-data-security-platform-brochure.pdf" style="color:var(--accent);">Voltage Fusion Platform Brochure</a></li>
+        <li><a href="https://www.opentext.com/assets/documents/en-US/pdf/mitigating-risk-with-voltage-data-discovery-and-data-protection-flyer.pdf" style="color:var(--accent);">Mitigating Risk with Voltage Fusion Flyer</a></li>
+        <li><a href="https://www.opentext.com/assets/documents/en-US/pdf/voltage-fusion-for-dora-compliance-and-data-security-posture-management-flyer.pdf" style="color:var(--accent);">Voltage Fusion for DORA Compliance Flyer</a></li>
+      </ul>
+      <h3>Community &amp; External</h3>
+      <ul style="padding-left:18px; line-height:2.2; font-size:14px;">
+        <li><a href="https://community.opentext.com/cybersec/data-privacy-protection" style="color:var(--accent);">OpenText DPP Community</a></li>
+        <li><a href="https://www.opentext.com/products/voltage-fusion-platform" style="color:var(--accent);">Voltage Fusion Product Page</a></li>
+        <li><a href="https://guides.opentext.com/test-data-management/secure-sensitive-data-wp" style="color:var(--accent);">SDM + SecureData Integration Guide</a></li>
+        <li><a href="https://blogs.opentext.com/protecting-sensitive-data-in-the-cloud-with-opentext-voltage-securedata-and-snowflake-horizon/" style="color:var(--accent);">Blog: Voltage + Snowflake Horizon</a></li>
+        <li><a href="https://www.gartner.com/reviews/market/data-masking/vendor/opentext/product/voltage-securedata-enterprise" style="color:var(--accent);">Gartner Peer Insights – Voltage SecureData</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="site-footer">
+  <p>Tài liệu nghiên cứu tổng hợp được biên soạn từ nguồn tài liệu chính thức của <strong>OpenText Corporation</strong>.</p>
+  <p style="margin-top:6px;">Ngày biên soạn: Tháng 4 năm 2026 · Dành cho mục đích nghiên cứu và tư vấn chuyên nghiệp.</p>
+  <p style="margin-top:10px;font-size:12px;opacity:.6;">OpenText™ và Voltage™ là thương hiệu thuộc sở hữu của OpenText Corporation. Tài liệu này không phải ấn phẩm chính thức của OpenText.</p>
+</footer>
+
+</body>
+</html>

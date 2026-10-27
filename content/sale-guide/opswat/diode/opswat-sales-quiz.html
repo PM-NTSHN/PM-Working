@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OPSWAT Sales Assessment — NTS Hanoi</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans+Condensed:wght@400;600;700;800&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f6fa;
+    --surface: #ffffff;
+    --surface2: #f0f3f8;
+    --border: #d8e0ec;
+    --cyan: #0077cc;
+    --cyan-dim: #3399dd;
+    --emerald: #00875a;
+    --amber: #b45309;
+    --rose: #c0392b;
+    --text: #0f1a2e;
+    --text-muted: #4a5e7a;
+    --text-dim: #8a9bb5;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    display: none;
+  }
+
+  .noise { display: none; }
+
+  .wrapper {
+    position: relative;
+    z-index: 2;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  /* HEADER */
+  .header {
+    padding: 48px 0 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,119,204,0.08);
+    border: 1px solid rgba(0,119,204,0.2);
+    color: var(--cyan);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 2px;
+    margin-bottom: 16px;
+  }
+
+  .header-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--cyan);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.8); }
+  }
+
+  .header h1 {
+    font-family: 'IBM Plex Sans Condensed', sans-serif;
+    font-size: clamp(28px, 6vw, 48px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -0.5px;
+  }
+
+  .header h1 span { color: var(--cyan); }
+
+  .header-sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 10px;
+  }
+
+  .header-meta {
+    display: flex;
+    gap: 24px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+
+  .meta-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .meta-chip .label { color: var(--text-muted); }
+  .meta-chip .value { color: var(--text); font-weight: 600; }
+
+  .meta-chip.pass .value { color: var(--emerald); }
+  .meta-chip.warn .value { color: var(--amber); }
+
+  /* PROGRESS BAR */
+  .progress-container {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(244,246,250,0.97);
+    backdrop-filter: blur(12px);
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  .progress-bar {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--cyan), var(--emerald));
+    border-radius: 2px;
+    transition: width 0.4s cubic-bezier(0.4,0,0.2,1);
+    width: 0%;
+  }
+
+  /* SECTIONS */
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin: 40px 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .q-card:hover { border-color: var(--cyan-dim); }
+  .q-card.answered { border-color: var(--border); }
+  .q-card.correct { border-color: rgba(0,229,160,0.4); }
+  .q-card.incorrect { border-color: rgba(255,69,96,0.4); }
+
+  .q-header {
+    padding: 16px 20px 14px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .q-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-dim);
+    padding-top: 2px;
+    min-width: 28px;
+    flex-shrink: 0;
+  }
+
+  .q-text {
+    font-size: 14.5px;
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--text);
+  }
+
+  .q-tag {
+    display: inline-flex;
+    margin-left: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    vertical-align: middle;
+  }
+
+  .tag-usg { background: rgba(0,119,204,0.08); color: var(--cyan); border: 1px solid rgba(0,119,204,0.2); }
+  .tag-bsg { background: rgba(0,135,90,0.08); color: var(--emerald); border: 1px solid rgba(0,135,90,0.2); }
+  .tag-lic { background: rgba(180,83,9,0.08); color: var(--amber); border: 1px solid rgba(180,83,9,0.2); }
+  .tag-sale { background: rgba(192,57,43,0.08); color: var(--rose); border: 1px solid rgba(192,57,43,0.2); }
+
+  .options {
+    padding: 0 20px 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    cursor: pointer;
+    background: var(--surface2);
+    transition: all 0.15s;
+    user-select: none;
+    font-size: 13.5px;
+    line-height: 1.45;
+    color: var(--text);
+  }
+
+  .opt:hover:not(.disabled) {
+    border-color: var(--cyan-dim);
+    background: rgba(0,119,204,0.05);
+  }
+
+  .opt.selected {
+    border-color: var(--cyan);
+    background: rgba(0,119,204,0.08);
+  }
+
+  .opt.correct-ans {
+    border-color: var(--emerald) !important;
+    background: rgba(0,135,90,0.08) !important;
+    color: var(--text);
+  }
+
+  .opt.wrong-ans {
+    border-color: var(--rose) !important;
+    background: rgba(192,57,43,0.07) !important;
+    color: var(--text-muted);
+  }
+
+  .opt.disabled { cursor: default; }
+
+  .opt-letter {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-dim);
+    min-width: 18px;
+    padding-top: 1px;
+    flex-shrink: 0;
+  }
+
+  .opt.selected .opt-letter { color: var(--cyan); }
+  .opt.correct-ans .opt-letter { color: var(--emerald); }
+  .opt.wrong-ans .opt-letter { color: var(--rose); }
+
+  .feedback {
+    display: none;
+    margin: 0 20px 16px;
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 12.5px;
+    line-height: 1.5;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .feedback.show { display: block; }
+  .feedback.ok { background: rgba(0,135,90,0.07); border: 1px solid rgba(0,135,90,0.25); color: var(--emerald); }
+  .feedback.bad { background: rgba(192,57,43,0.07); border: 1px solid rgba(192,57,43,0.25); color: var(--rose); }
+
+  /* SUBMIT */
+  .submit-zone {
+    margin-top: 48px;
+    padding: 32px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    text-align: center;
+  }
+
+  .btn-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--cyan);
+    color: #ffffff;
+    font-family: 'IBM Plex Sans Condensed', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    padding: 14px 36px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .btn-submit:hover { background: #0066bb; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(0,119,204,0.3); color: #fff; }
+  .btn-submit:active { transform: translateY(0); }
+  .btn-submit:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+  .submit-hint {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  /* RESULT PANEL */
+  .result-panel {
+    display: none;
+    margin-top: 48px;
+    padding: 40px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .result-panel.show { display: block; }
+
+  .result-panel.pass-result {
+    border-color: rgba(0,135,90,0.4);
+    background: rgba(0,135,90,0.04);
+  }
+
+  .result-panel.fail-result {
+    border-color: rgba(192,57,43,0.35);
+    background: rgba(192,57,43,0.03);
+  }
+
+  .result-badge {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .result-panel.pass-result .result-badge { color: var(--emerald); }
+  .result-panel.fail-result .result-badge { color: var(--rose); }
+
+  .result-score {
+    font-family: 'IBM Plex Sans Condensed', sans-serif;
+    font-size: 72px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .result-panel.pass-result .result-score { color: var(--emerald); }
+  .result-panel.fail-result .result-score { color: var(--rose); }
+
+  .result-label {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace;
+    margin-bottom: 24px;
+  }
+
+  .result-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+  }
+
+  .stat { text-align: center; }
+  .stat .s-val {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+  }
+  .stat .s-lbl {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .stat.good .s-val { color: var(--emerald); }
+  .stat.bad .s-val { color: var(--rose); }
+  .stat.neutral .s-val { color: var(--text); }
+
+  .result-msg {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-muted);
+    max-width: 480px;
+    margin: 0 auto 28px;
+  }
+
+  .btn-retry {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--cyan);
+    border: 1px solid var(--cyan-dim);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 3px;
+    cursor: pointer;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+  .btn-retry:hover { background: rgba(0,119,204,0.08); border-color: var(--cyan); }
+
+  /* BREAKDOWN TABLE */
+  .breakdown {
+    margin-top: 24px;
+    text-align: left;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+  }
+
+  .breakdown-title {
+    color: var(--text-muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    font-size: 10px;
+  }
+
+  .breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 11px;
+  }
+
+  .breakdown-row:last-child { border-bottom: none; }
+  .breakdown-row .topic { color: var(--text-muted); }
+  .breakdown-row .score-detail { color: var(--text); font-weight: 600; }
+
+  @media (max-width: 600px) {
+    .header h1 { font-size: 28px; }
+    .q-text { font-size: 13.5px; }
+    .opt { font-size: 13px; }
+    .result-score { font-size: 56px; }
+  }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="wrapper">
+
+  <div class="header">
+    <div class="header-badge">NTS Hanoi · Internal Assessment</div>
+    <h1>OPSWAT Sales<br><span>Knowledge Check</span></h1>
+    <div class="header-sub">MetaDefender Optical Diode & Bilateral Security Gateway</div>
+    <div class="header-meta">
+      <div class="meta-chip"><span class="label">Câu hỏi</span><span class="value">30</span></div>
+      <div class="meta-chip pass"><span class="label">Pass</span><span class="value">≥ 75% (23/30)</span></div>
+      <div class="meta-chip warn"><span class="label">Thời gian</span><span class="value">Không giới hạn</span></div>
+      <div class="meta-chip"><span class="label">Level</span><span class="value">Sales</span></div>
+    </div>
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-info">
+      <span id="prog-text">0 / 30 đã trả lời</span>
+      <span id="prog-pct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="prog-fill"></div></div>
+  </div>
+
+  <div id="quiz-body"></div>
+
+  <div class="submit-zone">
+    <button class="btn-submit" id="btn-submit" onclick="submitQuiz()">
+      <span>⚡</span> Nộp bài & Xem kết quả
+    </button>
+    <div class="submit-hint" id="submit-hint">Hãy trả lời đủ 30 câu trước khi nộp</div>
+  </div>
+
+  <div class="result-panel" id="result-panel">
+    <div class="result-badge" id="res-badge">—</div>
+    <div class="result-score" id="res-score">—</div>
+    <div class="result-label" id="res-label">—</div>
+    <div class="result-stats" id="res-stats"></div>
+    <div class="result-msg" id="res-msg"></div>
+    <button class="btn-retry" onclick="retryQuiz()">↺ Làm lại bài</button>
+    <div class="breakdown" id="breakdown"></div>
+  </div>
+
+</div>
+
+<script>
+const QUESTIONS = [
+  // === PHẦN 1: TỔNG QUAN & BỐI CẢNH ===
+  {
+    section: "Tổng quan & Bối cảnh mối đe dọa",
+    num: 1,
+    text: "Hội tụ IT/OT (IT/OT Convergence) tạo ra rủi ro bảo mật chủ yếu vì lý do gì?",
+    tag: "sale",
+    options: [
+      "Hệ thống OT chạy chậm hơn hệ thống IT nên gây tắc nghẽn.",
+      "Việc kết nối OT với IT xóa bỏ ranh giới vật lý (Air-Gap), mở đường cho hacker từ Internet xâm nhập vào SCADA/DCS.",
+      "Hệ thống OT không dùng được giao thức TCP/IP nên khó tích hợp.",
+      "Chi phí vận hành tăng cao khi phải duy trì hai mạng song song."
+    ],
+    correct: 1,
+    explain: "Air-Gap bị phá vỡ là nguyên nhân cốt lõi. Khi OT và IT kết nối, hacker có thể di chuyển từ môi trường IT dễ tấn công sang SCADA/DCS để phá hoại thiết bị vật lý."
+  },
+  {
+    section: "Tổng quan & Bối cảnh mối đe dọa",
+    num: 2,
+    text: "Tại sao Tường lửa (Firewall) thông thường KHÔNG đủ để bảo vệ biên IT/OT?",
+    tag: "sale",
+    options: [
+      "Firewall không hỗ trợ giao thức công nghiệp như Modbus hay OPC UA.",
+      "Firewall hoạt động bằng mã lệnh phần mềm, dễ bị khai thác qua lỗ hổng Zero-day hoặc cấu hình sai, cho phép Lateral Movement từ IT sang OT.",
+      "Firewall không thể xử lý được băng thông cao như 1Gbps hay 10Gbps.",
+      "Firewall không được các tiêu chuẩn quốc tế nào chứng nhận."
+    ],
+    correct: 1,
+    explain: "Bản chất phần mềm của Firewall là điểm yếu: lỗ hổng Zero-day trên chính Firewall hoặc cấu hình sai một luật duy nhất có thể khiến hacker di chuyển ngang sang OT."
+  },
+  {
+    section: "Tổng quan & Bối cảnh mối đe dọa",
+    num: 3,
+    text: "Luật / Tiêu chuẩn nào đề cập đến việc BẮT BUỘC cô lập cứng cho hạ tầng thông tin trọng yếu tại Việt Nam?",
+    tag: "sale",
+    options: [
+      "Thông tư 13/2018/TT-BTTTT",
+      "Nghị định 85/2016/NĐ-CP (Cấp độ 4, 5) kết hợp tiêu chuẩn IEC 62443 và NERC CIP",
+      "ISO 27001 và SOC 2 Type II",
+      "Quyết định 63/2010/QĐ-TTg về năng lượng tái tạo"
+    ],
+    correct: 1,
+    explain: "Nghị định 85 quy định hạ tầng Cấp 4-5 phải cô lập cứng. IEC 62443 và NERC CIP là chuẩn quốc tế quan trọng khi bán cho khách hàng điện lực, dầu khí, quốc phòng."
+  },
+  {
+    section: "Tổng quan & Bối cảnh mối đe dọa",
+    num: 4,
+    text: "Ransomware lây lan từ mạng IT sang OT theo đường nào nguy hiểm nhất?",
+    tag: "sale",
+    options: [
+      "Qua lỗ hổng firmware của máy in.",
+      "Qua kết nối mạng hai chiều thông thường (qua Firewall) giữa IT và OT.",
+      "Chỉ lây qua thiết bị USB của kỹ thuật viên bảo trì.",
+      "Qua bộ nhớ đệm RAM được chia sẻ giữa hai vùng mạng."
+    ],
+    correct: 1,
+    explain: "Nếu IT và OT có kết nối mạng hai chiều, ransomware sẽ tự động quét và lây lan sang máy chủ vận hành, có thể làm tê liệt toàn bộ nhà máy điện hoặc hệ thống điều phối."
+  },
+
+  // === PHẦN 2: SẢN PHẨM OPTICAL DIODE (USG) ===
+  {
+    section: "Optical Diode — Unidirectional Security Gateway (USG)",
+    num: 5,
+    text: "Optical Diode (USG) đảm bảo truyền dữ liệu một chiều tuyệt đối bằng cơ chế vật lý nào?",
+    tag: "usg",
+    options: [
+      "Mã hóa AES-256 và chặn tất cả gói tin đến từ phía IT bằng phần mềm.",
+      "Sử dụng tia laser để truyền dữ liệu, và cắt đứt vật lý dây quang nhận (RX) ở phía OT.",
+      "Dùng VPN một chiều có xác thực hai yếu tố.",
+      "Thiết lập Access Control List cứng trên chip ASIC."
+    ],
+    correct: 1,
+    explain: "Đây là nguyên lý cốt lõi: đầu phát laser (TX) ở phía OT, đầu thu (RX) ở phía IT. Dây quang nhận (RX) tại OT bị cắt vật lý — hacker tại IT không có cách nào vật lý nào gửi dữ liệu ngược về."
+  },
+  {
+    section: "Optical Diode — Unidirectional Security Gateway (USG)",
+    num: 6,
+    text: "Trong kiến trúc Optical Diode, Node BLUE và Node RED lần lượt tương ứng với vùng mạng nào?",
+    tag: "usg",
+    options: [
+      "BLUE = Internet / Cloud; RED = Mạng nội bộ Văn phòng",
+      "BLUE = Vùng OT (tin cậy, nguồn dữ liệu); RED = Vùng IT (bên ngoài, nhận dữ liệu)",
+      "BLUE = Vùng DMZ; RED = Vùng Core Switch",
+      "BLUE = Mạng không dây; RED = Mạng có dây"
+    ],
+    correct: 1,
+    explain: "Node BLUE = OT (nhà máy, hệ thống điều khiển, nguồn dữ liệu cần bảo vệ). Node RED = IT (văn phòng, SOC, Cloud, vùng nhận dữ liệu)."
+  },
+  {
+    section: "Optical Diode — Unidirectional Security Gateway (USG)",
+    num: 7,
+    text: "Một khách hàng muốn đẩy luồng Syslog từ thiết bị điều khiển OT ra SOC. Nên dùng sản phẩm nào?",
+    tag: "usg",
+    options: [
+      "BSG, vì Syslog yêu cầu bắt tay TCP.",
+      "Optical Diode (USG), vì Syslog là luồng một chiều không cần phản hồi từ đích.",
+      "Firewall với rule permit UDP port 514.",
+      "Cả USG và BSG đều không hỗ trợ Syslog."
+    ],
+    correct: 1,
+    explain: "Syslog là giao thức đẩy log ra ngoài, không cần ACK hay bắt tay phức tạp. USG là lựa chọn tối ưu — cô lập tuyệt đối, không rủi ro phản hồi ngược."
+  },
+  {
+    section: "Optical Diode — Unidirectional Security Gateway (USG)",
+    num: 8,
+    text: "Chứng nhận bảo mật Common Criteria EAL4+ được áp dụng cho dòng sản phẩm nào của OPSWAT?",
+    tag: "usg",
+    options: [
+      "Bilateral Security Gateway (BSG)",
+      "Unidirectional Security Gateway (USG) — Optical Diode",
+      "MetaDefender Core",
+      "MetaDefender Kiosk"
+    ],
+    correct: 1,
+    explain: "CC EAL4+ là chuẩn bảo mật phần cứng cao cấp, được cấp cho dòng USG. Đây là vũ khí thuyết phục khi khách hàng yêu cầu chứng minh độ tin cậy của phần cứng."
+  },
+  {
+    section: "Optical Diode — Unidirectional Security Gateway (USG)",
+    num: 9,
+    text: "Tốc độ trễ (latency) của OPSWAT USG đạt xấp xỉ bao nhiêu?",
+    tag: "usg",
+    options: [
+      "Khoảng 50–100ms",
+      "Khoảng 10–20ms",
+      "Dưới 1ms (xấp xỉ ~0.6ms)",
+      "Khoảng 1–5ms"
+    ],
+    correct: 2,
+    explain: "Độ trễ ~0.6ms là điểm mạnh quan trọng khi bán cho nhà máy điện, lọc hóa dầu — các hệ thống điều khiển công nghiệp yêu cầu thời gian thực tuyệt đối."
+  },
+  {
+    section: "Optical Diode — Unidirectional Security Gateway (USG)",
+    num: 10,
+    text: "Mức băng thông tối đa có thể cấu hình trên thiết bị OPSWAT là bao nhiêu?",
+    tag: "usg",
+    options: [
+      "Tối đa 1 Gbps",
+      "Tối đa 10 Gbps",
+      "Tối đa 100 Mbps",
+      "Tối đa 40 Gbps"
+    ],
+    correct: 1,
+    explain: "OPSWAT hỗ trợ băng thông từ 10M, 50M, 100M, 1G lên tới 10Gbps — đủ cho mọi quy mô hạ tầng từ nhà máy nhỏ đến tập đoàn lớn."
+  },
+
+  // === PHẦN 3: BILATERAL SECURITY GATEWAY (BSG) ===
+  {
+    section: "Bilateral Security Gateway (BSG)",
+    num: 11,
+    text: "BSG khác với Firewall thông thường ở điểm cốt lõi nào khi truyền dữ liệu hai chiều?",
+    tag: "bsg",
+    options: [
+      "BSG dùng thuật toán mã hóa mạnh hơn Firewall.",
+      "BSG tự động hủy hoàn toàn thông tin định tuyến IP/MAC nguồn-đích, ngăn tuyệt đối tấn công định tuyến mạng thông thường.",
+      "BSG có thông lượng cao hơn Firewall thế hệ mới (NGFW).",
+      "BSG không cần cập nhật firmware hay signature như Firewall."
+    ],
+    correct: 1,
+    explain: "BSG bóc tách toàn bộ lớp IP/MAC, chỉ truyền payload. Hacker tại vùng IT không thể dùng địa chỉ mạng để tấn công ngược vào OT — cơ chế này là thứ Firewall không làm được."
+  },
+  {
+    section: "Bilateral Security Gateway (BSG)",
+    num: 12,
+    text: "Trường hợp nào NÊN dùng BSG thay vì Optical Diode (USG)?",
+    tag: "bsg",
+    options: [
+      "Khách hàng cần đẩy bản tin SNMP Trap từ OT ra SIEM.",
+      "Khách hàng cần đồng bộ database Microsoft SQL Server theo cơ chế Transactional Replication giữa OT và IT.",
+      "Khách hàng cần stream video giám sát một chiều từ camera ra server.",
+      "Khách hàng cần gửi file backup từ OT sang NAS ở IT."
+    ],
+    correct: 1,
+    explain: "SQL Transactional Replication yêu cầu bắt tay TCP và phản hồi hai chiều. USG không đáp ứng được yêu cầu này — chỉ BSG mới xử lý được trong khi vẫn cô lập hoàn toàn lớp mạng."
+  },
+  {
+    section: "Bilateral Security Gateway (BSG)",
+    num: 13,
+    text: "BSG đạt chuẩn chứng nhận an ninh công nghiệp quốc tế nào?",
+    tag: "bsg",
+    options: [
+      "Common Criteria EAL4+",
+      "IEC 62443",
+      "ISO 27001",
+      "FIPS 140-2"
+    ],
+    correct: 1,
+    explain: "IEC 62443 là tiêu chuẩn an ninh mạng công nghiệp quốc tế quan trọng nhất. Đây là lá bài thuyết phục khi khách hàng là các đơn vị trong ngành điện, dầu khí, hóa chất."
+  },
+  {
+    section: "Bilateral Security Gateway (BSG)",
+    num: 14,
+    text: "Hệ thống Historian nào được đề cập trong tài liệu là use case phù hợp với BSG?",
+    tag: "bsg",
+    options: [
+      "InfluxDB và Grafana",
+      "AspenTech IP.21",
+      "Oracle TimesTen",
+      "MongoDB và Elasticsearch"
+    ],
+    correct: 1,
+    explain: "AspenTech IP.21 là database công nghiệp chuyên biệt yêu cầu giao tiếp phản hồi phức tạp, buộc phải dùng BSG. Đây là use case đặc thù trong ngành lọc hóa dầu và hóa chất."
+  },
+  {
+    section: "Bilateral Security Gateway (BSG)",
+    num: 15,
+    text: "BSG cô lập hoàn toàn lớp mạng bên trong theo cách nào?",
+    tag: "bsg",
+    options: [
+      "Dùng VLAN Tagging để tách riêng hai vùng mạng logic.",
+      "Dùng cặp card giao tiếp độc quyền liên kết qua cáp PCI chuyên dụng, dữ liệu bị bóc tách hoàn toàn IP/MAC.",
+      "Dùng tunnel IPSec mã hóa giữa hai vùng mạng.",
+      "Dùng NAT hai chiều để ẩn địa chỉ IP thực của các thiết bị OT."
+    ],
+    correct: 1,
+    explain: "Cặp card giao tiếp độc quyền qua cáp PCI là phần cứng riêng biệt, không phải software-defined. Dữ liệu mạng đầu vào bị bóc tách IP/MAC — không có kết nối mạng trực tiếp nào tồn tại."
+  },
+
+  // === PHẦN 4: TÍNH NĂNG & KỸ THUẬT ===
+  {
+    section: "Tính năng Kỹ thuật & Connector",
+    num: 16,
+    text: "\"Protocol Break\" (Phá vỡ Giao thức) của OPSWAT có ý nghĩa gì với bảo mật OT?",
+    tag: "usg",
+    options: [
+      "Chuyển đổi giao thức OPC UA sang Modbus để tương thích thiết bị cũ.",
+      "Chuyển đổi dữ liệu mạng TCP/IP thành luồng truyền dẫn không định tuyến độc quyền, triệt tiêu khả năng dò quét IP hay thiết lập kết nối từ xa vào OT.",
+      "Nén dữ liệu để tăng tốc độ truyền qua cáp quang.",
+      "Phân tích và lọc payload để phát hiện mã độc trước khi truyền qua."
+    ],
+    correct: 1,
+    explain: "Protocol Break là lớp bảo vệ thứ hai sau cô lập vật lý. Hacker không thể ping, scan hay kết nối vào hệ thống OT vì không còn tồn tại địa chỉ IP có thể định tuyến đến."
+  },
+  {
+    section: "Tính năng Kỹ thuật & Connector",
+    num: 17,
+    text: "Connector OPC UA có phải mua license bổ sung khi dùng thiết bị OPSWAT không?",
+    tag: "lic",
+    options: [
+      "Có, cần mua thêm OPC UA Connector Pack riêng.",
+      "Không, tất cả connector công nghiệp phổ biến đều tích hợp sẵn và hoàn toàn miễn phí.",
+      "Miễn phí năm đầu, từ năm thứ 2 phải trả phí hàng năm.",
+      "Tùy dòng thiết bị: DIN Rail thì miễn phí, 1U rackmount thì phải mua thêm."
+    ],
+    correct: 1,
+    explain: "Đây là vũ khí cực kỳ sắc bén khi đấu thầu: đối thủ như Owl, Waterfall phải bán connector license rời rất đắt. OPSWAT tích hợp sẵn TẤT CẢ, không tốn thêm một đồng license nào."
+  },
+  {
+    section: "Tính năng Kỹ thuật & Connector",
+    num: 18,
+    text: "Giao thức nào SAU ĐÂY không thuộc danh sách connector được tích hợp sẵn trong OPSWAT?",
+    tag: "lic",
+    options: [
+      "OPC UA / OPC DA",
+      "Modbus và MQTT",
+      "SCTP (Stream Control Transmission Protocol)",
+      "SMTP và FTP/SFTP"
+    ],
+    correct: 2,
+    explain: "SCTP không được đề cập trong tài liệu. Các connector được tích hợp sẵn bao gồm: Modbus, OPC UA/DA, MQTT, Syslog, SMTP, FTP/FTPS/SFTP, TCP/UDP Stream, OSI PI/AVEVA PI..."
+  },
+  {
+    section: "Tính năng Kỹ thuật & Connector",
+    num: 19,
+    text: "Băng thông tối THIỂU của dòng thiết bị DIN Rail (dành cho tủ điện công nghiệp) là bao nhiêu?",
+    tag: "sale",
+    options: [
+      "1 Mbps",
+      "10 Mbps",
+      "100 Mbps",
+      "50 Mbps"
+    ],
+    correct: 1,
+    explain: "Dòng DIN Rail có băng thông nhỏ hơn (10M, 50M), phù hợp với tủ điện công nghiệp. Dòng Rackmount 1U dành cho server room với băng thông 100M, 1G, 10G."
+  },
+  {
+    section: "Tính năng Kỹ thuật & Connector",
+    num: 20,
+    text: "OPSWAT có thể kết nối liền mạch với sản phẩm nào trong hệ sinh thái của chính hãng?",
+    tag: "sale",
+    options: [
+      "Palo Alto Cortex XDR và Crowdstrike Falcon",
+      "MetaDefender Kiosk, MetaDefender Client và MetaDefender Core",
+      "Cisco ISE và FortiNAC",
+      "Splunk SIEM và IBM QRadar"
+    ],
+    correct: 1,
+    explain: "Hệ sinh thái OPSWAT: Kiosk (kiểm soát thiết bị di động mang vào nhà máy), Client (agent trên máy trạm), Core (engine quét đa AV) kết hợp với Diode/BSG tạo lớp bảo vệ toàn diện."
+  },
+
+  // === PHẦN 5: BÁN HÀNG & LICENSING ===
+  {
+    section: "Bán hàng, Sizing & Licensing",
+    num: 21,
+    text: "Thiết bị OPSWAT luôn phải báo giá như thế nào về số lượng?",
+    tag: "lic",
+    options: [
+      "Theo từng node đơn lẻ, khách hàng tự chọn cần bao nhiêu.",
+      "Luôn đi theo cặp: 1 Node BLUE (OT) + 1 Node RED (IT). Phải báo giá theo cặp.",
+      "Theo bộ 4 thiết bị để đảm bảo dự phòng HA (High Availability).",
+      "Theo cluster tối thiểu 3 node để cân bằng tải."
+    ],
+    correct: 1,
+    explain: "Quy tắc sizing bắt buộc: 1 cặp = 1 Node BLUE + 1 Node RED. Sales mới hay quên điều này khi lập BOM, dẫn đến báo giá thiếu."
+  },
+  {
+    section: "Bán hàng, Sizing & Licensing",
+    num: 22,
+    text: "Mô hình bản quyền nào của OPSWAT phù hợp nhất với các dự án hạ tầng nhà nước tại Việt Nam?",
+    tag: "lic",
+    options: [
+      "SaaS (Subscription dựa trên số lượng thiết bị OT được quản lý).",
+      "License Vĩnh viễn (Perpetual License) — mua đứt một lần, hàng năm chỉ đóng phí Maintenance/Support.",
+      "Pay-per-use dựa trên lưu lượng dữ liệu thực tế truyền qua.",
+      "License theo thời hạn 3 năm với giá cố định."
+    ],
+    correct: 1,
+    explain: "Perpetual License là mô hình chuẩn mực cho dự án công/nhà nước VN: ngân sách đầu tư một lần, không phụ thuộc vendor hàng năm. Đây là điểm bán hàng quyết định khi đấu thầu."
+  },
+  {
+    section: "Bán hàng, Sizing & Licensing",
+    num: 23,
+    text: "Khi khách hàng cần nâng cấp băng thông từ 1G lên 10G trong tương lai, họ phải làm gì?",
+    tag: "lic",
+    options: [
+      "Mua thiết bị phần cứng mới hoàn toàn (không tái sử dụng được thiết bị cũ).",
+      "Chỉ cần mua thêm Software License Key để kích hoạt băng thông cao hơn, không cần thay phần cứng.",
+      "Thêm module phần cứng mở rộng vào chassis hiện tại.",
+      "Nâng cấp cần có kỹ sư OPSWAT đến trực tiếp flash firmware thiết bị."
+    ],
+    correct: 1,
+    explain: "Đây là lợi thế TCO lớn: phần cứng tái sử dụng, chỉ mua thêm license phần mềm. Đây là điểm bán hàng quan trọng khi khách lo ngại chi phí đầu tư dài hạn."
+  },
+  {
+    section: "Bán hàng, Sizing & Licensing",
+    num: 24,
+    text: "Để định hình BOM cho một dự án OPSWAT, Sales cần làm rõ những thông tin nào với khách hàng?",
+    tag: "sale",
+    options: [
+      "Số lượng user sử dụng hệ thống SCADA và thương hiệu PLC đang dùng.",
+      "Chọn dòng thiết bị (DIN Rail hay 1U), loại gateway (USG hay BSG), số cặp thiết bị cần, và băng thông phù hợp với throughput thực tế.",
+      "Số lượng địa chỉ IP trong vùng OT và loại Firewall đang dùng.",
+      "Tuổi thọ thiết bị OT hiện tại và kế hoạch refresh chu kỳ 5 năm."
+    ],
+    correct: 1,
+    explain: "4 yếu tố sizing chuẩn: (1) Form factor - DIN Rail hay 1U, (2) Loại - USG hay BSG, (3) Số lượng - luôn tính theo cặp, (4) Băng thông - theo throughput thực tế."
+  },
+  {
+    section: "Bán hàng, Sizing & Licensing",
+    num: 25,
+    text: "Điểm khác biệt chi phí chính giữa OPSWAT và các Diode thế hệ cũ (Owl, Waterfall) là gì?",
+    tag: "sale",
+    options: [
+      "OPSWAT đắt hơn nhưng có nhiều tính năng hơn.",
+      "Diode thế hệ cũ rất đắt và phải mua license rời đắt đỏ cho từng connector giao thức.",
+      "Hai bên tương đương về giá, OPSWAT chỉ nhỉnh hơn về hỗ trợ kỹ thuật.",
+      "Owl và Waterfall có mô hình SaaS rẻ hơn OPSWAT Perpetual License."
+    ],
+    correct: 1,
+    explain: "Đối thủ cũ rất đắt do: (1) Phần cứng proprietary giá cao, (2) Mỗi connector phải mua license riêng. OPSWAT: connector tích hợp sẵn miễn phí + form factor linh hoạt → TCO tổng thể cạnh tranh hơn rõ rệt."
+  },
+
+  // === PHẦN 6: USE CASES & ỨNG DỤNG THỰC TẾ ===
+  {
+    section: "Use Cases & Ứng dụng thực tế",
+    num: 26,
+    text: "Khách hàng trong ngành điện lực muốn gửi dữ liệu vận hành nhà máy từ hệ thống SCADA ra server phân tích ở văn phòng IT. Nên tư vấn giải pháp nào?",
+    tag: "usg",
+    options: [
+      "Cài đặt VPN Site-to-Site với xác thực certificate.",
+      "Optical Diode (USG) để đẩy dữ liệu một chiều từ OT ra IT, đảm bảo không có đường nào phản hồi về OT.",
+      "BSG để đồng bộ dữ liệu hai chiều giữa hai hệ thống.",
+      "Tăng cường Firewall thế hệ mới NGFW kết hợp IPS/IDS."
+    ],
+    correct: 1,
+    explain: "Use case đẩy dữ liệu một chiều (historian data, operational metrics) là core use case của USG. Không cần phản hồi → USG là lựa chọn bảo mật tuyệt đối."
+  },
+  {
+    section: "Use Cases & Ứng dụng thực tế",
+    num: 27,
+    text: "Khách hàng tham chiếu uy tín tại Việt Nam đã dùng giải pháp OPSWAT là đơn vị nào?",
+    tag: "sale",
+    options: [
+      "Viettel và VNPT",
+      "Bộ Công An và Tập đoàn Điện lực Việt Nam (EVN)",
+      "Ngân hàng Nhà nước Việt Nam và VinGroup",
+      "Petrovietnam và Samsung Việt Nam"
+    ],
+    correct: 1,
+    explain: "Bộ Công An (Cục nghiệp vụ) và EVN (điện lực, nhà máy thủy điện/nhiệt điện) là reference case mạnh nhất để chốt deal với khách hàng nhà nước và năng lượng."
+  },
+  {
+    section: "Use Cases & Ứng dụng thực tế",
+    num: 28,
+    text: "Thu thập và gửi luồng Windows Event Logs từ máy chủ OT ra SIEM/SOC là use case phù hợp với sản phẩm nào?",
+    tag: "usg",
+    options: [
+      "BSG, vì Windows Event Log yêu cầu giao tiếp hai chiều với SIEM.",
+      "Optical Diode (USG), vì đây là luồng log một chiều ra SOC không cần phản hồi từ SIEM.",
+      "Cả USG và BSG đều không phù hợp — cần dùng Security Broker riêng.",
+      "Firewall với rule permit cho port WinRM."
+    ],
+    correct: 1,
+    explain: "Log streaming (Syslog, Windows Event Log, SNMP Trap...) luôn là luồng một chiều từ thiết bị ra SOC/SIEM. USG là giải pháp hoàn hảo cho tất cả các use case này."
+  },
+  {
+    section: "Use Cases & Ứng dụng thực tế",
+    num: 29,
+    text: "Ngành công nghiệp nào KHÔNG phải target khách hàng điển hình cho OPSWAT Diode/BSG?",
+    tag: "sale",
+    options: [
+      "Điện lực và lọc dầu (Energy & Oil/Gas)",
+      "Thương mại điện tử bán lẻ (eCommerce & Retail)",
+      "Quốc phòng và an ninh quốc gia",
+      "Hạ tầng nước và xử lý nước thải"
+    ],
+    correct: 1,
+    explain: "eCommerce không có hệ thống OT/ICS cần bảo vệ. Target market của OPSWAT Diode/BSG là hạ tầng trọng yếu: điện lực, dầu khí, nước, quốc phòng, giao thông, hóa chất."
+  },
+  {
+    section: "Use Cases & Ứng dụng thực tế",
+    num: 30,
+    text: "Khách hàng phản bác: 'Chúng tôi đã có Firewall Palo Alto thế hệ mới, tại sao cần thêm OPSWAT?' — Phản luận bán hàng chuẩn nhất là gì?",
+    tag: "sale",
+    options: [
+      "Palo Alto không hỗ trợ giao thức OT, còn OPSWAT thì có.",
+      "Firewall dù tốt đến đâu vẫn là phần mềm — một Zero-day hay cấu hình sai là mạng OT bị xâm nhập ngay. OPSWAT cô lập cứng bằng vật lý và phá giao thức, loại bỏ hoàn toàn lớp rủi ro phần mềm này.",
+      "Palo Alto không đạt chuẩn IEC 62443 nên không hợp lệ về pháp lý.",
+      "OPSWAT giá rẻ hơn Palo Alto nhiều nên là lựa chọn tối ưu về chi phí."
+    ],
+    correct: 1,
+    explain: "Phản luận vàng: Firewall (kể cả Palo Alto NGFW) = phần mềm = có thể bị khai thác. OPSWAT Diode = cô lập vật lý = không thể bypass bằng bất kỳ phần mềm nào. Hai lớp bảo vệ bổ sung cho nhau, không thay thế nhau."
+  }
+];
+
+const CATEGORIES = [
+  "Tổng quan & Bối cảnh mối đe dọa",
+  "Optical Diode — Unidirectional Security Gateway (USG)",
+  "Bilateral Security Gateway (BSG)",
+  "Tính năng Kỹ thuật & Connector",
+  "Bán hàng, Sizing & Licensing",
+  "Use Cases & Ứng dụng thực tế"
+];
+
+const TAG_MAP = { usg: "USG", bsg: "BSG", lic: "License", sale: "Sales" };
+const userAnswers = {};
+let submitted = false;
+
+function buildQuiz() {
+  const body = document.getElementById('quiz-body');
+  let currentSection = '';
+  let html = '';
+
+  QUESTIONS.forEach((q, i) => {
+    if (q.section !== currentSection) {
+      currentSection = q.section;
+      const secIndex = CATEGORIES.indexOf(q.section) + 1;
+      html += `<div class="section-label">Phần ${secIndex}: ${q.section}</div>`;
+    }
+
+    const tagClass = 'tag-' + q.tag;
+    const tagLabel = TAG_MAP[q.tag] || q.tag;
+
+    html += `<div class="q-card" id="qcard-${i}">
+      <div class="q-header">
+        <div class="q-num">Q${String(q.num).padStart(2,'0')}</div>
+        <div class="q-text">${q.text} <span class="q-tag ${tagClass}">${tagLabel}</span></div>
+      </div>
+      <div class="options">`;
+
+    const letters = ['A','B','C','D'];
+    q.options.forEach((opt, j) => {
+      html += `<div class="opt" id="opt-${i}-${j}" onclick="selectAnswer(${i},${j})">
+        <span class="opt-letter">${letters[j]}</span>
+        <span>${opt}</span>
+      </div>`;
+    });
+
+    html += `</div>
+      <div class="feedback" id="fb-${i}"></div>
+    </div>`;
+  });
+
+  body.innerHTML = html;
+  updateProgress();
+}
+
+function selectAnswer(qIndex, optIndex) {
+  if (submitted) return;
+
+  const wasAnswered = userAnswers[qIndex] !== undefined;
+  userAnswers[qIndex] = optIndex;
+
+  const letters = ['A','B','C','D'];
+  for (let j = 0; j < 4; j++) {
+    const el = document.getElementById(`opt-${qIndex}-${j}`);
+    el.classList.remove('selected');
+  }
+  document.getElementById(`opt-${qIndex}-${optIndex}`).classList.add('selected');
+
+  const card = document.getElementById(`qcard-${qIndex}`);
+  card.classList.add('answered');
+
+  updateProgress();
+}
+
+function updateProgress() {
+  const answered = Object.keys(userAnswers).length;
+  const total = QUESTIONS.length;
+  const pct = Math.round((answered / total) * 100);
+
+  document.getElementById('prog-text').textContent = `${answered} / ${total} đã trả lời`;
+  document.getElementById('prog-pct').textContent = `${pct}%`;
+  document.getElementById('prog-fill').style.width = pct + '%';
+
+  const btn = document.getElementById('btn-submit');
+  const hint = document.getElementById('submit-hint');
+
+  if (answered === total) {
+    btn.disabled = false;
+    hint.textContent = `✓ Đã trả lời đủ ${total} câu — sẵn sàng nộp bài`;
+    hint.style.color = 'var(--emerald)';
+  } else {
+    btn.disabled = false;
+    hint.textContent = `Còn ${total - answered} câu chưa trả lời — có thể nộp bài nhưng câu bỏ trống sẽ tính sai`;
+    hint.style.color = 'var(--text-muted)';
+  }
+}
+
+function submitQuiz() {
+  if (submitted) return;
+  submitted = true;
+
+  document.getElementById('btn-submit').disabled = true;
+
+  let correct = 0;
+  const catResults = {};
+  CATEGORIES.forEach(c => catResults[c] = { correct: 0, total: 0 });
+
+  QUESTIONS.forEach((q, i) => {
+    const chosen = userAnswers[i];
+    const isCorrect = chosen === q.correct;
+    if (isCorrect) correct++;
+
+    catResults[q.section].total++;
+    if (isCorrect) catResults[q.section].correct++;
+
+    const card = document.getElementById(`qcard-${i}`);
+    const letters = ['A','B','C','D'];
+
+    card.classList.remove('answered');
+    card.classList.add(isCorrect ? 'correct' : 'incorrect');
+
+    for (let j = 0; j < 4; j++) {
+      const el = document.getElementById(`opt-${i}-${j}`);
+      if (!el) continue;
+      el.classList.add('disabled');
+      el.classList.remove('selected');
+      if (j === q.correct) el.classList.add('correct-ans');
+      else if (chosen === j && !isCorrect) el.classList.add('wrong-ans');
+    }
+
+    const fb = document.getElementById(`fb-${i}`);
+    fb.classList.add('show');
+    if (isCorrect) {
+      fb.classList.add('ok');
+      fb.innerHTML = `✓ Đúng — ${q.explain}`;
+    } else {
+      fb.classList.add('bad');
+      const correctLetter = letters[q.correct];
+      fb.innerHTML = `✗ Sai (Đáp án đúng: ${correctLetter}) — ${q.explain}`;
+    }
+  });
+
+  const total = QUESTIONS.length;
+  const pct = Math.round((correct / total) * 100);
+  const pass = pct >= 75;
+
+  const panel = document.getElementById('result-panel');
+  panel.classList.add('show');
+  panel.classList.add(pass ? 'pass-result' : 'fail-result');
+
+  document.getElementById('res-badge').textContent = pass ? '✓ ĐẠT CHUẨN — PASS' : '✗ CHƯA ĐẠT — FAIL';
+  document.getElementById('res-score').textContent = pct + '%';
+  document.getElementById('res-label').textContent = `${correct} / ${total} câu đúng`;
+
+  const statsHtml = `
+    <div class="stat good"><div class="s-val">${correct}</div><div class="s-lbl">Đúng</div></div>
+    <div class="stat bad"><div class="s-val">${total - correct}</div><div class="s-lbl">Sai</div></div>
+    <div class="stat neutral"><div class="s-val">75%</div><div class="s-lbl">Ngưỡng Pass</div></div>
+    <div class="stat ${pass ? 'good' : 'bad'}"><div class="s-val">${pct >= 75 ? 'PASS' : 'FAIL'}</div><div class="s-lbl">Kết quả</div></div>
+  `;
+  document.getElementById('res-stats').innerHTML = statsHtml;
+
+  let msg = '';
+  if (pct >= 90) msg = 'Xuất sắc! Mày nắm vững giải pháp ở mức tư vấn chuyên sâu. Sẵn sàng solo khách hàng.';
+  else if (pct >= 75) msg = 'Đạt chuẩn. Nền tảng kiến thức đủ để tư vấn. Ôn thêm các phần còn yếu để tự tin hơn khi gặp khách.';
+  else if (pct >= 50) msg = 'Chưa đạt. Cần ôn lại tài liệu, đặc biệt phần phân biệt USG/BSG và cơ chế licensing. Làm lại bài sau khi đọc kỹ.';
+  else msg = 'Cần ôn lại từ đầu. Đọc kỹ Cẩm nang Giải pháp OPSWAT trước khi thực hiện lại bài kiểm tra này.';
+
+  document.getElementById('res-msg').textContent = msg;
+
+  // Breakdown by category
+  let bHtml = '<div class="breakdown-title">Chi tiết theo chủ đề</div>';
+  CATEGORIES.forEach(cat => {
+    const r = catResults[cat];
+    const catPct = r.total > 0 ? Math.round((r.correct / r.total) * 100) : 0;
+    const shortCat = cat.replace('Optical Diode — Unidirectional Security Gateway (USG)', 'USG — Optical Diode')
+                        .replace('Bilateral Security Gateway (BSG)', 'BSG')
+                        .replace('Tính năng Kỹ thuật & Connector', 'Tính năng & Connector')
+                        .replace('Bán hàng, Sizing & Licensing', 'Sales & Licensing')
+                        .replace('Use Cases & Ứng dụng thực tế', 'Use Cases');
+    bHtml += `<div class="breakdown-row">
+      <span class="topic">${shortCat}</span>
+      <span class="score-detail">${r.correct}/${r.total} (${catPct}%)</span>
+    </div>`;
+  });
+  document.getElementById('breakdown').innerHTML = bHtml;
+
+  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function retryQuiz() {
+  submitted = false;
+  Object.keys(userAnswers).forEach(k => delete userAnswers[k]);
+
+  const panel = document.getElementById('result-panel');
+  panel.classList.remove('show', 'pass-result', 'fail-result');
+
+  document.getElementById('btn-submit').disabled = false;
+  document.getElementById('submit-hint').textContent = 'Hãy trả lời đủ 30 câu trước khi nộp';
+  document.getElementById('submit-hint').style.color = 'var(--text-muted)';
+
+  buildQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+buildQuiz();
+</script>
+</body>
+</html>

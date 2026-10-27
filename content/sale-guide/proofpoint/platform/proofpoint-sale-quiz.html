@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Training Quiz – Proofpoint Human-Centric Security</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --white: #ffffff;
+  --off-white: #f8fafc;
+  --light: #f1f5f9;
+  --border: #e2e8f0;
+  --muted: #64748b;
+  --text: #0f172a;
+  --text2: #334155;
+  
+  /* Proofpoint Blue Theme */
+  --primary: #0ea5e9;
+  --primary-dark: #0284c7;
+  --primary-light: #e0f2fe;
+  
+  --green: #10b981;
+  --green-light: #d1fae5;
+  --red: #ef4444;
+  --red-light: #fee2e2;
+  --orange: #f59e0b;
+  
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+  --radius: 12px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background-color: var(--off-white);
+  color: var(--text);
+  line-height: 1.6;
+  padding: 20px;
+}
+
+header {
+  text-align: center;
+  max-width: 800px;
+  margin: 20px auto 40px;
+}
+
+header h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 8px;
+}
+header h1 span { color: var(--primary); }
+header p { color: var(--muted); font-size: 15px; }
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  padding: 40px;
+  position: relative;
+}
+
+/* Header UI: Progress */
+.quiz-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px dashed var(--border);
+}
+.q-count {
+  font-weight: 600;
+  color: var(--primary);
+  background: var(--primary-light);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+.score-badge {
+  font-weight: 600;
+  color: var(--text2);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.score-badge span { color: var(--green); }
+
+/* Progress Bar */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--light);
+  border-radius: 4px;
+  margin-bottom: 30px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--primary);
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+/* Question Area */
+.question-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.option {
+  background: var(--white);
+  border: 2px solid var(--border);
+  padding: 16px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--text2);
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.option::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 2px solid var(--muted);
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+
+.option:hover { border-color: var(--primary); background: var(--primary-light); }
+
+.option.selected {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary-dark);
+}
+.option.selected::before {
+  border-color: var(--primary);
+  background: var(--primary);
+  box-shadow: inset 0 0 0 4px var(--white);
+}
+
+.option.correct {
+  border-color: var(--green);
+  background: var(--green-light);
+  color: var(--text);
+}
+.option.correct::before {
+  border-color: var(--green);
+  background: var(--green);
+  box-shadow: inset 0 0 0 4px var(--white);
+}
+
+.option.wrong {
+  border-color: var(--red);
+  background: var(--red-light);
+  color: var(--text);
+  opacity: 0.8;
+}
+.option.wrong::before {
+  border-color: var(--red);
+  background: var(--red);
+  box-shadow: inset 0 0 0 4px var(--white);
+}
+
+/* Explanation */
+.explanation {
+  margin-top: 24px;
+  padding: 16px 20px;
+  background: var(--light);
+  border-left: 4px solid var(--primary);
+  border-radius: 0 8px 8px 0;
+  font-size: 14px;
+  color: var(--text2);
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+.explanation strong { color: var(--text); }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Controls */
+.controls {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
+}
+button {
+  background: var(--primary);
+  color: var(--white);
+  border: none;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+button:hover { background: var(--primary-dark); }
+button:disabled { background: var(--muted); cursor: not-allowed; opacity: 0.5; }
+
+/* Result Overlay */
+.overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: var(--white);
+  border-radius: var(--radius);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+  z-index: 10;
+}
+.overlay.show { display: flex; animation: fadeIn 0.4s ease; }
+
+.result-ring {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  border: 12px solid var(--light);
+}
+.result-ring.lvl-a { border-color: var(--green); color: var(--green); }
+.result-ring.lvl-b { border-color: var(--primary); color: var(--primary); }
+.result-ring.lvl-c { border-color: var(--orange); color: var(--orange); }
+.result-ring.lvl-d { border-color: var(--red); color: var(--red); }
+
+.res-grade { font-size: 14px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+.res-title { font-size: 28px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+.res-sub { font-size: 15px; color: var(--muted); margin-bottom: 30px; max-width: 400px; }
+
+@media (max-width: 600px) {
+  .container { padding: 24px; }
+  .quiz-header { flex-direction: column; gap: 12px; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1><span>Proofpoint</span> Sales Assessment</h1>
+  <p>Bài kiểm tra kiến thức dành cho Team Sales (> 75% để vượt qua)</p>
+</header>
+
+<div class="container" id="quiz-container">
+  
+  <div class="quiz-header">
+    <div class="q-count" id="q-count">Câu hỏi 1 / 30</div>
+    <div class="score-badge">Điểm: <span id="score-display">0</span></div>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="progress-fill"></div>
+  </div>
+
+  <div class="question-title" id="question">Đang tải câu hỏi...</div>
+  
+  <div class="options" id="options">
+    <!-- Options injected by JS -->
+  </div>
+
+  <div class="explanation" id="explanation"></div>
+
+  <div class="controls">
+    <button id="btn-next" disabled>Xác nhận</button>
+  </div>
+
+  <!-- Result Screen -->
+  <div class="overlay" id="overlay">
+    <div class="res-grade" id="res-grade">KẾT QUẢ</div>
+    <div class="result-ring" id="res-ring">0%</div>
+    <div class="res-title" id="res-title">Hoàn thành!</div>
+    <div class="res-sub" id="res-sub">...</div>
+    <button onclick="location.reload()" style="background:var(--text);">Thi lại</button>
+  </div>
+</div>
+
+<script>
+const quizData = [
+  {
+    q: "Triết lý bảo mật cốt lõi tạo nên sự khác biệt của Proofpoint so với các hãng bảo mật truyền thống là gì?",
+    o: [
+      "A. Hạ tầng làm trung tâm (Infrastructure-centric)",
+      "B. Con người làm trung tâm (Human-centric)",
+      "C. Kiến trúc Zero Trust Network",
+      "D. Điểm cuối làm trung tâm (Endpoint-centric)"
+    ],
+    a: 1,
+    e: "Proofpoint áp dụng triết lý <strong>Human-centric Security</strong>, bảo vệ điểm yếu lớn nhất của tổ chức là Con người và Dữ liệu họ tạo ra, thay vì chỉ tập trung vào hạ tầng mạng."
+  },
+  {
+    q: "Proofpoint đang nắm giữ vị trí số 1 toàn cầu về mảng giải pháp nào dưới đây?",
+    o: [
+      "A. Tường lửa thế hệ mới (NGFW)",
+      "B. Giải pháp phòng chống mã độc (EDR)",
+      "C. Giải pháp chống thất thoát dữ liệu (DLP)",
+      "D. Quản lý danh tính người dùng (IAM)"
+    ],
+    a: 2,
+    e: "Theo tài liệu, Proofpoint có <strong>thị phần DLP (Data Loss Prevention) số 1 toàn cầu</strong> với 50% Fortune 100 đang sử dụng."
+  },
+  {
+    q: "Để thuyết phục C-Level/CISO, sales nên nhấn mạnh thống kê nào sau đây về nguồn gốc các cuộc tấn công?",
+    o: [
+      "A. 65% cuộc tấn công bắt đầu từ Endpoint",
+      "B. 80% cuộc tấn công do cấu hình sai Cloud",
+      "C. 94% các cuộc tấn công bắt đầu từ Email",
+      "D. 99% cuộc tấn công đến từ việc dùng chung mật khẩu"
+    ],
+    a: 2,
+    e: "Nỗi đau lớn nhất: <strong>94% các cuộc tấn công bắt đầu từ Email</strong>. Hacker đang 'hack' con người thay vì hack hạ tầng."
+  },
+  {
+    q: "Sự bùng nổ của Generative AI (ChatGPT) tạo ra mối đe dọa nào đặc biệt nguy hiểm trên môi trường Email doanh nghiệp?",
+    o: [
+      "A. Tấn công từ chối dịch vụ (DDoS) vào Mail Server",
+      "B. Mã độc Ransomware lây lan siêu tốc",
+      "C. Tạo ra các email lừa đảo BEC hoàn hảo, không có lỗi chính tả và cá nhân hóa cao",
+      "D. Đánh sập hệ thống xác thực đa bước (MFA)"
+    ],
+    a: 2,
+    e: "GenAI giúp kẻ tấn công soạn thảo các email lừa đảo BEC (Business Email Compromise) cực kỳ tinh vi, văn phong chuẩn mực và cá nhân hóa cao độ khiến người dùng dễ dàng sập bẫy."
+  },
+  {
+    q: "Tính năng TAP (Targeted Attack Protection) sử dụng công nghệ gì để xử lý mã độc chưa từng biết đến (Zero-day)?",
+    o: [
+      "A. Lọc DNS (DNS Filtering)",
+      "B. Môi trường giả lập (Sandbox)",
+      "C. Nhận diện chữ ký (Signature-based AV)",
+      "D. Khóa cổng kết nối (Port Blocking)"
+    ],
+    a: 1,
+    e: "TAP sử dụng <strong>Sandbox</strong> để phân tích hành vi của các file đính kèm và URL độc hại chưa từng biết đến (Zero-day)."
+  },
+  {
+    q: "Khách hàng nói: 'Chúng tôi đang dùng gói bảo mật mặc định của Microsoft 365 E5, thế là đủ rồi'. Luận điểm phản biện MẠNH NHẤT là gì?",
+    o: [
+      "A. Microsoft không có tính năng quét virus đính kèm",
+      "B. Microsoft là mục tiêu số 1 của Hacker; dùng Proofpoint giúp chặn đe dọa trước khi chạm đến MS và cung cấp tầm nhìn VAP",
+      "C. Microsoft E5 đắt hơn Proofpoint rất nhiều",
+      "D. Proofpoint là giải pháp mã nguồn mở nên an toàn hơn"
+    ],
+    a: 1,
+    e: "Hệ sinh thái MS365 là mục tiêu lớn nhất của Hacker. Bảo mật mặc định thường để lọt BEC và Ransomware. Proofpoint cung cấp lớp chặn ngoài Gateway và tính năng <strong>VAP (Very Attacked People)</strong> mà MS không có."
+  },
+  {
+    q: "Tính năng nào SAU ĐÂY KHÔNG thuộc bộ giải pháp Đào tạo nhận thức bảo mật (PSAT) của Proofpoint?",
+    o: [
+      "A. Phishing Simulations (Mô phỏng gửi email lừa đảo)",
+      "B. Quét lỗ hổng mã nguồn ứng dụng (DAST)",
+      "C. Hơn 300+ modules học liệu đào tạo",
+      "D. CLEAR Workflow (Nút báo cáo email đáng ngờ)"
+    ],
+    a: 1,
+    e: "Quét lỗ hổng ứng dụng (DAST) không thuộc mảng PSAT. PSAT tập trung vào nâng cao nhận thức con người qua mô phỏng lừa đảo và bài giảng."
+  },
+  {
+    q: "Giải pháp Proofpoint Endpoint DLP/ITM cung cấp tính năng gì để tạo 'bằng chứng không thể chối cãi' cho bộ phận HR và Pháp chế?",
+    o: [
+      "A. Keylogger (Ghi lại thao tác bàn phím)",
+      "B. Phân tích gói tin mạng nội bộ",
+      "C. Screen Capture (Quay màn hình khi có hành vi rủi ro)",
+      "D. Tự động mã hóa toàn bộ ổ cứng"
+    ],
+    a: 2,
+    e: "Tính năng <strong>Screen Capture</strong> cho phép xuất file PDF đính kèm bằng chứng ảnh chụp màn hình rõ ràng, giúp HR và Pháp chế dễ dàng làm việc khi có vi phạm nội bộ."
+  },
+  {
+    q: "Khách hàng e ngại Endpoint DLP sẽ gây chậm máy, lỗi màn hình xanh (BSOD). Proofpoint xử lý vấn đề này như thế nào?",
+    o: [
+      "A. Agent của Proofpoint hoạt động ở User-mode, chỉ tốn 1-2% CPU, không gây xung đột như Kernel-mode cũ",
+      "B. Proofpoint là giải pháp Agentless (Không cần cài đặt gì)",
+      "C. Agent chỉ chạy vào ban đêm khi nhân viên không làm việc",
+      "D. Chạy trên một phần cứng độc lập cắm vào USB"
+    ],
+    a: 0,
+    e: "Agent của Proofpoint ITM hoạt động ở <strong>User-mode</strong>, cực kỳ nhẹ nhàng (1-2% CPU) và không can thiệp sâu hệ thống, tránh lỗi BSOD thường thấy ở các hãng DLP cũ (Symantec, McAfee)."
+  },
+  {
+    q: "Doanh nghiệp Tài chính cần lưu trữ toàn bộ lịch sử chat trên MS Teams, Zoom, WhatsApp để tuân thủ pháp luật. Sản phẩm nào của Proofpoint đáp ứng điều này?",
+    o: [
+      "A. Proofpoint TAP",
+      "B. Proofpoint ITM",
+      "C. Proofpoint Core Email",
+      "D. Proofpoint Capture & Archiving"
+    ],
+    a: 3,
+    e: "<strong>Proofpoint Capture & Archiving</strong> chuyên dùng để ghi nhận, chuẩn hóa và lưu trữ giao tiếp từ các nền tảng chat/họp trực tuyến phục vụ Compliance & e-Discovery."
+  },
+  {
+    q: "Công nghệ cốt lõi nào giúp Proofpoint chặn các cuộc tấn công lừa đảo qua mã QR Code (Quishing) lén lút chèn trong email?",
+    o: [
+      "A. OCR (Optical Character Recognition) cơ bản",
+      "B. Computer Vision (Nhận diện hình ảnh bằng thị giác máy tính)",
+      "C. Chữ ký Antivirus (Signature)",
+      "D. Sandbox"
+    ],
+    a: 1,
+    e: "Proofpoint sử dụng AI <strong>Computer Vision</strong> độc quyền để 'nhìn' và bóc tách các mã QR độc hại (Quishing) ẩn trong nội dung ảnh - điều mà đa số SEG khác bỏ sót."
+  },
+  {
+    q: "Trong thuật ngữ của Proofpoint, 'VAP' có nghĩa là gì?",
+    o: [
+      "A. Vulnerability Assessment Platform",
+      "B. Virtual Antivirus Protection",
+      "C. Very Attacked People (Những cá nhân bị tấn công nhiều nhất)",
+      "D. Verified Access Portal"
+    ],
+    a: 2,
+    e: "<strong>VAP (Very Attacked People)</strong> giúp CISO chỉ điểm chính xác ai trong tổ chức đang là mục tiêu bị nhắm đến nhiều nhất để áp dụng chính sách bảo vệ nghiêm ngặt hơn."
+  },
+  {
+    q: "Hacker gửi một email lừa đảo mạo danh CEO yêu cầu chuyển tiền gấp, KHÔNG chứa link, KHÔNG đính kèm file độc hại. Proofpoint dùng công nghệ gì để chặn nó?",
+    o: [
+      "A. Lọc địa chỉ IP Blacklist",
+      "B. Nexus Language Model (LLM) phân tích 'Ý định' và 'Sự cấp bách'",
+      "C. Quét chữ ký virus trong nội dung mail",
+      "D. Kiểm tra lịch sử duyệt web của người gửi"
+    ],
+    a: 1,
+    e: "Sử dụng <strong>Nexus Language Model (LM)</strong>, hệ thống AI sẽ phân tích văn phong, 'Ý định' (Intent) và tính 'Cấp bách' (Urgency) để chặn các email BEC lừa đảo qua giao tiếp thông thường."
+  },
+  {
+    q: "Khách hàng nói: 'Hãng SEG X giá rẻ hơn mà check list tính năng trên giấy cũng y hệt Proofpoint'. Sales nên phản hồi thế nào?",
+    o: [
+      "A. Đồng ý giảm giá ngay 50% để giữ deal",
+      "B. Tặng kèm gói Training PSAT miễn phí trọn đời",
+      "C. Khẳng định 'Checkbox trên giấy không phản ánh thực tế bảo vệ' và đề nghị chạy PoC song song",
+      "D. Khuyên khách hàng dùng giải pháp rẻ tiền đó"
+    ],
+    a: 2,
+    e: "Đối mặt với so sánh tính năng trên giấy, cách hiệu quả nhất là <strong>chạy PoC (Proof of Concept) song song</strong>. Proofpoint sẽ bắt được những mối đe dọa thực tế mà SEG giá rẻ để lọt."
+  },
+  {
+    q: "Khách hàng chuộng giải pháp bảo mật Email chỉ dùng API (API-only / ICES) vì không muốn đổi MX Record. Proofpoint có đáp ứng được không?",
+    o: [
+      "A. Không, Proofpoint bắt buộc phải đổi MX Record",
+      "B. Có hỗ trợ triển khai qua API, nhưng Sales nên tư vấn chặn tại Gateway (MX) vẫn là lớp phòng thủ vững chắc toàn diện hơn",
+      "C. Có hỗ trợ API nhưng tính thêm phí license gấp đôi",
+      "D. Không, Proofpoint chỉ triển khai dạng thiết bị phần cứng (Hardware)"
+    ],
+    a: 1,
+    e: "Proofpoint <strong>có hỗ trợ triển khai API</strong>. Tuy nhiên, giải pháp API-only có tầm nhìn hẹp, không chặn được mối đe dọa trước khi vào Inbox. Kết hợp cả Gateway và API là tốt nhất."
+  },
+  {
+    q: "Mô hình cấp phép (Licensing) cho các sản phẩm của Proofpoint được tính dựa trên đơn vị nào?",
+    o: [
+      "A. Số lượng máy chủ kết nối",
+      "B. Lưu lượng băng thông (GB/tháng)",
+      "C. Số lượng thiết bị (Devices)",
+      "D. Số lượng người dùng (Users)"
+    ],
+    a: 3,
+    e: "Theo tài liệu, Proofpoint cấp phép (License) đơn giản, dựa trên <strong>số lượng người dùng (Users)</strong>, không đếm số lượng thiết bị hay máy chủ."
+  },
+  {
+    q: "Trong gói PSAT Enterprise, tính năng 'TAP Guided Training' có chức năng gì?",
+    o: [
+      "A. Tự động gửi bài học/đào tạo cho những người dùng vừa bị tấn công lừa đảo",
+      "B. Tự tạo video hoạt hình 3D cho bài giảng",
+      "C. Chặn email spam",
+      "D. Khởi động lại máy tính người dùng khi họ mở sai link"
+    ],
+    a: 0,
+    e: "<strong>TAP Guided Training</strong> tự động gửi các bài học tương ứng cho người dùng ngay sau khi họ vô tình click vào hoặc nhận được một email tấn công thực tế."
+  },
+  {
+    q: "Để tiếp cận khách hàng mới và tạo Business Case thuyết phục, công cụ/chương trình nào của Proofpoint được khuyến nghị sử dụng nhất?",
+    o: [
+      "A. Chạy rà soát mạng diện rộng (Network Pen-test)",
+      "B. Chương trình ERRA (Email Rapid Risk Assessment) hoặc mô phỏng lừa đảo miễn phí",
+      "C. Cài đặt dùng thử Endpoint DLP trên 1000 máy",
+      "D. Chạy chiến dịch giảm giá 50% trong lần đầu gặp"
+    ],
+    a: 1,
+    e: "Chạy đánh giá <strong>ERRA</strong> giúp phát hiện các lỗ hổng/email độc hại đang thực sự tồn tại trong hòm thư của khách hàng, từ đó tạo nhu cầu cấp thiết để mua hàng."
+  },
+  {
+    q: "Tính năng 'Nexus People Risk Explorer' (phân tích rủi ro con người) nằm trong gói bản quyền nào của sản phẩm PSAT?",
+    o: [
+      "A. Chỉ có ở gói PSAT Standard",
+      "B. Bán lẻ thành một License riêng biệt",
+      "C. Có ở gói PSAT Enterprise",
+      "D. Có sẵn trong tính năng mặc định của Microsoft 365"
+    ],
+    a: 2,
+    e: "Tính năng cao cấp <strong>Nexus People Risk Explorer</strong> được đóng gói kèm trong License của bản <strong>PSAT Enterprise</strong>."
+  },
+  {
+    q: "Công nghệ 'Relationship Graph' (Phân tích mối quan hệ) của Proofpoint hoạt động dựa trên nguyên lý nào?",
+    o: [
+      "A. Phân tích độ mạnh yếu của mật khẩu người dùng",
+      "B. Đánh giá rủi ro dựa trên tần suất giao tiếp, lịch sử và độ tin cậy của domain giữa người gửi và người nhận",
+      "C. Quét các thiết bị IoT trong cùng một mạng WiFi",
+      "D. Theo dõi ai gửi kết bạn trên Facebook cho nhân viên"
+    ],
+    a: 1,
+    e: "<strong>Relationship Graph</strong> biết được người gửi là ai, họ có thường xuyên giao tiếp với người nhận không, domain mới tạo hay đã lâu để đưa ra quyết định đánh giá mức độ rủi ro của Email."
+  },
+  {
+    q: "Tính năng CLEAR Workflow (Automated Email Remediation) mang lại giá trị gì lớn nhất?",
+    o: [
+      "A. Khôi phục mật khẩu tự động cho nhân viên IT",
+      "B. Khi 1 nhân viên báo cáo mail đáng ngờ, hệ thống tự động phân tích và xóa sạch mail đó khỏi hòm thư của TOÀN BỘ tổ chức",
+      "C. Tự động mã hóa email trước khi gửi ra ngoài",
+      "D. Xóa các email spam quá hạn 30 ngày"
+    ],
+    a: 1,
+    e: "Với <strong>CLEAR Workflow</strong>, chỉ cần một người bấm nút báo cáo (PhishAlarm), hệ thống sẽ phân tích và nếu là mã độc, nó sẽ tự động lôi email đó ra khỏi Inbox của mọi nhân viên khác."
+  },
+  {
+    q: "Mạng lưới tình báo mối đe dọa 'Nexus Threat Graph' của Proofpoint thu thập dữ liệu từ bao nhiêu khách hàng trên toàn cầu?",
+    o: [
+      "A. Khoảng 5,000",
+      "B. Khoảng 100,000",
+      "C. Hơn 200,000",
+      "D. Hơn 1,000,000"
+    ],
+    a: 2,
+    e: "Nexus Threat Graph liên tục học hỏi và thu thập tình báo từ mạng lưới hơn <strong>200,000 khách hàng toàn cầu</strong>, tạo ra dữ liệu lớn để AI phản ứng tức thời."
+  },
+  {
+    q: "Trong sản phẩm Endpoint DLP của Proofpoint, 'File tracking' (Theo dõi file) có thể bắt được kịch bản rò rỉ dữ liệu nào?",
+    o: [
+      "A. Tải file nhạy cảm từ Web/Cloud sau đó copy ra USB",
+      "B. Upload file từ máy tính lên một trang Web không được phép",
+      "C. Đổi tên file nhạy cảm để lách luật",
+      "D. Tất cả các ý trên"
+    ],
+    a: 3,
+    e: "DLP của Proofpoint cung cấp hơn 100+ cảnh báo hành vi, trong đó có <strong>File tracking</strong>, giúp bám sát đường đi của file (Web ra USB, Web qua Web, Đổi tên, Xóa) để chặn rò rỉ."
+  },
+  {
+    q: "Nhóm khách hàng mục tiêu lý tưởng nhất (Target Customer) của Proofpoint là những tổ chức nào?",
+    o: [
+      "A. Các Start-up có dưới 10 nhân sự",
+      "B. Các cửa hàng kinh doanh bán lẻ (F&B)",
+      "C. Khối Tài chính - Ngân hàng, Y tế, Sản xuất, Tập đoàn đa quốc gia có dữ liệu nhạy cảm",
+      "D. Học sinh sinh viên cần phần mềm diệt virus"
+    ],
+    a: 2,
+    e: "Proofpoint nhắm tới khách hàng Enterprise, đặc biệt là <strong>FSI, Y tế, Sản xuất</strong> - những nơi đòi hỏi sự tuân thủ bảo mật khắt khe và bảo vệ dữ liệu nhạy cảm."
+  },
+  {
+    q: "Một khách hàng đang dùng gói PSAT Standard muốn triển khai đào tạo cho các văn phòng ở Châu Âu và Châu Á. Gói Standard hỗ trợ ngôn ngữ giao diện như thế nào?",
+    o: [
+      "A. Chỉ hỗ trợ tiếng Anh",
+      "B. Hỗ trợ hơn 40+ ngôn ngữ không giới hạn",
+      "C. Tiếng Anh và 3 ngôn ngữ chọn thêm tùy ý",
+      "D. Người dùng phải tự dịch bằng Google Translate"
+    ],
+    a: 2,
+    e: "Theo bảng cấp phép License, gói <strong>PSAT Standard</strong> hỗ trợ Tiếng Anh và <strong>3 ngôn ngữ được chọn thêm</strong>. (Gói Enterprise mới full 40+ ngôn ngữ)."
+  },
+  {
+    q: "Sự trung thành của khách hàng (Retention Rate) đối với các giải pháp của Proofpoint là bao nhiêu?",
+    o: [
+      "A. 80%",
+      "B. 85%",
+      "C. 98%",
+      "D. 100%"
+    ],
+    a: 2,
+    e: "Tỷ lệ gia hạn (Retention rate) của Proofpoint lên tới <strong>98%</strong>, chứng minh chất lượng sản phẩm và sự hài lòng cực cao của khách hàng Doanh nghiệp lớn."
+  },
+  {
+    q: "Điều gì xảy ra nếu hệ thống bảo mật chỉ dựa vào 'Checking boxes' (Có đủ tính năng trên giấy báo giá)?",
+    o: [
+      "A. Hệ thống đó chắc chắn rẻ nhất",
+      "B. Checkbox trên giấy không phản ánh được khả năng bảo vệ thực tế trước mối đe dọa phức tạp",
+      "C. Khách hàng không cần phải làm PoC nữa",
+      "D. Tính năng trên giấy luôn hoạt động 100% như quảng cáo"
+    ],
+    a: 1,
+    e: "Sales cần giáo dục khách hàng rằng <strong>'Checking boxes doesn't equal same protection'</strong>. Cùng là tính năng Antispam/DLP nhưng cách tiếp cận AI của Proofpoint sâu và hiệu quả hơn hẳn các hãng SEG rẻ tiền."
+  },
+  {
+    q: "Theo Proofpoint, các hãng bảo mật thế hệ cũ (Legacy SEG) thường tiếp cận bài toán an toàn thông tin theo triết lý nào?",
+    o: [
+      "A. AI-centric",
+      "B. Human-centric (Lấy con người làm trung tâm)",
+      "C. Infrastructure-centric (Lấy hạ tầng thiết bị làm trung tâm)",
+      "D. Zero-Trust"
+    ],
+    a: 2,
+    e: "Các hãng SEG cũ tiếp cận theo hướng <strong>Infrastructure-centric</strong> (Cố gắng bảo vệ mạng/thiết bị). Proofpoint đi theo hướng <strong>Human-centric</strong> (Bảo vệ điểm yếu lớn nhất: Con người)."
+  },
+  {
+    q: "Khi khách hàng nói: 'Tôi muốn mua Endpoint DLP nhưng sợ cấp phép (license) theo số thiết bị thì chi phí đội lên do 1 nhân viên dùng nhiều thiết bị', Sales giải thích thế nào?",
+    o: [
+      "A. Proofpoint chỉ đếm thiết bị Windows, miễn phí cho Mac",
+      "B. Proofpoint tính License theo số lượng Người dùng (Users), không đếm số lượng thiết bị",
+      "C. Nhân viên phải chia sẻ thiết bị với nhau để tiết kiệm",
+      "D. Khách hàng phải mua thêm phần mềm quản lý thiết bị"
+    ],
+    a: 1,
+    e: "Tất cả các sản phẩm của Proofpoint đều cấp phép dựa trên <strong>số lượng người dùng (Users)</strong>, mang lại sự linh hoạt và tối ưu chi phí cho khách hàng."
+  },
+  {
+    q: "Yếu tố cốt lõi nào của mô hình ngôn ngữ lớn (LLM) được Proofpoint sử dụng trong Core Email Protection?",
+    o: [
+      "A. Phân tích độ dài của văn bản để chặn mail rác",
+      "B. Sinh ra các câu trả lời tự động cho khách hàng",
+      "C. Phân tích 'Ý định' và 'Mức độ cấp bách' trong câu chữ để nhận diện Email lừa đảo",
+      "D. Dịch thuật email theo thời gian thực"
+    ],
+    a: 2,
+    e: "LLM (Nexus Language Model) của Proofpoint không dùng để chat, mà dùng để thấu hiểu văn cảnh, <strong>phân tích Intent (Ý định lừa tiền/thông tin) và Urgency (Sự cấp bách)</strong> để chặn BEC."
+  }
+];
+
+let currentQuestion = 0;
+let score = 0;
+let selectedOption = -1;
+let answered = false;
+
+const elQuestion = document.getElementById('question');
+const elOptions = document.getElementById('options');
+const elExp = document.getElementById('explanation');
+const btnNext = document.getElementById('btn-next');
+const elQCount = document.getElementById('q-count');
+const elScore = document.getElementById('score-display');
+const elProgress = document.getElementById('progress-fill');
+
+function loadQuestion() {
+  answered = false;
+  selectedOption = -1;
+  btnNext.disabled = true;
+  btnNext.textContent = 'Xác nhận';
+  elExp.style.display = 'none';
+  
+  const qData = quizData[currentQuestion];
+  elQuestion.innerHTML = qData.q;
+  elQCount.textContent = `Câu hỏi ${currentQuestion + 1} / ${quizData.length}`;
+  elProgress.style.width = `${(currentQuestion / quizData.length) * 100}%`;
+  
+  elOptions.innerHTML = '';
+  qData.o.forEach((opt, index) => {
+    const div = document.createElement('div');
+    div.className = 'option';
+    div.innerHTML = opt;
+    div.onclick = () => selectOption(index, div);
+    elOptions.appendChild(div);
+  });
+}
+
+function selectOption(index, div) {
+  if (answered) return;
+  
+  document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+  div.classList.add('selected');
+  selectedOption = index;
+  btnNext.disabled = false;
+}
+
+btnNext.onclick = () => {
+  if (!answered) {
+    // Confirming answer
+    answered = true;
+    const qData = quizData[currentQuestion];
+    const opts = document.querySelectorAll('.option');
+    
+    if (selectedOption === qData.a) {
+      opts[selectedOption].classList.add('correct');
+      score++;
+      elScore.textContent = score;
+    } else {
+      opts[selectedOption].classList.add('wrong');
+      opts[qData.a].classList.add('correct');
+    }
+    
+    opts[selectedOption].classList.remove('selected');
+    
+    elExp.innerHTML = qData.e;
+    elExp.style.display = 'block';
+    
+    btnNext.textContent = currentQuestion === quizData.length - 1 ? 'Xem Kết Quả' : 'Câu tiếp theo';
+  } else {
+    // Moving to next
+    currentQuestion++;
+    if (currentQuestion < quizData.length) {
+      loadQuestion();
+    } else {
+      showResult();
+    }
+  }
+};
+
+function showResult() {
+  elProgress.style.width = '100%';
+  const pct = Math.round((score / quizData.length) * 100);
+  
+  document.getElementById('res-ring').textContent = pct + '%';
+  const ring = document.getElementById('res-ring');
+  ring.className = 'result-ring';
+  
+  let grade, title, sub;
+  
+  // Pass criteria is > 75% (so 76% or 23/30 questions)
+  if (pct >= 90) {
+    grade = 'XUẤT SẮC'; title = '🏆 Tuyệt vời, Top Sales!';
+    sub = 'Bạn nắm vững triết lý Human-Centric và sẵn sàng chốt deal Proofpoint lớn!';
+    ring.classList.add('lvl-a');
+  } else if (pct > 75) {
+    grade = 'ĐẠT (PASS)'; title = '👍 Rất Tốt!';
+    sub = 'Bạn đã vượt qua bài test. Nắm vững các kịch bản Battlecard sẽ giúp bạn tự tin hơn nữa.';
+    ring.classList.add('lvl-b');
+  } else if (pct >= 50) {
+    grade = 'CHƯA ĐẠT'; title = '📚 Cần Ôn Tập Thêm';
+    sub = 'Điểm qua bài là > 75%. Bạn cần đọc lại phần USPs công nghệ và định vị sản phẩm.';
+    ring.classList.add('lvl-c');
+  } else {
+    grade = 'CẦN CỐ GẮNG'; title = '💪 Hãy Ôn Luyện Ngay!';
+    sub = 'Hãy mở lại tài liệu Proofpoint Sales Playbook, đọc thật kỹ và làm lại bài kiểm tra nhé.';
+    ring.classList.add('lvl-d');
+  }
+
+  document.getElementById('res-grade').textContent = grade;
+  document.getElementById('res-title').textContent = title;
+  document.getElementById('res-sub').textContent = sub;
+  document.getElementById('overlay').classList.add('show');
+}
+
+// Start quiz
+loadQuestion();
+</script>
+
+</body>
+</html>

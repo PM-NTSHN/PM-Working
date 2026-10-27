@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales Training Quiz – Progress Kemp LoadMaster</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#f1f5f9;color:#1e293b;min-height:100vh}
+
+/* HEADER */
+.hdr{background:#0f172a;border-top:4px solid #f59e0b}
+.hdr-inner{max-width:820px;margin:0 auto;padding:1.75rem 1.25rem}
+.hdr-badge{display:inline-block;background:#f59e0b;color:#0f172a;font-size:.7rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:.25rem .75rem;border-radius:4px;margin-bottom:.75rem}
+.hdr h1{color:#fff;font-size:clamp(1.25rem,3.5vw,1.75rem);font-weight:800;line-height:1.25;margin-bottom:.5rem}
+.hdr h1 span{color:#f59e0b}
+.hdr p{color:#94a3b8;font-size:.875rem}
+.hdr-tags{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.9rem}
+.hdr-tag{background:rgba(255,255,255,.08);color:#94a3b8;font-size:.7rem;font-weight:600;padding:.2rem .6rem;border-radius:100px;border:1px solid rgba(255,255,255,.1)}
+
+/* PROGRESS */
+.prog-bar-wrap{background:#fff;border-bottom:1px solid #e2e8f0;position:sticky;top:0;z-index:40;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+.prog-bar-inner{max-width:820px;margin:0 auto;padding:.7rem 1.25rem;display:flex;align-items:center;gap:1rem}
+.prog-txt{font-size:.8rem;font-weight:700;color:#64748b;white-space:nowrap}
+.prog-track{flex:1;background:#e2e8f0;height:7px;border-radius:100px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,#f59e0b,#10b981);border-radius:100px;width:0%;transition:width .4s ease}
+.prog-counts{display:flex;gap:.9rem;flex-shrink:0}
+.prog-count{text-align:center}
+.prog-count-val{font-size:1rem;font-weight:800;line-height:1}
+.prog-count-val.c{color:#16a34a}
+.prog-count-val.w{color:#dc2626}
+.prog-count-lbl{font-size:.6rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em}
+
+/* MAIN */
+.main{max-width:820px;margin:0 auto;padding:1.75rem 1.25rem 7rem}
+
+/* SECTION */
+.sec-hdr{display:flex;align-items:center;gap:.9rem;margin:2.25rem 0 1rem}
+.sec-hdr:first-child{margin-top:0}
+.sec-pill{display:flex;align-items:center;gap:.45rem;background:#fff;border:1.5px solid #e2e8f0;border-radius:100px;padding:.28rem .85rem .28rem .45rem;font-size:.75rem;font-weight:700;color:#475569;white-space:nowrap;flex-shrink:0}
+.sec-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sec-name{font-size:.8rem;font-weight:700;color:#475569;white-space:nowrap}
+.sec-line{flex:1;height:1px;background:#e2e8f0}
+
+/* CARD */
+.card{background:#fff;border:1.5px solid #e2e8f0;border-radius:12px;margin-bottom:.85rem;overflow:hidden;transition:border-color .2s,box-shadow .2s}
+.card:hover{box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.card.open{box-shadow:0 4px 20px rgba(0,0,0,.09)}
+.card.ok{border-color:#86efac}
+.card.ng{border-color:#fca5a5}
+
+/* TRIGGER */
+.trigger{display:flex;align-items:flex-start;gap:.9rem;padding:1.1rem 1.25rem;cursor:pointer;user-select:none;transition:background .12s}
+.trigger:hover{background:#f8fafc}
+.qnum{background:#f59e0b;color:#0f172a;font-size:.68rem;font-weight:800;padding:.22rem .5rem;border-radius:5px;letter-spacing:.04em;flex-shrink:0;margin-top:.1rem}
+.qtext{flex:1;font-size:.92rem;font-weight:600;color:#1e293b;line-height:1.55}
+.arrow{flex-shrink:0;width:22px;height:22px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:.65rem;color:#94a3b8;margin-top:.1rem;transition:transform .25s,background .15s}
+.card.open .arrow{transform:rotate(180deg);background:#f59e0b;color:#0f172a}
+
+/* BODY */
+.body{display:none;padding:0 1.25rem 1.1rem}
+.card.open .body{display:block}
+
+/* OPTIONS */
+.opts{display:flex;flex-direction:column;gap:.45rem}
+.opt{display:flex;align-items:flex-start;gap:.75rem;padding:.75rem .9rem;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:9px;cursor:pointer;font-size:.875rem;font-weight:500;color:#334155;transition:border-color .12s,background .12s,color .12s;line-height:1.5}
+.opt:hover:not(.locked){border-color:#3b82f6;background:#eff6ff;color:#1d4ed8}
+.opt.locked{cursor:default;pointer-events:none}
+.opt.ok{border-color:#86efac;background:#f0fdf4;color:#15803d}
+.opt.ng{border-color:#fca5a5;background:#fef2f2;color:#b91c1c;opacity:.75}
+.opt-key{width:25px;height:25px;border-radius:5px;background:#fff;border:1.5px solid #e2e8f0;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;flex-shrink:0;color:#94a3b8;transition:background .12s,border-color .12s,color .12s;margin-top:.05rem}
+.opt:hover:not(.locked) .opt-key{background:#3b82f6;border-color:#3b82f6;color:#fff}
+.opt.ok .opt-key{background:#16a34a;border-color:#16a34a;color:#fff}
+.opt.ng .opt-key{background:#dc2626;border-color:#dc2626;color:#fff}
+
+/* TIP BOX */
+.tip{margin-top:.85rem;padding:.9rem 1rem;background:#fffbeb;border:1.5px solid #fde68a;border-radius:9px;display:none}
+.tip.show{display:block}
+.tip-hdr{font-size:.72rem;font-weight:800;color:#d97706;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem}
+.tip-body{font-size:.85rem;color:#78350f;line-height:1.7}
+.tip-body b{color:#b45309;font-weight:700}
+
+/* FOOTER */
+.footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e2e8f0;box-shadow:0 -3px 15px rgba(0,0,0,.07);z-index:40}
+.footer-inner{max-width:820px;margin:0 auto;padding:.8rem 1.25rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.footer-info{font-size:.82rem;color:#64748b}
+.footer-info b{color:#1e293b;font-weight:700}
+.btns{display:flex;gap:.5rem}
+.btn{padding:.55rem 1.2rem;border-radius:7px;border:none;font-family:inherit;font-size:.82rem;font-weight:700;cursor:pointer;transition:all .12s;letter-spacing:.02em}
+.btn-ghost{background:#fff;border:1.5px solid #e2e8f0;color:#475569}
+.btn-ghost:hover{border-color:#1e293b;color:#1e293b}
+.btn-main{background:#0f172a;color:#fff}
+.btn-main:hover{background:#1e3a5f;transform:translateY(-1px)}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(5px);z-index:100;align-items:center;justify-content:center;padding:1.5rem}
+.overlay.show{display:flex}
+.modal{background:#fff;border-radius:18px;padding:2.25rem 1.75rem;max-width:400px;width:100%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.18)}
+.score-ring{width:100px;height:100px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;margin:0 auto 1.1rem;border:5px solid;font-weight:800}
+.score-ring .big{font-size:1.85rem;line-height:1}
+.score-ring .sm{font-size:.62rem;font-weight:700;letter-spacing:.09em;text-transform:uppercase;margin-top:.1rem}
+.lvl-a{border-color:#4ade80;background:#f0fdf4;color:#16a34a}
+.lvl-b{border-color:#facc15;background:#fefce8;color:#a16207}
+.lvl-c{border-color:#fb923c;background:#fff7ed;color:#c2410c}
+.lvl-d{border-color:#f87171;background:#fef2f2;color:#b91c1c}
+.modal-title{font-size:1.2rem;font-weight:800;margin-bottom:.35rem}
+.modal-sub{font-size:.85rem;color:#64748b;margin-bottom:1.5rem}
+.stat-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.65rem;margin-bottom:1.75rem}
+.stat-cell{background:#f8fafc;border-radius:9px;padding:.8rem .5rem}
+.stat-n{font-size:1.5rem;font-weight:800;line-height:1}
+.stat-n.c{color:#16a34a}
+.stat-n.w{color:#dc2626}
+.stat-n.s{color:#94a3b8}
+.stat-l{font-size:.68rem;font-weight:700;color:#94a3b8;margin-top:.2rem;text-transform:uppercase;letter-spacing:.06em}
+.modal-btns{display:flex;gap:.65rem;justify-content:center}
+
+@media(max-width:560px){
+  .hdr-inner{padding:1.25rem 1rem}
+  .main{padding:1.25rem 1rem 6.5rem}
+  .trigger{padding:.9rem 1rem}
+  .body{padding:0 1rem .9rem}
+  .footer-inner{padding:.65rem 1rem}
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-inner">
+    <div class="hdr-badge">Progress · Kemp LoadMaster</div>
+    <h1>Sales Training Quiz<br><span>Application Delivery Controller</span></h1>
+    <p>Bộ câu hỏi giúp đội kinh doanh nắm vững sản phẩm và tự tin tư vấn khách hàng. Mỗi câu có giải thích kèm gợi ý bán hàng thực tế.</p>
+    <div class="hdr-tags">
+      <span class="hdr-tag">32 câu hỏi</span>
+      <span class="hdr-tag">Gợi ý bán hàng sau mỗi câu</span>
+      <span class="hdr-tag">Load Balancing · WAF · GSLB · License · BOM · Use Cases</span>
+    </div>
+  </div>
+</header>
+
+<div class="prog-bar-wrap">
+  <div class="prog-bar-inner">
+    <span class="prog-txt" id="prog-txt">0 / 32</span>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+    <div class="prog-counts">
+      <div class="prog-count"><div class="prog-count-val c" id="pc">0</div><div class="prog-count-lbl">Đúng</div></div>
+      <div class="prog-count"><div class="prog-count-val w" id="pw">0</div><div class="prog-count-lbl">Sai</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="main" id="root"></div>
+
+<div class="footer">
+  <div class="footer-inner">
+    <div class="footer-info">Đã trả lời: <b id="fa">0</b>/32 &nbsp;·&nbsp; Còn lại: <b id="fr">32</b></div>
+    <div class="btns">
+      <button class="btn btn-ghost" onclick="reset()">&#8635; Làm Lại</button>
+      <button class="btn btn-main" onclick="finish()">Xem Kết Quả</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="score-ring" id="sring"><span class="big" id="spct">0%</span><span class="sm" id="sgrade"></span></div>
+    <div class="modal-title" id="stitle"></div>
+    <div class="modal-sub" id="ssub"></div>
+    <div class="stat-row">
+      <div class="stat-cell"><div class="stat-n c" id="mc">0</div><div class="stat-l">Đúng</div></div>
+      <div class="stat-cell"><div class="stat-n w" id="mw">0</div><div class="stat-l">Sai</div></div>
+      <div class="stat-cell"><div class="stat-n s" id="ms">0</div><div class="stat-l">Bỏ qua</div></div>
+    </div>
+    <div class="modal-btns">
+      <button class="btn btn-ghost" onclick="closeModal()">Xem Chi Tiết</button>
+      <button class="btn btn-main" onclick="reset()">Làm Lại</button>
+    </div>
+  </div>
+</div>
+
+<script>
+var TOTAL = 32;
+var answered = {};
+var results  = {};
+
+var SECTIONS = [{"color": "#e69015", "label": "PHẦN 1", "title": "Vai Trò & Ý Nghĩa Của Cân Bằng Tải", "qs": [{"q": "Cân bằng tải ứng dụng (ADC) giải quyết vấn đề gì cơ bản nhất trong hệ thống web?", "opts": ["Thay thế firewall để bảo mật toàn bộ hệ thống mạng", "Phân phối lưu lượng truy cập đến nhiều máy chủ, đảm bảo không server nào quá tải và dịch vụ luôn sẵn sàng", "Tăng tốc độ đường truyền Internet của doanh nghiệp", "Lưu trữ dữ liệu dự phòng tự động cho máy chủ"], "correct": 1, "tip": "Khi giới thiệu với khách hàng, dùng hình ảnh <b>\"quầy tính tiền siêu thị\"</b>: không có cân bằng tải thì tất cả khách hàng chen vào một quầy duy nhất trong khi các quầy khác trống. ADC là người điều phối, phân luồng đều vào tất cả các quầy — <b>availability + performance</b>. Đây là vấn đề của mọi doanh nghiệp có website hay ứng dụng quan trọng."}, {"q": "Theo Progress Kemp, 5 lợi ích cốt lõi mà một ADC mang lại cho khách hàng là gì?", "opts": ["Rẻ, nhanh, nhỏ, dễ cài và tiết kiệm điện", "Availability, Scalability, Security, Performance và Control", "Backup, Recovery, Monitoring, Alerting và Reporting", "Routing, Switching, Firewall, VPN và Proxy"], "correct": 1, "tip": "<b>5 trụ cột của ADC</b>: (1) <b>Availability</b> – tự động chuyển tải khi server hỏng, (2) <b>Scalability</b> – thêm server dễ dàng khi traffic tăng, (3) <b>Security</b> – WAF, auth, IPS, (4) <b>Performance</b> – SSL offload, cache, nén dữ liệu, (5) <b>Control</b> – visibility, health-check, dashboard. Nhớ 5 từ này khi gặp khách hàng!"}, {"q": "\"Virtual Service\" (hay VIP) trong LoadMaster là gì? Giải thích đơn giản nhất cho khách hàng?", "opts": ["Một máy chủ ảo hóa chạy ứng dụng bên trong LoadMaster", "Địa chỉ IP ảo trên LoadMaster mà người dùng kết nối đến – đại diện cho toàn bộ cụm server phía sau", "Phần mềm quản trị web của LoadMaster", "Giao thức kết nối mã hóa giữa LoadMaster và server backend"], "correct": 1, "tip": "Giải thích đơn giản: <b>VIP là \"địa chỉ thương hiệu\"</b> của dịch vụ. Người dùng chỉ biết VIP – họ không cần biết có bao nhiêu server phía sau. Tương tự: gọi đến tổng đài 1800-xxxx, không biết đang nói chuyện với ai trong 50 nhân viên. LoadMaster nhận request tại VIP, tự phân phối về Real Server."}]}, {"color": "#2563eb", "label": "PHẦN 2", "title": "Tính Năng Nổi Bật Kemp LoadMaster", "qs": [{"q": "Tính năng High Availability (HA) của Kemp LoadMaster có nghĩa là gì trong thực tế?", "opts": ["LoadMaster có tốc độ xử lý rất cao, không bị chậm", "Triển khai 2 thiết bị cặp đôi Active + Standby: khi thiết bị Active bị lỗi, Standby tự tiếp quản trong vài giây mà không cần can thiệp thủ công", "Dữ liệu được sao lưu tự động hàng giờ lên cloud", "Hệ thống hoạt động 24/7 mà không cần khởi động lại"], "correct": 1, "tip": "HA là <b>must-have cho mọi dự án production</b>. Pitch: \"Nếu chỉ có 1 LoadMaster mà nó hỏng thì toàn bộ dịch vụ offline – đây là điểm chết người. Cặp HA 2 thiết bị giải quyết hoàn toàn.\" <b>Luôn đưa vào BOM cặp HA</b> cho dự án quan trọng. Failover thường dưới 5 giây – hoàn toàn trong suốt với người dùng cuối."}, {"q": "SSL Offloading trong Kemp LoadMaster mang lại lợi ích gì cho web server?", "opts": ["Giúp web server hỗ trợ thêm giao thức SMTP và FTP", "Giải phóng CPU của web server khỏi việc mã hóa/giải mã SSL – rất tốn tài nguyên – để server tập trung xử lý ứng dụng và tăng capacity", "Tự động cấp SSL certificate miễn phí từ Let's Encrypt", "Tăng tốc độ tải trang cho người dùng cuối thêm 10 lần"], "correct": 1, "tip": "Pitch đơn giản: <b>\"Mỗi lần user truy cập HTTPS, server phải tính toán mã hóa – rất tốn CPU. Kemp làm việc này thay, server chỉ lo chạy ứng dụng.\"</b> Với web HTTPS traffic cao, SSL offload có thể tăng capacity server lên 20–40%. Đây cũng là điều kiện để WAF hoạt động – phải giải mã mới đọc được nội dung request."}, {"q": "Tính năng Content Switching trong Kemp LoadMaster cho phép làm gì?", "opts": ["Nén nội dung trang web để tải trang nhanh hơn", "Định tuyến request đến nhóm server khác nhau dựa trên URL path, host header hoặc nội dung HTTP – ví dụ: /api/ đến API server pool, /images/ đến media server pool", "Chặn nội dung không phù hợp từ Internet", "Đồng bộ nội dung giữa các web server tự động"], "correct": 1, "tip": "<b>Use case bán hàng thực tế:</b> Website kết hợp cả web + API + media. Content Switching giúp: /api/ đến pool server API (scale riêng), /video/ đến pool media server (DSR enabled). <b>Một VIP duy nhất phục vụ nhiều pool server khác nhau</b> – không cần nhiều IP public. Đây là tính năng L7 thực sự, khác hoàn toàn với load balancer đơn giản chỉ có L4."}, {"q": "Health Checking trong Kemp LoadMaster hoạt động như thế nào khi một Real Server bị lỗi?", "opts": ["Gửi email cảnh báo đến admin để restart thủ công", "Tự động phát hiện server lỗi và dừng gửi traffic đến server đó ngay lập tức, chuyển sang các server còn lại – người dùng không bị ảnh hưởng", "Tự động restart server bị lỗi từ xa", "Ghi log lỗi để admin xem và xử lý vào sáng hôm sau"], "correct": 1, "tip": "Health Check là nền tảng của tính năng <b>Availability</b>. Kemp kiểm tra server liên tục (HTTP GET, TCP connect, ICMP ping). Khi server trả về lỗi thì tự loại khỏi pool trong vài giây – user không thấy lỗi. <b>Pitch với IT Manager:</b> \"Không cần trực đêm lo server chết – LoadMaster tự xử lý, sáng mai bạn mới biết qua alert.\""}, {"q": "Kemp LoadMaster hỗ trợ các thuật toán cân bằng tải nào?", "opts": ["Chỉ Round Robin duy nhất", "Round Robin, Weighted Round Robin, Least Connection, Weighted Least Connection, Agent-Based Adaptive, Fixed Weighted, Weighted Response Time, Source IP Hash", "Chỉ Source IP Hash và Round Robin", "Chỉ Least Connection và Weighted Round Robin"], "correct": 1, "tip": "Điểm bán hàng mạnh: Kemp có <b>8 thuật toán phân phối tải</b>! <b>Round Robin</b> = lần lượt đều nhau, <b>Least Connection</b> = ưu tiên server ít kết nối nhất (thông minh hơn), <b>Agent-Based</b> = cài agent trên server để báo cáo tải CPU/RAM thực tế về LoadMaster. Đối thủ giá rẻ thường chỉ có Round Robin – đây là điểm khác biệt rõ ràng."}]}, {"color": "#7c3aed", "label": "PHẦN 3", "title": "GSLB – Global Server Load Balancing", "qs": [{"q": "GSLB (Global Server Load Balancing) trong Kemp giải quyết bài toán gì?", "opts": ["Tăng tốc độ xử lý của từng server trong một datacenter", "Điều phối traffic giữa nhiều datacenter khác nhau – người dùng được kết nối đến site gần nhất hoặc còn hoạt động, kể cả khi một site bị sự cố hoàn toàn", "Sao lưu dữ liệu tự động giữa các datacenter", "Quản lý kết nối VPN giữa các văn phòng chi nhánh"], "correct": 1, "tip": "<b>GSLB = người điều phối toàn cầu</b> hoạt động ở tầng DNS. Use cases bán hàng: (1) <b>Multisite HN + HCM</b> – user Hà Nội nhận IP HN datacenter, user HCM nhận IP HCM, (2) <b>Disaster Recovery</b> – site A sập, GSLB tự route về site B trong dưới 30 giây, (3) <b>Hybrid Cloud</b> – tải cao thì route thêm lên AWS/Azure. Đây là tính năng chỉ có ở Enterprise ADC!"}, {"q": "Để sử dụng tính năng GSLB của Kemp LoadMaster, cần subscription tier nào?", "opts": ["Standard Support – bao gồm mặc định trong gói cơ bản", "Enterprise Support – bao gồm mặc định", "Enterprise Plus Support – GSLB chỉ có trong gói Enterprise Plus (cùng với WAF)", "Mua thêm add-on license riêng biệt ngoài tất cả các gói subscription"], "correct": 2, "tip": "<b>Quan trọng khi lên BOM:</b> GSLB chỉ có trong gói <b>Enterprise Plus (ENP)</b>. Khi khách cần multisite hoặc DR, BOM phải bao gồm ENP thay vì chỉ EN (Enterprise). ENP bao gồm trọn gói: WAF + GSLB + ESP + 24x7 support, tiết kiệm đến 40% so với mua từng tính năng riêng lẻ."}, {"q": "Khách hàng có 2 datacenter tại Hà Nội và TP.HCM. Họ muốn user tự kết nối đến DC gần và tự failover khi 1 DC sập. Tính năng Kemp nào phù hợp?", "opts": ["Chỉ cần HA Active-Standby tại một datacenter duy nhất", "GSLB với geo-routing và health-driven DNS failover giữa 2 site", "DNS Round Robin thông thường là đã đủ", "Chỉ cần tăng băng thông kết nối Internet"], "correct": 1, "tip": "<b>Use case điển hình cho doanh nghiệp Việt Nam có 2 site HN-HCM.</b> Pitch: \"GSLB trả lời DNS query: user Hà Nội nhận IP HN datacenter, user HCM nhận IP HCM. Nếu DC Hà Nội sập, GSLB phát hiện trong 30 giây và tự chuyển TẤT CẢ user về HCM – không cần can thiệp thủ công, không cần gọi điện đêm khuya.\" Đây là giá trị rõ ràng, dễ thuyết phục ban lãnh đạo phê duyệt ngân sách."}]}, {"color": "#dc2626", "label": "PHẦN 4", "title": "WAF – Web Application Firewall", "qs": [{"q": "Kemp WAF bảo vệ chống lại loại tấn công nào mà firewall mạng thông thường KHÔNG thể chặn?", "opts": ["Tấn công vào thiết bị mạng như router và switch", "Tấn công ứng dụng web như SQL Injection, Cross-Site Scripting (XSS), botnet – đi qua cổng 443 hợp lệ mà firewall mạng cho phép đi qua", "Tấn công vật lý vào phòng máy chủ datacenter", "Virus lây lan qua email nội bộ trong công ty"], "correct": 1, "tip": "Giải thích đơn giản: <b>Firewall mạng kiểm tra địa chỉ và cổng kết nối, không đọc nội dung bên trong.</b> Hacker gửi lệnh SQL độc hại qua cổng 443 (HTTPS bình thường) – firewall cho qua vì thấy cổng hợp lệ. WAF đọc sâu vào nội dung HTTP request, phát hiện và chặn. <b>Pitch với CISO:</b> \"Bạn có firewall rồi nhưng chưa có WAF thì website vẫn có thể bị hack qua SQL injection.\""}, {"q": "Kemp WAF giúp doanh nghiệp tuân thủ chuẩn bảo mật nào quan trọng trong lĩnh vực tài chính và thanh toán?", "opts": ["ISO 9001 – quản lý chất lượng", "PCI-DSS Section 6.6 – yêu cầu bắt buộc với tổ chức xử lý thẻ thanh toán quốc tế", "SOX (Sarbanes-Oxley) – kiểm toán tài chính", "HIPAA – bảo mật thông tin y tế"], "correct": 1, "tip": "<b>Trigger bán hàng mạnh cho ngân hàng, ví điện tử, TMĐT:</b> \"PCI-DSS yêu cầu bắt buộc phải có WAF bảo vệ web application (requirement 6.6). Không có WAF = không đạt PCI-DSS = có thể bị phạt hoặc mất quyền xử lý thẻ quốc tế.\" Kemp WAF còn bảo vệ theo chuẩn OWASP Top Ten – danh sách 10 lỗ hổng web nguy hiểm nhất."}, {"q": "Kemp WAF được bao gồm trong gói support nào của LoadMaster phần cứng (Hardware)?", "opts": ["Standard Support – gói cơ bản nhất", "Enterprise Support – gói giữa", "Enterprise Plus Support – WAF và GSLB chỉ có trong Enterprise Plus", "Phải mua thêm license WAF riêng biệt bên ngoài tất cả các gói"], "correct": 2, "tip": "<b>Khi lên BOM cho khách cần WAF:</b> phải chọn gói <b>ENP (Enterprise Plus)</b>. ENP bao gồm trọn: WAF với cập nhật rule hàng ngày + GSLB + ESP (Edge Security Pack) + 24x7 support + advance hardware replacement. Progress cho biết ENP tiết kiệm đến <b>40% so với mua riêng từng tính năng</b>. Đây là argument tốt để upsell từ Standard lên ENP."}]}, {"color": "#059669", "label": "PHẦN 5", "title": "Kỹ Năng Tư Vấn Bán Hàng ADC", "qs": [{"q": "Câu hỏi discovery quan trọng nhất cần hỏi khách hàng khi tư vấn giải pháp LoadMaster là gì?", "opts": ["Ngân sách của anh/chị là bao nhiêu?", "Throughput hiện tại là bao nhiêu Mbps/Gbps, SSL TPS cần thiết, số concurrent connections, và có cần HA hay multisite không?", "Anh/chị đang dùng thiết bị của hãng nào?", "Anh/chị có bao nhiêu nhân viên IT?"], "correct": 1, "tip": "<b>Discovery questions để sizing đúng:</b> (1) <b>Throughput (Mbps/Gbps)</b> – quyết định model hardware, (2) <b>SSL TPS</b> (HTTPS connection/giây) – điểm thường bị bỏ qua, (3) <b>Concurrent connections</b>, (4) <b>Cần HA?</b> – nếu có thì nhân đôi thiết bị và license, (5) <b>GSLB/WAF không?</b> – quyết định subscription tier. Thu thập đủ 5 thông tin này trước khi lên BOM."}, {"q": "Khách hàng hỏi tại sao chọn Kemp thay vì F5 hay Citrix? Lợi thế nào nên nhấn mạnh?", "opts": ["Kemp nhỏ hơn nên ít tính năng hơn nhưng không cần dùng nhiều tính năng", "Giá thành và hiệu năng vượt trội: tính năng tương đương với chi phí thấp hơn đáng kể. Triển khai 2–4 giờ trong khi đối thủ mất 3–5 ngày nhờ certified application templates", "Kemp có giá hoàn toàn miễn phí cho license cơ bản", "Kemp chỉ phù hợp cho doanh nghiệp nhỏ, không cạnh tranh với F5 ở enterprise"], "correct": 1, "tip": "<b>Key selling points so với F5 và Citrix:</b> (1) <b>Price/Performance</b> – tính năng tương đương, giá hợp lý hơn nhiều (Progress gọi là \"unmatched value\"), (2) <b>Deployment nhanh</b> – 2–4 giờ vs 3–5 ngày nhờ certified application templates, (3) <b>TCO thấp</b> – ít nhân sự vận hành, (4) <b>IT Pro Editor Choice award</b>, (5) Flexible licensing. <b>Không bán rẻ – bán value và tổng chi phí sở hữu!</b>"}, {"q": "Dấu hiệu nào cho thấy khách hàng CẦN giải pháp cân bằng tải ngay?", "opts": ["Chỉ khi công ty có hơn 1000 nhân viên", "Website bị chậm giờ cao điểm; server hỏng thì dịch vụ offline; có 2 datacenter; cần bảo mật cho hệ thống thanh toán; sắp ra mắt ứng dụng mới lo không chịu tải", "Chỉ khi đang có hơn 10 web server", "Chỉ khi có yêu cầu bằng văn bản từ phòng IT"], "correct": 1, "tip": "<b>Trigger để qualify lead:</b> (1) Website chậm giờ cao điểm → Scalability, (2) \"Server A hỏng là công ty nghỉ\" → HA + health check, (3) \"Có 2 datacenter\" → GSLB, (4) \"Hệ thống thanh toán cần bảo mật\" → WAF + PCI-DSS, (5) \"Sắp ra mắt app mới, lo không chịu tải\" → ADC. Bất kỳ tình huống nào trong số này đều là potential customer!"}, {"q": "Khi gặp khách hàng SMB lo ngại chi phí đầu tư phần cứng, nên tư vấn hướng nào?", "opts": ["Hardware LoadMaster cao cấp nhất để đảm bảo tương lai", "Virtual LoadMaster (VLM) chạy trên hypervisor sẵn có của khách – không cần mua thêm phần cứng, tiết kiệm chi phí đầu tư ban đầu đáng kể", "Từ chối vì Kemp không phù hợp với SMB", "Cho dùng trial 30 ngày miễn phí vĩnh viễn"], "correct": 1, "tip": "<b>Virtual LoadMaster (VLM) = giải pháp tối ưu cho SMB:</b> Khách đã có VMware hay Hyper-V thì chỉ cần mua VLM license, cài thêm VM mới. Không tốn rack, không tốn phần cứng thêm. VLM-1G (1Gbps, 1000 SSL TPS) phù hợp hầu hết SMB. Thêm ENP subscription là có WAF + GSLB + ESP đầy đủ. <b>Total cost thấp hơn hardware rất nhiều</b>, lại dễ snapshot, clone và migrate."}]}, {"color": "#d97706", "label": "PHẦN 6", "title": "License Perpetual – Kiến Thức Bán Hàng", "qs": [{"q": "Perpetual License của Kemp LoadMaster có đặc điểm gì khác Subscription License?", "opts": ["Perpetual rẻ hơn nhiều và có thêm nhiều tính năng đặc biệt", "Perpetual: trả một lần sở hữu mãi mãi. Vẫn cần mua Support Subscription hàng năm riêng để được hỗ trợ kỹ thuật, cập nhật phần mềm và mở khóa tính năng nâng cao (WAF, GSLB)", "Perpetual license tự động gia hạn mỗi năm không cần làm gì", "Perpetual license chỉ được sử dụng tối đa 3 năm rồi hết hạn"], "correct": 1, "tip": "<b>Cấu trúc Perpetual License Kemp:</b> (1) <b>License chính (Perpetual)</b>: trả một lần, dùng mãi mãi – ví dụ LM-X15-NG hardware appliance. (2) <b>Support Subscription (hàng năm)</b>: Standard / Enterprise / Enterprise Plus – quyết định tính năng và mức hỗ trợ. <b>Khi lên BOM perpetual</b> = Hardware license + Support subscription năm đầu (thường bắt buộc kèm theo). Từ năm sau khách renew subscription hàng năm."}, {"q": "Ba gói Support Subscription của Kemp LoadMaster là gì và điểm khác biệt chính?", "opts": ["Basic, Standard và Premium – tăng dần theo giá", "Standard (10x5 support, L4-L7 cơ bản) – Enterprise (24x7, thêm ESP) – Enterprise Plus (24x7, thêm WAF + GSLB + Floating License)", "Bronze, Silver và Gold – giống nhau về tính năng nhưng khác SLA", "Lite, Pro và Max – khác nhau về số VIP được tạo"], "correct": 1, "tip": "<b>3 tầng subscription – nhớ kỹ:</b><br>• <b>Standard</b>: 10x5 support, L4-L7, IPS, Network Telemetry<br>• <b>Enterprise</b>: 24x7 support, thêm Edge Security Pack (ESP – pre-authentication, SSO)<br>• <b>Enterprise Plus (ENP)</b>: 24x7 support, thêm WAF (update daily) + GSLB (update daily) + Floating License<br><b>ENP là gói phổ biến nhất cho production</b> vì bao gồm đầy đủ tính năng bảo mật và GSLB."}, {"q": "Khi lên BOM cho cặp HA (2 thiết bị LoadMaster), cần bao nhiêu license và subscription?", "opts": ["1 license + 1 subscription dùng chung cho cả 2 thiết bị", "2 license (cho từng thiết bị) + 2 support subscription (cho từng thiết bị)", "2 license phần cứng nhưng chỉ cần 1 subscription chung là đủ", "Thiết bị Standby không cần license, chỉ cần license cho Active"], "correct": 1, "tip": "<b>Quan trọng khi lên BOM cho HA pair:</b> Mỗi thiết bị (node) cần license và subscription riêng. Ví dụ BOM cho HA pair LM-X15-NG: (1) 2x LM-X15-NG hardware, (2) 2x ENP-LM-X15-NG. <b>Sai lầm phổ biến của sales: quên tính license và subscription cho thiết bị Standby!</b> Đây là lý do BOM bị thiếu và khách hàng phàn nàn sau khi mua."}, {"q": "Khách hàng đã có LM-X15-NG với Standard subscription. Họ muốn kích hoạt thêm WAF. Cần làm gì?", "opts": ["Mua thêm thiết bị LM-X15-NG mới có WAF sẵn", "Upgrade Support Subscription từ Standard lên Enterprise Plus (ENP) – WAF sẽ được kích hoạt ngay, không cần mua phần cứng mới", "Mua thêm WAF appliance riêng biệt đặt trước LoadMaster", "LoadMaster LM-X15-NG không hỗ trợ WAF, phải đổi model"], "correct": 1, "tip": "<b>Upsell opportunity tuyệt vời!</b> Kịch bản rất hay gặp: khách đã có hardware rồi, chỉ cần upgrade subscription. Pitch: \"Phần cứng của anh/chị đã hỗ trợ WAF đầy đủ rồi, chỉ cần nâng gói support lên Enterprise Plus là WAF được kích hoạt ngay – không cần mua thêm thiết bị.\" <b>Dễ bán vì khách không phải đầu tư lớn</b>, chỉ trả thêm chênh lệch subscription hàng năm."}]}, {"color": "#0891b2", "label": "PHẦN 7", "title": "Lên BOM – Cấu Trúc & Thành Phần", "qs": [{"q": "Một BOM đầy đủ cho giải pháp Kemp LoadMaster Hardware thường bao gồm những thành phần nào?", "opts": ["Chỉ cần part number thiết bị hardware là đủ để báo giá", "Hardware appliance + Support Subscription + Phụ kiện kết nối (module SFP/SFP+ nếu dùng cổng quang) + Nhân đôi tất cả nếu là cặp HA", "Chỉ subscription, không cần liệt kê hardware riêng", "Hardware + Cable ethernet + Rack mount kit, không cần subscription"], "correct": 1, "tip": "<b>BOM checklist cho hardware LoadMaster:</b><br>① <b>Hardware appliance</b>: LM-X1, LM-X3-NG, LM-X15-NG, LM-X25-NG...<br>② <b>Support Subscription</b>: STD / EN / ENP-LM-X? (hàng năm, năm đầu thường bắt buộc)<br>③ <b>SFP/SFP+ transceivers</b>: nếu dùng cổng 10GbE thì cần mua module quang riêng<br>④ <b>Nhân đôi tất cả nếu HA pair</b><br>Tham khảo Sample BOM trong tài liệu Progress Kemp để có format chuẩn."}, {"q": "Sample BOM từ tài liệu Progress Kemp cho giải pháp 15Gbps gồm 3 thành phần chính là gì?", "opts": ["Router + Switch + Firewall", "LM-X15-NG (hardware 15Gbps) + ENP-LM-X15-NG (Enterprise Plus subscription) + X15-NG-SFP-SR (module quang 10GbE SFP+ nếu cần)", "VLM-MAX + ENP subscription + Cloud deployment", "LM-X25-NG + Standard subscription + cáp ethernet Cat6"], "correct": 1, "tip": "<b>Sample BOM chuẩn từ Progress cho 15Gbps:</b><br>(1) <b>LM-X15-NG</b>: Hardware 15Gbps L7, 15,000 SSL TPS, 16x1GbE + 4x10GbE, Redundant PSU, Redundant Disk RAID1<br>(2) <b>ENP-LM-X15-NG</b>: Enterprise Plus 1 năm – 24x7 support, WAF update daily, GSLB update daily, ESP, advance hardware replacement<br>(3) <b>X15-NG-SFP-SR</b>: SFP+ SR 10GBase-SR transceiver (850nm, tối đa 300m), bao gồm 4 transceivers – chỉ cần khi dùng cổng 10GbE."}, {"q": "Khi nào nên đề xuất Virtual LoadMaster (VLM) thay vì Hardware LoadMaster cho khách hàng?", "opts": ["Không bao giờ – hardware luôn tốt hơn và đáng tin cậy hơn", "Khi khách đã có hạ tầng ảo hóa (VMware, Hyper-V, Nutanix); budget hạn chế; môi trường cloud AWS/Azure; throughput phù hợp với VLM-1G (1Gbps) hoặc VLM-5G (5Gbps)", "Chỉ khi khách hàng là startup mới thành lập", "Khi khách hàng không có phòng máy chủ riêng"], "correct": 1, "tip": "<b>VLM vs Hardware – khi nào chọn VLM:</b><br>✅ Đã có VMware/Hyper-V/Nutanix → không tốn rack, không tốn hardware mới<br>✅ Triển khai trên AWS hoặc Azure<br>✅ Throughput dưới 1Gbps → VLM-1G, dưới 5Gbps → VLM-5G<br>✅ Dev, Test, Staging environment<br>✅ Cần flexibility: snapshot, clone, vMotion<br><b>Khi nào Hardware tốt hơn:</b> throughput và SSL TPS cao, DSR mode, compliance yêu cầu dedicated appliance."}, {"q": "Thông số nào quan trọng nhất để chọn đúng model LoadMaster khi sizing?", "opts": ["Màu sắc và kích thước vật lý của thiết bị trong rack", "Application Throughput (Layer 7 Gbps) và SSL TPS – hai thông số này quyết định model, không chỉ đơn thuần là tốc độ mạng", "Số lượng cổng ethernet trên thiết bị", "Chỉ cần biết tổng số web server trong backend pool"], "correct": 1, "tip": "<b>2 thông số sizing quan trọng nhất:</b><br>(1) <b>Application Throughput L7</b>: lưu lượng HTTP/HTTPS qua VIP. LM-X1=1Gbps, LM-X3=3.4Gbps, LM-X15=15Gbps, LM-X25=25Gbps<br>(2) <b>SSL TPS</b>: số HTTPS handshake/giây. LM-X1=1,000, LM-X3=1,700, LM-X15=15,000, LM-X25=25,000<br><b>Lưu ý quan trọng:</b> nhiều site HTTPS nặng bị bottleneck SSL TPS TRƯỚC khi đến giới hạn throughput! Luôn hỏi khách tỷ lệ HTTPS và tần suất đăng nhập để ước tính TPS cần thiết."}]}, {"color": "#be185d", "label": "PHẦN 8", "title": "Tình Huống Thực Tế & Use Cases", "qs": [{"q": "Sàn thương mại điện tử lo website bị sập ngày sale 11/11 với traffic tăng đột biến. Giải pháp Kemp nào phù hợp nhất?", "opts": ["Chỉ cần nâng cấp băng thông Internet là đủ", "LoadMaster HA + web server pool có thể scale-out không downtime: khi traffic tăng chỉ cần thêm server vào pool, LoadMaster tự phát hiện qua health check và phân tải ngay", "Tắt bớt tính năng web để giảm tải cho server", "Chuyển toàn bộ hệ thống sang cloud hosting là giải pháp duy nhất"], "correct": 1, "tip": "<b>TMĐT use case – ROI rõ ràng:</b> LoadMaster cho phép scale-out không downtime – thêm server vào pool, health check tự phát hiện và gửi traffic ngay. Session persistence (cookie sticky) đảm bảo giỏ hàng không mất. WAF bảo vệ luồng thanh toán. <b>Pitch với CEO/CTO:</b> \"1 ngày sale website sập = mất hàng chục tỷ đồng doanh thu và mất uy tín – LoadMaster ngăn ngừa điều này với chi phí đầu tư một lần.\""}, {"q": "Ngân hàng triển khai Internet Banking cần 99.99% uptime, chống SQL injection, và xác thực 2FA. Đề xuất Kemp đầy đủ gồm gì?", "opts": ["Chỉ cần 1 thiết bị LM-X3-NG là đủ cho ngân hàng", "HA pair (2 thiết bị) + Enterprise Plus subscription (WAF cho SQL injection + GSLB nếu multisite) + Edge Security Pack (2FA qua RADIUS hoặc RSA SecurID) + SSL offload TLS 1.3", "Virtual LoadMaster miễn phí với Standard subscription là đủ", "Chỉ cần firewall tốt, không cần ADC cho ngân hàng"], "correct": 1, "tip": "<b>Banking use case – BOM gồm:</b><br>(1) <b>HA pair</b>: 2x hardware LoadMaster – đảm bảo 99.99% uptime SLA<br>(2) <b>WAF (ENP)</b>: SQL injection, XSS protection – đáp ứng PCI-DSS requirement 6.6<br>(3) <b>ESP</b>: 2FA với RADIUS, RSA SecurID, Active Directory – pre-auth tại LoadMaster trước khi request đến server<br>(4) <b>TLS 1.2/1.3</b>: mã hóa chuẩn ngân hàng<br><b>BOM: 2x LM hardware + 2x ENP subscription.</b>"}, {"q": "Website phát nội dung video (VOD platform) cần tối ưu cho lượng traffic video lớn. Kemp giúp như thế nào?", "opts": ["Bật tính năng nén dữ liệu để giảm bandwidth video", "Content Switching phân luồng /video/ đến media server pool riêng. Cân nhắc Direct Server Return (DSR) để response video đi thẳng từ server về user, không qua LoadMaster – tránh bottleneck bandwidth", "Chỉ cần tăng RAM cho web server là đủ", "WAF là giải pháp chính cần thiết cho streaming video"], "correct": 1, "tip": "<b>Video streaming optimization:</b><br>(1) <b>Content Switching</b>: /stream/ đến media pool riêng, /api/ đến API pool<br>(2) <b>DSR (Direct Server Return)</b>: response video đi thẳng từ media server về user – LoadMaster không phải xử lý response lớn, tránh bottleneck hoàn toàn<br>(3) <b>Persistence</b>: Source IP hash đảm bảo stream không bị ngắt giữa chừng<br><b>Pitch:</b> \"Với video, dữ liệu response lớn gấp 100 lần request – DSR giúp LoadMaster tập trung vào điều phối, không bị nghẽn bởi video data.\""}, {"q": "Tập đoàn có trụ sở HN và chi nhánh HCM, mỗi site có server riêng. Muốn user tự kết nối đến site gần và failover tự động. Kiến trúc Kemp tối ưu là gì?", "opts": ["Một LoadMaster tập trung tại HN quản lý server của cả 2 site", "LoadMaster HA tại mỗi site + GSLB Enterprise Plus: user HN đến HN LoadMaster và HN servers; user HCM đến HCM LoadMaster và HCM servers; khi 1 site sập GSLB tự route về site còn lại", "Chỉ cần DNS Round Robin giữa 2 IP là đủ", "VPN site-to-site để kết nối 2 datacenter là giải pháp duy nhất cần thiết"], "correct": 1, "tip": "<b>Multi-site architecture – BOM cho dự án này:</b><br>Site HN: 2x LoadMaster hardware + 2x ENP subscription<br>Site HCM: 2x LoadMaster hardware + 2x ENP subscription<br>GSLB tích hợp sẵn trong LoadMaster khi có ENP – không cần thiết bị GSLB riêng biệt. Cấu hình sync giữa 2 site qua Secure Sync. <b>Tổng: 4 thiết bị + 4 ENP subscriptions.</b> Đây là deal size đáng kể – qualify kỹ trước khi propose."}, {"q": "Khách hàng muốn deploy LoadMaster trên AWS cloud. Kemp cung cấp những tùy chọn nào?", "opts": ["Kemp chỉ có phần cứng vật lý, không hỗ trợ cloud", "Virtual LoadMaster trên AWS: BYOL (mang license của mình, trả cloud VM fee riêng) hoặc PAYG trên AWS Marketplace (trả theo giờ, đã bao gồm cả WAF + GSLB + ESP trong gói PAYG)", "Chỉ hỗ trợ Microsoft Azure, không hỗ trợ AWS", "Cloud chỉ dùng được với hợp đồng subscription 3 năm tối thiểu"], "correct": 1, "tip": "<b>Kemp trên AWS và Azure:</b><br>(1) <b>BYOL</b>: mua VLM Perpetual hoặc Subscription license, deploy trên cloud VM, trả cloud platform fee riêng – kiểm soát chi phí tốt hơn cho long-term<br>(2) <b>PAYG trên Marketplace</b>: thanh toán theo giờ, <b>bao gồm luôn WAF + GSLB + ESP</b> – tiện nhất cho test, proof-of-concept và dự án ngắn hạn<br>Đây là lựa chọn tốt cho khách đang migration lên cloud hoặc triển khai hybrid cloud."}, {"q": "Khách hàng muốn deploy LoadMaster cho Microsoft Exchange. Kemp có giải pháp gì giúp triển khai nhanh?", "opts": ["Phải cấu hình thủ công toàn bộ từng tham số, rất phức tạp và mất nhiều ngày", "Dùng Application Template có sẵn cho Exchange – Kemp cung cấp certified templates cho Exchange, SharePoint, SAP, Citrix... giúp deploy đúng best practice chỉ trong vài giờ", "LoadMaster không tương thích với Microsoft Exchange", "Phải mua thêm Exchange Connector plug-in riêng từ Microsoft"], "correct": 1, "tip": "<b>Application Templates = competitive advantage của Kemp!</b> Không chỉ Exchange, còn có templates cho: SAP, Citrix XenApp/XenDesktop, SharePoint, IIS, Apache, Nginx, Moodle, Oracle, Skype for Business, VMware Horizon, Blackboard, Zimbra... Templates được certified, tuân thủ best practice. <b>Pitch:</b> \"Đối thủ mất 3–5 ngày config Exchange Load Balancing – Kemp template giúp live trong 2–4 giờ. Tiết kiệm chi phí triển khai đáng kể.\""}]}];
+
+function buildQuiz() {
+  answered = {};
+  results  = {};
+  var root = document.getElementById('root');
+  root.innerHTML = '';
+  var n = 0;
+
+  for (var si = 0; si < SECTIONS.length; si++) {
+    var sec = SECTIONS[si];
+
+    // Section header
+    var sh = document.createElement('div');
+    sh.className = 'sec-hdr';
+    sh.innerHTML =
+      '<div class="sec-pill">' +
+        '<div class="sec-dot" style="background:' + sec.color + '"></div>' +
+        sec.label +
+      '</div>' +
+      '<div class="sec-name">' + sec.title + '</div>' +
+      '<div class="sec-line"></div>';
+    root.appendChild(sh);
+
+    for (var qi = 0; qi < sec.qs.length; qi++) {
+      n++;
+      var q   = sec.qs[qi];
+      var qid = 'q' + si + '_' + qi;
+
+      var optsHtml = '';
+      var keys = ['A','B','C','D'];
+      for (var oi = 0; oi < q.opts.length; oi++) {
+        optsHtml +=
+          '<div class="opt" id="' + qid + '_o' + oi + '" ' +
+               'data-qid="' + qid + '" data-oi="' + oi + '" data-correct="' + q.correct + '">' +
+            '<span class="opt-key">' + keys[oi] + '</span>' +
+            '<span>' + q.opts[oi] + '</span>' +
+          '</div>';
+      }
+
+      var card = document.createElement('div');
+      card.className = 'card';
+      card.id = qid;
+      card.innerHTML =
+        '<div class="trigger" data-qid="' + qid + '">' +
+          '<span class="qnum">C' + n + '</span>' +
+          '<span class="qtext">' + q.q + '</span>' +
+          '<span class="arrow">&#9660;</span>' +
+        '</div>' +
+        '<div class="body">' +
+          '<div class="opts">' + optsHtml + '</div>' +
+          '<div class="tip" id="' + qid + '_tip">' +
+            '<div class="tip-hdr"><span>&#128161;</span> Kiến Thức &amp; Gợi Ý Bán Hàng</div>' +
+            '<div class="tip-body">' + q.tip + '</div>' +
+          '</div>' +
+        '</div>';
+
+      root.appendChild(card);
+    }
+  }
+
+  // Attach events after building
+  root.addEventListener('click', function(e) {
+    // Trigger click
+    var trigger = e.target.closest('.trigger');
+    if (trigger) {
+      var qid = trigger.getAttribute('data-qid');
+      toggleCard(qid);
+      return;
+    }
+    // Option click
+    var opt = e.target.closest('.opt');
+    if (opt && !opt.classList.contains('locked')) {
+      var qid     = opt.getAttribute('data-qid');
+      var oi      = parseInt(opt.getAttribute('data-oi'));
+      var correct = parseInt(opt.getAttribute('data-correct'));
+      pickAnswer(qid, oi, correct);
+    }
+  });
+
+  updateUI();
+}
+
+function toggleCard(qid) {
+  var card = document.getElementById(qid);
+  card.classList.toggle('open');
+}
+
+function pickAnswer(qid, chosen, correct) {
+  if (answered[qid]) return;
+  answered[qid] = true;
+  results[qid]  = (chosen === correct);
+
+  var card = document.getElementById(qid);
+  if (!card.classList.contains('open')) card.classList.add('open');
+
+  // Lock all options for this question
+  var opts = card.querySelectorAll('.opt');
+  for (var i = 0; i < opts.length; i++) opts[i].classList.add('locked');
+
+  if (chosen === correct) {
+    document.getElementById(qid + '_o' + chosen).classList.add('ok');
+    card.classList.add('ok');
+  } else {
+    document.getElementById(qid + '_o' + chosen).classList.add('ng');
+    document.getElementById(qid + '_o' + correct).classList.add('ok');
+    card.classList.add('ng');
+  }
+
+  document.getElementById(qid + '_tip').classList.add('show');
+  updateUI();
+}
+
+function updateUI() {
+  var ans  = Object.keys(answered).length;
+  var corr = 0;
+  for (var k in results) { if (results[k]) corr++; }
+  var wrong   = ans - corr;
+  var remain  = TOTAL - ans;
+  var pct     = Math.round(ans / TOTAL * 100);
+
+  document.getElementById('prog-txt').textContent  = ans + ' / ' + TOTAL;
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('pc').textContent = corr;
+  document.getElementById('pw').textContent = wrong;
+  document.getElementById('fa').textContent = ans;
+  document.getElementById('fr').textContent = remain;
+}
+
+function finish() {
+  var ans  = Object.keys(answered).length;
+  var corr = 0;
+  for (var k in results) { if (results[k]) corr++; }
+  var skip = TOTAL - ans;
+  var pct  = Math.round(corr / TOTAL * 100);
+
+  document.getElementById('mc').textContent = corr;
+  document.getElementById('mw').textContent = ans - corr;
+  document.getElementById('ms').textContent = skip;
+  document.getElementById('spct').textContent = pct + '%';
+
+  var ring  = document.getElementById('sring');
+  ring.className = 'score-ring';
+  var grade, title, sub;
+  if (pct >= 85) {
+    grade = 'XUẤT SẮC'; title = '🏆 Sẵn Sàng Ra Trận!';
+    sub   = 'Bạn nắm vững sản phẩm và tự tin tư vấn khách hàng về Kemp LoadMaster!';
+    ring.classList.add('lvl-a');
+  } else if (pct >= 65) {
+    grade = 'KHÁ TỐT'; title = '👍 Gần Đến Đích Rồi!';
+    sub   = 'Kiến thức tốt. Ôn thêm phần License, BOM và các use case thực tế.';
+    ring.classList.add('lvl-b');
+  } else if (pct >= 45) {
+    grade = 'TRUNG BÌNH'; title = '📚 Cần Ôn Thêm';
+    sub   = 'Đọc lại datasheet và presentation Kemp, đặc biệt phần WAF, GSLB và BOM.';
+    ring.classList.add('lvl-c');
+  } else {
+    grade = 'CẦN CỐ GẮNG'; title = '💪 Hãy Ôn Luyện Thêm!';
+    sub   = 'Tham khảo tài liệu Kemp LoadMaster và làm lại bài kiểm tra này.';
+    ring.classList.add('lvl-d');
+  }
+
+  document.getElementById('sgrade').textContent = grade;
+  document.getElementById('stitle').textContent  = title;
+  document.getElementById('ssub').textContent    = sub;
+  document.getElementById('overlay').classList.add('show');
+}
+
+function closeModal() {
+  document.getElementById('overlay').classList.remove('show');
+}
+
+function reset() {
+  document.getElementById('overlay').classList.remove('show');
+  buildQuiz();
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+buildQuiz();
+</script>
+</body>
+</html>

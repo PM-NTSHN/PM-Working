@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cẩm Nang DAST Fortify | OpenText – Hỗ Trợ Sale</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0f1e;
+    --bg2: #0d1529;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1e2d4a;
+    --accent: #00d4ff;
+    --accent2: #0097b8;
+    --accent3: #ff6b35;
+    --accent4: #22c55e;
+    --accent5: #f59e0b;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --text3: #64748b;
+    --danger: #ef4444;
+    --glow: 0 0 20px rgba(0,212,255,0.15);
+    --glow-strong: 0 0 40px rgba(0,212,255,0.25);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    min-height: 100vh;
+  }
+
+  /* GRID BACKGROUND */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* SIDEBAR NAV */
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0; bottom: 0;
+    width: 240px;
+    background: rgba(10,15,30,0.97);
+    border-right: 1px solid var(--border);
+    padding: 24px 0;
+    z-index: 100;
+    overflow-y: auto;
+    backdrop-filter: blur(10px);
+  }
+
+  .sidebar-logo {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+
+  .sidebar-logo .brand {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  .sidebar-logo .product {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+    margin-top: 4px;
+  }
+
+  .badge-sale {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--accent3), #ff8c5a);
+    color: white;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+
+  .nav-section {
+    padding: 0 12px;
+    margin-bottom: 4px;
+  }
+
+  .nav-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--text3);
+    text-transform: uppercase;
+    padding: 8px 8px 4px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 10px;
+    border-radius: 6px;
+    color: var(--text2);
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 500;
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+
+  .nav-item:hover {
+    background: var(--surface2);
+    color: var(--accent);
+  }
+
+  .nav-item .icon {
+    width: 18px;
+    text-align: center;
+    font-size: 13px;
+    flex-shrink: 0;
+  }
+
+  /* MAIN CONTENT */
+  .main {
+    margin-left: 240px;
+    padding: 40px 48px;
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, rgba(0,212,255,0.08) 0%, rgba(0,151,184,0.04) 50%, transparent 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 48px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(0,212,255,0.12), transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.2;
+    color: white;
+    margin-bottom: 12px;
+  }
+
+  .hero h1 span {
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 15px;
+    color: var(--text2);
+    max-width: 600px;
+    margin-bottom: 28px;
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 2px;
+  }
+
+  /* SECTION */
+  .section {
+    margin-bottom: 48px;
+    scroll-margin-top: 20px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .icon-blue { background: rgba(0,212,255,0.12); }
+  .icon-orange { background: rgba(255,107,53,0.12); }
+  .icon-green { background: rgba(34,197,94,0.12); }
+  .icon-yellow { background: rgba(245,158,11,0.12); }
+  .icon-red { background: rgba(239,68,68,0.12); }
+  .icon-purple { background: rgba(167,139,250,0.12); }
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+  }
+
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text3);
+    font-weight: 600;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .card:hover {
+    border-color: rgba(0,212,255,0.3);
+    box-shadow: var(--glow);
+  }
+
+  .card-grid {
+    display: grid;
+    gap: 16px;
+  }
+
+  .card-grid-2 { grid-template-columns: 1fr 1fr; }
+  .card-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+  .card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card p, .card li {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.65;
+  }
+
+  .card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .card ul li::before {
+    content: '▸';
+    color: var(--accent);
+    margin-right: 6px;
+    font-size: 11px;
+  }
+
+  /* HIGHLIGHT BOXES */
+  .highlight {
+    border-left: 3px solid var(--accent);
+    background: rgba(0,212,255,0.05);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+  }
+
+  .highlight.orange { border-color: var(--accent3); background: rgba(255,107,53,0.05); }
+  .highlight.green { border-color: var(--accent4); background: rgba(34,197,94,0.05); }
+  .highlight.yellow { border-color: var(--accent5); background: rgba(245,158,11,0.05); }
+
+  .highlight strong {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .highlight.orange strong { color: var(--accent3); }
+  .highlight.green strong { color: var(--accent4); }
+  .highlight.yellow strong { color: var(--accent5); }
+
+  /* FEATURE GRID */
+  .feature-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    transition: all 0.2s;
+  }
+
+  .feature-item:hover {
+    border-color: rgba(0,212,255,0.4);
+    transform: translateY(-2px);
+    box-shadow: var(--glow);
+  }
+
+  .feature-icon {
+    font-size: 22px;
+    margin-bottom: 10px;
+  }
+
+  .feature-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 6px;
+  }
+
+  .feature-desc {
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+
+  /* SWOT */
+  .swot-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .swot-card {
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .swot-s { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); }
+  .swot-w { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); }
+  .swot-o { background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.25); }
+  .swot-t { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); }
+
+  .swot-label {
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .swot-s .swot-label { color: var(--accent4); }
+  .swot-w .swot-label { color: var(--danger); }
+  .swot-o .swot-label { color: var(--accent); }
+  .swot-t .swot-label { color: var(--accent5); }
+
+  .swot-card ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .swot-card li {
+    font-size: 12.5px;
+    color: var(--text2);
+    line-height: 1.55;
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .swot-card li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    font-size: 14px;
+  }
+
+  .swot-s li::before { color: var(--accent4); }
+  .swot-w li::before { color: var(--danger); }
+  .swot-o li::before { color: var(--accent); }
+  .swot-t li::before { color: var(--accent5); }
+
+  /* SURVEY TABLE */
+  .survey-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .survey-table th {
+    background: var(--surface2);
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .survey-table td {
+    padding: 10px 14px;
+    font-size: 12.5px;
+    color: var(--text2);
+    border-bottom: 1px solid rgba(30,45,74,0.5);
+    vertical-align: top;
+  }
+
+  .survey-table tr:hover td {
+    background: rgba(0,212,255,0.03);
+  }
+
+  .survey-table .q-num {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .survey-table .q-cat {
+    font-size: 11px;
+    color: var(--text3);
+    white-space: nowrap;
+  }
+
+  /* LICENSE TABLE */
+  .license-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .license-table th {
+    background: var(--surface2);
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text2);
+    letter-spacing: 0.06em;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .license-table td {
+    padding: 12px 16px;
+    font-size: 12.5px;
+    color: var(--text2);
+    border-bottom: 1px solid rgba(30,45,74,0.5);
+    vertical-align: top;
+    line-height: 1.55;
+  }
+
+  .license-table .lic-name {
+    color: white;
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .badge-blue { background: rgba(0,212,255,0.15); color: var(--accent); border: 1px solid rgba(0,212,255,0.3); }
+  .badge-green { background: rgba(34,197,94,0.15); color: var(--accent4); border: 1px solid rgba(34,197,94,0.3); }
+  .badge-orange { background: rgba(255,107,53,0.15); color: var(--accent3); border: 1px solid rgba(255,107,53,0.3); }
+  .badge-yellow { background: rgba(245,158,11,0.15); color: var(--accent5); border: 1px solid rgba(245,158,11,0.3); }
+  .badge-red { background: rgba(239,68,68,0.15); color: var(--danger); border: 1px solid rgba(239,68,68,0.3); }
+
+  /* COMPETITOR COMPARE */
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .compare-table th {
+    padding: 12px 14px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .compare-table th:first-child {
+    text-align: left;
+    color: var(--text2);
+  }
+
+  .compare-table th.fortify-col {
+    background: rgba(0,212,255,0.08);
+    color: var(--accent);
+    border-left: 2px solid rgba(0,212,255,0.4);
+    border-right: 2px solid rgba(0,212,255,0.4);
+  }
+
+  .compare-table td {
+    padding: 10px 14px;
+    font-size: 12.5px;
+    color: var(--text2);
+    border-bottom: 1px solid rgba(30,45,74,0.4);
+    text-align: center;
+  }
+
+  .compare-table td:first-child { text-align: left; color: var(--text); font-weight: 500; }
+
+  .compare-table td.fortify-col {
+    background: rgba(0,212,255,0.04);
+    border-left: 2px solid rgba(0,212,255,0.2);
+    border-right: 2px solid rgba(0,212,255,0.2);
+  }
+
+  .check { color: var(--accent4); font-size: 15px; }
+  .partial { color: var(--accent5); font-size: 13px; }
+  .cross { color: var(--danger); font-size: 15px; }
+
+  /* KEY SELLING */
+  .ksp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .ksp-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    transition: all 0.2s;
+  }
+
+  .ksp-item:hover {
+    border-color: rgba(0,212,255,0.35);
+    box-shadow: var(--glow);
+  }
+
+  .ksp-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    color: rgba(0,212,255,0.3);
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .ksp-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 5px;
+  }
+
+  .ksp-desc {
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+
+  /* USE CASES */
+  .usecase-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+    display: flex;
+    gap: 20px;
+    transition: all 0.2s;
+  }
+
+  .usecase-item:hover {
+    border-color: rgba(0,212,255,0.3);
+    box-shadow: var(--glow);
+  }
+
+  .usecase-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+    width: 44px;
+    text-align: center;
+    margin-top: 2px;
+  }
+
+  .usecase-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 6px;
+  }
+
+  .usecase-scenario {
+    font-size: 12px;
+    color: var(--accent);
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+
+  .usecase-desc {
+    font-size: 12.5px;
+    color: var(--text2);
+    line-height: 1.65;
+  }
+
+  /* CUSTOMER REFS */
+  .customer-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .customer-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    text-align: center;
+    transition: all 0.2s;
+  }
+
+  .customer-card:hover {
+    border-color: rgba(0,212,255,0.3);
+    transform: translateY(-2px);
+  }
+
+  .customer-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 4px;
+  }
+
+  .customer-segment {
+    font-size: 11px;
+    color: var(--text3);
+    margin-bottom: 10px;
+  }
+
+  .customer-use {
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.55;
+  }
+
+  /* FAQ */
+  .faq-item {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+
+  .faq-q {
+    padding: 14px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: var(--surface);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    transition: background 0.2s;
+    user-select: none;
+  }
+
+  .faq-q:hover { background: var(--surface2); }
+
+  .faq-q .faq-arrow {
+    font-size: 12px;
+    color: var(--accent);
+    transition: transform 0.3s;
+    flex-shrink: 0;
+  }
+
+  .faq-a {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s;
+    background: rgba(0,212,255,0.02);
+  }
+
+  .faq-a.open {
+    max-height: 500px;
+  }
+
+  .faq-a-inner {
+    padding: 14px 20px 16px;
+    font-size: 12.5px;
+    color: var(--text2);
+    line-height: 1.7;
+    border-top: 1px solid var(--border);
+  }
+
+  .faq-a-inner strong {
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  .faq-cat-header {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: var(--text3);
+    text-transform: uppercase;
+    padding: 16px 0 8px;
+  }
+
+  /* SEGMENT TAGS */
+  .segment-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+  }
+
+  .segment-tag {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text2);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  /* PRINT BUTTON */
+  .print-btn {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 4px 20px rgba(0,212,255,0.4);
+    z-index: 200;
+    transition: all 0.2s;
+  }
+
+  .print-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 30px rgba(0,212,255,0.5);
+  }
+
+  /* TOP RANK BADGE */
+  .rank-badge {
+    background: linear-gradient(135deg, #f59e0b, #ef4444);
+    color: white;
+    font-size: 11px;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: 20px;
+    letter-spacing: 0.08em;
+  }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 32px 0;
+  }
+
+  /* TYPOGRAPHY */
+  .text-accent { color: var(--accent); }
+  .text-orange { color: var(--accent3); }
+  .text-green { color: var(--accent4); }
+  .text-yellow { color: var(--accent5); }
+  .text-white { color: white; }
+  .text-sm { font-size: 12px; }
+  .text-xs { font-size: 11px; }
+  .font-mono { font-family: 'JetBrains Mono', monospace; }
+  .font-bold { font-weight: 700; }
+
+  @media print {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 20px; }
+    .print-btn { display: none; }
+    body::before { display: none; }
+    .section { page-break-inside: avoid; }
+  }
+
+  @media (max-width: 900px) {
+    .sidebar { display: none; }
+    .main { margin-left: 0; padding: 20px; }
+    .card-grid-3 { grid-template-columns: 1fr 1fr; }
+    .ksp-grid { grid-template-columns: 1fr; }
+    .customer-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">OpenText™ Fortify</div>
+    <div class="product">DAST Handbook</div>
+    <div class="badge-sale">📋 Tài liệu sale</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-label">Nội dung</div>
+    <a class="nav-item" href="#intro"><span class="icon">🏢</span>Giới thiệu OpenText</a>
+    <a class="nav-item" href="#problem"><span class="icon">⚠️</span>Vấn đề hiện trạng</a>
+    <a class="nav-item" href="#features"><span class="icon">⚡</span>Tính năng DAST</a>
+    <a class="nav-item" href="#survey"><span class="icon">📋</span>Câu hỏi khảo sát</a>
+    <a class="nav-item" href="#swot"><span class="icon">📊</span>Phân tích SWOT</a>
+    <a class="nav-item" href="#license"><span class="icon">🔑</span>Cơ chế License</a>
+    <a class="nav-item" href="#compare"><span class="icon">⚔️</span>So sánh đối thủ</a>
+    <a class="nav-item" href="#ksp"><span class="icon">🎯</span>Key Selling Points</a>
+    <a class="nav-item" href="#usecase"><span class="icon">🏗️</span>Use Cases</a>
+    <a class="nav-item" href="#customers"><span class="icon">🤝</span>Khách hàng tham chiếu</a>
+    <a class="nav-item" href="#faq"><span class="icon">❓</span>FAQ – Hỏi & Đáp</a>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">🛡️ Sales Enablement Guide · 2024–2025</div>
+    <h1>Cẩm nang giải pháp<br><span>Dò quét lỗ hổng ứng dụng DAST</span></h1>
+    <p class="hero-sub">Fortify by OpenText™ — Hỗ trợ đội ngũ sale tư vấn giải pháp kiểm thử bảo mật động (DAST) cho khách hàng doanh nghiệp, tài chính, viễn thông và cơ quan nhà nước.</p>
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-val">10+</div>
+        <div class="stat-label">Năm Top Gartner<br>Magic Quadrant</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">30×</div>
+        <div class="stat-label">Tiết kiệm chi phí<br>so với fix sau triển khai</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">OWASP</div>
+        <div class="stat-label">100% True Positive<br>Benchmark v1.2b</div>
+      </div>
+      <div class="stat">
+        <div class="stat-val">REST<br>SOAP<br>API</div>
+        <div class="stat-label">Bao phủ toàn diện<br>mọi loại API</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 1. GIỚI THIỆU -->
+  <div class="section" id="intro">
+    <div class="section-header">
+      <div class="section-icon icon-blue">🏢</div>
+      <div>
+        <div class="section-num">01</div>
+        <div class="section-title">Giới thiệu OpenText & Giải pháp DAST</div>
+      </div>
+    </div>
+
+    <div class="card-grid card-grid-2" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-title">🏢 OpenText là ai?</div>
+        <ul>
+          <li>Tập đoàn phần mềm doanh nghiệp hàng đầu thế giới (Canada), chuyên về quản lý thông tin và an ninh mạng</li>
+          <li>Thương hiệu Fortify được OpenText mua lại từ Micro Focus, kế thừa từ HP Fortify — hơn 20 năm phát triển</li>
+          <li>Được xếp hạng <strong class="text-accent">Leader liên tiếp 10+ năm trên Gartner Magic Quadrant</strong> về Application Security Testing (AST)</li>
+          <li>Khách hàng: Fortune 500, ngân hàng, bộ quốc phòng, viễn thông toàn cầu</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">🔍 DAST là gì?</div>
+        <p style="margin-bottom:10px;"><strong class="text-accent">Dynamic Application Security Testing (DAST)</strong> — Kiểm thử bảo mật ứng dụng động — là phương pháp tấn công thử nghiệm vào ứng dụng <em>đang chạy thực tế</em> để tìm ra lỗ hổng.</p>
+        <ul>
+          <li>Mô phỏng hacker tấn công từ bên ngoài vào web app, API</li>
+          <li>Không cần mã nguồn — chỉ cần URL của ứng dụng</li>
+          <li>Phát hiện lỗ hổng runtime: SQL Injection, XSS, Auth bypass...</li>
+          <li>Fortify DAST gồm: <strong>WebInspect</strong> + <strong>ScanCentral DAST</strong></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="highlight">
+      <strong>Điểm khác biệt DAST vs SAST:</strong> SAST quét mã nguồn khi đang viết code (bên trong), DAST tấn công ứng dụng khi đã chạy (bên ngoài). <em>Cần cả hai để bảo vệ toàn diện.</em>
+    </div>
+  </div>
+
+  <!-- 2. VẤN ĐỀ HIỆN TRẠNG -->
+  <div class="section" id="problem">
+    <div class="section-header">
+      <div class="section-icon icon-red">⚠️</div>
+      <div>
+        <div class="section-num">02</div>
+        <div class="section-title">Vấn đề hiện trạng trong các tổ chức</div>
+      </div>
+    </div>
+
+    <div class="card-grid card-grid-3" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-title">🎯 Tấn công ngày càng tinh vi</div>
+        <ul>
+          <li>Web app và API là mục tiêu tấn công số 1 hiện nay</li>
+          <li>OWASP Top 10 vẫn còn phổ biến: SQLi, XSS, IDOR, XXE...</li>
+          <li>API "bóng tối" (shadow API) không được biết đến = nguy cơ ẩn</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">🔓 Kiểm tra bảo mật còn thủ công</div>
+        <ul>
+          <li>Pentest định kỳ 1-2 lần/năm — không đủ tần suất</li>
+          <li>Pentester thiếu — chi phí cao, thời gian lâu</li>
+          <li>Không có quy trình tự động hóa trong DevSecOps</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">📉 Hệ quả kinh doanh</div>
+        <ul>
+          <li>Lộ dữ liệu khách hàng → phạt PDPA, mất uy tín</li>
+          <li>Downtime → thiệt hại doanh thu trực tiếp</li>
+          <li>Chi phí fix sau triển khai cao hơn 30× so với phát hiện sớm</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="highlight orange">
+      <strong>Câu hỏi đặt ra cho khách hàng:</strong> "Hiện tại tổ chức của bạn kiểm tra bảo mật các ứng dụng web/API bao lâu một lần? Quy trình đó tự động hay thủ công?"
+    </div>
+  </div>
+
+  <!-- 3. TÍNH NĂNG -->
+  <div class="section" id="features">
+    <div class="section-header">
+      <div class="section-icon icon-blue">⚡</div>
+      <div>
+        <div class="section-num">03</div>
+        <div class="section-title">Tính năng nổi bật của Fortify DAST</div>
+      </div>
+    </div>
+
+    <div class="card-grid card-grid-3" style="margin-bottom:16px;">
+      <div class="feature-item">
+        <div class="feature-icon">🕷️</div>
+        <div class="feature-name">Tự động Crawl & Audit</div>
+        <div class="feature-desc">Tự động "bò" toàn bộ ứng dụng web, lập bản đồ cấu trúc, rồi kiểm tra từng điểm dễ bị tấn công. Không cần can thiệp thủ công.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🔌</div>
+        <div class="feature-name">Quét API toàn diện</div>
+        <div class="feature-desc">Hỗ trợ REST, SOAP, GraphQL, OpenAPI (Swagger 1.0/2.0/3.0), Postman Collection, RAML, WSDL. Tự động khám phá shadow API trong quá trình quét.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🏗️</div>
+        <div class="feature-name">Hỗ trợ ứng dụng hiện đại</div>
+        <div class="feature-desc">Quét được SPA (Single Page App): Angular, React, Vue. Hỗ trợ HTTP/2, WebSocket, JSON, AJAX, HTML5. Tích hợp Selenium scripts.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🔐</div>
+        <div class="feature-name">Xác thực tự động</div>
+        <div class="feature-desc">Hỗ trợ OAuth 2.0, Bearer Token, Cookie, HTTP Basic/NTLM. Tự động xử lý đăng nhập SMS OTP, Email OTP. Quản lý session tự động.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🔗</div>
+        <div class="feature-name">Tích hợp CI/CD</div>
+        <div class="feature-desc">Kết nối Jenkins, Azure DevOps, GitLab CI, Maven, Gradle, MSBuild. Scan tự động mỗi khi build/deploy — bảo mật liên tục trong DevSecOps.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">📡</div>
+        <div class="feature-name">OAST – Phát hiện lỗ hổng ẩn</div>
+        <div class="feature-desc">Out-of-Band Application Security Testing: phát hiện Blind SQLi, Blind XSS, SSRF, XXE qua DNS/HTTP callback. Hỗ trợ cả môi trường air-gapped.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">📊</div>
+        <div class="feature-name">Báo cáo & Dashboard</div>
+        <div class="feature-desc">Dashboard trực quan trên SSC, báo cáo theo chuẩn OWASP, PCI-DSS, HIPAA. Xuất FPR, XML. Ưu tiên lỗ hổng theo mức độ nghiêm trọng.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">⚖️</div>
+        <div class="feature-name">SAST + DAST Correlation</div>
+        <div class="feature-desc">Kết hợp kết quả SAST và DAST trên nền tảng SSC để loại bỏ false positive, ưu tiên chính xác hơn. Không cần agent.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon">🏭</div>
+        <div class="feature-name">ScanCentral DAST Farm</div>
+        <div class="feature-desc">Mở rộng theo nhu cầu, triển khai nhiều WebInspect sensor song song. Phù hợp doanh nghiệp lớn có hàng trăm ứng dụng cần quét thường xuyên.</div>
+      </div>
+    </div>
+
+    <div class="highlight green">
+      <strong>FAST (Functional Application Security Testing):</strong> Tích hợp với UFT One, Selenium, Cucumber — chụp traffic từ functional test để tái sử dụng trong DAST scan. Hiệu quả hơn IAST vì vẫn tiếp tục crawl sau khi functional test kết thúc.
+    </div>
+  </div>
+
+  <!-- 4. KHẢO SÁT -->
+  <div class="section" id="survey">
+    <div class="section-header">
+      <div class="section-icon icon-yellow">📋</div>
+      <div>
+        <div class="section-num">04</div>
+        <div class="section-title">Câu hỏi khảo sát hiện trạng (để lên BOM)</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title">💡 Hướng dẫn dùng bảng khảo sát</div>
+      <p>Sử dụng các câu hỏi này khi gặp khách hàng để thu thập đủ thông tin sizing. Mỗi câu trả lời giúp xác định số lượng license, cấu hình server, và kiến trúc triển khai phù hợp.</p>
+    </div>
+
+    <table class="survey-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Danh mục</th>
+          <th>Câu hỏi khảo sát</th>
+          <th>Mục đích</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="q-num">Q1</td>
+          <td class="q-cat"><span class="badge badge-blue">Ứng dụng</span></td>
+          <td>Tổng số ứng dụng web/API cần quét DAST là bao nhiêu?</td>
+          <td>Xác định số Target/WebInspect license</td>
+        </tr>
+        <tr>
+          <td class="q-num">Q2</td>
+          <td class="q-cat"><span class="badge badge-blue">Ứng dụng</span></td>
+          <td>Liệt kê danh sách URL/IP của các ứng dụng cần quét?</td>
+          <td>Xác định cấu hình Single Scan Target hay Concurrent</td>
+        </tr>
+        <tr>
+          <td class="q-num">Q3</td>
+          <td class="q-cat"><span class="badge badge-orange">API</span></td>
+          <td>Ứng dụng sử dụng loại API nào? REST, SOAP, GraphQL, gRPC?</td>
+          <td>Chọn module API phù hợp</td>
+        </tr>
+        <tr>
+          <td class="q-num">Q4</td>
+          <td class="q-cat"><span class="badge badge-orange">API</span></td>
+          <td>Có file OpenAPI/Swagger, Postman Collection hay WSDL không?</td>
+          <td>Tối ưu cấu hình scan API</td>
+        </tr>
+        <tr>
+          <td class="q-num">Q5</td>
+          <td class="q-cat"><span class="badge badge-green">Công nghệ</span></td>
+          <td>Ứng dụng sử dụng framework gì? (Angular, React, Vue, .NET, Java...)</td>
+          <td>Đảm bảo tương thích, cấu hình SPA scan</td>
+        </tr>
+        <tr>
+          <td class="q-num">Q6</td>
+          <td class="q-cat"><span class="badge badge-green">Công nghệ</span></td>
+          <td>Cơ chế xác thực của ứng dụng? (SSO, OAuth, LDAP, OTP, Basic Auth)</td>
+          <td>Cấu hình authentication cho DAST scan</td>
+        </tr>
+        <tr>
+          <td class="q-num">Q7</td>
+          <td class="q-cat"><span class="badge badge-yellow">Nhân sự</span></td>
+          <td>Số lượng người thực hiện và xem kết quả DAST scan là bao nhiêu?</td>
+          <td>Tính số lượng Fortify User license</td>
+        </tr>
+        <tr>
+          <td class="q-num">Q8</td>
+          <td class="q-cat"><span class="badge badge-yellow">Nhân sự</span></td>
+          <td>Số scan song song tối đa cần thực hiện cùng lúc là bao nhiêu?</td>
+          <td>Tính số Concurrent Scan Machine / DAST Sensor</td>
+        </tr>
+        <tr>
+          <td class="q-num">Q9</td>
+          <td class="q-cat"><span class="badge badge-red">Triển khai</span></td>
+          <td>Hạ tầng triển khai: On-premise, Private Cloud, hay Hybrid?</td>
+          <td>Lựa chọn mô hình triển khai phù hợp</td>
+        </tr>
+        <tr>
+          <td class="q-num">Q10</td>
+          <td class="q-cat"><span class="badge badge-red">Triển khai</span></td>
+          <td>Môi trường mạng: Internet-facing hay internal (air-gapped)?</td>
+          <td>Cấu hình OAST server (public vs private)</td>
+        </tr>
+        <tr>
+          <td class="q-num">Q11</td>
+          <td class="q-cat"><span class="badge badge-blue">CI/CD</span></td>
+          <td>Có quy trình CI/CD không? Dùng Jenkins, GitLab CI, Azure DevOps?</td>
+          <td>Tích hợp DAST vào pipeline tự động</td>
+        </tr>
+        <tr>
+          <td class="q-num">Q12</td>
+          <td class="q-cat"><span class="badge badge-blue">CI/CD</span></td>
+          <td>Tần suất quét mong muốn: hàng ngày, hàng tuần, hay theo trigger?</td>
+          <td>Sizing server, lập kế hoạch license</td>
+        </tr>
+        <tr>
+          <td class="q-num">Q13</td>
+          <td class="q-cat"><span class="badge badge-green">Tuân thủ</span></td>
+          <td>Tổ chức cần tuân thủ chuẩn nào? PCI-DSS, ISO 27001, GDPR, TT09?</td>
+          <td>Tùy chỉnh báo cáo theo chuẩn</td>
+        </tr>
+        <tr>
+          <td class="q-num">Q14</td>
+          <td class="q-cat"><span class="badge badge-green">Tuân thủ</span></td>
+          <td>Có yêu cầu lưu trữ lịch sử kết quả scan bao lâu? (1, 3, 5 năm?)</td>
+          <td>Sizing database, storage</td>
+        </tr>
+        <tr>
+          <td class="q-num">Q15</td>
+          <td class="q-cat"><span class="badge badge-orange">Tích hợp</span></td>
+          <td>Cần tích hợp kết quả với Jira, Slack, SIEM hay hệ thống khác không?</td>
+          <td>Cấu hình webhook, API integration</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 5. SWOT -->
+  <div class="section" id="swot">
+    <div class="section-header">
+      <div class="section-icon icon-purple">📊</div>
+      <div>
+        <div class="section-num">05</div>
+        <div class="section-title">Phân tích SWOT & Phân khúc khách hàng</div>
+      </div>
+    </div>
+
+    <div class="swot-grid" style="margin-bottom:24px;">
+      <div class="swot-card swot-s">
+        <div class="swot-label">💪 Strengths — Điểm mạnh</div>
+        <ul>
+          <li>Leader Gartner Magic Quadrant 10+ năm liên tiếp</li>
+          <li>OWASP Benchmark: 100% true positive rate</li>
+          <li>Quét API toàn diện nhất: REST, SOAP, GraphQL, Postman, OpenAPI</li>
+          <li>Tích hợp SAST+DAST trên cùng nền tảng SSC (không cần agent)</li>
+          <li>Hỗ trợ SPA, framework hiện đại, HTTP/2, WebSocket</li>
+          <li>OAST phát hiện blind attacks, hỗ trợ air-gapped</li>
+          <li>Tích hợp CI/CD sâu: Jenkins, GitLab, Azure DevOps</li>
+          <li>Khả năng scale farm sensor không giới hạn</li>
+        </ul>
+      </div>
+      <div class="swot-card swot-w">
+        <div class="swot-label">⚠️ Weaknesses — Điểm yếu</div>
+        <ul>
+          <li>Chi phí license cao hơn so với open-source tools</li>
+          <li>Yêu cầu hạ tầng server khá lớn khi deploy on-premise</li>
+          <li>Thời gian onboarding và cấu hình ban đầu mất thời gian</li>
+          <li>WebInspect chủ yếu chạy trên Windows (DAST Sensor)</li>
+          <li>Cần training đội ngũ kỹ thuật để vận hành hiệu quả</li>
+        </ul>
+      </div>
+      <div class="swot-card swot-o">
+        <div class="swot-label">🚀 Opportunities — Cơ hội</div>
+        <ul>
+          <li>Thị trường AppSec Việt Nam đang tăng trưởng mạnh</li>
+          <li>Nghị định 13/2023 về PDPA thúc đẩy doanh nghiệp đầu tư bảo mật</li>
+          <li>Làn sóng chuyển đổi số tạo ra hàng nghìn ứng dụng mới cần quét</li>
+          <li>Yêu cầu tuân thủ PCI-DSS v4.0 bắt buộc DAST</li>
+          <li>Ngân hàng số, fintech, ví điện tử phát triển nhanh</li>
+          <li>Xu hướng DevSecOps đang được áp dụng rộng rãi</li>
+        </ul>
+      </div>
+      <div class="swot-card swot-t">
+        <div class="swot-label">⚡ Threats — Thách thức</div>
+        <ul>
+          <li>Đối thủ: Burp Suite Pro (PortSwigger), OWASP ZAP miễn phí</li>
+          <li>StackHawk, Invicti, Netsparker cạnh tranh trực tiếp</li>
+          <li>Khách hàng e ngại chi phí cao trong giai đoạn đầu</li>
+          <li>Một số tổ chức tin tưởng vào pentest thủ công định kỳ</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🎯 Phân khúc khách hàng phù hợp để chào DAST</div>
+      <div class="segment-tags">
+        <div class="segment-tag">🏦 Ngân hàng & Fintech</div>
+        <div class="segment-tag">📈 Chứng khoán</div>
+        <div class="segment-tag">📡 Viễn thông (Viettel, VNPT, MobiFone)</div>
+        <div class="segment-tag">🏥 Bảo hiểm & Y tế</div>
+        <div class="segment-tag">🛒 Thương mại điện tử lớn</div>
+        <div class="segment-tag">🏛️ Cơ quan Chính phủ / Bộ ngành</div>
+        <div class="segment-tag">👮 Công an / Quốc phòng</div>
+        <div class="segment-tag">⚡ Điện lực, Dầu khí, Hạ tầng</div>
+        <div class="segment-tag">🎓 Giáo dục ĐH top tier</div>
+        <div class="segment-tag">🏭 Tập đoàn lớn có CNTT nội bộ</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. LICENSE -->
+  <div class="section" id="license">
+    <div class="section-header">
+      <div class="section-icon icon-green">🔑</div>
+      <div>
+        <div class="section-num">06</div>
+        <div class="section-title">Cơ chế tính License</div>
+      </div>
+    </div>
+
+    <div class="highlight" style="margin-bottom:16px;">
+      <strong>Quan trọng:</strong> Fortify DAST tính license theo <strong>số lượng người dùng (Users)</strong> và <strong>số scan engine đồng thời (Scan Machines / Dynamic Engine)</strong>. Không giới hạn số lần quét hay số IP đích (trừ Single Target License).
+    </div>
+
+    <table class="license-table" style="margin-bottom:16px;">
+      <thead>
+        <tr>
+          <th>Loại License</th>
+          <th>Mô tả</th>
+          <th>Phù hợp với</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="lic-name">WebInspect Named User</td>
+          <td>1 user cố định, cài trên 1 OS, không giới hạn số scan, không giới hạn target</td>
+          <td>Chuyên gia bảo mật cá nhân dùng desktop</td>
+        </tr>
+        <tr>
+          <td class="lic-name">WebInspect Concurrent User</td>
+          <td>Nhiều user chia sẻ pool, đếm số người dùng đồng thời. Yêu cầu LIM Server. Không giới hạn scan, target.</td>
+          <td>Đội AppSec có nhiều người dùng luân phiên</td>
+        </tr>
+        <tr>
+          <td class="lic-name">WebInspect Single Scan Target</td>
+          <td>Scan không giới hạn số lần vào 1 IP cố định. Cài tối đa 5 máy. Đổi IP 2 lần/12 tháng.</td>
+          <td>Tổ chức chỉ cần quét 1 ứng dụng duy nhất</td>
+        </tr>
+        <tr>
+          <td class="lic-name">WebInspect Security Consultant Term</td>
+          <td>License thuê theo thời hạn (1 tháng / 1 năm), 1 Named User, 1 OS Instance. Dành cho MSP/tư vấn bảo mật.</td>
+          <td>Công ty pentest, tư vấn bảo mật, MSSP</td>
+        </tr>
+        <tr>
+          <td class="lic-name">Fortify Concurrent Scanning Model</td>
+          <td>Đếm số scan đang chạy đồng thời (Scan Machine). Cài trên không giới hạn máy. 1 scan = 1 Scan Machine license. Yêu cầu tối thiểu 2 Scan Machines + 1 User.</td>
+          <td>Doanh nghiệp lớn, quét nhiều app song song</td>
+        </tr>
+        <tr>
+          <td class="lic-name">Fortify Dynamic Only Scan Machine</td>
+          <td>Chỉ dành cho DAST (WebInspect), không bao gồm SAST. Giá thấp hơn full Concurrent Scan Machine.</td>
+          <td>Chỉ cần DAST, không mua SAST</td>
+        </tr>
+        <tr>
+          <td class="lic-name">WebInspect Enterprise</td>
+          <td>Bao gồm toàn bộ tính năng, quản lý tập trung qua SSC. Mỗi user cần có SSC User license. User chỉ request scan không cần license user.</td>
+          <td>Doanh nghiệp enterprise, triển khai ScanCentral DAST</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="card-grid card-grid-2">
+      <div class="card">
+        <div class="card-title">📐 Cách tính đơn giản để lên BOM</div>
+        <ul>
+          <li><strong class="text-accent">Số Scan Machine</strong> = Số scan DAST chạy đồng thời tối đa</li>
+          <li><strong class="text-accent">Số User</strong> = Số người xem/quản lý kết quả trên SSC/WebInspect</li>
+          <li>LIM Server: bắt buộc cho Concurrent User và Concurrent Scan</li>
+          <li>SSC Server: bắt buộc cho WebInspect Enterprise / ScanCentral DAST</li>
+          <li>Database: SQL Server (Microsoft SQL hoặc Oracle)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="card-title">🖥️ Cấu hình server tham khảo (Viettel)</div>
+        <ul>
+          <li>Management Server (SSC): 16 CPU, 32GB RAM</li>
+          <li>ScanCentral DAST Server: 8 CPU, 16GB RAM</li>
+          <li>LIM Server: 4 CPU, 8GB RAM</li>
+          <li>Database Server: 16 CPU, 64GB RAM, SSD</li>
+          <li>DAST Sensor (x5 Windows): 8 CPU, 16GB RAM mỗi node</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. SO SÁNH ĐỐI THỦ -->
+  <div class="section" id="compare">
+    <div class="section-header">
+      <div class="section-icon icon-orange">⚔️</div>
+      <div>
+        <div class="section-num">07</div>
+        <div class="section-title">So sánh với đối thủ cạnh tranh</div>
+        <span class="rank-badge">🏆 #1 Gartner Magic Quadrant</span>
+      </div>
+    </div>
+
+    <table class="compare-table" style="margin-bottom:16px;">
+      <thead>
+        <tr>
+          <th>Tiêu chí</th>
+          <th class="fortify-col">🛡️ Fortify DAST<br><small>(OpenText)</small></th>
+          <th>Burp Suite Pro<br><small>(PortSwigger)</small></th>
+          <th>Invicti<br><small>(Netsparker)</small></th>
+          <th>OWASP ZAP<br><small>(Open Source)</small></th>
+          <th>StackHawk</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Quét API (REST/SOAP/GraphQL)</td>
+          <td class="fortify-col"><span class="check">✅</span> Toàn diện</td>
+          <td><span class="partial">⚡</span> Một phần</td>
+          <td><span class="check">✅</span> Tốt</td>
+          <td><span class="partial">⚡</span> Hạn chế</td>
+          <td><span class="check">✅</span> API-first</td>
+        </tr>
+        <tr>
+          <td>Tích hợp CI/CD sâu</td>
+          <td class="fortify-col"><span class="check">✅</span> Đầy đủ</td>
+          <td><span class="partial">⚡</span> Cơ bản</td>
+          <td><span class="check">✅</span> Tốt</td>
+          <td><span class="check">✅</span> Plugin</td>
+          <td><span class="check">✅</span> Native</td>
+        </tr>
+        <tr>
+          <td>SAST + DAST tích hợp cùng nền tảng</td>
+          <td class="fortify-col"><span class="check">✅</span> SSC</td>
+          <td><span class="cross">❌</span></td>
+          <td><span class="cross">❌</span></td>
+          <td><span class="cross">❌</span></td>
+          <td><span class="cross">❌</span></td>
+        </tr>
+        <tr>
+          <td>Hỗ trợ SPA (React/Angular/Vue)</td>
+          <td class="fortify-col"><span class="check">✅</span></td>
+          <td><span class="check">✅</span></td>
+          <td><span class="check">✅</span></td>
+          <td><span class="partial">⚡</span></td>
+          <td><span class="check">✅</span></td>
+        </tr>
+        <tr>
+          <td>OAST – Blind attacks detection</td>
+          <td class="fortify-col"><span class="check">✅</span> DNS/HTTP</td>
+          <td><span class="check">✅</span> Burp Collab</td>
+          <td><span class="partial">⚡</span></td>
+          <td><span class="cross">❌</span></td>
+          <td><span class="cross">❌</span></td>
+        </tr>
+        <tr>
+          <td>Triển khai On-premise an toàn</td>
+          <td class="fortify-col"><span class="check">✅</span> Đầy đủ</td>
+          <td><span class="check">✅</span></td>
+          <td><span class="partial">⚡</span> Hybrid</td>
+          <td><span class="check">✅</span></td>
+          <td><span class="cross">❌</span> Cloud-only</td>
+        </tr>
+        <tr>
+          <td>Hỗ trợ Air-gapped (mạng kín)</td>
+          <td class="fortify-col"><span class="check">✅</span> Private OAST</td>
+          <td><span class="check">✅</span></td>
+          <td><span class="cross">❌</span></td>
+          <td><span class="check">✅</span></td>
+          <td><span class="cross">❌</span></td>
+        </tr>
+        <tr>
+          <td>Scale farm sensor doanh nghiệp</td>
+          <td class="fortify-col"><span class="check">✅</span> Unlimited</td>
+          <td><span class="cross">❌</span></td>
+          <td><span class="partial">⚡</span></td>
+          <td><span class="cross">❌</span></td>
+          <td><span class="partial">⚡</span></td>
+        </tr>
+        <tr>
+          <td>Báo cáo chuẩn PCI-DSS, OWASP</td>
+          <td class="fortify-col"><span class="check">✅</span> Phong phú</td>
+          <td><span class="partial">⚡</span></td>
+          <td><span class="check">✅</span></td>
+          <td><span class="partial">⚡</span></td>
+          <td><span class="partial">⚡</span></td>
+        </tr>
+        <tr>
+          <td>Xếp hạng Gartner Magic Quadrant</td>
+          <td class="fortify-col"><span class="check">✅</span> <strong>Leader #1</strong></td>
+          <td><span class="partial">⚡</span> Challenger</td>
+          <td><span class="partial">⚡</span> Niche</td>
+          <td><span class="cross">❌</span> N/A</td>
+          <td><span class="cross">❌</span> N/A</td>
+        </tr>
+        <tr>
+          <td>Chi phí</td>
+          <td class="fortify-col">💰💰💰 Enterprise</td>
+          <td>💰💰 Mid-range</td>
+          <td>💰💰💰 Enterprise</td>
+          <td>🆓 Miễn phí</td>
+          <td>💰 Startup-friendly</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight green">
+      <strong>Điểm mạnh cạnh tranh quan trọng nhất của Fortify:</strong> Đây là giải pháp <em>duy nhất</em> tích hợp SAST + DAST + SCA trên cùng một nền tảng quản lý (SSC), hỗ trợ đầy đủ air-gapped, và được xếp hạng Leader trên Gartner liên tục 10+ năm.
+    </div>
+  </div>
+
+  <!-- 8. KEY SELLING POINTS -->
+  <div class="section" id="ksp">
+    <div class="section-header">
+      <div class="section-icon icon-orange">🎯</div>
+      <div>
+        <div class="section-num">08</div>
+        <div class="section-title">Key Selling Points – Luận điểm bán hàng</div>
+      </div>
+    </div>
+
+    <div class="ksp-grid">
+      <div class="ksp-item">
+        <div class="ksp-num">01</div>
+        <div>
+          <div class="ksp-title">🏆 "Tiêu chuẩn vàng" ngành AppSec</div>
+          <div class="ksp-desc">Fortify là giải pháp được các ngân hàng, quân đội, tập đoàn Fortune 500 tin dùng. Đây là sự lựa chọn an toàn nhất cho bộ phận CISO khi cần giải trình với ban lãnh đạo.</div>
+        </div>
+      </div>
+      <div class="ksp-item">
+        <div class="ksp-num">02</div>
+        <div>
+          <div class="ksp-title">🔗 Hệ sinh thái bảo mật hoàn chỉnh</div>
+          <div class="ksp-desc">Một nền tảng SSC quản lý SAST + DAST + SCA. Không cần ghép nhiều công cụ khác nhau, giảm chi phí vận hành, tăng hiệu quả tương quan kết quả.</div>
+        </div>
+      </div>
+      <div class="ksp-item">
+        <div class="ksp-num">03</div>
+        <div>
+          <div class="ksp-title">⚡ Tích hợp DevSecOps thực sự</div>
+          <div class="ksp-desc">Scan tự động mỗi khi deploy, không cần đợi pentest định kỳ. Phát hiện lỗ hổng kịp thời, sửa ngay trong sprint — giảm 30× chi phí so với fix sau khi live.</div>
+        </div>
+      </div>
+      <div class="ksp-item">
+        <div class="ksp-num">04</div>
+        <div>
+          <div class="ksp-title">🔌 Quét API tốt nhất thị trường</div>
+          <div class="ksp-desc">Hỗ trợ toàn bộ định dạng API hiện đại. Tự động khám phá shadow API — loại rủi ro mà hầu hết tổ chức không biết mình đang có.</div>
+        </div>
+      </div>
+      <div class="ksp-item">
+        <div class="ksp-num">05</div>
+        <div>
+          <div class="ksp-title">🔒 An toàn cho môi trường nội bộ</div>
+          <div class="ksp-desc">Triển khai hoàn toàn on-premise, hỗ trợ air-gapped. Dữ liệu ứng dụng không bao giờ ra ngoài. Phù hợp tuyệt đối cho ngân hàng, công an, quốc phòng.</div>
+        </div>
+      </div>
+      <div class="ksp-item">
+        <div class="ksp-num">06</div>
+        <div>
+          <div class="ksp-title">📊 Tuân thủ quy định bắt buộc</div>
+          <div class="ksp-desc">Báo cáo theo chuẩn PCI-DSS v4.0, OWASP Top 10, ISO 27001. Giúp tổ chức chứng minh tuân thủ với kiểm toán nội bộ và cơ quan quản lý nhà nước.</div>
+        </div>
+      </div>
+      <div class="ksp-item">
+        <div class="ksp-num">07</div>
+        <div>
+          <div class="ksp-title">🚀 Scale không giới hạn</div>
+          <div class="ksp-desc">Từ 5 đến 500 ứng dụng — ScanCentral DAST tự động scale sensor pool. Phù hợp cho tập đoàn lớn muốn quét hàng trăm ứng dụng song song.</div>
+        </div>
+      </div>
+      <div class="ksp-item">
+        <div class="ksp-num">08</div>
+        <div>
+          <div class="ksp-title">🎓 Nâng cao năng lực nội bộ</div>
+          <div class="ksp-desc">Hướng dẫn fix lỗi chi tiết theo từng loại lỗ hổng. Giúp đội dev học cách viết code an toàn. Giảm phụ thuộc vào pentest bên ngoài về lâu dài.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. USE CASES -->
+  <div class="section" id="usecase">
+    <div class="section-header">
+      <div class="section-icon icon-green">🏗️</div>
+      <div>
+        <div class="section-num">09</div>
+        <div class="section-title">Use Cases thực tế theo ngành</div>
+      </div>
+    </div>
+
+    <div class="usecase-item">
+      <div class="usecase-icon">🏦</div>
+      <div>
+        <div class="usecase-name">Ngân hàng – Ví dụ: GP Bank, MSB</div>
+        <div class="usecase-scenario">Tình huống: Internet Banking + Mobile App + Open Banking API bị yêu cầu kiểm tra bảo mật định kỳ theo quy định NHNN</div>
+        <div class="usecase-desc">Fortify DAST quét toàn bộ ứng dụng Internet Banking, Mobile API, và Open Banking endpoints mỗi lần release. Phát hiện lỗ hổng IDOR trong API chuyển tiền trước khi lên production. Báo cáo theo chuẩn PCI-DSS nộp cho NHNN và kiểm toán. Tích hợp Jenkins để scan tự động — giảm 80% thời gian pentest thủ công.</div>
+      </div>
+    </div>
+
+    <div class="usecase-item">
+      <div class="usecase-icon">📈</div>
+      <div>
+        <div class="usecase-name">Chứng khoán – Ví dụ: Sàn HoSE, Công ty CK top 10</div>
+        <div class="usecase-scenario">Tình huống: Hệ thống giao dịch trực tuyến (trading web/app) với hàng triệu lệnh/ngày — không được có downtime hay bị exploit</div>
+        <div class="usecase-desc">DAST scan định kỳ ngoài giờ giao dịch, phát hiện lỗ hổng XSS và Session Fixation trong module đặt lệnh. ScanCentral DAST lên lịch quét tự động 2h sáng mỗi ngày. Kết quả tích hợp SSC để CISO review dashboard tổng quan. Không ảnh hưởng hiệu năng hệ thống giao dịch.</div>
+      </div>
+    </div>
+
+    <div class="usecase-item">
+      <div class="usecase-icon">📡</div>
+      <div>
+        <div class="usecase-name">Viễn thông – Viettel, VNPT, MobiFone</div>
+        <div class="usecase-scenario">Tình huống: Hàng trăm ứng dụng web nội bộ + customer-facing portal + hàng nghìn API nội bộ cần kiểm tra bảo mật liên tục</div>
+        <div class="usecase-desc">ScanCentral DAST Farm với 5+ sensor chạy song song, quét 50+ ứng dụng/tuần. Phát hiện lỗ hổng SQL Injection trong cổng tự phục vụ khách hàng. Tích hợp GitLab CI để scan tự động mỗi khi merge request. Báo cáo tập trung trên SSC cho đội CSOC theo dõi. Kết hợp với SAST để có góc nhìn 360° về bảo mật ứng dụng.</div>
+      </div>
+    </div>
+
+    <div class="usecase-item">
+      <div class="usecase-icon">👮</div>
+      <div>
+        <div class="usecase-name">Công an tỉnh / Bộ Công an</div>
+        <div class="usecase-scenario">Tình huống: Hệ thống quản lý dân cư, cơ sở dữ liệu quốc gia, cổng dịch vụ công — yêu cầu tuyệt mật, không thể đưa dữ liệu ra ngoài</div>
+        <div class="usecase-desc">Fortify DAST triển khai hoàn toàn on-premise trong mạng nội bộ bảo mật cao. OAST Private Container cho môi trường air-gapped — không cần kết nối Internet. Phát hiện lỗ hổng trong cổng tra cứu thông tin công dân trước khi công khai. Quét định kỳ theo yêu cầu Thông tư 09/2020 của Bộ TT&TT. Báo cáo tuân thủ cho lãnh đạo đơn vị.</div>
+      </div>
+    </div>
+
+    <div class="usecase-item">
+      <div class="usecase-icon">🏥</div>
+      <div>
+        <div class="usecase-name">Bệnh viện lớn / Bảo hiểm y tế</div>
+        <div class="usecase-scenario">Tình huống: Hệ thống HIS, cổng đặt lịch khám, app bệnh nhân — lưu trữ dữ liệu y tế nhạy cảm, nguy cơ rò rỉ PHI</div>
+        <div class="usecase-desc">DAST phát hiện lỗ hổng truy cập trái phép vào hồ sơ bệnh nhân (IDOR). Báo cáo tuân thủ HIPAA và quy định bảo vệ dữ liệu y tế. Quét API kết nối giữa HIS, PACS, và cổng bảo hiểm. Scan theo lịch sau mỗi lần nâng cấp phần mềm.</div>
+      </div>
+    </div>
+
+    <div class="usecase-item">
+      <div class="usecase-icon">🏛️</div>
+      <div>
+        <div class="usecase-name">Cơ quan Chính phủ / Bộ ngành</div>
+        <div class="usecase-scenario">Tình huống: Cổng dịch vụ công quốc gia, hệ thống thuế điện tử, hải quan — phục vụ hàng triệu công dân và doanh nghiệp</div>
+        <div class="usecase-desc">Fortify DAST kiểm tra định kỳ cổng dịch vụ công trước mỗi kỳ nộp hồ sơ lớn. Phát hiện lỗ hổng trong module xác thực và tải tài liệu. Tích hợp quy trình kiểm tra an toàn thông tin theo Thông tư 12/2022 của Bộ TT&TT. Báo cáo nộp lên Ban Cơ yếu Chính phủ theo định kỳ.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. KHÁCH HÀNG THAM CHIẾU -->
+  <div class="section" id="customers">
+    <div class="section-header">
+      <div class="section-icon icon-blue">🤝</div>
+      <div>
+        <div class="section-num">10</div>
+        <div class="section-title">Khách hàng tham chiếu</div>
+      </div>
+    </div>
+
+    <div class="customer-grid" style="margin-bottom:16px;">
+      <div class="customer-card">
+        <div class="customer-name">🏢 Viettel</div>
+        <div class="customer-segment">Viễn thông · Hà Nội</div>
+        <div class="customer-use">Triển khai SAST + DAST + SCA toàn diện. ScanCentral DAST Farm với 5 sensor. Quét hàng trăm ứng dụng nội bộ và external.</div>
+      </div>
+      <div class="customer-card">
+        <div class="customer-name">📡 VNPT</div>
+        <div class="customer-segment">Viễn thông · Quốc gia</div>
+        <div class="customer-use">Fortify DAST kiểm tra bảo mật cổng dịch vụ khách hàng và hệ thống quản lý nội bộ. Tích hợp pipeline CI/CD.</div>
+      </div>
+      <div class="customer-card">
+        <div class="customer-name">📱 MobiFone</div>
+        <div class="customer-segment">Viễn thông · Hà Nội</div>
+        <div class="customer-use">Quét bảo mật ứng dụng di động và API. Phát hiện lỗ hổng trước mỗi lần release phiên bản mới.</div>
+      </div>
+      <div class="customer-card">
+        <div class="customer-name">🏦 GP Bank</div>
+        <div class="customer-segment">Ngân hàng · Hà Nội</div>
+        <div class="customer-use">Fortify DAST kiểm tra hệ thống Internet Banking, Mobile App Banking. Báo cáo PCI-DSS định kỳ.</div>
+      </div>
+      <div class="customer-card">
+        <div class="customer-name">🌐 Các Bộ Ngành TW</div>
+        <div class="customer-segment">Chính phủ · Toàn quốc</div>
+        <div class="customer-use">Kiểm tra bảo mật cổng dịch vụ công, hệ thống nội bộ. Tuân thủ quy định bảo đảm ATTT theo Thông tư Bộ TT&TT.</div>
+      </div>
+      <div class="customer-card">
+        <div class="customer-name">🏭 Tập đoàn FPT, CMC</div>
+        <div class="customer-segment">Công nghệ · Toàn quốc</div>
+        <div class="customer-use">Sử dụng Fortify DAST cho cả nhu cầu nội bộ và cung cấp dịch vụ AppSec cho khách hàng doanh nghiệp.</div>
+      </div>
+    </div>
+
+    <div class="highlight">
+      <strong>Tip cho Sale:</strong> Khi khách hàng hỏi về tham chiếu, nhấn mạnh việc Fortify được các tổ chức tài chính và viễn thông lớn nhất Việt Nam tin dùng. Có thể xin phép tham chiếu từ Viettel hoặc các đơn vị đã triển khai.
+    </div>
+  </div>
+
+  <!-- 11. FAQ -->
+  <div class="section" id="faq">
+    <div class="section-header">
+      <div class="section-icon icon-purple">❓</div>
+      <div>
+        <div class="section-num">11</div>
+        <div class="section-title">FAQ – Câu hỏi thường gặp & Trả lời</div>
+      </div>
+    </div>
+
+    <div class="faq-cat-header">🔍 Về Sản phẩm & Tính năng</div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        DAST khác gì so với Pentest thủ công? Tại sao cần DAST nếu đã có Pentest?
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          Pentest thủ công thường thực hiện <strong>1-2 lần/năm</strong>, tốn chi phí cao và phụ thuộc vào kỹ năng cá nhân. DAST tự động chạy <strong>mỗi khi build/deploy</strong>, phát hiện lỗ hổng mới xuất hiện kịp thời. Hai phương pháp bổ sung cho nhau: DAST xử lý "width" (phủ rộng, tần suất cao), Pentest xử lý "depth" (phân tích sâu kịch bản phức tạp). Về lâu dài, DAST giúp giảm scope và chi phí Pentest đáng kể.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Fortify DAST có quét được ứng dụng yêu cầu đăng nhập (authenticated scan) không?
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          <strong>Có.</strong> Fortify WebInspect hỗ trợ nhiều cơ chế xác thực: OAuth 2.0, Bearer Token, Cookie-based, HTTP Basic/NTLM, Form-based Login. Ngoài ra hỗ trợ <strong>tự động tạo macro đăng nhập</strong> và tích hợp Selenium scripts để xử lý luồng xác thực phức tạp bao gồm cả OTP qua SMS/Email.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Fortify DAST phát hiện được những loại lỗ hổng nào?
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          Fortify DAST phát hiện toàn bộ <strong>OWASP Top 10</strong> bao gồm: SQL Injection, Cross-Site Scripting (XSS), Cross-Site Request Forgery (CSRF), Insecure Direct Object Reference (IDOR), XML External Entity (XXE), Security Misconfiguration, Broken Authentication, Sensitive Data Exposure, và nhiều hơn. Với OAST còn phát hiện được <strong>Blind SQLi, Blind XSS, SSRF, Remote File Include</strong> — những lỗ hổng mà scan thông thường không thể phát hiện.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Thời gian quét một ứng dụng mất bao lâu?
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          Phụ thuộc vào độ phức tạp của ứng dụng. Ứng dụng nhỏ (~100 trang): <strong>1-2 giờ</strong>. Ứng dụng trung bình: <strong>4-8 giờ</strong>. Ứng dụng lớn có nhiều API: <strong>12-24 giờ</strong>. Fortify hỗ trợ <strong>Incremental Scan</strong> — chỉ quét phần thay đổi so với scan trước, giúp rút ngắn thời gian đáng kể trong CI/CD pipeline.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-cat-header">🔑 Về License & Sizing</div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        License DAST tính theo số ứng dụng hay số người dùng?
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          Fortify DAST <strong>không tính theo số ứng dụng hay số lần quét</strong>. License được tính theo: (1) <strong>Số Scan Machine đồng thời</strong> — số scan chạy song song tối đa, và (2) <strong>Số User</strong> — người dùng truy cập SSC/WebInspect để xem/quản lý kết quả. Ví dụ: nếu bạn cần chạy 3 scan cùng lúc → cần 3 Dynamic Scan Machine + số user tương ứng.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Khách hàng nhỏ chỉ có 1-2 ứng dụng web nên mua loại license nào?
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          Với khách hàng nhỏ: <strong>WebInspect Named User License</strong> (1 người dùng, không giới hạn target, không giới hạn số lần scan) hoặc <strong>WebInspect Single Scan Target</strong> (chỉ cần quét 1 IP/domain cố định, chi phí thấp hơn). Với công ty tư vấn bảo mật muốn dùng cho nhiều khách hàng: <strong>Security Consultant Term License</strong> (thuê theo tháng/năm).
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Cần bao nhiêu server để triển khai Fortify DAST cho doanh nghiệp vừa (~20 ứng dụng)?
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          Cấu hình tối thiểu gợi ý: <strong>1 Management Server</strong> (SSC + ScanCentral DAST, 8-16 CPU, 32GB RAM), <strong>1 LIM Server</strong> (4 CPU, 8GB RAM), <strong>1 Database Server</strong> (SQL Server, 8 CPU, 32GB RAM), và <strong>2-3 DAST Sensor</strong> (Windows Server, 8 CPU, 16GB RAM mỗi node). Tổng: khoảng 5-6 VM. Có thể consolidate nếu cấu hình phần cứng đủ mạnh.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-cat-header">🚀 Về Triển khai</div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Fortify DAST có triển khai được trong môi trường mạng nội bộ (không có Internet) không?
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          <strong>Hoàn toàn có.</strong> Fortify DAST được thiết kế để triển khai fully on-premise. Đặc biệt, tính năng <strong>OAST Private Docker Container</strong> cho phép phát hiện blind attacks (Blind SQLi, Blind XSS, SSRF) ngay cả trong môi trường air-gapped, không cần kết nối ra Internet. Đây là điểm mạnh khi bán cho Công an, Quân đội, Bộ ngành nhạy cảm.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Thời gian triển khai Fortify DAST từ đầu đến khi vận hành được mất bao lâu?
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          Theo OpenText, ScanCentral DAST có thể <strong>"up and running in one hour"</strong> với Docker container. Thực tế triển khai doanh nghiệp đầy đủ (on-premise, cấu hình LIM, SSC, sensor pool, tích hợp CI/CD): <strong>3-5 ngày</strong> cho kỹ sư triển khai. Sau đó cần <strong>1-2 tuần training và pilot scan</strong> đầu tiên. Tổng dự án triển khai đầy đủ: <strong>4-6 tuần</strong>.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Fortify DAST có tích hợp được với GitLab và Jenkins không?
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          <strong>Có.</strong> Fortify cung cấp plugin và REST API để tích hợp với Jenkins (Fortify Jenkins Plugin), Azure DevOps, GitLab CI, Bamboo, Maven, Gradle, MSBuild. Quy trình: developer push code → CI/CD trigger build → Fortify DAST tự động scan staging environment → kết quả trả về SSC → notify qua Jira/email/Slack nếu phát hiện lỗ hổng nghiêm trọng.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-cat-header">⚔️ Về Cạnh tranh</div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Khách hàng nói "OWASP ZAP miễn phí, tại sao phải trả tiền mua Fortify?"
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          ZAP tốt cho mục đích học tập và scan thủ công đơn giản, nhưng thiếu nhiều tính năng doanh nghiệp: (1) <strong>Không có OAST cho blind attacks</strong>, (2) <strong>Không scale farm sensor</strong>, (3) <strong>Không tích hợp SAST + SCA cùng nền tảng</strong>, (4) <strong>Không có support chuyên nghiệp & SLA</strong>, (5) <strong>Không có báo cáo chuẩn PCI-DSS tự động</strong>. Chi phí thực tế khi dùng ZAP cho doanh nghiệp (nhân lực vận hành, tích hợp thủ công, không có support) thường cao hơn mua Fortify.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Khách hàng so sánh với Burp Suite Pro — điểm nào Fortify hơn?
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          Burp Suite Pro là công cụ tốt cho pentester cá nhân, nhưng Fortify DAST vượt trội ở: (1) <strong>Tích hợp SAST + DAST cùng SSC</strong> — Burp không có, (2) <strong>Scale enterprise với sensor farm</strong> — Burp không hỗ trợ, (3) <strong>Báo cáo compliance tự động</strong> (PCI-DSS, OWASP), (4) <strong>API quét OpenAPI/Postman tự động</strong>, (5) <strong>ScanCentral cho team lớn</strong> — quản lý lịch quét, phân quyền, dashboard tập trung. Burp phù hợp pentest cá nhân; Fortify phù hợp enterprise DevSecOps.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Fortify có được công nhận bởi tổ chức quốc tế nào không?
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          Fortify được xếp hạng <strong>Leader trong Gartner Magic Quadrant về Application Security Testing liên tục hơn 10 năm</strong>. Fortify Static Code Analyzer đạt <strong>100% True Positive Rate trong OWASP Benchmark Test v1.2b</strong>. OpenText là thành viên tích cực của OWASP Foundation. Fortify được nhiều tổ chức tiêu chuẩn như NIST, PCI Security Standards Council công nhận như một giải pháp đáp ứng yêu cầu kiểm tra bảo mật ứng dụng.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-cat-header">💰 Về ROI & Business Value</div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Làm thế nào để thuyết phục CFO/CIO về ROI khi đầu tư Fortify DAST?
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          Sử dụng các con số cụ thể: (1) <strong>Chi phí fix lỗ hổng sau production cao hơn 30× so với fix khi phát triển</strong> (IBM Systems Sciences Institute). (2) Chi phí trung bình một vụ vi phạm dữ liệu tại Đông Nam Á: <strong>2.5 triệu USD</strong> (IBM Cost of Data Breach Report). (3) Phạt PDPA tối đa tại Việt Nam. (4) Thời gian pentest thủ công 1-2 lần/năm với chi phí 50-200 triệu/lần có thể thay thế bằng DAST tự động. Tổng hợp: đầu tư Fortify giúp giảm 60-80% chi phí pentest và giảm thiểu rủi ro vi phạm dữ liệu.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Fortify DAST có hỗ trợ tiếng Việt và đội ngũ hỗ trợ tại Việt Nam không?
+        <span class="faq-arrow">▼</span>
+      </div>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          Giao diện Fortify là tiếng Anh (chuẩn quốc tế). Tài liệu kỹ thuật bằng tiếng Anh. Tuy nhiên, đội ngũ triển khai và hỗ trợ tại Việt Nam (thông qua đối tác phân phối) cung cấp <strong>training và hỗ trợ bằng tiếng Việt</strong>. OpenText có Partner Network tại Việt Nam cung cấp Professional Services, training, và L1/L2 support. SLA hỗ trợ được cam kết trong hợp đồng.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+  <div style="text-align:center; color:var(--text3); font-size:12px; padding-bottom:40px;">
+    📄 Cẩm nang nội bộ — Fortify DAST Sales Enablement · OpenText™ Partner · Phiên bản 2024-2025<br>
+    Tài liệu này dành cho đội ngũ sale nội bộ. Không phân phối ra bên ngoài.
+  </div>
+
+</div>
+
+<!-- PRINT BUTTON -->
+<button class="print-btn" onclick="window.print()">🖨️ In / Lưu PDF</button>
+
+<script>
+  function toggleFaq(el) {
+    const answer = el.nextElementSibling;
+    const arrow = el.querySelector('.faq-arrow');
+    const isOpen = answer.classList.contains('open');
+    
+    // Close all
+    document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.faq-arrow').forEach(a => a.style.transform = '');
+    
+    if (!isOpen) {
+      answer.classList.add('open');
+      arrow.style.transform = 'rotate(180deg)';
+    }
+  }
+
+  // Smooth scroll for nav
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+
+  // Highlight active nav on scroll
+  const sections = document.querySelectorAll('.section[id]');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      if (window.scrollY >= section.offsetTop - 60) current = section.id;
+    });
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.style.background = item.getAttribute('href') === '#' + current ? 'var(--surface2)' : '';
+      item.style.color = item.getAttribute('href') === '#' + current ? 'var(--accent)' : '';
+    });
+  });
+</script>
+</body>
+</html>

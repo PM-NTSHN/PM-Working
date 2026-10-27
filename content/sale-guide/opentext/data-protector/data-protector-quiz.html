@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Data Protector — Bài kiểm tra kiến thức</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+
+:root {
+  --bg: #08090a;
+  --bg2: #111214;
+  --bg3: #18191c;
+  --border: #2a2c30;
+  --border2: #3a3c42;
+  --text: #f0f0f0;
+  --text2: #8a8d95;
+  --text3: #5a5d65;
+  --blue: #4d9fff;
+  --blue2: #1a3a6e;
+  --green: #3ecf6e;
+  --green2: #0f3320;
+  --red: #ff5252;
+  --red2: #3a0f0f;
+  --amber: #ffb830;
+  --amber2: #3a2500;
+  --head: 'Syne', sans-serif;
+  --body: 'DM Sans', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--body);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── BG PATTERN ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(77,159,255,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(62,207,110,0.04) 0%, transparent 50%),
+    repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.015) 39px, rgba(255,255,255,0.015) 40px),
+    repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.015) 39px, rgba(255,255,255,0.015) 40px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--blue), var(--green));
+  transition: width 0.4s ease;
+  z-index: 1000;
+  box-shadow: 0 0 12px rgba(77,159,255,0.5);
+}
+
+/* ── HEADER ── */
+.header {
+  position: relative;
+  z-index: 1;
+  padding: 40px 20px 32px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+.header-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 100px;
+  padding: 6px 14px 6px 8px;
+  margin-bottom: 20px;
+}
+.badge-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.badge-text { font-size: 12px; color: var(--text2); font-family: var(--body); letter-spacing: 0.04em; }
+.header h1 {
+  font-family: var(--head);
+  font-size: clamp(24px, 6vw, 36px);
+  font-weight: 800;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+.header h1 span { color: var(--blue); }
+.header p {
+  font-size: 15px;
+  color: var(--text2);
+  max-width: 480px;
+  margin: 0 auto 24px;
+  line-height: 1.6;
+}
+.meta-row {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text2);
+}
+.meta-icon {
+  width: 20px; height: 20px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+}
+
+/* ── QUIZ WRAP ── */
+.quiz-wrap {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 24px 16px 80px;
+}
+
+/* ── QUESTION CARD ── */
+.q-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.q-card.answered-correct { border-color: rgba(62,207,110,0.4); }
+.q-card.answered-wrong { border-color: rgba(255,82,82,0.4); }
+
+.q-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.q-num {
+  font-family: var(--head);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--blue);
+  background: var(--blue2);
+  padding: 3px 8px;
+  border-radius: 5px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.q-tag {
+  font-size: 10px;
+  color: var(--text3);
+  background: var(--bg3);
+  padding: 3px 7px;
+  border-radius: 5px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  border: 1px solid var(--border);
+}
+.q-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  line-height: 1.55;
+  flex: 1;
+}
+
+/* ── OPTIONS ── */
+.q-options { padding: 12px 14px 14px; display: flex; flex-direction: column; gap: 8px; }
+
+.opt {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+.opt:hover { border-color: var(--border2); background: #1e2024; }
+.opt:active { transform: scale(0.985); }
+
+.opt-letter {
+  width: 22px; height: 22px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--head);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text2);
+  flex-shrink: 0;
+  margin-top: 1px;
+  transition: all 0.15s;
+}
+.opt-text { font-size: 13px; color: var(--text2); line-height: 1.5; padding-top: 2px; }
+
+/* selected */
+.opt.selected { border-color: var(--blue); background: rgba(77,159,255,0.08); }
+.opt.selected .opt-letter { background: var(--blue); border-color: var(--blue); color: #fff; }
+.opt.selected .opt-text { color: var(--text); }
+
+/* correct */
+.opt.correct { border-color: var(--green); background: rgba(62,207,110,0.08); }
+.opt.correct .opt-letter { background: var(--green); border-color: var(--green); color: #fff; }
+.opt.correct .opt-text { color: var(--text); }
+
+/* wrong */
+.opt.wrong { border-color: var(--red); background: rgba(255,82,82,0.08); }
+.opt.wrong .opt-letter { background: var(--red); border-color: var(--red); color: #fff; }
+.opt.wrong .opt-text { color: var(--text); }
+
+/* missed correct */
+.opt.show-correct { border-color: rgba(62,207,110,0.5); background: rgba(62,207,110,0.05); }
+.opt.show-correct .opt-letter { border-color: var(--green); color: var(--green); }
+.opt.show-correct .opt-text { color: var(--text2); }
+
+/* disabled */
+.opt.disabled { cursor: default; pointer-events: none; }
+
+/* ── EXPLANATION ── */
+.q-explain {
+  margin: 0 14px 14px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  line-height: 1.6;
+  display: none;
+}
+.q-explain.correct-exp { background: var(--green2); color: #7adfaa; border: 1px solid rgba(62,207,110,0.2); }
+.q-explain.wrong-exp { background: var(--red2); color: #ff8a8a; border: 1px solid rgba(255,82,82,0.2); }
+.q-explain.show { display: block; }
+.q-explain strong { color: #fff; }
+
+/* ── SUBMIT BTN ── */
+.submit-wrap {
+  text-align: center;
+  margin: 28px 0 16px;
+}
+.btn-submit {
+  font-family: var(--head);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 14px 40px;
+  background: linear-gradient(135deg, var(--blue), #2d7fff);
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(77,159,255,0.3);
+}
+.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(77,159,255,0.4); }
+.btn-submit:active { transform: translateY(0); }
+.btn-submit:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+/* ── RESULT PANEL ── */
+#result-panel {
+  display: none;
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 16px 80px;
+}
+
+.result-card {
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.result-hero {
+  padding: 40px 24px 32px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.result-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 0%, var(--hero-color, rgba(77,159,255,0.12)) 0%, transparent 70%);
+}
+.result-score-ring {
+  width: 120px; height: 120px;
+  margin: 0 auto 20px;
+  position: relative;
+  z-index: 1;
+}
+.result-score-ring svg { transform: rotate(-90deg); }
+.ring-bg { fill: none; stroke: var(--bg3); stroke-width: 8; }
+.ring-fill { fill: none; stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1); }
+.score-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.score-num {
+  font-family: var(--head);
+  font-size: 28px;
+  font-weight: 800;
+  line-height: 1;
+}
+.score-denom { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+.result-grade {
+  font-family: var(--head);
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 6px;
+  position: relative; z-index: 1;
+}
+.result-msg {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.5;
+  position: relative; z-index: 1;
+  max-width: 360px;
+  margin: 0 auto;
+}
+
+.result-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border-top: 1px solid var(--border);
+}
+.stat-item {
+  padding: 16px;
+  text-align: center;
+  border-right: 1px solid var(--border);
+}
+.stat-item:last-child { border-right: none; }
+.stat-num { font-family: var(--head); font-size: 20px; font-weight: 700; }
+.stat-lbl { font-size: 11px; color: var(--text2); margin-top: 3px; }
+
+/* category breakdown */
+.breakdown { padding: 20px; }
+.breakdown h3 {
+  font-family: var(--head);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text2);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.cat-row { margin-bottom: 12px; }
+.cat-top { display: flex; justify-content: space-between; margin-bottom: 5px; }
+.cat-name { font-size: 13px; color: var(--text); }
+.cat-score { font-size: 13px; color: var(--text2); }
+.cat-bar { height: 5px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+.cat-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
+
+.btn-retry {
+  font-family: var(--head);
+  font-size: 14px;
+  font-weight: 700;
+  padding: 12px 32px;
+  border: 1px solid var(--border2);
+  border-radius: 10px;
+  background: var(--bg3);
+  color: var(--text);
+  cursor: pointer;
+  display: block;
+  margin: 0 auto;
+  transition: all 0.15s;
+}
+.btn-retry:hover { background: var(--bg2); border-color: var(--blue); color: var(--blue); }
+
+/* ── STICKY COUNTER ── */
+.sticky-counter {
+  position: fixed;
+  bottom: 20px;
+  right: 16px;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  padding: 10px 14px;
+  z-index: 50;
+  font-size: 12px;
+  color: var(--text2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+.counter-num { font-family: var(--head); font-size: 16px; font-weight: 700; color: var(--text); }
+
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+.q-card { animation: fadeIn 0.3s ease both; }
+.q-card:nth-child(n) { animation-delay: calc(n * 0.02s); }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="pbar" style="width:0%"></div>
+
+<div class="header">
+  <div class="header-badge">
+    <div class="badge-dot"></div>
+    <span class="badge-text">OpenText Data Protector — Certification Quiz</span>
+  </div>
+  <h1>Kiểm tra kiến thức<br><span>Data Protector</span></h1>
+  <p>30 câu hỏi trắc nghiệm đánh giá toàn diện: kiến trúc, tính năng, tích hợp, bảo mật, licensing và sales.</p>
+  <div class="meta-row">
+    <div class="meta-item"><div class="meta-icon">📝</div> 30 câu hỏi</div>
+    <div class="meta-item"><div class="meta-icon">⚡</div> Kết quả ngay</div>
+    <div class="meta-item"><div class="meta-icon">🎯</div> 6 chủ đề</div>
+    <div class="meta-item"><div class="meta-icon">📱</div> Mobile-friendly</div>
+  </div>
+</div>
+
+<div class="quiz-wrap" id="quiz-wrap">
+  <!-- Questions injected by JS -->
+</div>
+
+<div id="result-panel"></div>
+
+<div class="sticky-counter" id="sticky">
+  <span>Đã trả lời</span>
+  <span class="counter-num" id="cnt">0</span>
+  <span>/ 30</span>
+</div>
+
+<script>
+const Q = [
+  // ── KIẾN TRÚC (5 câu)
+  {
+    cat: "Kiến trúc",
+    q: "Thành phần nào là 'não bộ' trung tâm, quản lý toàn bộ backup policies và catalog trong Data Protector?",
+    opts: ["Media Agent", "Disk Agent", "Cell Manager", "Installation Server"],
+    ans: 2,
+    exp: "<strong>Cell Manager</strong> là thành phần trung tâm, quản lý policies, catalog, scheduling. Nó có thể được cài trên Windows, Linux hoặc HP-UX."
+  },
+  {
+    cat: "Kiến trúc",
+    q: "Data Protector Cell Manager có thể được cài đặt trên những hệ điều hành nào?",
+    opts: ["Chỉ Windows Server", "Windows và Linux", "Windows, Linux và HP-UX", "Linux và CentOS"],
+    ans: 2,
+    exp: "<strong>Cell Manager hỗ trợ Windows, Linux và HP-UX.</strong> Còn DP for Cloud Workloads (DP4CW) thì cài trên Linux và CentOS."
+  },
+  {
+    cat: "Kiến trúc",
+    q: "Manager of Managers (MoM) được dùng để làm gì?",
+    opts: ["Quản lý nhiều Media Agent đồng thời", "Quản lý tập trung nhiều Cell Manager từ một console", "Thay thế Cell Manager trong môi trường lớn", "Backup Cell Manager khi gặp sự cố"],
+    ans: 1,
+    exp: "<strong>MoM cho phép quản lý tập trung nhiều Cell Manager</strong> từ một console duy nhất — phù hợp với doanh nghiệp lớn, multi-site, cần centralized management."
+  },
+  {
+    cat: "Kiến trúc",
+    q: "Thành phần nào trong Data Protector chịu trách nhiệm DI CHUYỂN dữ liệu đến backup device (tape, disk, cloud)?",
+    opts: ["Disk Agent (DA)", "Media Agent (MA)", "Cell Manager", "Internal Database (IDB)"],
+    ans: 1,
+    exp: "<strong>Media Agent (MA)</strong> chịu trách nhiệm di chuyển dữ liệu đến backup device. Còn Disk Agent (DA) là agent cài trên client để backup file system."
+  },
+  {
+    cat: "Kiến trúc",
+    q: "Data Protector Internal Database (IDB) lưu trữ thông tin gì?",
+    opts: ["Dữ liệu backup của các server", "Encryption keys của backup data", "Metadata về backup sessions, media và objects", "Log file của quá trình backup"],
+    ans: 2,
+    exp: "<strong>IDB lưu trữ metadata</strong> về backup sessions, media, và objects — là nền tảng cho tính năng tìm kiếm, reporting và restore. IDB cũng nên được backup để đảm bảo continuity."
+  },
+
+  // ── TÍNH NĂNG (7 câu)
+  {
+    cat: "Tính năng",
+    q: "Tính năng nào cho phép Data Protector backup VMware mà KHÔNG cần cài agent bên trong từng VM?",
+    opts: ["Hardware-assisted backup", "Agentless backup qua native hypervisor integration", "Zero Downtime Backup (ZDB)", "Cached Granular Recovery"],
+    ans: 1,
+    exp: "<strong>Native integration với VMware và Hyper-V</strong> cung cấp agentless backup — không cần cài agent trong VM. DP cũng hỗ trợ protection policy inheritance khi VM mới được tạo."
+  },
+  {
+    cat: "Tính năng",
+    q: "Tính năng 'VM Power On' trong Data Protector cho phép làm gì?",
+    opts: ["Tắt VM trước khi backup để đảm bảo consistent", "Khởi động VM trực tiếp từ backup image mà không cần restore trước", "Tự động bật VM sau khi backup hoàn thành", "Kiểm tra VM có đang chạy trước khi backup"],
+    ans: 1,
+    exp: "<strong>VM Power On</strong> cho phép khởi động VM ngay lập tức từ backup image trên supported device (HPE StoreOnce / Dell EMC DD) — không cần chờ restore xong mới dùng được."
+  },
+  {
+    cat: "Tính năng",
+    q: "Data Protector Deduplication (DPD) có khả năng scale đến bao nhiêu dữ liệu nguồn?",
+    opts: ["100 TB", "500 TB", "Hơn 1 PB", "10 PB"],
+    ans: 2,
+    exp: "<strong>DPD có thể scale đến hơn 1 PB source data.</strong> Đây là enterprise feature thường chỉ có trên dedicated dedup appliance, nhưng Data Protector tích hợp sẵn dưới dạng software."
+  },
+  {
+    cat: "Tính năng",
+    q: "Trong Federated Deduplication, dữ liệu có thể được deduplicate ở đâu?",
+    opts: ["Chỉ trên backup appliance (target)", "Chỉ trên application server (source)", "Tại application server, media server hoặc backup appliance", "Chỉ trên media server"],
+    ans: 2,
+    exp: "<strong>Federated dedup có thể chạy tại 3 điểm:</strong> application server (source side), media server, hoặc backup appliance (target). Một khi deduplicated, data di chuyển không cần rehydrate."
+  },
+  {
+    cat: "Tính năng",
+    q: "Tính năng 'Live Migrate' trong Data Protector VMware protection thực hiện điều gì?",
+    opts: ["Di chuyển VM từ host này sang host khác khi backup", "Khởi động VM từ backup image và đồng thời restore về đích — cùng lúc", "Migrate VM sang cloud trong khi đang chạy production", "Tạo live snapshot của VM đang chạy"],
+    ans: 1,
+    exp: "<strong>Live Migrate</strong> vừa khởi động VM từ backup image (để dùng ngay), vừa đồng thời tiến hành restore VM về destination thực sự — giảm tối đa downtime."
+  },
+  {
+    cat: "Tính năng",
+    q: "Operations Orchestration (OO) trong Data Protector dùng để làm gì?",
+    opts: ["Tự động scale storage khi đầy", "Tạo workflow tự động hóa các quy trình backup và recovery", "Điều phối traffic mạng trong quá trình backup", "Quản lý license tự động"],
+    ans: 1,
+    exp: "<strong>Operations Orchestration (OO)</strong> cho phép tạo workflow qua content packs để tự động hóa đa dạng quy trình backup và recovery — giảm tác vụ thủ công cho admin."
+  },
+  {
+    cat: "Tính năng",
+    q: "Enhanced Automated Disaster Recovery (EADR) backup những gì ngoài application data?",
+    opts: ["Chỉ user data files", "OS files, drivers và files cần thiết cho boot process", "Chỉ database files và transaction logs", "Toàn bộ storage array snapshots"],
+    ans: 1,
+    exp: "<strong>EADR backup cả OS files, drivers, và boot files</strong> — cho phép phục hồi bare-metal hoàn toàn. Chỉ cần check một checkbox trong GUI để kích hoạt, không tốn thêm chi phí."
+  },
+
+  // ── TÍCH HỢP (6 câu)
+  {
+    cat: "Tích hợp",
+    q: "Data Protector hỗ trợ tích hợp application-aware backup với những database/ứng dụng nào sau đây? (chọn nhóm đầy đủ nhất)",
+    opts: [
+      "Oracle, SQL Server, Exchange",
+      "Oracle, SAP HANA, IBM Db2, PostgreSQL, MySQL, Sybase ASE, Exchange, SharePoint",
+      "Oracle, SAP HANA, SQL Server, Exchange",
+      "Chỉ Oracle và SAP HANA"
+    ],
+    ans: 1,
+    exp: "<strong>Data Protector có support matrix rộng nhất:</strong> Oracle, SAP, SAP HANA, IBM Db2, Sybase ASE, PostgreSQL, MySQL, MS Exchange, MS SharePoint, MS SQL Server — tất cả đều application-aware."
+  },
+  {
+    cat: "Tích hợp",
+    q: "Zero Downtime Backup (ZDB) với HPE storage cho phép làm gì đặc biệt?",
+    opts: [
+      "Backup mà không cần network connection",
+      "Tạo application-aware snapshot không downtime, Instant Recovery từ storage array",
+      "Backup đến cloud mà không qua media server",
+      "Dedup tại source trước khi ghi lên tape"
+    ],
+    ans: 1,
+    exp: "<strong>ZDB tạo snapshots application-aware ngay trên storage array</strong> (không downtime). Instant Recovery phục hồi ứng dụng từ snapshot trên array — RTO gần = 0 vì storage array là first recovery point."
+  },
+  {
+    cat: "Tích hợp",
+    q: "Khi dùng HPE StoreOnce Cloud Bank, điều gì xảy ra khi HPE StoreOnce device bị mất?",
+    opts: [
+      "Toàn bộ backup mất theo vì metadata ở trên device",
+      "Vẫn restore được vì metadata đã được transfer lên cloud target",
+      "Phải rebuild từ application backup mới nhất",
+      "Chỉ restore được nếu còn bản sao tape"
+    ],
+    ans: 1,
+    exp: "<strong>StoreOnce Cloud Bank transfer cả metadata lên cloud</strong>, nên dù mất device vật lý vẫn có thể restore. Không cần rehydrate data — đây là điểm khác biệt so với backup cloud thông thường."
+  },
+  {
+    cat: "Tích hợp",
+    q: "Data Protector hỗ trợ NDMP 3-way backup cho những platform nào?",
+    opts: [
+      "Chỉ HPE storage",
+      "NetApp, Dell EMC Isilon và Unity",
+      "Chỉ Dell EMC",
+      "Tất cả storage có giao thức NDMP"
+    ],
+    ans: 1,
+    exp: "<strong>3-way NDMP được hỗ trợ cho NetApp, Dell EMC Isilon và Unity</strong> — cho phép backup dữ liệu trực tiếp từ NAS sang backup device mà không qua media server (giảm network load)."
+  },
+  {
+    cat: "Tích hợp",
+    q: "Microsoft 365 Teams backup bằng DP4CW có thể bảo vệ những loại dữ liệu nào?",
+    opts: [
+      "Chỉ Teams chats",
+      "Teams chats, 1-on-1 chats, document libraries và Sites",
+      "Chỉ Teams files và documents",
+      "Toàn bộ Teams account bao gồm video recordings"
+    ],
+    ans: 1,
+    exp: "<strong>DP4CW backup Teams:</strong> chats (channel và 1-on-1), Teams document libraries và Sites. Lưu ý: video recordings không được đề cập trong scope tích hợp chính thức."
+  },
+  {
+    cat: "Tích hợp",
+    q: "Hypervisor nào trong danh sách sau được hỗ trợ qua DP4CW Extension (KHÔNG phải core Data Protector)?",
+    opts: [
+      "VMware vSphere",
+      "Microsoft Hyper-V",
+      "KVM và Oracle VM",
+      "H3C CAS"
+    ],
+    ans: 2,
+    exp: "<strong>KVM và Oracle VM cần DP4CW extension.</strong> VMware vSphere, Hyper-V, và H3C CAS là hypervisor được hỗ trợ trong core Data Protector mà không cần extension thêm."
+  },
+
+  // ── BẢO MẬT (5 câu)
+  {
+    cat: "Bảo mật",
+    q: "Data Protector sử dụng giao thức gì để bảo mật tất cả communication giữa các components?",
+    opts: ["SSL 3.0", "TLS 1.2", "IPSec", "SSH only"],
+    ans: 1,
+    exp: "<strong>TLS 1.2 được dùng cho toàn bộ communication</strong> giữa các Data Protector entities. Dùng self-signed certificate với certificate pinning thay vì root CA concept truyền thống."
+  },
+  {
+    cat: "Bảo mật",
+    q: "Trong cơ chế bảo vệ ransomware, tại sao deploying Cell Manager trên Linux được khuyến nghị?",
+    opts: [
+      "Linux có hiệu suất backup tốt hơn Windows",
+      "Linux ít bị ảnh hưởng bởi ransomware hơn — ransomware thường nhắm Windows trước",
+      "Data Protector chỉ chạy đầy đủ tính năng trên Linux",
+      "Linux hỗ trợ WORM tape tốt hơn Windows"
+    ],
+    ans: 1,
+    exp: "<strong>Linux ít bị tấn công ransomware hơn Windows</strong> — hầu hết ransomware viết cho Windows. Triển khai Cell Manager trên Linux giảm đáng kể attack surface của hệ thống backup."
+  },
+  {
+    cat: "Bảo mật",
+    q: "Tính năng 'Common Criteria Certified' của Data Protector đảm bảo điều gì?",
+    opts: [
+      "Dữ liệu được mã hóa theo chuẩn quân sự",
+      "Chứng nhận quốc tế về áp dụng quy trình nghiêm ngặt trong phát triển và đánh giá bảo mật phần mềm",
+      "Tuân thủ GDPR tự động",
+      "Tích hợp với hệ thống SIEM của bên thứ ba"
+    ],
+    ans: 1,
+    exp: "<strong>Common Criteria Certification</strong> là chứng nhận quốc tế xác nhận phần mềm được phát triển và đánh giá theo quy trình bảo mật nghiêm ngặt — đảm bảo assurance cho khách hàng về chất lượng security."
+  },
+  {
+    cat: "Bảo mật",
+    q: "Tại sao tape là phương tiện 'air gap' tốt nhất chống ransomware?",
+    opts: [
+      "Tape rẻ hơn disk và cloud",
+      "Tape không bao giờ expose file-system-like access, data chỉ đọc được bởi backup app, có thể offline hoàn toàn",
+      "Tape tự động mã hóa dữ liệu mà không cần cấu hình",
+      "Tape có tốc độ ghi nhanh hơn disk"
+    ],
+    ans: 1,
+    exp: "<strong>Tape không expose file-system-like access</strong> — malware không thể đọc data trực tiếp. Data interleaved và encrypted, chỉ backup app hiểu được. Export tape ra ngoài = air gap hoàn toàn."
+  },
+  {
+    cat: "Bảo mật",
+    q: "Data Protector tích hợp với công cụ nào để thực hiện malware check TRƯỚC khi backup?",
+    opts: ["Windows Defender", "Symantec Endpoint", "Webroot", "CrowdStrike"],
+    ans: 2,
+    exp: "<strong>Data Protector tích hợp với Webroot</strong> để scan malware trước backup. Nếu phát hiện ransomware có 2 hành động: tiếp tục backup (với cảnh báo) hoặc abort backup để không lưu dữ liệu đã nhiễm."
+  },
+
+  // ── GRE (4 câu)
+  {
+    cat: "GRE",
+    q: "Granular Recovery Extension (GRE) for SharePoint cho phép phục hồi đơn vị nhỏ nhất là gì?",
+    opts: [
+      "Toàn bộ content database",
+      "Một site collection",
+      "Từng item riêng lẻ: document, calendar item, list, folder — kể cả metadata",
+      "Chỉ restore theo folder"
+    ],
+    ans: 2,
+    exp: "<strong>GRE SharePoint restore đến item level:</strong> document, shared doc, folder, list, library, calendar item, tasks, announcement, form, reporting template, metadata và workflow status — nhỏ hơn nhiều so với SQL database level."
+  },
+  {
+    cat: "GRE",
+    q: "Điểm đặc biệt của GRE SharePoint so với việc IT Admin restore trực tiếp là gì?",
+    opts: [
+      "GRE nhanh hơn 10 lần so với restore thông thường",
+      "Site Collection Admin có thể tự thực hiện qua SharePoint Central Administration — không cần IT Admin can thiệp",
+      "GRE không cần backup trước, restore trực tiếp từ production",
+      "GRE tự động schedule restore định kỳ"
+    ],
+    ans: 1,
+    exp: "<strong>GRE tích hợp vào SharePoint Central Administration</strong> — Site Collection Admin tự phục hồi item mà không cần chờ IT Admin. Giảm tải đáng kể cho đội vận hành và giảm thời gian chờ của business user."
+  },
+  {
+    cat: "GRE",
+    q: "Cached GRE cho VMware khác gì với Standard GRE?",
+    opts: [
+      "Cached GRE nhanh hơn vì không cần restore VM trước — duyệt file trực tiếp từ backup appliance",
+      "Cached GRE lưu kết quả restore vào cache để dùng lại lần sau",
+      "Cached GRE chỉ hoạt động với incremental backup",
+      "Cached GRE yêu cầu cài agent trong từng VM"
+    ],
+    ans: 0,
+    exp: "<strong>Cached GRE (HPE StoreOnce / Dell EMC DD)</strong> cho phép duyệt file trực tiếp từ backup image trên appliance mà không cần restore toàn bộ VM trước — nhanh hơn rất nhiều so với Standard GRE."
+  },
+  {
+    cat: "GRE",
+    q: "GRE là tính năng của phiên bản Data Protector nào?",
+    opts: ["Có trong cả Express và Premium", "Chỉ có trong Data Protector Premium", "Chỉ có trong Data Protector Express", "Cần mua add-on riêng biệt"],
+    ans: 1,
+    exp: "<strong>GRE chỉ có trong Data Protector Premium.</strong> Data Protector Express chỉ hỗ trợ virtual environments, không có GRE hay application agent integration."
+  },
+
+  // ── LICENSE (3 câu)
+  {
+    cat: "Licensing",
+    q: "Data Protector Express sử dụng mô hình licensing nào?",
+    opts: [
+      "Capacity-based — tính theo TB dữ liệu",
+      "Socket-based — tính theo số CPU socket của hypervisor host",
+      "Feature-based — mua từng tính năng riêng",
+      "Per-VM — tính theo số lượng virtual machines"
+    ],
+    ans: 1,
+    exp: "<strong>Express dùng Socket-based License (SBL)</strong> — tính theo số CPU socket trên physical machine hosting VMs (ESX, Hyper-V hosts). Phù hợp cho môi trường ảo hóa thuần túy."
+  },
+  {
+    cat: "Licensing",
+    q: "Lợi thế lớn nhất của Capacity-based License (Premium) so với Feature-based là gì?",
+    opts: [
+      "Chi phí luôn thấp hơn feature-based",
+      "Multiple backup copies không tốn thêm chi phí, bao gồm tất cả enterprise features, pay-as-you-grow",
+      "Không cần gia hạn license hàng năm",
+      "Có thể dùng cho unlimited số lượng Cell Manager"
+    ],
+    ans: 1,
+    exp: "<strong>Capacity License ưu việt:</strong> nhiều backup copies không tốn thêm, toàn bộ enterprise features included, pay-as-you-grow theo TB thực tế. License có thể transfer sang infra mới — không bị lock-in."
+  },
+  {
+    cat: "Licensing",
+    q: "Sau khi cài đặt Data Protector lần đầu, bao lâu thì cần có license thật?",
+    opts: ["7 ngày", "30 ngày", "90 ngày (Instant-On Trial)", "Ngay lập tức"],
+    ans: 2,
+    exp: "<strong>Data Protector có 90 ngày Instant-On Trial</strong> — đủ thời gian để test, đánh giá và triển khai trước khi cam kết mua license thật. Sau khi cài license mới, Instant-On tự tắt."
+  },
+
+  // ── SALES (5 câu)
+  {
+    cat: "Sales",
+    q: "Khách hàng hỏi 'M365 đã có backup rồi, cần gì thêm?' — lập luận nào SAI?",
+    opts: [
+      "M365 chỉ giữ data 30-90 ngày trong recycle bin, không đủ cho compliance lâu dài",
+      "M365 native không bảo vệ khỏi ransomware sync và xóa nhầm",
+      "M365 đã có granular item-level restore đầy đủ, không cần DP4CW",
+      "Một số ngành yêu cầu backup data offline / air-gapped"
+    ],
+    ans: 2,
+    exp: "<strong>M365 KHÔNG có granular item-level restore đầy đủ</strong> như GRE của DP4CW. Đây chính là lý do cần backup giải pháp riêng — khách hàng cần restore từng email/file/calendar item một cách nhanh chóng."
+  },
+  {
+    cat: "Sales",
+    q: "Khi so sánh Data Protector vs Veeam cho khách hàng có SAP HANA và Oracle, điểm mạnh nào nên nhấn mạnh?",
+    opts: [
+      "Data Protector rẻ hơn Veeam",
+      "Data Protector có native integration sâu với SAP HANA và Oracle — support matrix rộng nhất, phục hồi near-zero data loss",
+      "Veeam không hỗ trợ VMware còn Data Protector thì có",
+      "Data Protector không cần agent còn Veeam thì cần"
+    ],
+    ans: 1,
+    exp: "<strong>Native integration với SAP HANA và Oracle</strong> là điểm mạnh then chốt. Veeam mạnh với VMware thuần túy, nhưng DP có support matrix rộng nhất cho enterprise application (200+ certifications) và point-in-time recovery."
+  },
+  {
+    cat: "Sales",
+    q: "Chiến lược 3-2-1-1-0 trong ngữ cảnh Data Protector, con số cuối '0' có nghĩa là gì?",
+    opts: [
+      "0 chi phí cho bản sao thứ 4",
+      "0 lỗi khi verify backup — backup phải được kiểm tra và không có lỗi",
+      "0 downtime khi backup",
+      "0 phụ thuộc vào cloud"
+    ],
+    ans: 1,
+    exp: "<strong>Con số 0 = 0 lỗi khi verify backup.</strong> Backup không có giá trị nếu không restore được. Data Protector hỗ trợ automatic backup verification để đảm bảo backup integrity trước khi cần dùng thật."
+  },
+  {
+    cat: "Sales",
+    q: "Một khách hàng ngân hàng lo ngại về compliance và audit. Tính năng nào của Data Protector liên quan trực tiếp nhất?",
+    opts: [
+      "VM Power On và Live Migrate",
+      "Automated Disaster Recovery (EADR)",
+      "Information Retention với tiered architecture, WORM, audit reporting và Common Criteria Certification",
+      "REST API access"
+    ],
+    ans: 2,
+    exp: "<strong>Compliance cần nhiều tính năng kết hợp:</strong> Information Retention (giữ data đúng thời hạn), WORM (immutability), tiered architecture (đúng media theo policy), audit reporting, và Common Criteria Cert chứng minh bảo mật phần mềm."
+  },
+  {
+    cat: "Sales",
+    q: "DP4CW (Data Protector for Cloud Workloads) khác Data Protector core như thế nào về licensing?",
+    opts: [
+      "DP4CW được include sẵn trong Data Protector Premium",
+      "DP4CW và Data Protector core cần license RIÊNG BIỆT",
+      "DP4CW chỉ có phiên bản subscription, không có perpetual",
+      "DP4CW miễn phí cho khách hàng đã có Data Protector Premium"
+    ],
+    ans: 1,
+    exp: "<strong>DP4CW và Data Protector core đều cần license riêng biệt.</strong> Đây là điểm quan trọng khi tư vấn — khách hàng cần M365 backup hoặc Kubernetes protection phải mua thêm DP4CW license."
+  }
+];
+
+// ── SHUFFLE & BUILD ──
+let answered = new Array(Q.length).fill(false);
+let correct_count = 0;
+let answered_count = 0;
+
+function buildQuiz() {
+  const wrap = document.getElementById('quiz-wrap');
+  wrap.innerHTML = '';
+  Q.forEach((q, i) => {
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.id = `q${i}`;
+    card.style.animationDelay = `${i * 0.04}s`;
+
+    const letters = ['A','B','C','D'];
+    const optsHTML = q.opts.map((o, j) => `
+      <div class="opt" id="opt_${i}_${j}" onclick="pick(${i},${j})">
+        <div class="opt-letter">${letters[j]}</div>
+        <div class="opt-text">${o}</div>
+      </div>`).join('');
+
+    card.innerHTML = `
+      <div class="q-header">
+        <div class="q-num">Q${i+1}</div>
+        <div class="q-tag">${q.cat}</div>
+        <div class="q-text">${q.q}</div>
+      </div>
+      <div class="q-options">${optsHTML}</div>
+      <div class="q-explain" id="exp${i}"></div>
+    `;
+    wrap.appendChild(card);
+  });
+
+  // Submit button
+  const submitWrap = document.createElement('div');
+  submitWrap.className = 'submit-wrap';
+  submitWrap.innerHTML = `<button class="btn-submit" id="submitBtn" onclick="submitQuiz()">Nộp bài và xem kết quả →</button>`;
+  wrap.appendChild(submitWrap);
+}
+
+function pick(qi, oi) {
+  if (answered[qi]) return;
+  answered[qi] = true;
+  answered_count++;
+
+  const isCorrect = oi === Q[qi].ans;
+  if (isCorrect) correct_count++;
+
+  const card = document.getElementById(`q${qi}`);
+  const opts = card.querySelectorAll('.opt');
+
+  opts.forEach((opt, j) => {
+    opt.classList.add('disabled');
+    if (j === oi && isCorrect) opt.classList.add('correct');
+    else if (j === oi && !isCorrect) opt.classList.add('wrong');
+    else if (j === Q[qi].ans && !isCorrect) opt.classList.add('show-correct');
+  });
+
+  card.classList.add(isCorrect ? 'answered-correct' : 'answered-wrong');
+
+  // Show explanation
+  const exp = document.getElementById(`exp${qi}`);
+  exp.className = `q-explain ${isCorrect ? 'correct-exp' : 'wrong-exp'} show`;
+  exp.innerHTML = (isCorrect ? '✓ Đúng! ' : '✗ Chưa đúng. ') + Q[qi].exp;
+
+  // Update counter
+  document.getElementById('cnt').textContent = answered_count;
+  updateProgress();
+}
+
+function updateProgress() {
+  const pct = (answered_count / Q.length * 100).toFixed(1);
+  document.getElementById('pbar').style.width = pct + '%';
+}
+
+function submitQuiz() {
+  // Mark unanswered as skipped
+  Q.forEach((q, i) => {
+    if (!answered[i]) {
+      const card = document.getElementById(`q${i}`);
+      card.querySelector(`#opt_${i}_${q.ans}`).classList.add('show-correct', 'disabled');
+      const opts = card.querySelectorAll('.opt');
+      opts.forEach(o => o.classList.add('disabled'));
+      const exp = document.getElementById(`exp${i}`);
+      exp.className = 'q-explain wrong-exp show';
+      exp.innerHTML = '⚪ Bỏ qua. ' + q.exp;
+    }
+  });
+
+  showResult();
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('sticky').style.display = 'none';
+}
+
+function showResult() {
+  const pct = Math.round(correct_count / Q.length * 100);
+  const panel = document.getElementById('result-panel');
+  panel.style.display = 'block';
+
+  // Grade
+  let grade, msg, color, heroColor;
+  if (pct >= 90) {
+    grade = '🏆 Xuất sắc! Sẵn sàng tư vấn khách hàng';
+    msg = 'Bạn nắm vững toàn bộ kiến thức Data Protector. Tự tin present với khách hàng!';
+    color = '#3ecf6e';
+    heroColor = 'rgba(62,207,110,0.12)';
+  } else if (pct >= 75) {
+    grade = '🎯 Tốt! Cần ôn thêm vài chủ đề';
+    msg = 'Kiến thức khá tốt. Ôn lại các câu sai để hoàn thiện hơn trước khi gặp khách hàng.';
+    color = '#4d9fff';
+    heroColor = 'rgba(77,159,255,0.12)';
+  } else if (pct >= 55) {
+    grade = '📚 Trung bình — Cần học thêm';
+    msg = 'Nắm được phần cơ bản nhưng cần đi sâu hơn vào các tính năng kỹ thuật và licensing.';
+    color = '#ffb830';
+    heroColor = 'rgba(255,184,48,0.12)';
+  } else {
+    grade = '💪 Cần ôn tập thêm nhiều';
+    msg = 'Hãy đọc lại tài liệu học và thực hành lại quiz. Bạn sẽ nắm được!';
+    color = '#ff5252';
+    heroColor = 'rgba(255,82,82,0.12)';
+  }
+
+  // Category breakdown
+  const cats = {};
+  Q.forEach((q, i) => {
+    if (!cats[q.cat]) cats[q.cat] = { total: 0, correct: 0 };
+    cats[q.cat].total++;
+    if (answered[i] && i < Q.length) {
+      // check by comparing selected answer
+    }
+  });
+
+  // Recount by category
+  const catScore = {};
+  Q.forEach((q, i) => {
+    if (!catScore[q.cat]) catScore[q.cat] = { t: 0, c: 0 };
+    catScore[q.cat].t++;
+  });
+
+  // Count correct by checking DOM
+  Q.forEach((q, i) => {
+    if (!catScore[q.cat]) catScore[q.cat] = { t: 0, c: 0 };
+    const correctOpt = document.getElementById(`opt_${i}_${q.ans}`);
+    if (correctOpt && correctOpt.classList.contains('correct')) {
+      catScore[q.cat].c++;
+    }
+  });
+
+  const catColors = {
+    'Kiến trúc': '#4d9fff',
+    'Tính năng': '#3ecf6e',
+    'Tích hợp': '#bc8cff',
+    'Bảo mật': '#ff5252',
+    'GRE': '#ffb830',
+    'Licensing': '#39d4d4',
+    'Sales': '#ff7043'
+  };
+
+  const catHTML = Object.entries(catScore).map(([cat, s]) => {
+    const p = Math.round(s.c / s.t * 100);
+    const c = catColors[cat] || '#4d9fff';
+    return `
+      <div class="cat-row">
+        <div class="cat-top">
+          <span class="cat-name">${cat}</span>
+          <span class="cat-score" style="color:${c}">${s.c}/${s.t} (${p}%)</span>
+        </div>
+        <div class="cat-bar">
+          <div class="cat-fill" style="width:${p}%; background:${c}" data-w="${p}"></div>
+        </div>
+      </div>`;
+  }).join('');
+
+  const circumference = 2 * Math.PI * 50;
+  const offset = circumference - (pct / 100) * circumference;
+
+  panel.innerHTML = `
+    <div class="result-card">
+      <div class="result-hero" style="--hero-color:${heroColor}">
+        <div class="result-score-ring">
+          <svg width="120" height="120" viewBox="0 0 120 120">
+            <circle class="ring-bg" cx="60" cy="60" r="50"/>
+            <circle class="ring-fill" cx="60" cy="60" r="50"
+              stroke="${color}"
+              stroke-dasharray="${circumference}"
+              stroke-dashoffset="${circumference}"
+              id="ring-anim"/>
+          </svg>
+          <div class="score-center">
+            <div class="score-num" style="color:${color}">${correct_count}</div>
+            <div class="score-denom">/ ${Q.length}</div>
+          </div>
+        </div>
+        <div class="result-grade" style="color:${color}">${grade}</div>
+        <div class="result-msg">${msg}</div>
+      </div>
+      <div class="result-stats">
+        <div class="stat-item">
+          <div class="stat-num" style="color:${color}">${pct}%</div>
+          <div class="stat-lbl">Điểm số</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" style="color:var(--green)">${correct_count}</div>
+          <div class="stat-lbl">Câu đúng</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" style="color:var(--red)">${Q.length - correct_count}</div>
+          <div class="stat-lbl">Câu sai/bỏ</div>
+        </div>
+      </div>
+      <div class="breakdown">
+        <h3>Kết quả theo chủ đề</h3>
+        ${catHTML}
+      </div>
+    </div>
+    <button class="btn-retry" onclick="retry()">↺ Làm lại từ đầu</button>
+  `;
+
+  // Animate ring
+  setTimeout(() => {
+    document.getElementById('ring-anim').style.strokeDashoffset = offset;
+    // Animate cat bars
+    document.querySelectorAll('.cat-fill').forEach(el => {
+      el.style.width = '0%';
+      setTimeout(() => { el.style.width = el.dataset.w + '%'; }, 100);
+    });
+  }, 200);
+
+  panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function retry() {
+  answered = new Array(Q.length).fill(false);
+  correct_count = 0;
+  answered_count = 0;
+  document.getElementById('result-panel').style.display = 'none';
+  document.getElementById('pbar').style.width = '0%';
+  document.getElementById('cnt').textContent = '0';
+  document.getElementById('sticky').style.display = 'flex';
+  buildQuiz();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+buildQuiz();
+</script>
+</body>
+</html>

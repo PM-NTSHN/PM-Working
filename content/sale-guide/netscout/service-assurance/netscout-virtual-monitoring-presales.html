@@ -1,0 +1,2090 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NETSCOUT – Giám sát Môi trường Ảo hóa | Tài liệu Presales</title>
+<style>
+/* ─── TOKENS ─────────────────────────────────────────────────────────────── */
+:root {
+  --ns-green:      #00843D;
+  --ns-green-dark: #005C2B;
+  --ns-green-mid:  #1F7A4D;
+  --ns-green-pale: #E8F5EE;
+  --ns-green-xpale:#F0FAF4;
+  --ns-black:      #111418;
+  --ns-gray-dark:  #2E3540;
+  --ns-gray-mid:   #566071;
+  --ns-gray-light: #8896A5;
+  --ns-border:     #D0D8E0;
+  --ns-bg:         #F7F9FB;
+  --ns-white:      #FFFFFF;
+  --ns-warn:       #FFF8E1;
+  --ns-warn-b:     #F59E0B;
+  --ns-accent:     #00B259;
+  --ns-code-bg:    #EFF3F7;
+
+  --font-display: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-body:    'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono:    'Consolas', 'Courier New', monospace;
+
+  --radius:  6px;
+  --radius-lg: 12px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,.08);
+  --shadow:    0 4px 16px rgba(0,0,0,.10);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,.13);
+
+  --sidebar-w: 280px;
+  --content-max: 900px;
+}
+
+/* ─── RESET ──────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  line-height: 1.7;
+  color: var(--ns-gray-dark);
+  background: var(--ns-bg);
+  display: flex;
+}
+
+/* ─── SIDEBAR ────────────────────────────────────────────────────────────── */
+#sidebar {
+  position: fixed;
+  top: 0; left: 0;
+  width: var(--sidebar-w);
+  height: 100vh;
+  background: var(--ns-black);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: var(--ns-green-mid) transparent;
+}
+#sidebar::-webkit-scrollbar { width: 4px; }
+#sidebar::-webkit-scrollbar-thumb { background: var(--ns-green-mid); border-radius: 4px; }
+
+.sidebar-logo {
+  padding: 24px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,.08);
+}
+.sidebar-logo .logo-text {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -.5px;
+  color: var(--ns-white);
+}
+.sidebar-logo .logo-text span { color: var(--ns-accent); }
+.sidebar-logo .logo-sub {
+  font-size: 10.5px;
+  color: var(--ns-gray-light);
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  margin-top: 4px;
+}
+
+.sidebar-search {
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+}
+.sidebar-search input {
+  width: 100%;
+  padding: 7px 12px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: var(--radius);
+  color: var(--ns-white);
+  font-size: 13px;
+  outline: none;
+  transition: border-color .2s;
+}
+.sidebar-search input::placeholder { color: var(--ns-gray-light); }
+.sidebar-search input:focus { border-color: var(--ns-green); }
+
+nav { flex: 1; padding: 10px 0 20px; }
+.nav-section {
+  padding: 14px 20px 4px;
+  font-size: 9.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--ns-gray-light);
+}
+nav a {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 20px;
+  color: rgba(255,255,255,.65);
+  text-decoration: none;
+  font-size: 13px;
+  transition: all .18s;
+  border-left: 3px solid transparent;
+  line-height: 1.4;
+}
+nav a:hover {
+  color: var(--ns-white);
+  background: rgba(255,255,255,.05);
+  border-left-color: var(--ns-green);
+}
+nav a.active {
+  color: var(--ns-white);
+  background: rgba(0,132,61,.15);
+  border-left-color: var(--ns-green);
+  font-weight: 600;
+}
+nav a .nav-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  opacity: .7;
+  font-size: 14px;
+  text-align: center;
+}
+nav a.active .nav-icon { opacity: 1; }
+nav a .nav-badge {
+  margin-left: auto;
+  font-size: 10px;
+  background: var(--ns-green);
+  color: white;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+.sidebar-footer {
+  padding: 14px 20px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  font-size: 11px;
+  color: var(--ns-gray-light);
+  line-height: 1.5;
+}
+.sidebar-footer strong { color: rgba(255,255,255,.5); display: block; }
+
+/* ─── MAIN CONTENT ───────────────────────────────────────────────────────── */
+#main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  min-height: 100vh;
+}
+
+/* ─── TOP BAR ────────────────────────────────────────────────────────────── */
+#topbar {
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  background: rgba(247,249,251,.96);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--ns-border);
+  padding: 0 40px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.topbar-breadcrumb {
+  font-size: 12.5px;
+  color: var(--ns-gray-mid);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.topbar-breadcrumb span { color: var(--ns-gray-light); }
+.topbar-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.btn-sm {
+  padding: 5px 14px;
+  border-radius: var(--radius);
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .18s;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--ns-border);
+  color: var(--ns-gray-mid);
+}
+.btn-outline:hover { border-color: var(--ns-green); color: var(--ns-green); }
+.btn-primary {
+  background: var(--ns-green);
+  color: white;
+}
+.btn-primary:hover { background: var(--ns-green-dark); }
+.tag {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+.tag-internal { background: #FEE2E2; color: #B91C1C; }
+.tag-version  { background: var(--ns-green-pale); color: var(--ns-green-dark); }
+
+/* ─── CONTENT SECTIONS ───────────────────────────────────────────────────── */
+.content {
+  padding: 40px 40px 80px;
+  max-width: var(--content-max);
+}
+
+/* ─── HERO ───────────────────────────────────────────────────────────────── */
+#hero {
+  background: linear-gradient(135deg, var(--ns-black) 0%, #0A1F12 60%, var(--ns-green-dark) 100%);
+  padding: 56px 40px 48px;
+  position: relative;
+  overflow: hidden;
+}
+#hero::before {
+  content: '';
+  position: absolute;
+  top: -60px; right: -60px;
+  width: 340px; height: 340px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,178,89,.18) 0%, transparent 70%);
+}
+#hero::after {
+  content: '';
+  position: absolute;
+  bottom: -40px; left: 200px;
+  width: 200px; height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,132,61,.12) 0%, transparent 70%);
+}
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0,178,89,.15);
+  border: 1px solid rgba(0,178,89,.3);
+  color: var(--ns-accent);
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-bottom: 18px;
+}
+.hero-tag::before { content: '●'; font-size: 8px; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.hero-title {
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--ns-white);
+  line-height: 1.15;
+  letter-spacing: -.8px;
+  margin-bottom: 10px;
+  max-width: 680px;
+}
+.hero-title em {
+  color: var(--ns-accent);
+  font-style: normal;
+}
+.hero-sub {
+  font-size: 15px;
+  color: rgba(255,255,255,.6);
+  max-width: 580px;
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+.hero-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+.hero-chip {
+  padding: 5px 14px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 20px;
+  color: rgba(255,255,255,.75);
+  font-size: 12px;
+  font-weight: 500;
+}
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  position: relative; z-index: 1;
+}
+.hero-stat {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+}
+.hero-stat-val {
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--ns-accent);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.hero-stat-lbl {
+  font-size: 11.5px;
+  color: rgba(255,255,255,.5);
+  line-height: 1.4;
+}
+
+/* ─── SECTION ────────────────────────────────────────────────────────────── */
+section { padding-top: 16px; }
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--ns-green-pale);
+}
+.section-num {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--ns-green);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 800;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.section-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--ns-black);
+  line-height: 1.3;
+}
+.section-desc {
+  font-size: 13.5px;
+  color: var(--ns-gray-mid);
+  margin-top: 4px;
+}
+
+h3.sub {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ns-green-dark);
+  margin: 28px 0 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+h3.sub::before {
+  content: '';
+  width: 4px; height: 16px;
+  background: var(--ns-green);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+p.body { color: var(--ns-gray-dark); margin-bottom: 12px; line-height: 1.75; }
+
+/* ─── CALLOUT BOXES ──────────────────────────────────────────────────────── */
+.callout {
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin: 16px 0;
+  border-left: 4px solid;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.callout-body { flex: 1; }
+.callout-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  margin-bottom: 4px;
+}
+.callout-text { font-size: 13.5px; line-height: 1.65; }
+.callout.green  { background: var(--ns-green-pale);  border-color: var(--ns-green);    }
+.callout.green  .callout-label { color: var(--ns-green-dark); }
+.callout.warn   { background: var(--ns-warn);         border-color: var(--ns-warn-b);   }
+.callout.warn   .callout-label { color: #92400E; }
+.callout.info   { background: #EFF6FF;                border-color: #3B82F6;            }
+.callout.info   .callout-label { color: #1D4ED8; }
+.callout.dark   { background: var(--ns-code-bg);      border-color: var(--ns-gray-mid); }
+.callout.dark   .callout-label { color: var(--ns-gray-dark); }
+
+/* ─── TABLES ─────────────────────────────────────────────────────────────── */
+.tbl-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  margin: 16px 0;
+  border: 1px solid var(--ns-border);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+thead th {
+  background: var(--ns-green);
+  color: white;
+  padding: 10px 14px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  white-space: nowrap;
+}
+thead th:first-child { border-radius: var(--radius) 0 0 0; }
+thead th:last-child  { border-radius: 0 var(--radius) 0 0; }
+tbody tr { transition: background .12s; }
+tbody tr:nth-child(even) { background: var(--ns-green-xpale); }
+tbody tr:hover { background: var(--ns-green-pale); }
+tbody td {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--ns-border);
+  vertical-align: top;
+  line-height: 1.55;
+}
+tbody tr:last-child td { border-bottom: none; }
+td.td-key {
+  font-weight: 700;
+  color: var(--ns-gray-dark);
+  white-space: nowrap;
+  width: 1%;
+}
+td .chip {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+}
+td .chip-green  { background: var(--ns-green-pale); color: var(--ns-green-dark); }
+td .chip-blue   { background: #DBEAFE; color: #1E40AF; }
+td .chip-gray   { background: #F1F5F9; color: #475569; }
+td .chip-orange { background: #FEF3C7; color: #92400E; }
+
+/* ─── CARD GRIDS ─────────────────────────────────────────────────────────── */
+.card-grid {
+  display: grid;
+  gap: 14px;
+  margin: 16px 0;
+}
+.card-grid-2 { grid-template-columns: repeat(2, 1fr); }
+.card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+.card {
+  background: var(--ns-white);
+  border: 1px solid var(--ns-border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow .18s, transform .18s;
+}
+.card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+.card-icon {
+  width: 38px; height: 38px;
+  border-radius: 9px;
+  background: var(--ns-green-pale);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+.card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ns-black);
+  margin-bottom: 6px;
+}
+.card-body {
+  font-size: 13px;
+  color: var(--ns-gray-mid);
+  line-height: 1.6;
+}
+.card-badge {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--ns-green-pale);
+  color: var(--ns-green-dark);
+}
+
+/* ─── ARCHITECTURE DIAGRAM ───────────────────────────────────────────────── */
+.arch-diagram {
+  background: var(--ns-black);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin: 20px 0;
+  position: relative;
+  overflow: hidden;
+}
+.arch-diagram::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,132,61,.12) 0%, transparent 70%);
+}
+.arch-layer {
+  position: relative;
+  z-index: 1;
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: var(--radius);
+  padding: 12px 18px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.arch-layer:last-child { margin-bottom: 0; }
+.arch-layer.layer-app     { background: rgba(0,132,61,.2); border-color: rgba(0,132,61,.4); }
+.arch-layer.layer-inst    { background: rgba(0,132,61,.12); border-color: rgba(0,132,61,.25); }
+.arch-layer.layer-collect { background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.12); }
+.arch-layer.layer-env     { background: rgba(0,178,89,.07); border-color: rgba(0,178,89,.2); }
+.arch-layer-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--ns-accent);
+  white-space: nowrap;
+  min-width: 110px;
+}
+.arch-layer-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.arch-item {
+  padding: 4px 12px;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 4px;
+  font-size: 12px;
+  color: rgba(255,255,255,.85);
+  font-weight: 500;
+}
+.arch-item.highlight {
+  background: rgba(0,132,61,.35);
+  border-color: var(--ns-green);
+  color: var(--ns-white);
+  font-weight: 700;
+}
+.arch-arrow {
+  text-align: center;
+  color: var(--ns-accent);
+  font-size: 14px;
+  padding: 4px 0;
+  opacity: .6;
+}
+
+/* ─── DEPLOY MODE CARDS ──────────────────────────────────────────────────── */
+.deploy-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 16px 0;
+}
+.deploy-card {
+  border: 1.5px solid var(--ns-border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  background: var(--ns-white);
+  transition: all .18s;
+  cursor: default;
+}
+.deploy-card:hover {
+  border-color: var(--ns-green);
+  box-shadow: 0 0 0 3px rgba(0,132,61,.08);
+}
+.deploy-card-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.deploy-mode-icon {
+  width: 34px; height: 34px;
+  border-radius: 8px;
+  background: var(--ns-green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.deploy-card-title { font-weight: 700; font-size: 14px; color: var(--ns-black); }
+.deploy-card-sub   { font-size: 11.5px; color: var(--ns-gray-mid); }
+.deploy-card-desc  { font-size: 13px; color: var(--ns-gray-mid); margin-bottom: 12px; line-height: 1.6; }
+.deploy-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.deploy-tag {
+  padding: 2px 8px;
+  background: var(--ns-code-bg);
+  border-radius: 4px;
+  font-size: 11px;
+  color: var(--ns-gray-mid);
+  font-weight: 600;
+}
+
+/* ─── FLOW STEPS ─────────────────────────────────────────────────────────── */
+.flow-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 16px 0;
+  position: relative;
+}
+.flow-steps::before {
+  content: '';
+  position: absolute;
+  left: 19px; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, var(--ns-green) 0%, var(--ns-green-pale) 100%);
+  z-index: 0;
+}
+.flow-step {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 12px 0;
+  position: relative;
+  z-index: 1;
+}
+.flow-step-num {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--ns-green);
+  color: white;
+  font-weight: 800;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 3px var(--ns-bg);
+}
+.flow-step-content { flex: 1; padding-top: 6px; }
+.flow-step-title { font-weight: 700; font-size: 14px; color: var(--ns-black); margin-bottom: 4px; }
+.flow-step-desc  { font-size: 13px; color: var(--ns-gray-mid); line-height: 1.6; }
+
+/* ─── COMPARISON ─────────────────────────────────────────────────────────── */
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 16px 0;
+}
+.compare-col {
+  background: var(--ns-white);
+  border: 2px solid var(--ns-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.compare-col.featured { border-color: var(--ns-green); }
+.compare-header {
+  padding: 14px 18px;
+  background: var(--ns-code-bg);
+  border-bottom: 1px solid var(--ns-border);
+}
+.compare-col.featured .compare-header {
+  background: var(--ns-green);
+  border-bottom-color: var(--ns-green-dark);
+}
+.compare-header-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ns-black);
+}
+.compare-col.featured .compare-header-title { color: white; }
+.compare-header-sub {
+  font-size: 12px;
+  color: var(--ns-gray-mid);
+  margin-top: 2px;
+}
+.compare-col.featured .compare-header-sub { color: rgba(255,255,255,.7); }
+.compare-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  border-bottom: 1px solid var(--ns-border);
+}
+.compare-row:last-child { border-bottom: none; }
+.compare-row-label {
+  padding: 9px 14px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--ns-gray-mid);
+  background: rgba(0,0,0,.02);
+  border-right: 1px solid var(--ns-border);
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+.compare-row-val {
+  padding: 9px 14px;
+  font-size: 13px;
+  color: var(--ns-gray-dark);
+  line-height: 1.5;
+}
+.compare-row-val strong { color: var(--ns-black); }
+.tick { color: var(--ns-green); font-weight: 700; }
+.cross { color: #DC2626; }
+
+/* ─── FAQ ────────────────────────────────────────────────────────────────── */
+.faq-list { margin: 16px 0; }
+.faq-item {
+  border: 1px solid var(--ns-border);
+  border-radius: var(--radius);
+  margin-bottom: 8px;
+  overflow: hidden;
+  background: var(--ns-white);
+}
+.faq-q {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 18px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--ns-black);
+  transition: background .15s;
+  user-select: none;
+  list-style: none;
+}
+.faq-q:hover { background: var(--ns-green-xpale); }
+.faq-q::marker { display: none; }
+.faq-q-icon {
+  width: 24px; height: 24px;
+  background: var(--ns-green-pale);
+  color: var(--ns-green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.faq-toggle {
+  margin-left: auto;
+  color: var(--ns-gray-light);
+  font-size: 18px;
+  flex-shrink: 0;
+  transition: transform .2s;
+}
+details[open] .faq-toggle { transform: rotate(45deg); }
+.faq-a {
+  padding: 0 18px 14px 54px;
+  font-size: 13.5px;
+  color: var(--ns-gray-mid);
+  line-height: 1.7;
+  border-top: 1px solid var(--ns-border);
+  padding-top: 12px;
+}
+.faq-a p { margin-bottom: 8px; }
+.faq-a p:last-child { margin-bottom: 0; }
+
+/* ─── CHECKLIST ──────────────────────────────────────────────────────────── */
+.checklist {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 12px 0;
+}
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 9px 12px;
+  background: var(--ns-white);
+  border: 1px solid var(--ns-border);
+  border-radius: var(--radius);
+  font-size: 13px;
+  color: var(--ns-gray-dark);
+  line-height: 1.4;
+}
+.check-item::before {
+  content: '☐';
+  color: var(--ns-green);
+  font-size: 16px;
+  flex-shrink: 0;
+  margin-top: -1px;
+}
+
+/* ─── PROTOCOL TAGS ──────────────────────────────────────────────────────── */
+.proto-group { margin-bottom: 14px; }
+.proto-group-title {
+  font-size: 11.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  color: var(--ns-gray-light);
+  margin-bottom: 7px;
+}
+.proto-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.proto-tag {
+  padding: 3px 10px;
+  background: var(--ns-code-bg);
+  border: 1px solid var(--ns-border);
+  border-radius: 4px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  color: var(--ns-gray-dark);
+  font-weight: 600;
+}
+.proto-tag.hi { background: var(--ns-green-pale); border-color: var(--ns-green); color: var(--ns-green-dark); }
+
+/* ─── POSITIONING TABLE ──────────────────────────────────────────────────── */
+.persona-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0;
+}
+.persona-card {
+  border: 1px solid var(--ns-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--ns-white);
+}
+.persona-header {
+  padding: 12px 16px;
+  background: var(--ns-green);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.persona-icon { font-size: 20px; }
+.persona-name { font-weight: 700; color: white; font-size: 14px; }
+.persona-body { padding: 14px 16px; }
+.persona-pain {
+  font-size: 12.5px;
+  color: var(--ns-gray-mid);
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed var(--ns-border);
+}
+.persona-pain strong { display: block; font-size: 10.5px; text-transform: uppercase; letter-spacing: .6px; color: var(--ns-gray-light); margin-bottom: 3px; }
+.persona-msg {
+  font-size: 13px;
+  color: var(--ns-black);
+  line-height: 1.65;
+  font-style: italic;
+}
+.persona-msg strong { font-style: normal; color: var(--ns-green-dark); }
+
+/* ─── COMPETITIVE TABLE ──────────────────────────────────────────────────── */
+.vs-row { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 10px; padding: 12px; background: var(--ns-white); border: 1px solid var(--ns-border); border-radius: var(--radius); }
+.vs-badge { padding: 3px 10px; border-radius: 4px; font-size: 11.5px; font-weight: 700; flex-shrink: 0; white-space: nowrap; }
+.vs-badge.ns   { background: var(--ns-green); color: white; }
+.vs-badge.comp { background: #EFF6FF; color: #1E40AF; border: 1px solid #BFDBFE; }
+.vs-text { font-size: 13px; color: var(--ns-gray-mid); line-height: 1.6; }
+.vs-text strong { color: var(--ns-black); }
+
+/* ─── PRINT/SCROLL ───────────────────────────────────────────────────────── */
+.back-to-top {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  width: 42px; height: 42px;
+  border-radius: 50%;
+  background: var(--ns-green);
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+  opacity: 0;
+  transition: opacity .2s;
+  z-index: 200;
+}
+.back-to-top.visible { opacity: 1; }
+.back-to-top:hover { background: var(--ns-green-dark); }
+
+/* ─── UTILITIES ──────────────────────────────────────────────────────────── */
+.mt-8  { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mb-8  { margin-bottom: 8px; }
+.mb-16 { margin-bottom: 16px; }
+ul.bullet-list {
+  padding-left: 20px;
+  margin: 10px 0;
+}
+ul.bullet-list li {
+  margin-bottom: 7px;
+  font-size: 13.5px;
+  color: var(--ns-gray-dark);
+  line-height: 1.65;
+}
+ul.bullet-list li strong { color: var(--ns-black); }
+
+/* ─── SECTION DIVIDER ────────────────────────────────────────────────────── */
+.section-sep {
+  border: none;
+  border-top: 2px solid var(--ns-green-pale);
+  margin: 44px 0 36px;
+}
+
+/* ─── SEARCH HIGHLIGHT ───────────────────────────────────────────────────── */
+.highlight { background: #FEF08A; border-radius: 2px; }
+
+@media print {
+  #sidebar, #topbar, .back-to-top { display: none !important; }
+  #main { margin-left: 0; }
+  .content { padding: 16px; max-width: 100%; }
+  #hero { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ SIDEBAR ════════════════════════════════ -->
+<aside id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-text">NET<span>SCOUT</span></div>
+    <div class="logo-sub">Presales Reference · Virtualization</div>
+  </div>
+  <div class="sidebar-search">
+    <input type="text" id="searchInput" placeholder="🔍  Tìm kiếm nội dung..." oninput="doSearch(this.value)">
+  </div>
+  <nav>
+    <div class="nav-section">Tổng quan</div>
+    <a href="#hero" class="active" onclick="setActive(this)"><span class="nav-icon">🏠</span> Giới thiệu & Số liệu</a>
+    <a href="#s1" onclick="setActive(this)"><span class="nav-icon">⚠️</span> Thách thức ảo hóa</a>
+    <a href="#s2" onclick="setActive(this)"><span class="nav-icon">🏗️</span> Kiến trúc tổng thể</a>
+
+    <div class="nav-section">Sản phẩm</div>
+    <a href="#s3" onclick="setActive(this)"><span class="nav-icon">☁️</span> vSTREAM® <span class="nav-badge">VMware/KVM</span></a>
+    <a href="#s4" onclick="setActive(this)"><span class="nav-icon">⎈</span> KlearSight Sensor <span class="nav-badge">K8s</span></a>
+    <a href="#s5" onclick="setActive(this)"><span class="nav-icon">⚖️</span> So sánh vSTREAM vs KlearSight</a>
+    <a href="#s7" onclick="setActive(this)"><span class="nav-icon">📊</span> nGeniusONE Analytics</a>
+
+    <div class="nav-section">Tư vấn</div>
+    <a href="#s6" onclick="setActive(this)"><span class="nav-icon">🗺️</span> Kiến trúc tham chiếu</a>
+    <a href="#s8" onclick="setActive(this)"><span class="nav-icon">❓</span> FAQ & Phản đối</a>
+    <a href="#s9" onclick="setActive(this)"><span class="nav-icon">🎯</span> Positioning & Messaging</a>
+    <a href="#checklist" onclick="setActive(this)"><span class="nav-icon">✅</span> Checklist khảo sát</a>
+  </nav>
+  <div class="sidebar-footer">
+    <strong>Tài liệu nội bộ Presales</strong>
+    Phiên bản 1.0 · Tháng 6/2026<br>
+    Cần xác nhận với NETSCOUT SE trước khi dùng trong hồ sơ chính thức.
+  </div>
+</aside>
+
+<!-- ═══════════════════════════════ MAIN ════════════════════════════════════ -->
+<div id="main">
+
+  <!-- TOP BAR -->
+  <div id="topbar">
+    <div class="topbar-breadcrumb">
+      <span>NETSCOUT</span> › <span>Presales</span> › <strong>Giám sát môi trường ảo hóa</strong>
+    </div>
+    <div class="topbar-actions">
+      <span class="tag tag-internal">🔒 Nội bộ</span>
+      <span class="tag tag-version">v1.0 · 06/2026</span>
+      <button class="btn-sm btn-outline" onclick="window.print()">🖨️ In tài liệu</button>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div id="hero">
+    <div class="hero-tag">Presales Reference · Banking &amp; Financial Services</div>
+    <div class="hero-title">
+      Giám sát Môi trường Ảo hóa<br>với <em>vSTREAM®</em> &amp; <em>KlearSight</em>
+    </div>
+    <div class="hero-sub">
+      Tài liệu tham chiếu toàn diện cho presale tư vấn giải pháp NETSCOUT cho khách hàng ngân hàng triển khai Kubernetes, VMware, KVM và môi trường hybrid/multi-cloud.
+    </div>
+    <div class="hero-chips">
+      <div class="hero-chip">⎈ Kubernetes (EKS / AKS / GKE / OpenShift)</div>
+      <div class="hero-chip">🖥️ VMware vSphere / NSX</div>
+      <div class="hero-chip">🐧 KVM / OpenStack</div>
+      <div class="hero-chip">☁️ AWS / Azure / GCP</div>
+      <div class="hero-chip">🏦 Ngân hàng & TCTD</div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-val">100%</div>
+        <div class="hero-stat-lbl">DPI packet-based — không bỏ sót traffic</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val">1 vCPU</div>
+        <div class="hero-stat-lbl">Tài nguyên tối thiểu để chạy vSTREAM</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val">eBPF</div>
+        <div class="hero-stat-lbl">Công nghệ kernel-level cho K8s — zero agent</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-val">1 UI</div>
+        <div class="hero-stat-lbl">nGeniusONE — single pane of glass mọi môi trường</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+
+  <!-- ════════════════ SECTION 1: THÁCH THỨC ════════════════ -->
+  <hr class="section-sep" id="s1">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <div>
+      <div class="section-title">Thách thức giám sát trong môi trường ảo hóa ngân hàng</div>
+      <div class="section-desc">Tại sao monitoring truyền thống không đủ cho ngân hàng hybrid hiện đại</div>
+    </div>
+  </div>
+
+  <p class="body">Các ngân hàng Việt Nam đang tăng tốc hiện đại hóa hạ tầng CNTT theo hướng hybrid/multi-cloud, triển khai Kubernetes cho các ứng dụng core banking, payment gateway, mobile banking và API Open Banking. Sự phức tạp của môi trường lai này tạo ra những <strong>khoảng mù nghiêm trọng về khả năng quan sát (observability)</strong>.</p>
+
+  <h3 class="sub">Các điểm mù đặc thù trong môi trường ngân hàng</h3>
+  <div class="card-grid card-grid-2">
+    <div class="card">
+      <div class="card-icon">🔀</div>
+      <div class="card-title">East-west traffic ẩn trong Kubernetes</div>
+      <div class="card-body">Traffic giữa các pod trong K8s cluster không đi qua physical switch → không TAP được bằng phương pháp truyền thống. Chiếm phần lớn giao tiếp microservice.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🖥️</div>
+      <div class="card-title">VM-to-VM traffic trong VMware</div>
+      <div class="card-body">Giao tiếp giữa các VM trên cùng ESXi host đi qua virtual switch nội bộ — hoàn toàn không hiện diện trên đường vật lý. Core banking ↔ DB thường nằm trong blind spot này.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🌐</div>
+      <div class="card-title">Overlay network che khuất traffic</div>
+      <div class="card-body">Microservices giao tiếp qua VXLAN, service mesh (Istio), gRPC — tầng encapsulation này ẩn toàn bộ application-level payload khỏi các công cụ monitoring L3/L4.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔄</div>
+      <div class="card-title">Dynamic topology Kubernetes</div>
+      <div class="card-body">Pods được spin up/down liên tục khi auto-scaling. IP thay đổi từng phút. Log-based và flow-based tool không theo kịp context — alert đến thì pod đã biến mất.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <div class="card-title">Thiếu bằng chứng cho audit</div>
+      <div class="card-body">Giao dịch tài chính cần packet-level evidence để phục vụ audit nội bộ, NHNN thanh tra, điều tra gian lận (fraud) và compliance PCI-DSS.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">⏱️</div>
+      <div class="card-title">MTTR cao vì thiếu root cause</div>
+      <div class="card-body">Không có end-to-end visibility → "blame game" giữa các team (network? app? DB? cloud?). MTTR kéo dài hàng giờ, ảnh hưởng trực tiếp đến doanh thu và uy tín ngân hàng.</div>
+    </div>
+  </div>
+
+  <h3 class="sub">Tại sao Flow data và Log không đủ?</h3>
+  <div class="callout green">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">
+      <div class="callout-label">Luận điểm bán hàng cốt lõi</div>
+      <div class="callout-text">Logs &amp; NetFlow chỉ cho biết <strong>"có gì đó xảy ra"</strong>. Packet-based DPI cho biết <strong>"chính xác điều gì xảy ra, ở đâu, tại sao"</strong> — kể cả application payload, error codes, transaction timing, và security anomalies.</div>
+    </div>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Công cụ</th><th>Phạm vi</th><th>Hạn chế với ngân hàng hybrid</th><th>NETSCOUT bổ sung gì?</th></tr></thead>
+      <tbody>
+        <tr><td class="td-key">NetFlow / sFlow</td><td>L3–L4 metadata</td><td>Không thấy payload ứng dụng, không phân tích east-west VM/pod traffic</td><td>DPI đến L7, phân tích từng transaction</td></tr>
+        <tr><td class="td-key">Logs (ELK, Splunk)</td><td>Application events</td><td>Phụ thuộc developer implement log đúng; không có timing network-level; không có forensics</td><td>Independent packet evidence, không phụ thuộc app code</td></tr>
+        <tr><td class="td-key">Prometheus/Grafana</td><td>Metrics (CPU, latency avg)</td><td>Metric tổng hợp che khuất anomaly ngắn; không có per-transaction drill-down</td><td>Per-session timing breakdown: network/server/app response time</td></tr>
+        <tr><td class="td-key">Service Mesh (Istio)</td><td>L7 proxy metrics</td><td>Chỉ thấy traffic qua proxy; không thấy traffic bypass mesh; không có forensics</td><td>Packet capture độc lập với application stack</td></tr>
+        <tr><td class="td-key">Wireshark / tcpdump</td><td>Packet capture thủ công</td><td>Manual, không real-time monitoring, không scalable, không alerting</td><td>Automated 24/7 monitoring, alerting, historical analysis, enterprise scale</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ════════════════ SECTION 2: KIẾN TRÚC ════════════════ -->
+  <hr class="section-sep" id="s2">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <div>
+      <div class="section-title">Kiến trúc giải pháp NETSCOUT tổng thể</div>
+      <div class="section-desc">Nền tảng ASI Smart Data — nguồn dữ liệu thống nhất cho mọi môi trường</div>
+    </div>
+  </div>
+
+  <p class="body">Toàn bộ giải pháp NETSCOUT được xây dựng trên công nghệ <strong>Adaptive Service Intelligence® (ASI)</strong> — DPI engine thế hệ mới được cấp bằng sáng chế. ASI biến đổi traffic mạng thô thành <strong>"Smart Data"</strong> — tập metadata giàu ngữ cảnh được phân tích tập trung bởi nGeniusONE®.</p>
+
+  <div class="arch-diagram">
+    <div class="arch-layer layer-app">
+      <div class="arch-layer-label">📊 Analytics</div>
+      <div class="arch-layer-items">
+        <div class="arch-item highlight">nGeniusONE® — Single Pane of Glass</div>
+        <div class="arch-item">Service Dashboard</div>
+        <div class="arch-item">Service Monitor</div>
+        <div class="arch-item">Session Analysis</div>
+        <div class="arch-item">Packet Forensics</div>
+      </div>
+    </div>
+    <div class="arch-arrow">▲ ASI Smart Data ▲</div>
+    <div class="arch-layer layer-inst">
+      <div class="arch-layer-label">🔬 Instrumentation</div>
+      <div class="arch-layer-items">
+        <div class="arch-item highlight">InfiniStreamNG (Physical)</div>
+        <div class="arch-item highlight">vSTREAM® (Virtual/Cloud)</div>
+        <div class="arch-item highlight">KlearSight Sensor (K8s eBPF)</div>
+      </div>
+    </div>
+    <div class="arch-arrow">▲ Raw Traffic ▲</div>
+    <div class="arch-layer layer-collect">
+      <div class="arch-layer-label">📡 Thu thập</div>
+      <div class="arch-layer-items">
+        <div class="arch-item">HD TAPs (Physical)</div>
+        <div class="arch-item">vSwitch Port Mirror</div>
+        <div class="arch-item">ERSPAN Tunnel</div>
+        <div class="arch-item">eBPF Kernel Hook</div>
+        <div class="arch-item">Cloud Traffic Mirror</div>
+      </div>
+    </div>
+    <div class="arch-arrow">▲ Network Segments ▲</div>
+    <div class="arch-layer layer-env">
+      <div class="arch-layer-label">🌐 Môi trường</div>
+      <div class="arch-layer-items">
+        <div class="arch-item">Physical DC</div>
+        <div class="arch-item">VMware vSphere/NSX</div>
+        <div class="arch-item">KVM/OpenStack</div>
+        <div class="arch-item">Kubernetes On-Prem</div>
+        <div class="arch-item">AWS EKS</div>
+        <div class="arch-item">AKS / GKE</div>
+        <div class="arch-item">OpenShift</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub">Ba thành phần Instrumentation cốt lõi</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Thành phần</th><th>Công nghệ</th><th>Môi trường áp dụng</th><th>Vai trò chính</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="td-key">InfiniStreamNG (ISNG)</td>
+          <td><span class="chip chip-gray">Hardware/Software Appliance</span></td>
+          <td>Physical DC · 1G / 10G / 40G / 100G</td>
+          <td>Thu thập traffic vật lý, tạo ASI Smart Data, packet forensics</td>
+        </tr>
+        <tr>
+          <td class="td-key">vSTREAM®</td>
+          <td><span class="chip chip-green">Virtual Network Function</span></td>
+          <td>VMware · KVM · OpenStack · Public Cloud · Docker/K8s</td>
+          <td>Giám sát east-west traffic ảo hóa, thay thế TAP trong môi trường virtual</td>
+        </tr>
+        <tr>
+          <td class="td-key">KlearSight Sensor</td>
+          <td><span class="chip chip-blue">eBPF DaemonSet</span></td>
+          <td>Kubernetes: OpenShift · EKS · AKS · GKE · Vanilla K8s</td>
+          <td>Bắt traffic pod-level không cần thay đổi ứng dụng, SSL traffic đã decrypt</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ════════════════ SECTION 3: vSTREAM ════════════════ -->
+  <hr class="section-sep" id="s3">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <div>
+      <div class="section-title">vSTREAM® — Giám sát ảo hóa VMware, KVM và Cloud</div>
+      <div class="section-desc">Virtual TAP thay thế hardware TAP bên trong hypervisor</div>
+    </div>
+  </div>
+
+  <p class="body">vSTREAM® là Virtual Network Function (VNF) của NETSCOUT, mang toàn bộ sức mạnh ASI Smart Data của InfiniStreamNG vào trong môi trường ảo hóa và đám mây. vSTREAM hoạt động như một "mắt thần" bên trong hypervisor — nhìn thấy traffic mà TAP vật lý không bao giờ thấy được.</p>
+
+  <h3 class="sub">Ba chế độ triển khai vSTREAM</h3>
+  <div class="deploy-grid">
+    <div class="deploy-card">
+      <div class="deploy-card-head">
+        <div class="deploy-mode-icon">🖥️</div>
+        <div>
+          <div class="deploy-card-title">Stand-Alone VNF</div>
+          <div class="deploy-card-sub">Phổ biến nhất cho VMware</div>
+        </div>
+      </div>
+      <div class="deploy-card-desc">vSTREAM chạy như một VM độc lập bên cạnh các VM ứng dụng trên hypervisor. Nhận traffic qua port mirror hoặc ERSPAN từ vSwitch.</div>
+      <div class="deploy-tags">
+        <span class="deploy-tag">VMware ESXi</span>
+        <span class="deploy-tag">KVM</span>
+        <span class="deploy-tag">Hyper-V</span>
+        <span class="deploy-tag">VMware NSX</span>
+      </div>
+    </div>
+    <div class="deploy-card">
+      <div class="deploy-card-head">
+        <div class="deploy-mode-icon">⚙️</div>
+        <div>
+          <div class="deploy-card-title">Embedded</div>
+          <div class="deploy-card-sub">Bare-metal server</div>
+        </div>
+      </div>
+      <div class="deploy-card-desc">vSTREAM được cài trực tiếp vào OS của server vật lý. Lý tưởng khi không có hypervisor hoặc muốn giám sát traffic ngay trên host.</div>
+      <div class="deploy-tags">
+        <span class="deploy-tag">RHEL / CentOS</span>
+        <span class="deploy-tag">Ubuntu</span>
+        <span class="deploy-tag">Fedora</span>
+        <span class="deploy-tag">SUSE</span>
+        <span class="deploy-tag">Windows Server</span>
+      </div>
+    </div>
+    <div class="deploy-card">
+      <div class="deploy-card-head">
+        <div class="deploy-mode-icon">📦</div>
+        <div>
+          <div class="deploy-card-title">Container</div>
+          <div class="deploy-card-sub">Docker / Kubernetes</div>
+        </div>
+      </div>
+      <div class="deploy-card-desc">vSTREAM chạy như một container. Nhận tunnel traffic từ KlearSight Sensor để xử lý ASI. Thường đặt ngoài K8s cluster nhưng có thể container hóa.</div>
+      <div class="deploy-tags">
+        <span class="deploy-tag">Docker Engine</span>
+        <span class="deploy-tag">Kubernetes</span>
+        <span class="deploy-tag">AWS / Azure / GCP</span>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub">Môi trường hỗ trợ chi tiết</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Loại môi trường</th><th>Nền tảng cụ thể</th><th>Cơ chế lấy traffic</th><th>Lưu ý triển khai</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="td-key">VMware vSphere</td>
+          <td>ESXi · vCenter · NSX-V · NSX-T</td>
+          <td>Distributed vSwitch port mirror, NSX Service Insertion, ERSPAN</td>
+          <td>1 vSTREAM instance per ESXi host để bắt east-west VM traffic</td>
+        </tr>
+        <tr>
+          <td class="td-key">KVM / OpenStack</td>
+          <td>Open vSwitch (OVS) · Linux Bridge</td>
+          <td>OVS port mirror, Linux Bridge tap interface</td>
+          <td>Deploy như nova instance trong OpenStack; cần xác nhận version cụ thể</td>
+        </tr>
+        <tr>
+          <td class="td-key">AWS</td>
+          <td>EC2, VPC Traffic Mirroring</td>
+          <td>VPC Traffic Mirroring → vSTREAM EC2 instance</td>
+          <td>Chi phí traffic mirror theo GB; filter traffic quan trọng trước</td>
+        </tr>
+        <tr>
+          <td class="td-key">Microsoft Azure</td>
+          <td>Azure VM, vNet TAP</td>
+          <td>Azure vNet TAP → vSTREAM Azure VM</td>
+          <td>Kiểm tra availability của vNet TAP theo region</td>
+        </tr>
+        <tr>
+          <td class="td-key">Google Cloud</td>
+          <td>GCE, Packet Mirroring</td>
+          <td>GCP Packet Mirroring → vSTREAM GCE instance</td>
+          <td>Hỗ trợ lọc theo subnet, protocol, port trước khi mirror</td>
+        </tr>
+        <tr>
+          <td class="td-key">Bare Metal</td>
+          <td>Linux (RHEL/CentOS/Ubuntu/SUSE), Windows Server</td>
+          <td>Embedded agent, OS-level packet capture</td>
+          <td>Không cần thêm phần cứng monitoring; cài trực tiếp trên server</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub">Thông số kỹ thuật & Tính năng vSTREAM</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Thông số</th><th>Chi tiết</th></tr></thead>
+      <tbody>
+        <tr><td class="td-key">Tài nguyên tối thiểu</td><td>1 vCPU · Thêm vCPU/vRAM để tăng throughput giám sát</td></tr>
+        <tr><td class="td-key">Khả năng mở rộng</td><td>Scale horizontal: thêm vSTREAM instances; scale vertical: thêm vCPU/vRAM</td></tr>
+        <tr><td class="td-key">ASI Smart Data</td><td>Full ASI metrics: response time per transaction, retransmission rate, active sessions, KPIs per service/app</td></tr>
+        <tr><td class="td-key">Traffic forwarding</td><td>Nhận traffic từ port mirror / ERSPAN / tunnel; forward filtered traffic đến monitoring tools</td></tr>
+        <tr><td class="td-key">Tích hợp nGeniusONE</td><td>Toàn bộ Smart Data gửi về nGeniusONE để phân tích, alert, report, forensics</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub">Protocol support — Quan trọng cho ngân hàng</h3>
+  <div class="proto-group">
+    <div class="proto-group-title">🏦 Tài chính (Ưu tiên cao nhất)</div>
+    <div class="proto-tags">
+      <span class="proto-tag hi">FIX Protocol</span>
+      <span class="proto-tag hi">OUCH</span>
+      <span class="proto-tag hi">STAMP</span>
+      <span class="proto-tag hi">VISA</span>
+      <span class="proto-tag hi">MasterCard</span>
+      <span class="proto-tag hi">Amex</span>
+      <span class="proto-tag hi">UnionPay</span>
+      <span class="proto-tag hi">SSL Certificate</span>
+    </div>
+  </div>
+  <div class="proto-group">
+    <div class="proto-group-title">🌐 Enterprise Web & API</div>
+    <div class="proto-tags">
+      <span class="proto-tag">HTTP / HTTPS</span>
+      <span class="proto-tag">DNS / DHCP</span>
+      <span class="proto-tag">SMTP / POP3</span>
+      <span class="proto-tag">SIP</span>
+      <span class="proto-tag">FTP / TFTP</span>
+      <span class="proto-tag">LDAP / Kerberos</span>
+      <span class="proto-tag">SNMP</span>
+      <span class="proto-tag">NTP</span>
+      <span class="proto-tag">NFS</span>
+      <span class="proto-tag">SMB</span>
+    </div>
+  </div>
+  <div class="proto-group">
+    <div class="proto-group-title">🗄️ Database & Middleware</div>
+    <div class="proto-tags">
+      <span class="proto-tag hi">Oracle DB</span>
+      <span class="proto-tag hi">MySQL</span>
+      <span class="proto-tag">IBM MQ</span>
+      <span class="proto-tag">DICOM</span>
+      <span class="proto-tag">Citrix ICA</span>
+      <span class="proto-tag">MSRP / ActiveSync</span>
+    </div>
+  </div>
+  <div class="proto-group">
+    <div class="proto-group-title">📦 Network Encapsulation</div>
+    <div class="proto-tags">
+      <span class="proto-tag">VXLAN</span>
+      <span class="proto-tag">VLAN / Stacked VLAN</span>
+      <span class="proto-tag">MPLS</span>
+      <span class="proto-tag">GRE</span>
+      <span class="proto-tag">GTP v0/v1/v2</span>
+      <span class="proto-tag">L2TP</span>
+      <span class="proto-tag">PPPoE</span>
+      <span class="proto-tag">VNTag</span>
+      <span class="proto-tag">Teredo</span>
+      <span class="proto-tag">VSAN</span>
+      <span class="proto-tag">Cisco Fabric Path</span>
+    </div>
+  </div>
+
+  <h3 class="sub">Hướng dẫn tư vấn: vSTREAM trên VMware</h3>
+  <div class="callout info">
+    <div class="callout-icon">🖥️</div>
+    <div class="callout-body">
+      <div class="callout-label">Môi trường phổ biến nhất tại ngân hàng Việt Nam</div>
+      <div class="callout-text">Hầu hết ngân hàng VN chạy VMware vSphere. Đây là use case có thể close deal nhanh nhất.</div>
+    </div>
+  </div>
+  <ul class="bullet-list">
+    <li><strong>DVPG Port Mirroring:</strong> Cấu hình Distributed vSwitch để mirror traffic của các VM quan trọng (core banking, database, API gateway) sang vSTREAM VM. Không ảnh hưởng đến data path sản xuất.</li>
+    <li><strong>VMware NSX-V / NSX-T:</strong> Sử dụng NSX Service Insertion để chuyển traffic đến vSTREAM mà không cần thay đổi kiến trúc mạng. Elegant nhất cho môi trường NSX.</li>
+    <li><strong>ERSPAN Tunnel:</strong> Với vCenter phân tán hoặc cần gửi traffic qua L3 boundary, dùng ERSPAN encapsulation đến vSTREAM. Linh hoạt nhất cho multi-site.</li>
+    <li><strong>Sizing rule:</strong> 1 vSTREAM instance per ESXi host có VM critical cần monitor để bắt east-west traffic trên cùng host. Số vSTREAM phụ thuộc vào số ESXi hosts và bandwidth.</li>
+  </ul>
+
+  <!-- ════════════════ SECTION 4: KLEARSIGHT ════════════════ -->
+  <hr class="section-sep" id="s4">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <div>
+      <div class="section-title">Omnis KlearSight Sensor — Giám sát Kubernetes với eBPF</div>
+      <div class="section-desc">Pod-level visibility không cần thay đổi ứng dụng, không cần sidecar</div>
+    </div>
+  </div>
+
+  <div class="callout green">
+    <div class="callout-icon">🚀</div>
+    <div class="callout-body">
+      <div class="callout-label">Điểm khác biệt chiến lược</div>
+      <div class="callout-text">KlearSight <strong>không cần thay đổi ứng dụng, không cần sidecar proxy, không cần service mesh agent</strong>. Hoạt động ở tầng kernel Linux (eBPF) — hoàn toàn trong suốt với workload. Bắt được cả TLS/SSL traffic đã decrypt mà không cần encryption key.</div>
+    </div>
+  </div>
+
+  <h3 class="sub">Tại sao eBPF là breakthrough technology?</h3>
+  <div class="card-grid card-grid-2">
+    <div class="card">
+      <div class="card-icon">⚡</div>
+      <div class="card-title">Kernel-level, zero-overhead</div>
+      <div class="card-body">eBPF chạy trong Linux kernel với sandbox nghiêm ngặt. Không inject agent vào pod. Overhead cực thấp so với sidecar proxy (Envoy/Linkerd).</div>
+      <span class="card-badge">vs. Service Mesh</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔓</div>
+      <div class="card-title">SSL/TLS visibility không cần key</div>
+      <div class="card-body">Bắt traffic sau khi Linux kernel đã decrypt TLS. Không truy cập hoặc yêu cầu encryption keys. An toàn tuyệt đối cho ngân hàng.</div>
+      <span class="card-badge">Zero-key</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔄</div>
+      <div class="card-title">Auto-adapt topology</div>
+      <div class="card-body">KlearSight Manager liên tục theo dõi K8s topology. Khi pod scale up/down hoặc migrate node, monitoring tự thích nghi — không cần reconfiguration.</div>
+      <span class="card-badge">Dynamic</span>
+    </div>
+    <div class="card">
+      <div class="card-icon">📦</div>
+      <div class="card-title">DaemonSet deployment</div>
+      <div class="card-body">Sensor deploy như DaemonSet — tự động lên EVERY worker node hiện tại và tương lai. Kubernetes operator quản lý lifecycle hoàn toàn.</div>
+      <span class="card-badge">Auto-scale</span>
+    </div>
+  </div>
+
+  <h3 class="sub">Kiến trúc 4 thành phần</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Thành phần</th><th>Vị trí deploy</th><th>Chức năng chi tiết</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="td-key">KlearSight Manager</td>
+          <td><span class="chip chip-blue">Trong K8s Cluster</span></td>
+          <td>Theo dõi cluster topology liên tục. Quản lý lifecycle các Sensor pods. Xác định pods cần giám sát theo cấu hình namespace/label. Cung cấp context metadata (pod name, namespace, service, labels) cho Sensor.</td>
+        </tr>
+        <tr>
+          <td class="td-key">KlearSight Sensor</td>
+          <td><span class="chip chip-green">DaemonSet — mỗi worker node</span></td>
+          <td>Hook vào kernel Linux qua eBPF để bắt traffic của tất cả pods trên node đó. Enrich packet với K8s metadata. Forward tunnel traffic ra ngoài cluster đến ISNG/vSTREAM.</td>
+        </tr>
+        <tr>
+          <td class="td-key">ASI Instrumentation (ISNG/vSTREAM)</td>
+          <td><span class="chip chip-orange">Ngoài K8s Cluster</span></td>
+          <td>Nhận tunnel traffic từ tất cả KlearSight Sensors. Thực hiện full ASI DPI. Tạo Smart Data (KPIs, response time, session info) gửi lên nGeniusONE để phân tích.</td>
+        </tr>
+        <tr>
+          <td class="td-key">nGeniusONE®</td>
+          <td><span class="chip chip-gray">Management Server</span></td>
+          <td>Central analytics platform. Service dependency map. Alert theo threshold. Session analysis drill-down. Full packet decode. Report và forensics cho compliance.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub">Luồng dữ liệu kỹ thuật (Data Path)</h3>
+  <div class="flow-steps">
+    <div class="flow-step">
+      <div class="flow-step-num">1</div>
+      <div class="flow-step-content">
+        <div class="flow-step-title">Capture tại Kernel</div>
+        <div class="flow-step-desc">KlearSight Sensor dùng eBPF hook bắt packet tại kernel của mỗi worker node. Bao gồm cả inter-pod traffic trên cùng node (east-west) — không cần external TAP.</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-num">2</div>
+      <div class="flow-step-content">
+        <div class="flow-step-title">Enrich với K8s Context</div>
+        <div class="flow-step-desc">Manager cung cấp metadata: pod name, namespace, service name, node, labels, deployment. Traffic được gắn context K8s — không chỉ là IP address.</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-num">3</div>
+      <div class="flow-step-content">
+        <div class="flow-step-title">Tunnel ra ngoài Cluster</div>
+        <div class="flow-step-desc">Sensor đóng gói enriched traffic vào tunnel và gửi ra ngoài Kubernetes cluster đến InfiniStreamNG hoặc vSTREAM (ASI Instrumentation). Control path và data path tách biệt.</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-num">4</div>
+      <div class="flow-step-content">
+        <div class="flow-step-title">ASI Deep Packet Inspection</div>
+        <div class="flow-step-desc">ISNG hoặc vSTREAM nhận tunnel traffic, thực hiện full ASI DPI. Tạo Smart Data: response time per service, retransmission rate, error codes, session KPIs.</div>
+      </div>
+    </div>
+    <div class="flow-step">
+      <div class="flow-step-num">5</div>
+      <div class="flow-step-content">
+        <div class="flow-step-title">Analytics trên nGeniusONE</div>
+        <div class="flow-step-desc">nGeniusONE tiêu thụ Smart Data, hiển thị Service Dashboard với K8s context, service dependency map, alert và drill-down đến packet level. Cùng UI với physical network monitoring.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub">Kubernetes Platforms được hỗ trợ</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Loại</th><th>Platform cụ thể</th><th>Ghi chú</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="td-key">Managed K8s — Public Cloud</td>
+          <td>
+            <span class="chip chip-orange">AWS EKS</span>&nbsp;
+            <span class="chip chip-blue">Azure AKS</span>&nbsp;
+            <span class="chip chip-green">Google GKE</span>
+          </td>
+          <td>Hỗ trợ chính thức. Triển khai như workload thông thường trong cluster.</td>
+        </tr>
+        <tr>
+          <td class="td-key">On-Premises K8s</td>
+          <td>
+            <span class="chip chip-orange">Red Hat OpenShift</span>&nbsp;
+            <span class="chip chip-gray">OKD (Community)</span>&nbsp;
+            <span class="chip chip-gray">Vanilla K8s</span>
+          </td>
+          <td>OpenShift được hỗ trợ chính thức — rất phổ biến tại ngân hàng VN.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub">Giá trị đặc biệt cho ngân hàng</h3>
+  <ul class="bullet-list">
+    <li><strong>API microservice chain:</strong> Giám sát luồng: Core Banking API → Payment Service → Fraud Detection → Notification. Xác định bottleneck từng bước trong milliseconds.</li>
+    <li><strong>Retry storm detection:</strong> Khi một service timeout, upstream liên tục retry gây cascading failure. KlearSight phát hiện pattern này sớm trước khi ảnh hưởng người dùng.</li>
+    <li><strong>TLS 1.3 visibility:</strong> Bắt traffic sau khi kernel decrypt — không cần certificate injection vào pod. Tuân thủ security policy ngân hàng.</li>
+    <li><strong>Compliance evidence:</strong> Lưu giữ packet records của giao dịch tài chính trên K8s phục vụ audit NHNN và internal audit.</li>
+    <li><strong>Zero app changes:</strong> Không cần developer thêm code, không cần deploy sidecar, không cần thay đổi deployment manifest.</li>
+  </ul>
+
+  <!-- ════════════════ SECTION 5: SO SÁNH ════════════════ -->
+  <hr class="section-sep" id="s5">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <div>
+      <div class="section-title">So sánh: vSTREAM vs KlearSight — Khi nào dùng cái nào?</div>
+      <div class="section-desc">Hai sản phẩm BỔ SUNG cho nhau, không thay thế nhau</div>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <div class="callout-icon">⚠️</div>
+    <div class="callout-body">
+      <div class="callout-label">Lưu ý quan trọng khi tư vấn</div>
+      <div class="callout-text">Không nên đề xuất chỉ một trong hai. <strong>Ngân hàng hybrid = vSTREAM cho VMware/KVM + KlearSight cho K8s.</strong> Cả hai feed Smart Data vào một nGeniusONE → single pane of glass hoàn chỉnh.</div>
+    </div>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Tiêu chí</th><th>vSTREAM®</th><th>KlearSight Sensor</th></tr></thead>
+      <tbody>
+        <tr><td class="td-key">Môi trường chính</td><td>VMware, KVM, Cloud VM, Bare Metal</td><td>Kubernetes (pod-level)</td></tr>
+        <tr><td class="td-key">Công nghệ capture</td><td>Port mirror / ERSPAN / TAP → vSTREAM VM</td><td>eBPF kernel hook tại worker node</td></tr>
+        <tr><td class="td-key">Đơn vị giám sát</td><td>Virtual Machine (VM)</td><td>Pod / Container / Node interface</td></tr>
+        <tr><td class="td-key">East-west VM traffic</td><td><span class="tick">✔ Có</span> — nếu port mirror cấu hình đúng trên vSwitch</td><td><span class="cross">✘</span> Không áp dụng (cho VM)</td></tr>
+        <tr><td class="td-key">East-west Pod traffic</td><td><span class="cross">✘</span> Không nhìn thấy được</td><td><span class="tick">✔ Có</span> — đây là điểm mạnh chính</td></tr>
+        <tr><td class="td-key">Dynamic topology</td><td>Cần reconfigure khi VM migrate</td><td>Tự động thích nghi khi pod scale/restart</td></tr>
+        <tr><td class="td-key">SSL/TLS decryption</td><td>Cần mirror trước encrypt hoặc cần key</td><td><span class="tick">✔</span> Capture sau kernel decrypt — không cần key</td></tr>
+        <tr><td class="td-key">Yêu cầu infrastructure</td><td>1 vSTREAM VM per ESXi host cần monitor</td><td>KlearSight DaemonSet tự deploy lên tất cả nodes</td></tr>
+        <tr><td class="td-key">Thay đổi application</td><td>Không cần</td><td>Không cần</td></tr>
+        <tr><td class="td-key">Dependencies</td><td>nGeniusONE + port mirror/ERSPAN/NSX</td><td>nGeniusONE + ISNG hoặc vSTREAM (ngoài cluster)</td></tr>
+        <tr><td class="td-key">Use case ngân hàng</td><td>VM legacy: core banking, DB, middleware, LDAP</td><td>Microservices mới: payment API, mobile backend, open banking</td></tr>
+        <tr><td class="td-key">Protocol support</td><td>Full ASI: 50+ protocols bao gồm Oracle, FIX, card payment</td><td>Full ASI sau khi tunnel đến ISNG/vSTREAM</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout green mt-16">
+    <div class="callout-icon">🏆</div>
+    <div class="callout-body">
+      <div class="callout-label">Best Practice cho ngân hàng Hybrid</div>
+      <div class="callout-text"><strong>Triển khai ĐỒNG THỜI:</strong> vSTREAM cho nền VMware/KVM legacy (core banking, DB, middleware) + KlearSight Sensor cho K8s mới (payment microservices, mobile API, open banking). Cả hai đều feed Smart Data vào một nGeniusONE duy nhất → <strong>single pane of glass</strong> cho toàn bộ hybrid environment.</div>
+    </div>
+  </div>
+
+  <!-- ════════════════ SECTION 6: KIẾN TRÚC THAM CHIẾU ════════════════ -->
+  <hr class="section-sep" id="s6">
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <div>
+      <div class="section-title">Kiến trúc tham chiếu cho ngân hàng Hybrid</div>
+      <div class="section-desc">Bill of Materials và mapping visibility theo ứng dụng</div>
+    </div>
+  </div>
+
+  <h3 class="sub">Thành phần giải pháp & Bill of Materials</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Thành phần</th><th>Số lượng khuyến nghị</th><th>Vị trí deploy</th><th>Mục đích</th></tr></thead>
+      <tbody>
+        <tr><td class="td-key">nGeniusONE Server</td><td>1–2 (Primary + Standby)</td><td>Data Center (vật lý hoặc VM)</td><td>Central analytics, management, single pane of glass</td></tr>
+        <tr><td class="td-key">InfiniStreamNG (ISNG)</td><td>Theo số core network segment</td><td>Core DC, Internet edge, WAN aggregation</td><td>Physical network monitoring, long-term packet forensics</td></tr>
+        <tr><td class="td-key">vSTREAM (VMware zone)</td><td>1 per ESXi host có VM critical</td><td>VMware cluster (core banking, DB)</td><td>East-west VM traffic, virtual environment visibility</td></tr>
+        <tr><td class="td-key">vSTREAM (KVM zone)</td><td>1 per KVM host (nếu có)</td><td>OpenStack cluster</td><td>KVM VM traffic monitoring</td></tr>
+        <tr><td class="td-key">KlearSight Manager</td><td>1 per K8s cluster</td><td>Trong mỗi Kubernetes cluster</td><td>Quản lý sensors, theo dõi topology tự động</td></tr>
+        <tr><td class="td-key">KlearSight Sensor</td><td>1 per worker node (DaemonSet — tự động)</td><td>Mỗi K8s worker node</td><td>Pod-level eBPF traffic capture</td></tr>
+        <tr><td class="td-key">vSTREAM (K8s receiver)</td><td>1–2 (HA pair)</td><td>Ngoài K8s cluster (VM/bare-metal)</td><td>Nhận tunnel từ KlearSight Sensors, xử lý ASI</td></tr>
+        <tr><td class="td-key">nGenius 7000 PFS</td><td>1–2 (tùy chọn, tại core)</td><td>Network aggregation layer</td><td>Traffic aggregation, filtering trước ISNG</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub">Luồng visibility theo loại traffic</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Loại traffic</th><th>Luồng xử lý</th></tr></thead>
+      <tbody>
+        <tr><td class="td-key">Physical N-S</td><td>TAP → <strong>InfiniStreamNG</strong> → ASI Smart Data → nGeniusONE</td></tr>
+        <tr><td class="td-key">VM East-West (VMware)</td><td>vSwitch port mirror / NSX → <strong>vSTREAM</strong> → ASI Smart Data → nGeniusONE</td></tr>
+        <tr><td class="td-key">Pod East-West (K8s)</td><td>eBPF (KlearSight Sensor) → Tunnel → <strong>vSTREAM/ISNG</strong> → ASI Smart Data → nGeniusONE</td></tr>
+        <tr><td class="td-key">Cloud traffic</td><td>Cloud Traffic Mirror → <strong>vSTREAM in cloud</strong> → ASI Smart Data → nGeniusONE</td></tr>
+        <tr><td class="td-key">Synthetic (tùy chọn)</td><td>nPoint agent → <strong>nGeniusPULSE</strong> → nGeniusONE (end-user experience)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 class="sub">Visibility mapping theo ứng dụng ngân hàng</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Ứng dụng ngân hàng</th><th>Môi trường</th><th>Công cụ giám sát</th><th>Loại insight thu được</th></tr></thead>
+      <tbody>
+        <tr>
+          <td class="td-key">Core Banking (T24, Flexcube)</td>
+          <td>VMware VM</td>
+          <td><span class="chip chip-green">vSTREAM</span></td>
+          <td>SQL query time, Oracle DB response time, session count, lỗi authentication, EOD batch performance</td>
+        </tr>
+        <tr>
+          <td class="td-key">Mobile Banking API</td>
+          <td>Kubernetes pod</td>
+          <td><span class="chip chip-blue">KlearSight</span></td>
+          <td>HTTP API latency per endpoint, error rate (4xx/5xx), gRPC call chain, retry patterns, timeout rate</td>
+        </tr>
+        <tr>
+          <td class="td-key">Payment Gateway</td>
+          <td>K8s + Physical</td>
+          <td><span class="chip chip-blue">KlearSight</span> + <span class="chip chip-gray">ISNG</span></td>
+          <td>Transaction throughput, timeout rate, VISA/MasterCard protocol analysis, settlement latency</td>
+        </tr>
+        <tr>
+          <td class="td-key">Internet Banking</td>
+          <td>Physical DC</td>
+          <td><span class="chip chip-gray">ISNG</span></td>
+          <td>HTTPS response time, DNS lookup latency, client connect time, user experience score, geographic analysis</td>
+        </tr>
+        <tr>
+          <td class="td-key">Open Banking / API GW</td>
+          <td>Kubernetes</td>
+          <td><span class="chip chip-blue">KlearSight</span></td>
+          <td>Per-partner API call analysis, SLA compliance tracking, third-party latency contribution</td>
+        </tr>
+        <tr>
+          <td class="td-key">LDAP / Active Directory</td>
+          <td>VMware VM</td>
+          <td><span class="chip chip-green">vSTREAM</span></td>
+          <td>Authentication latency, failed bind rate, Kerberos token analysis, lockout patterns</td>
+        </tr>
+        <tr>
+          <td class="td-key">Fraud Detection Engine</td>
+          <td>Kubernetes / VMware</td>
+          <td><span class="chip chip-blue">KlearSight</span> / <span class="chip chip-green">vSTREAM</span></td>
+          <td>Real-time scoring latency, API call patterns, anomaly detection in transaction flow</td>
+        </tr>
+        <tr>
+          <td class="td-key">ATM / POS Gateway</td>
+          <td>Physical DC</td>
+          <td><span class="chip chip-gray">ISNG</span></td>
+          <td>ISO 8583 transaction analysis, card protocol monitoring, terminal connectivity</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ════════════════ SECTION 7: nGENIUSONE ════════════════ -->
+  <hr class="section-sep" id="s7">
+  <div class="section-header">
+    <div class="section-num">7</div>
+    <div>
+      <div class="section-title">nGeniusONE® — Trung tâm phân tích và quản lý</div>
+      <div class="section-desc">Single pane of glass cho ServiceOps, NetOps và CloudOps</div>
+    </div>
+  </div>
+
+  <h3 class="sub">Workflow triage 4 tầng</h3>
+  <div class="card-grid card-grid-4">
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <div class="card-title">Service Dashboard</div>
+      <div class="card-body">Health status tổng quan từng dịch vụ. Alert theo severity. Service dependency map. Phân loại vấn đề theo priority.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📈</div>
+      <div class="card-title">Service Monitor</div>
+      <div class="card-body">KPIs realtime: response time, throughput, error rate, active sessions theo app/server/client community. Trend analysis.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔍</div>
+      <div class="card-title">Session Analysis</div>
+      <div class="card-body">Drill-down từng session: client/server IP, timing breakdown (network/app/server response), error codes, protocol details.</div>
+    </div>
+    <div class="card">
+      <div class="card-icon">📦</div>
+      <div class="card-title">Packet Analysis</div>
+      <div class="card-body">Full packet decode. Forensics timeline. Export pcap. Bằng chứng pháp lý cho điều tra sự cố và compliance audit.</div>
+    </div>
+  </div>
+
+  <h3 class="sub">License nGeniusONE — Lựa chọn sizing</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>License Type</th><th>Interface Count</th><th>Hình thức</th><th>Phù hợp cho</th><th>Upgrade path</th></tr></thead>
+      <tbody>
+        <tr><td class="td-key">Entry</td><td>5</td><td>Software only</td><td>Chi nhánh nhỏ, single site đơn giản</td><td>→ Workgroup → Intermediate → Full</td></tr>
+        <tr><td class="td-key">Workgroup</td><td>10</td><td>Software hoặc Appliance</td><td>Data center vừa, đơn site, ngân hàng nhỏ</td><td>→ Intermediate → Full</td></tr>
+        <tr><td class="td-key">Intermediate</td><td>25</td><td>Software hoặc Appliance</td><td>Multi-site, hybrid environment, ngân hàng TMCP</td><td>→ Full</td></tr>
+        <tr><td class="td-key">Full</td><td>50</td><td>Software hoặc Appliance</td><td>Large enterprise, multi-DC ngân hàng lớn</td><td>+ Standby cho HA</td></tr>
+        <tr><td class="td-key">Virtual (Cloud)</td><td>Full (50)</td><td>Virtual deployment</td><td>Cloud-based nG1, monitoring dịch vụ trong public cloud</td><td>N/A</td></tr>
+        <tr><td class="td-key">Standby</td><td>Full capacity</td><td>HA pair cho Full license</td><td>HA/DR cho môi trường mission-critical ngân hàng</td><td>Bổ sung cho Full</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout info">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">
+      <div class="callout-label">Sizing tip cho ngân hàng</div>
+      <div class="callout-text">Ngân hàng thương mại lớn (Vietcombank, BIDV, VietinBank) → Full + Standby cho HA. Ngân hàng TMCP vừa → Intermediate hoặc Full. Phân tán nhiều site → nhiều nG1 server kết nối qua <strong>Global Manager</strong>.</div>
+    </div>
+  </div>
+
+  <h3 class="sub">nGeniusONE Server Hardware</h3>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>Cấu hình</th><th>CPU</th><th>RAM</th><th>Storage</th><th>Rack</th><th>Phù hợp</th></tr></thead>
+      <tbody>
+        <tr><td class="td-key">Standard</td><td>Dual 10-Core 2.2GHz</td><td>64 GB</td><td>8 TB (RAID 5)</td><td>2 RU</td><td>Workgroup/Intermediate</td></tr>
+        <tr><td class="td-key">Enhanced</td><td>Single 16-Core 2.8GHz</td><td>128 GB</td><td>10 TB (RAID 5)</td><td>2 RU</td><td>Intermediate/Full</td></tr>
+        <tr><td class="td-key">Enhanced Plus</td><td>Dual 14-Core 2.6GHz</td><td>256 GB</td><td>32 TB (RAID 5)</td><td>2 RU</td><td>Full / Large enterprise</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ════════════════ SECTION 8: FAQ ════════════════ -->
+  <hr class="section-sep" id="s8">
+  <div class="section-header">
+    <div class="section-num">8</div>
+    <div>
+      <div class="section-title">FAQ & Xử lý phản đối thường gặp</div>
+      <div class="section-desc">Câu hỏi điển hình từ khách hàng ngân hàng và cách trả lời hiệu quả</div>
+    </div>
+  </div>
+
+  <div class="faq-list">
+    <details class="faq-item">
+      <summary class="faq-q">
+        <div class="faq-q-icon">Q</div>
+        "Chúng tôi đã có Prometheus/Grafana/Zabbix rồi, tại sao cần NETSCOUT?"
+        <div class="faq-toggle">+</div>
+      </summary>
+      <div class="faq-a">
+        <p>Prometheus/Grafana là <strong>metric-based monitoring</strong>: thu thập số liệu từ các /metrics endpoint. Chúng không nhìn thấy traffic thực tế giữa các services.</p>
+        <p>Khi xảy ra sự cố (ví dụ: giao dịch chậm), Prometheus chỉ cho biết <em>"CPU của pod X là 80%"</em> nhưng không cho biết <em>"tại sao request từ payment service đến DB mất 3 giây"</em>.</p>
+        <p>NETSCOUT nhìn vào packet thực tế, cho câu trả lời chính xác: <strong>lỗi ở network layer, application layer, hay database</strong>. Hai công cụ bổ sung, không thay thế nhau. Đề xuất: NETSCOUT + Prometheus = full-stack observability.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-q">
+        <div class="faq-q-icon">Q</div>
+        "eBPF có an toàn trong môi trường banking security policy không?"
+        <div class="faq-toggle">+</div>
+      </summary>
+      <div class="faq-a">
+        <p>eBPF chạy trong Linux kernel với <strong>sandbox cực kỳ nghiêm ngặt</strong> — kernel verifier kiểm tra và xác nhận từng eBPF program trước khi load, đảm bảo không có memory unsafe access.</p>
+        <p>KlearSight Sensor chỉ READ traffic, <strong>không modify</strong> bất kỳ packet nào. Không cần quyền đặc biệt ngoài quyền cần thiết cho eBPF (CAP_BPF). Không truy cập encryption keys.</p>
+        <p>NETSCOUT là vendor enterprise với track record triển khai cho ngân hàng và telco lớn toàn cầu. Presale nên đề nghị security assessment session với CISO/InfoSec team và cung cấp tài liệu product security documentation.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-q">
+        <div class="faq-q-icon">Q</div>
+        "vSTREAM có làm chậm VMware production environment không?"
+        <div class="faq-toggle">+</div>
+      </summary>
+      <div class="faq-a">
+        <p>vSTREAM <strong>không can thiệp vào data path sản xuất</strong>. Nó nhận traffic đã được mirror sẵn bởi vSwitch/NSX — mirror là copy, không phải inline/bump-in-the-wire.</p>
+        <p>Tài nguyên vSTREAM tiêu thụ (bắt đầu từ 1 vCPU) hoàn toàn tách biệt với VM production. Cần đặt đúng vCPU/vRAM theo bandwidth cần monitor.</p>
+        <p>Sizing cụ thể: cần cung cấp cho NETSCOUT SE số ESXi hosts, số VMs, bandwidth average/peak của traffic cần giám sát để có recommendation chính xác.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-q">
+        <div class="faq-q-icon">Q</div>
+        "Chúng tôi đang dùng Istio Service Mesh — KlearSight còn cần thiết không?"
+        <div class="faq-toggle">+</div>
+      </summary>
+      <div class="faq-a">
+        <p>Service mesh cung cấp observability từ góc nhìn <strong>proxy (L7 HTTP metrics)</strong>. KlearSight cung cấp visibility từ góc nhìn <strong>packet — hoàn toàn độc lập với application stack</strong>.</p>
+        <p>Hai góc nhìn bổ sung: service mesh cho thấy "what the application reports", KlearSight cho thấy "what actually happened on the wire" — bao gồm cả traffic mesh không quản lý được.</p>
+        <p><strong>Đặc biệt quan trọng cho ngân hàng:</strong> Compliance và forensics cần bằng chứng độc lập với application layer. Packet capture là evidence không thể làm giả, không phụ thuộc vào developer implement đúng logging.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-q">
+        <div class="faq-q-icon">Q</div>
+        "Giải pháp có hỗ trợ Red Hat OpenShift của chúng tôi không?"
+        <div class="faq-toggle">+</div>
+      </summary>
+      <div class="faq-a">
+        <p><strong>Có.</strong> KlearSight Sensor hỗ trợ chính thức Red Hat OpenShift Container Platform và OKD (Community Edition of OpenShift).</p>
+        <p>OpenShift là on-premises Kubernetes platform phổ biến nhất trong ngành ngân hàng VN và được NETSCOUT hỗ trợ chính thức.</p>
+        <p>Cần xác nhận version OpenShift cụ thể của khách hàng với NETSCOUT SE để đảm bảo compatibility với phiên bản KlearSight hiện tại.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-q">
+        <div class="faq-q-icon">Q</div>
+        "Làm thế nào justify ROI cho ban lãnh đạo ngân hàng?"
+        <div class="faq-toggle">+</div>
+      </summary>
+      <div class="faq-a">
+        <p><strong>ROI arguments mạnh nhất cho ngân hàng:</strong></p>
+        <p>① <strong>Giảm MTTR:</strong> Từ hàng giờ xuống hàng phút khi có root cause analysis dựa trên packet. 1 giờ downtime core banking = thiệt hại khổng lồ về giao dịch và uy tín.</p>
+        <p>② <strong>Compliance:</strong> Lưu giữ traffic evidence đáp ứng yêu cầu audit của NHNN Thông tư 09/2020 và PCI-DSS. Tránh phạt và yêu cầu remediation tốn kém.</p>
+        <p>③ <strong>Fraud detection:</strong> Packet-level visibility phát hiện lateral movement và anomaly sớm hơn — giảm thiệt hại từ cyber incidents.</p>
+        <p>④ <strong>PoC strategy:</strong> Đề nghị proof-of-concept 30–60 ngày trong môi trường staging/UAT. Chứng minh giá trị thực tế trước khi commit toàn bộ budget.</p>
+      </div>
+    </details>
+
+    <details class="faq-item">
+      <summary class="faq-q">
+        <div class="faq-q-icon">Q</div>
+        "Giải pháp có tích hợp với SIEM (Splunk, IBM QRadar) không?"
+        <div class="faq-toggle">+</div>
+      </summary>
+      <div class="faq-a">
+        <p>nGeniusONE có khả năng export và tích hợp với các SIEM platform. Smart Data từ nGeniusONE có thể feed vào Splunk, QRadar và các SIEM khác để correlate với security events.</p>
+        <p>Presale cần xác nhận phương thức tích hợp cụ thể (Syslog, API, connector) và version compatibility với NETSCOUT SE trước khi cam kết với khách hàng.</p>
+      </div>
+    </details>
+  </div>
+
+  <!-- ════════════════ SECTION 9: POSITIONING ════════════════ -->
+  <hr class="section-sep" id="s9">
+  <div class="section-header">
+    <div class="section-num">9</div>
+    <div>
+      <div class="section-title">Positioning & Key Messages theo đối tượng</div>
+      <div class="section-desc">Thông điệp đúng người, đúng lúc, đúng pain point</div>
+    </div>
+  </div>
+
+  <div class="persona-grid">
+    <div class="persona-card">
+      <div class="persona-header">
+        <div class="persona-icon">👔</div>
+        <div class="persona-name">CIO / CTO</div>
+      </div>
+      <div class="persona-body">
+        <div class="persona-pain">
+          <strong>Pain Point</strong>
+          Hạ tầng hybrid phức tạp, nhiều team dùng nhiều tool khác nhau, thiếu single source of truth, khó ra quyết định đầu tư.
+        </div>
+        <div class="persona-msg">"NETSCOUT là <strong>platform duy nhất</strong> cho phép quan sát xuyên suốt từ physical network đến Kubernetes pod — một màn hình, một bộ data, một vendor chịu trách nhiệm. Đơn giản hóa tooling, giảm chi phí vận hành."</div>
+      </div>
+    </div>
+    <div class="persona-card">
+      <div class="persona-header">
+        <div class="persona-icon">🔒</div>
+        <div class="persona-name">CISO / Information Security</div>
+      </div>
+      <div class="persona-body">
+        <div class="persona-pain">
+          <strong>Pain Point</strong>
+          Blind spot trong east-west traffic, thiếu bằng chứng forensics cho incident response, không thể prove compliance.
+        </div>
+        <div class="persona-msg">"Packet là <strong>bằng chứng không thể làm giả</strong>. NETSCOUT capture toàn bộ traffic kể cả trong Kubernetes — phát hiện lateral movement, exfiltration, và cung cấp evidence chain không phụ thuộc application logs cho audit."</div>
+      </div>
+    </div>
+    <div class="persona-card">
+      <div class="persona-header">
+        <div class="persona-icon">⚙️</div>
+        <div class="persona-name">Network Ops / CloudOps</div>
+      </div>
+      <div class="persona-body">
+        <div class="persona-pain">
+          <strong>Pain Point</strong>
+          MTTR cao, blame game giữa team, mất nhiều giờ tìm root cause trong môi trường K8s/VMware phức tạp.
+        </div>
+        <div class="persona-msg">"Khi alert đến, bạn biết ngay: vấn đề ở <strong>network, application, hay DB</strong> — không phải blame game. Drill down đến packet trong vài click. MTTR từ hàng giờ xuống hàng phút."</div>
+      </div>
+    </div>
+    <div class="persona-card">
+      <div class="persona-header">
+        <div class="persona-icon">📋</div>
+        <div class="persona-name">Compliance / Internal Audit</div>
+      </div>
+      <div class="persona-body">
+        <div class="persona-pain">
+          <strong>Pain Point</strong>
+          Thiếu evidence cho NHNN audit, không prove được transaction integrity, PCI-DSS logging requirements.
+        </div>
+        <div class="persona-msg">"Lưu giữ <strong>packet-level records</strong> của mọi giao dịch tài chính. Không còn lo thiếu evidence khi NHNN thanh tra hoặc khi xử lý dispute. Full audit trail độc lập với application."</div>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub mt-24">Competitive Differentiation</h3>
+  <div class="vs-row">
+    <div class="vs-badge comp">vs. Dynatrace / Datadog / New Relic</div>
+    <div class="vs-text">APM tools dùng agent trong application, metric-based. NETSCOUT dùng packet — <strong>vendor-independent</strong>, không cần thay đổi app, monitor bất kỳ protocol nào kể cả custom. APM không có forensics capability.</div>
+  </div>
+  <div class="vs-row">
+    <div class="vs-badge comp">vs. Wireshark / tcpdump</div>
+    <div class="vs-text">Manual capture, không real-time monitoring, không scalable, không alerting. NETSCOUT là <strong>enterprise platform</strong> với automation, alerting, historical analysis, 24/7 monitoring và compliance reporting.</div>
+  </div>
+  <div class="vs-row">
+    <div class="vs-badge comp">vs. Cisco ThousandEyes</div>
+    <div class="vs-text">ThousandEyes giỏi external/synthetic monitoring từ outside-in. NETSCOUT giỏi <strong>internal DPI, east-west visibility, packet forensics</strong> bên trong data center và Kubernetes — inside-out perspective.</div>
+  </div>
+  <div class="vs-row">
+    <div class="vs-badge comp">vs. Elastic Stack (ELK)</div>
+    <div class="vs-text">ELK xử lý log rất tốt nhưng <strong>không có DPI</strong>. NETSCOUT tích hợp được với ELK (export data) và bổ sung packet intelligence mà ELK không có. Hai công cụ bổ sung hoàn hảo cho nhau.</div>
+  </div>
+  <div class="vs-row">
+    <div class="vs-badge ns">NETSCOUT Strengths</div>
+    <div class="vs-text"><strong>Packet-based DPI at scale</strong> · Single platform physical + virtual + K8s · Vendor-independent (không phụ thuộc app code) · True forensics evidence · Financial protocol support (FIX, card, ISO 8583) · ASI Smart Data unified analytics</div>
+  </div>
+
+  <!-- ════════════════ CHECKLIST ════════════════ -->
+  <hr class="section-sep" id="checklist">
+  <div class="section-header">
+    <div class="section-num">✅</div>
+    <div>
+      <div class="section-title">Checklist Khảo sát Khách hàng Ngân hàng</div>
+      <div class="section-desc">Thu thập thông tin cần thiết để đề xuất kiến trúc và sizing chính xác</div>
+    </div>
+  </div>
+
+  <h3 class="sub">Hạ tầng VMware</h3>
+  <div class="checklist">
+    <div class="check-item">Số lượng ESXi hosts hiện tại?</div>
+    <div class="check-item">Đang dùng VMware NSX-V hay NSX-T (hay chưa có NSX)?</div>
+    <div class="check-item">Số lượng VMs quan trọng cần monitor (core banking, DB, middleware)?</div>
+    <div class="check-item">Bandwidth average và peak traffic giữa các VMs?</div>
+    <div class="check-item">Có Distributed vSwitch (dvSwitch) hay Standard vSwitch?</div>
+    <div class="check-item">Version VMware vSphere/vCenter hiện tại?</div>
+  </div>
+
+  <h3 class="sub">Hạ tầng Kubernetes</h3>
+  <div class="checklist">
+    <div class="check-item">Số lượng Kubernetes clusters?</div>
+    <div class="check-item">Số worker nodes per cluster?</div>
+    <div class="check-item">K8s platform: OpenShift / Vanilla K8s / EKS / AKS / GKE?</div>
+    <div class="check-item">Version Kubernetes / OpenShift hiện tại?</div>
+    <div class="check-item">Đang dùng Service Mesh (Istio/Linkerd) không?</div>
+    <div class="check-item">Microservices nào là critical nhất cần monitor?</div>
+    <div class="check-item">Có CNI plugin đặc biệt không (Calico, Cilium, Flannel)?</div>
+    <div class="check-item">Traffic bandwidth peak giữa các pods?</div>
+  </div>
+
+  <h3 class="sub">Yêu cầu nghiệp vụ & Compliance</h3>
+  <div class="checklist">
+    <div class="check-item">Ứng dụng quan trọng nhất cần giám sát?</div>
+    <div class="check-item">Yêu cầu lưu giữ dữ liệu packet (retention period)?</div>
+    <div class="check-item">Compliance requirements: NHNN / PCI-DSS / ISO 27001?</div>
+    <div class="check-item">Có yêu cầu HA/DR cho monitoring system không?</div>
+    <div class="check-item">Số lượng sites/data centers cần monitor?</div>
+    <div class="check-item">Yêu cầu tích hợp với SIEM hiện tại (Splunk, QRadar...)?</div>
+  </div>
+
+  <h3 class="sub">Môi trường monitoring hiện tại</h3>
+  <div class="checklist">
+    <div class="check-item">Monitoring tools đang dùng (Prometheus, Zabbix, Nagios, SolarWinds)?</div>
+    <div class="check-item">Có APM tool không (Dynatrace, Datadog, AppDynamics)?</div>
+    <div class="check-item">Log management platform (ELK, Splunk, Graylog)?</div>
+    <div class="check-item">MTTR hiện tại khi có sự cố P1?</div>
+    <div class="check-item">Team size: NetOps / CloudOps / AppOps?</div>
+    <div class="check-item">Budget cycle: Q mấy? Đang ở giai đoạn nào của quyết định?</div>
+  </div>
+
+  <div class="callout dark mt-24">
+    <div class="callout-icon">📌</div>
+    <div class="callout-body">
+      <div class="callout-label">Bước tiếp theo khuyến nghị</div>
+      <div class="callout-text">Sau khi thu thập thông tin qua checklist trên, đề xuất: (1) <strong>Workshop kỹ thuật</strong> 2–3 giờ với NetOps/CloudOps team để demo nGeniusONE trên môi trường tương tự; (2) <strong>PoC proposal</strong> 30–60 ngày trong môi trường staging/UAT; (3) Liên hệ NETSCOUT SE để sizing chính xác và commercial proposal.</div>
+    </div>
+  </div>
+
+  <hr class="section-sep">
+  <div style="text-align:center; padding: 20px 0 10px; color: var(--ns-gray-light); font-size: 12px; border-top: 1px solid var(--ns-border);">
+    <strong style="color: var(--ns-gray-mid);">NETSCOUT Systems, Inc.</strong> · Tài liệu nội bộ Presales · Phiên bản 1.0 · Tháng 6/2026<br>
+    Thông số kỹ thuật cần được xác nhận với NETSCOUT SE trước khi đưa vào hồ sơ chính thức.<br>
+    © 2026 NETSCOUT Systems, Inc. · www.netscout.com
+  </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Lên đầu trang">↑</button>
+
+<script>
+// Active nav on scroll
+const sections = ['hero','s1','s2','s3','s4','s5','s6','s7','s8','s9','checklist'];
+const navLinks = document.querySelectorAll('nav a');
+const backToTop = document.getElementById('backToTop');
+
+function setActive(el) {
+  navLinks.forEach(a => a.classList.remove('active'));
+  el.classList.add('active');
+}
+
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  backToTop.classList.toggle('visible', scrollY > 300);
+
+  let current = 'hero';
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= 80) current = id;
+  });
+  navLinks.forEach(a => {
+    const href = a.getAttribute('href')?.replace('#','');
+    a.classList.toggle('active', href === current);
+  });
+});
+
+// Search
+function doSearch(q) {
+  const content = document.getElementById('main');
+  // Remove existing highlights
+  content.querySelectorAll('.highlight').forEach(el => {
+    el.outerHTML = el.textContent;
+  });
+  if (!q || q.length < 2) return;
+  const regex = new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+  function walk(node) {
+    if (node.nodeType === 3) {
+      const m = node.textContent.match(regex);
+      if (m) {
+        const span = document.createElement('span');
+        span.innerHTML = node.textContent.replace(regex, '<mark class="highlight">$1</mark>');
+        node.parentNode.replaceChild(span, node);
+      }
+    } else if (node.nodeType === 1 && !['SCRIPT','STYLE','INPUT'].includes(node.tagName)) {
+      Array.from(node.childNodes).forEach(walk);
+    }
+  }
+  walk(content);
+}
+
+// Smooth scroll for all anchor links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.getElementById(a.getAttribute('href').slice(1));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+</script>
+</body>
+</html>

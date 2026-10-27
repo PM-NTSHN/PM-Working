@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pentera Platform – Unified Sales Playbook</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap');
+
+  :root {
+    --bg: #0a0e1a; 
+    --surface: #111827; 
+    --surface2: #1a2235; 
+    --border: #1e2d45;
+    /* Brand Colors */
+    --pentera-core: #00d4ff;   /* Cyan */
+    --pentera-surface: #ff6b35; /* Orange */
+    --pentera-cloud: #4ade80;   /* Green */
+    
+    --text: #e2e8f0; 
+    --text-muted: #64748b; 
+    --text-dim: #94a3b8; 
+    --gold: #fbbf24;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background: var(--bg); color: var(--text); font-family: 'IBM Plex Sans', sans-serif; line-height: 1.6; font-size: 16px; overflow-x: hidden; }
+  h1, h2, h3, h4 { font-family: 'Playfair Display', serif; color: #fff; margin-bottom: 1rem; line-height:1.2; }
+  a { color: var(--pentera-core); text-decoration: none; transition: 0.2s; }
+  a:hover { color: var(--gold); }
+  
+  /* Layout */
+  .container { display: flex; max-width: 1400px; margin: 0 auto; position: relative; }
+  .sidebar { width: 300px; height: 100vh; position: sticky; top: 0; background: var(--surface); border-right: 1px solid var(--border); padding: 2rem 1.5rem; overflow-y: auto; z-index: 10; }
+  .main-content { flex: 1; padding: 4rem; max-width: 1000px; }
+  
+  /* Header */
+  .title-area { margin-bottom: 4rem; border-bottom: 2px solid var(--border); padding-bottom: 2rem; }
+  .title-area h1 { font-size: 3rem; color: #fff; margin-bottom: 1rem; }
+  .title-area .meta { display: flex; gap: 1rem; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; font-size: 0.85rem; flex-wrap: wrap; }
+  .tag { padding: 0.2rem 0.6rem; border-radius: 4px; border: 1px solid; font-weight: 500; }
+  .tag.general { background: rgba(251,191,36,0.1); color: var(--gold); border-color: rgba(251,191,36,0.2); }
+  .tag.core { background: rgba(0,212,255,0.1); color: var(--pentera-core); border-color: rgba(0,212,255,0.2); }
+  .tag.surface { background: rgba(255,107,53,0.1); color: var(--pentera-surface); border-color: rgba(255,107,53,0.2); }
+  .tag.cloud { background: rgba(74,222,128,0.1); color: var(--pentera-cloud); border-color: rgba(74,222,128,0.2); }
+  
+  /* Sections */
+  section { margin-bottom: 5rem; scroll-margin-top: 2rem; }
+  section h2 { font-size: 2.2rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 10px; }
+  section h3 { font-size: 1.5rem; margin-top: 2.5rem; margin-bottom: 1.5rem; }
+  
+  /* Section Color Theming */
+  #intro h2 { color: var(--gold); }
+  #core h2 { color: var(--pentera-core); }
+  #core h3 { color: var(--pentera-core); }
+  #surface h2 { color: var(--pentera-surface); }
+  #surface h3 { color: var(--pentera-surface); }
+  #cloud h2 { color: var(--pentera-cloud); }
+  #cloud h3 { color: var(--pentera-cloud); }
+  #objections h2 { color: #fff; }
+
+  p, ul, ol { margin-bottom: 1.2rem; color: var(--text); }
+  ul, ol { padding-left: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+  
+  /* Grids & Cards */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+  .card { background: var(--surface2); border: 1px solid var(--border); padding: 1.5rem; border-radius: 8px; transition: transform 0.3s, border-color 0.3s; }
+  .card:hover { transform: translateY(-3px); }
+  .card h4 { font-family: 'IBM Plex Sans', sans-serif; font-size: 1.15rem; margin-bottom: 0.8rem; }
+  
+  /* Product Specific Cards */
+  .card.core { border-top: 4px solid var(--pentera-core); }
+  .card.core h4 { color: var(--pentera-core); }
+  .card.core:hover { border-color: var(--pentera-core); }
+
+  .card.surface { border-top: 4px solid var(--pentera-surface); }
+  .card.surface h4 { color: var(--pentera-surface); }
+  .card.surface:hover { border-color: var(--pentera-surface); }
+
+  .card.cloud { border-top: 4px solid var(--pentera-cloud); }
+  .card.cloud h4 { color: var(--pentera-cloud); }
+  .card.cloud:hover { border-color: var(--pentera-cloud); }
+  
+  /* Alerts/Elevator Pitches */
+  .alert { padding: 1.5rem; margin: 2rem 0; border-radius: 0 8px 8px 0; border-left: 4px solid; }
+  .alert strong { display: block; margin-bottom: 0.5rem; font-size: 1.1rem; }
+  .alert.general { background: rgba(251,191,36,0.1); border-color: var(--gold); }
+  .alert.general strong { color: var(--gold); }
+  .alert.core { background: rgba(0,212,255,0.1); border-color: var(--pentera-core); }
+  .alert.core strong { color: var(--pentera-core); }
+  .alert.surface { background: rgba(255,107,53,0.1); border-color: var(--pentera-surface); }
+  .alert.surface strong { color: var(--pentera-surface); }
+  .alert.cloud { background: rgba(74,222,128,0.1); border-color: var(--pentera-cloud); }
+  .alert.cloud strong { color: var(--pentera-cloud); }
+  
+  /* Table */
+  table { width: 100%; border-collapse: collapse; margin: 2rem 0; font-size: 0.95rem; }
+  th, td { padding: 1rem; border: 1px solid var(--border); text-align: left; }
+  th { background: var(--surface); color: var(--gold); font-family: 'IBM Plex Mono', monospace; font-weight: 500; }
+  tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+
+  /* TOC */
+  .toc h3 { font-size: 1rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-muted); font-family: 'IBM Plex Sans', sans-serif; margin-bottom: 1rem; }
+  .toc ul { list-style: none; padding: 0; }
+  .toc li { margin-bottom: 0.5rem; }
+  .toc a { display: block; color: var(--text-dim); font-size: 0.95rem; border-left: 2px solid transparent; padding: 0.5rem 0 0.5rem 1rem; margin-left: -1.5rem; transition: all 0.2s; }
+  .toc a:hover { color: #fff; background: rgba(255,255,255,0.05); }
+  
+  /* Active states for TOC */
+  .toc a.active-intro { color: var(--gold); border-left-color: var(--gold); background: rgba(251,191,36,0.05); }
+  .toc a.active-core { color: var(--pentera-core); border-left-color: var(--pentera-core); background: rgba(0,212,255,0.05); }
+  .toc a.active-surface { color: var(--pentera-surface); border-left-color: var(--pentera-surface); background: rgba(255,107,53,0.05); }
+  .toc a.active-cloud { color: var(--pentera-cloud); border-left-color: var(--pentera-cloud); background: rgba(74,222,128,0.05); }
+  .toc a.active-objections { color: #fff; border-left-color: #fff; background: rgba(255,255,255,0.05); }
+
+  /* Responsive */
+  @media (max-width: 1024px) { .sidebar { display: none; } .main-content { padding: 2rem; } .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <nav class="sidebar toc">
+    <h3>Mục Lục</h3>
+    <ul>
+      <li><a href="#intro" data-target="intro">1. Nền tảng Pentera</a></li>
+      <li><a href="#core" data-target="core">2. Pentera Core (Mạng nội bộ)</a></li>
+      <li><a href="#surface" data-target="surface">3. Pentera Surface (Internet)</a></li>
+      <li><a href="#cloud" data-target="cloud">4. Pentera Cloud (Đám mây)</a></li>
+      <li><a href="#objections" data-target="objections">5. Xử lý Từ chối (FAQ Chung)</a></li>
+    </ul>
+  </nav>
+
+  <main class="main-content">
+    <div class="title-area">
+      <div class="meta">
+        <span class="tag general">Unified Sales Playbook</span>
+        <span class="tag core">Core</span>
+        <span class="tag surface">Surface</span>
+        <span class="tag cloud">Cloud</span>
+        <span>Version 2.0</span>
+        <span>Target: CISO, SOC, Network/Cloud Admins</span>
+      </div>
+      <h1>Pentera Platform<br><span style="font-size:1.8rem; color:var(--text-dim); font-family: 'IBM Plex Sans', sans-serif; font-weight:300;">Automated Security Validation</span></h1>
+      <p style="font-size: 1.1rem; color: var(--text-dim); margin-top: 1rem;">Cẩm nang tổng hợp tư vấn hệ sinh thái Pentera: Từ kiểm thử mạng nội bộ (Core), rà soát bề mặt Internet (Surface) cho đến bảo mật đám mây (Cloud).</p>
+    </div>
+
+    <!-- ================= INTRO ================= -->
+    <section id="intro">
+      <h2>1. Tổng quan Nền tảng Pentera</h2>
+      <div class="alert general">
+        <strong>Elevator Pitch cho toàn bộ nền tảng:</strong>
+        "Pentera là Nền tảng Thẩm định An toàn Tự động (Automated Security Validation) duy nhất trên thị trường hiện nay giúp doanh nghiệp tự động hóa việc kiểm thử xâm nhập trên TOÀN BỘ bề mặt tấn công: Từ mạng nội bộ, tài sản public Internet cho đến hệ thống Cloud. Thay vì chỉ đưa ra cảnh báo lý thuyết như các công cụ quét lỗ hổng, Pentera khai thác (emulate) một cách <strong>an toàn tuyệt đối</strong> để chứng minh lỗ hổng nào là thật và cung cấp hướng dẫn vá lỗi (Surgical Remediation)."
+      </div>
+      
+      <p><strong>3 Trụ cột cốt lõi làm nên sức mạnh của Pentera:</strong></p>
+      <div class="grid-3">
+        <div class="card">
+          <h4 style="color:var(--gold)">Agentless (Không Agent)</h4>
+          <p>Không yêu cầu cài đặt, bảo trì hay cập nhật phần mềm agent trên bất kỳ máy trạm (endpoint) nào. Triển khai cực nhanh.</p>
+        </div>
+        <div class="card">
+          <h4 style="color:var(--gold)">Safe-by-Design</h4>
+          <p>Thuật toán tự động tấn công được thiết kế để không bao giờ làm sập hệ thống Production, có cơ chế Approve (phê duyệt) trước khi khai thác.</p>
+        </div>
+        <div class="card">
+          <h4 style="color:var(--gold)">Real Exploitation</h4>
+          <p>Không dừng lại ở mô phỏng (Simulation). Pentera bắn payload thật (nhưng an toàn) để chứng minh lỗ hổng là CÓ THỂ khai thác, loại bỏ False Positives.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= CORE ================= -->
+    <section id="core">
+      <h2>2. Pentera Core <span style="font-size: 1.2rem; font-family:'IBM Plex Sans'; font-weight:400;">(Inside-out)</span></h2>
+      <p>Giải pháp kiểm thử xâm nhập tự động từ bên trong mạng nội bộ. Giả định Hacker đã lọt qua lớp Firewall và đang ở trong mạng LAN.</p>
+      
+      <div class="alert core">
+        <strong>Pitch Nhanh (Core):</strong>
+        "Pentera Core hoạt động như một Red Team nội bộ 24/7. Nó tự động lập bản đồ mạng, dò quét, đánh cắp thông tin đăng nhập, di chuyển ngang (Lateral Movement) và chứng minh khả năng rò rỉ dữ liệu. Tính năng <strong>RansomwareReady™</strong> giúp kiểm chứng xem EDR/AV của công ty có chặn được Ransomware trước khi dữ liệu bị mã hóa hay không."
+      </div>
+
+      <h3>Vấn đề khách hàng & Cách giải quyết</h3>
+      <div class="grid-2">
+        <div class="card core">
+          <h4>Nỗi đau: Thuê Pen-test ngoài đắt & chậm</h4>
+          <p>Mỗi năm làm 1-2 lần. Khi báo cáo gửi về thì hạ tầng đã thay đổi. Phụ thuộc vào kỹ năng cá nhân của chuyên gia đánh giá.</p>
+        </div>
+        <div class="card core">
+          <h4>Giải pháp: Validation Liên tục</h4>
+          <p>Cho phép chạy kiểm tra liên tục (hàng tuần/tháng) bất cứ lúc nào, cập nhật thuật toán tấn công mới nhất (MITRE ATT&CK).</p>
+        </div>
+        <div class="card core">
+          <h4>Nỗi đau: Quá tải cảnh báo (Alert Fatigue)</h4>
+          <p>Công cụ quét lỗ hổng (VA) trả về hàng ngàn lỗ hổng CVSS cao nhưng thực tế không thể khai thác do bị cô lập.</p>
+        </div>
+        <div class="card core">
+          <h4>Giải pháp: Surgical Remediation</h4>
+          <p>Pentera chỉ ra <strong>Root Cause</strong>. Chỉ cần vá 1 lỗ hổng cốt lõi, doanh nghiệp có thể bẻ gãy toàn bộ chuỗi tấn công (Kill-chain).</p>
+        </div>
+      </div>
+      
+      <h3>Phân tích Đối thủ (BAS & VA)</h3>
+      <p>Khách hàng hay nhầm Core với BAS hoặc VA. Cách giải thích:</p>
+      <ul>
+        <li><strong>So với BAS (AttackIQ, XM Cyber):</strong> BAS yêu cầu cài đặt Agent khắp nơi và chỉ "chơi trò giả lập" (Playbook tĩnh). Pentera là Validation thật, không cần Agent, tự động tìm đường đi như Hacker thật.</li>
+        <li><strong>So với VA (Tenable, Qualys):</strong> VA quét theo chữ ký và đoán bệnh. Pentera tận dụng lỗ hổng đó để khai thác (Exploit) xem nó có thực sự lấy được cờ (flag) không, loại bỏ 100% cảnh báo giả.</li>
+      </ul>
+    </section>
+
+    <!-- ================= SURFACE ================= -->
+    <section id="surface">
+      <h2>3. Pentera Surface <span style="font-size: 1.2rem; font-family:'IBM Plex Sans'; font-weight:400;">(Outside-in)</span></h2>
+      <p>Giải pháp Quản lý Bề mặt Tấn công Bên ngoài (External Attack Surface Management - EASM). Giả định Hacker đang ngồi từ xa trên Internet.</p>
+      
+      <div class="alert surface">
+        <strong>Pitch Nhanh (Surface):</strong>
+        "Pentera Surface là nền tảng 100% SaaS. Chỉ cần cung cấp Tên miền (Domain), nó sẽ đóng vai trò như một 'kẻ gác cổng', liên tục tìm kiếm mọi tài sản hướng ra Internet (kể cả những tài sản IT bỏ quên - Shadow IT), quét lỗ hổng và <strong>tiến hành khai thác (Validate)</strong> để xem có thể xâm nhập từ bên ngoài vào không."
+      </div>
+
+      <h3>Vấn đề khách hàng & Điểm khác biệt (USPs)</h3>
+      <div class="grid-2">
+        <div class="card surface">
+          <h4>Nỗi đau: Shadow IT</h4>
+          <p>Công ty tạo landing page tạm, cấu hình sai VPN, quên xóa tên miền cũ. Hacker luôn tìm thấy những ngõ ngách này trước đội IT.</p>
+        </div>
+        <div class="card surface">
+          <h4>USP: EASM thế hệ mới (Validation)</h4>
+          <p>EASM truyền thống chỉ "đếm cửa sổ" (Liệt kê tài sản). Pentera Surface tiến hành "đẩy thử cửa sổ" xem có vào được không (Xác thực khả năng khai thác).</p>
+        </div>
+      </div>
+      <p><em>Sales Insight:</em> Surface cực kỳ dễ chốt (POC nhanh) vì không cần cài đặt gì, khách hàng chỉ cần cung cấp Domain và sẽ bất ngờ với những gì Pentera tìm thấy trên Internet.</p>
+    </section>
+
+    <!-- ================= CLOUD ================= -->
+    <section id="cloud">
+      <h2>4. Pentera Cloud <span style="font-size: 1.2rem; font-family:'IBM Plex Sans'; font-weight:400;">(Cloud-Native & Hybrid)</span></h2>
+      <p>Giải pháp Pen-test tự động cho môi trường Cloud (AWS, Azure) và khả năng tấn công lai (Hybrid).</p>
+      
+      <div class="alert cloud">
+        <strong>Pitch Nhanh (Cloud):</strong>
+        "Với Cloud, cấu hình sai (misconfigurations) nguy hiểm hơn cả lỗ hổng phần mềm. Pentera Cloud tự động khám phá tài sản, thu thập bí mật (Secrets harvesting - API keys), và đặc biệt nhất: <strong>Mô phỏng đường dẫn tấn công từ Cloud đánh ngược về On-premises</strong>."
+      </div>
+
+      <h3>Vấn đề khách hàng & Điểm khác biệt (USPs)</h3>
+      <div class="grid-2">
+        <div class="card cloud">
+          <h4>Nỗi đau: Vùng mù Cloud & IAM</h4>
+          <p>Tài nguyên tạo ra/xóa đi liên tục. Hacker thường lạm dụng cấu hình IAM sai để chiếm quyền hơn là khai thác Zero-day.</p>
+        </div>
+        <div class="card cloud">
+          <h4>USP: Hybrid Attack Paths</h4>
+          <p>Giống kẻ tấn công thực thụ, Pentera Cloud liên kết với Core để vẽ ra lộ trình di chuyển ngang giữa Cloud và mạng nội bộ, điều mà các công cụ Cloud-only (CSPM) không làm được.</p>
+        </div>
+      </div>
+      <p><em>Khách hàng mục tiêu:</em> Các tổ chức đang làm Digital Transformation, dùng nhiều AWS/Azure, có hạ tầng lai (Hybrid Cloud).</p>
+    </section>
+
+    <!-- ================= OBJECTIONS ================= -->
+    <section id="objections">
+      <h2>5. Xử lý Từ chối Chung (FAQ)</h2>
+      
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <h4>1. "Giải pháp tự động tấn công có làm sập hệ thống (DDoS) hoặc hỏng dữ liệu của tôi không?"</h4>
+        <p><strong>Trả lời:</strong> "Dạ không. Nền tảng Pentera được xây dựng trên nguyên tắc <strong>Safe-by-Design</strong>. Sản phẩm không sử dụng các kỹ thuật tấn công phá hoại (như DDoS, mã hóa hay xóa dữ liệu thật). Hơn nữa, anh/chị có toàn quyền cấu hình mức độ 'Stealth' và có quy trình 'Yêu cầu phê duyệt bằng tay' (Approval Process) trước khi Pentera chạy các lệnh khai thác sâu."</p>
+      </div>
+
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <h4>2. "Phần mềm này yêu cầu cài đặt (Deployment) phức tạp như thế nào?"</h4>
+        <p><strong>Trả lời:</strong> 
+        <br>- <strong>Với Core:</strong> Triển khai dạng Máy ảo (VM) nội bộ, hoàn toàn <strong>Agentless</strong>, không cài gì lên máy trạm nhân viên.
+        <br>- <strong>Với Surface & Cloud:</strong> Hoạt động 100% dưới dạng SaaS (Platform-as-a-Service), không cần phần cứng nội bộ, chỉ cần khai báo Domain hoặc kết nối API với AWS/Azure là chạy được ngay.</p>
+      </div>
+      
+      <div class="card" style="margin-bottom: 1.5rem;">
+        <h4>3. "Tôi đã có tool CSPM kiểm tra cấu hình Cloud, tại sao cần Pentera Cloud?"</h4>
+        <p><strong>Trả lời:</strong> "CSPM rất tốt để kiểm tra tính Tuân thủ (Compliance) trên giấy tờ. Tuy nhiên, nó không kiểm tra tính Khai thác (Exploitability). Pentera cung cấp bằng chứng thực tế (Evidence-Based): Cấu hình sai đó có thực sự giúp Hacker trích xuất API Key và cướp quyền điều khiển được không? Giúp anh/chị ưu tiên vá những gì thực sự nguy hiểm."</p>
+      </div>
+
+      <div class="card">
+        <h4>4. "Báo cáo của Pentera có giúp đáp ứng chuẩn Compliance không?"</h4>
+        <p><strong>Trả lời:</strong> "Có ạ. Báo cáo của Pentera có thể dùng trực tiếp để trình cho các đợt Audit, đặc biệt đáp ứng rất tốt tiêu chuẩn <strong>PCI-DSS (Yêu cầu 11.3 về Penetration Testing)</strong>, giúp chứng minh tổ chức có thực hiện đánh giá rủi ro định kỳ và liên tục."</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+// Smooth scroll & Active TOC logic
+document.querySelectorAll('.toc a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+const sections = document.querySelectorAll('section[id]');
+const tocLinks = document.querySelectorAll('.toc a');
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      // Remove all active classes
+      tocLinks.forEach(l => {
+        l.classList.remove('active-intro', 'active-core', 'active-surface', 'active-cloud', 'active-objections');
+      });
+      // Add active class based on data-target
+      const activeLink = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
+      if (activeLink) {
+        const targetType = activeLink.getAttribute('data-target');
+        activeLink.classList.add(`active-${targetType}`);
+      }
+    }
+  });
+}, { rootMargin: '-15% 0px -75% 0px' });
+
+sections.forEach(sec => observer.observe(sec));
+</script>
+</body>
+</html>

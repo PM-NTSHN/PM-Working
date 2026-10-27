@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cẩm nang giải pháp WhatsUp Gold hỗ trợ Sale bán hàng</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --g: #00C853; --gd: #009624; --gp: #E8F9EE;
+  --navy: #0A1628; --navy2: #112240; --navy3: #1D3557;
+  --slate: #457B9D; --text: #1A1A2E; --muted: #6B7A90;
+  --border: #E2EAF0; --bg: #F7FAFC; --white: #fff;
+  --amber: #FFB300; --red: #E53935; --blue: #1976D2; --purple: #7B1FA2;
+  --r: 10px; --r2: 16px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:14px}
+body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
+
+/* NAV */
+#nav{position:fixed;top:0;left:0;right:0;z-index:999;background:var(--navy);border-bottom:2px solid var(--g);display:flex;align-items:center;gap:0;height:52px;overflow-x:auto;overflow-y:hidden}
+#nav::-webkit-scrollbar{height:3px}
+#nav::-webkit-scrollbar-thumb{background:var(--g)}
+.nav-brand{padding:0 20px;font-weight:800;font-size:13px;color:var(--g);white-space:nowrap;border-right:1px solid rgba(255,255,255,.1);height:100%;display:flex;align-items:center;gap:8px;flex-shrink:0}
+.nav-brand span{color:rgba(255,255,255,.5);font-weight:400}
+.nav-links{display:flex;gap:0;padding:0 8px;flex:1}
+.nav-links a{padding:0 12px;height:52px;display:flex;align-items:center;font-size:12px;color:rgba(255,255,255,.55);text-decoration:none;white-space:nowrap;border-bottom:2px solid transparent;transition:.15s;font-weight:500}
+.nav-links a:hover,.nav-links a.active{color:var(--g);border-bottom-color:var(--g)}
+
+/* HERO */
+.hero{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 60%,#0D2137 100%);padding:80px 40px 60px;margin-top:52px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;bottom:-60px;right:-60px;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(0,200,83,.15) 0%,transparent 70%)}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(0,200,83,.12);border:1px solid rgba(0,200,83,.3);border-radius:100px;padding:4px 14px;font-size:11px;font-weight:700;color:var(--g);letter-spacing:.1em;text-transform:uppercase;margin-bottom:20px}
+.hero h1{font-size:32px;font-weight:800;color:#fff;line-height:1.2;margin-bottom:10px;position:relative;z-index:1}
+.hero h1 em{color:var(--g);font-style:normal}
+.hero p{color:rgba(255,255,255,.55);font-size:14px;max-width:520px;position:relative;z-index:1;margin-bottom:28px}
+.hero-pills{display:flex;flex-wrap:wrap;gap:8px;position:relative;z-index:1}
+.pill{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:100px;padding:5px 14px;font-size:11.5px;color:rgba(255,255,255,.6);font-weight:500}
+
+/* WRAPPER */
+.wrap{max-width:960px;margin:0 auto;padding:0 20px}
+
+/* SECTION */
+.sec{padding:48px 0;border-bottom:1px solid var(--border)}
+.sec:last-child{border-bottom:none}
+.sec-head{display:flex;align-items:center;gap:14px;margin-bottom:28px}
+.sec-num{width:32px;height:32px;border-radius:8px;background:var(--g);color:var(--navy);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec-head h2{font-size:20px;font-weight:800;color:var(--navy)}
+.sec-head p{font-size:12.5px;color:var(--muted);margin-top:2px}
+
+/* CARDS */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:20px}
+.card:hover{box-shadow:0 4px 20px rgba(0,0,0,.06)}
+.card-icon{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:12px}
+.card h3{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:6px}
+.card p{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* FEATURE LIST */
+.feat-block{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:18px 20px;margin-bottom:12px;display:flex;gap:16px;align-items:flex-start}
+.feat-block .fi{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;margin-top:1px}
+.feat-block h4{font-size:14px;font-weight:700;color:var(--navy);margin-bottom:4px}
+.feat-block p{font-size:12.5px;color:var(--muted);line-height:1.55}
+.feat-block .tag-sm{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;margin-bottom:6px}
+
+/* TAGS */
+.tg-g{background:var(--gp);color:var(--gd);border:1px solid #C0E8CC}
+.tg-b{background:#E3F2FD;color:#1565C0;border:1px solid #90CAF9}
+.tg-o{background:#FFF3E0;color:#E65100;border:1px solid #FFCC80}
+.tg-p{background:#F3E5F5;color:#6A1B9A;border:1px solid #CE93D8}
+
+/* SURVEY TABLE */
+.survey-table{width:100%;border-collapse:collapse;background:var(--white);border-radius:var(--r2);overflow:hidden;border:1px solid var(--border)}
+.survey-table thead tr{background:var(--navy)}
+.survey-table thead th{padding:12px 16px;font-size:11.5px;font-weight:700;color:rgba(255,255,255,.7);text-align:left;letter-spacing:.06em}
+.survey-table thead th.hl{color:var(--g)}
+.survey-table tbody tr{border-bottom:1px solid var(--border);transition:.12s}
+.survey-table tbody tr:hover{background:var(--bg)}
+.survey-table tbody td{padding:11px 16px;font-size:13px;vertical-align:top;line-height:1.5}
+.survey-table tbody td:first-child{width:36px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--g);font-weight:500}
+.survey-table tbody td:last-child{font-size:11.5px;color:var(--blue);font-style:italic}
+.survey-table tr.sec-row td{background:#F0F7FF;font-weight:700;color:var(--navy2);font-size:12px;text-transform:uppercase;letter-spacing:.08em}
+
+/* LICENSE */
+.lic-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.lic-card{background:var(--white);border:2px solid var(--border);border-radius:var(--r2);padding:24px;position:relative}
+.lic-card.rec{border-color:var(--g);box-shadow:0 0 0 3px rgba(0,200,83,.1)}
+.lic-card.rec::before{content:'ALL-IN-ONE';position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--g);color:var(--navy);font-size:9px;font-weight:800;letter-spacing:.12em;padding:3px 10px;border-radius:100px}
+.lic-card h3{font-size:17px;font-weight:800;color:var(--navy);margin-bottom:4px}
+.lic-card .subtitle{font-size:11.5px;color:var(--muted);margin-bottom:16px}
+.lic-card .basis{background:var(--bg);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:12.5px;line-height:1.6}
+.lic-card .basis strong{color:var(--navy);display:block;font-size:13px;margin-bottom:2px}
+.check-list{list-style:none}
+.check-list li{font-size:12.5px;padding:5px 0;border-bottom:1px solid var(--border);display:flex;gap:8px;align-items:flex-start;line-height:1.4}
+.check-list li:last-child{border:none}
+.check-list li::before{content:'✓';color:var(--g);font-weight:700;flex-shrink:0}
+.check-list li.no::before{content:'✗';color:#ccc}
+.part-box{background:var(--gp);border:1px solid #C0E8CC;border-radius:8px;padding:10px 14px;margin-top:14px}
+.part-box .pt{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:500;color:var(--gd)}
+.part-box .pd{font-size:11.5px;color:var(--muted);margin-top:2px}
+
+/* SWOT */
+.swot-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:var(--r2);overflow:hidden;border:2px solid var(--border)}
+.swot-cell{padding:22px;border:1px solid var(--border)}
+.swot-cell h4{font-size:13px;font-weight:800;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.swot-cell ul{list-style:none}
+.swot-cell ul li{font-size:12.5px;line-height:1.55;padding:4px 0;color:var(--text);display:flex;gap:7px}
+.swot-cell ul li::before{flex-shrink:0;margin-top:1px}
+.sw-s{background:#E8F9EE} .sw-s h4{color:#1B5E20} .sw-s ul li::before{content:'💪'}
+.sw-w{background:#FFF8E1} .sw-w h4{color:#E65100} .sw-w ul li::before{content:'⚠️';font-size:11px}
+.sw-o{background:#E3F2FD} .sw-o h4{color:#0D47A1} .sw-o ul li::before{content:'🚀';font-size:11px}
+.sw-t{background:#FCE4EC} .sw-t h4{color:#880E4F} .sw-t ul li::before{content:'⚡';font-size:11px}
+
+/* COMPARE TABLE */
+.cmp-table{width:100%;border-collapse:collapse;background:var(--white);border-radius:var(--r2);overflow:hidden;border:1px solid var(--border);font-size:12.5px}
+.cmp-table thead tr{background:var(--navy2)}
+.cmp-table thead th{padding:12px 14px;color:rgba(255,255,255,.7);font-weight:700;text-align:center;font-size:11.5px}
+.cmp-table thead th:first-child{text-align:left;color:rgba(255,255,255,.45)}
+.cmp-table thead th.col-w{color:var(--g)}
+.cmp-table tbody tr{border-bottom:1px solid var(--border)}
+.cmp-table tbody tr:hover{background:var(--bg)}
+.cmp-table tbody tr.cat-row td{background:#F0F7FF;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--slate);padding:8px 14px}
+.cmp-table tbody td{padding:10px 14px;text-align:center;vertical-align:middle}
+.cmp-table tbody td:first-child{text-align:left;font-weight:500;color:var(--navy)}
+.cmp-table tbody td.col-w{background:rgba(0,200,83,.04);font-weight:600}
+.ck{color:var(--g);font-size:15px} .cx{color:#ccc;font-size:13px} .cp{color:var(--amber);font-size:12px}
+
+/* USECASE */
+.usecase{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);padding:24px;margin-bottom:16px}
+.usecase-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:16px}
+.usecase-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.usecase h3{font-size:15px;font-weight:800;color:var(--navy);margin-bottom:4px}
+.usecase .sub{font-size:12px;color:var(--muted)}
+.uc-flow{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;margin:16px 0}
+.uc-step{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:12px;flex:1;min-width:140px}
+.uc-step .num{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--g);font-weight:500;margin-bottom:3px}
+.uc-step strong{display:block;font-size:12.5px;color:var(--navy);margin-bottom:2px}
+.arrow{color:var(--border);font-size:20px;align-self:center;flex-shrink:0}
+.bom-pills{display:flex;flex-wrap:wrap;gap:6px}
+.bom-pill{background:var(--gp);border:1px solid #C0E8CC;border-radius:6px;padding:4px 10px;font-size:11.5px;color:var(--gd);font-family:'JetBrains Mono',monospace;font-weight:500}
+
+/* CUSTOMERS */
+.ref-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.ref-item{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:12px;text-align:center}
+.ref-item .ri{font-size:22px;margin-bottom:6px}
+.ref-item .rn{font-size:11.5px;font-weight:700;color:var(--navy);line-height:1.3}
+.ref-item .rs{font-size:10.5px;color:var(--muted);margin-top:2px}
+
+/* FAQ */
+.faq-item{background:var(--white);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+.faq-q{padding:14px 18px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:12px;user-select:none}
+.faq-q span{font-size:13.5px;font-weight:600;color:var(--navy);line-height:1.4}
+.faq-q .arrow{font-size:16px;color:var(--g);transition:.2s;flex-shrink:0}
+.faq-a{padding:0 18px 16px;font-size:13px;color:var(--muted);line-height:1.7;display:none}
+.faq-item.open .faq-q .arrow{transform:rotate(180deg)}
+.faq-item.open .faq-a{display:block}
+.faq-cat{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--g);margin:24px 0 10px;display:flex;align-items:center;gap:8px}
+.faq-cat::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* INFO BOXES */
+.infobox{border-radius:var(--r);padding:14px 18px;margin:16px 0;font-size:13px;line-height:1.65}
+.ib-g{background:var(--gp);border:1px solid #C0E8CC;border-left:4px solid var(--g);color:#1B5E20}
+.ib-b{background:#E3F2FD;border:1px solid #90CAF9;border-left:4px solid var(--blue);color:#0D47A1}
+.ib-o{background:#FFF8E1;border:1px solid #FFE082;border-left:4px solid var(--amber);color:#5D4037}
+.ib-g strong,.ib-b strong,.ib-o strong{font-weight:700;display:block;margin-bottom:3px}
+
+/* SCROLL PROGRESS */
+#spb{position:fixed;top:52px;left:0;right:0;height:2px;background:var(--g);z-index:998;transform-origin:left;transform:scaleX(0)}
+
+/* RESPONSIVE */
+@media(max-width:700px){
+  .grid-2,.grid-3,.lic-grid,.swot-grid,.ref-grid{grid-template-columns:1fr}
+  .hero{padding:60px 20px 40px}
+  .hero h1{font-size:24px}
+  .wrap{padding:0 14px}
+}
+</style>
+</head>
+<body>
+
+<div id="spb"></div>
+
+<!-- NAVBAR -->
+<nav id="nav">
+  <div class="nav-brand">🟢 <span>WUG</span> Sale Guide</div>
+  <div class="nav-links">
+    <a href="#s1">Giới thiệu</a>
+    <a href="#s2">Hiện trạng</a>
+    <a href="#s3">Tính năng</a>
+    <a href="#s4">Survey</a>
+    <a href="#s5">SWOT</a>
+    <a href="#s6">License</a>
+    <a href="#s7">So sánh</a>
+    <a href="#s8">Use Case</a>
+    <a href="#s9">Khách hàng</a>
+    <a href="#s10">FAQ</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wrap">
+    <div class="hero-tag">📘 Tài liệu nội bộ · Dành cho đội ngũ Sale</div>
+    <h1>Cẩm nang giải pháp<br><em>WhatsUp Gold</em><br>hỗ trợ Sale bán hàng</h1>
+    <p>Tất cả những gì Sale cần biết để tư vấn, demo và chốt deal giải pháp giám sát mạng hàng đầu của Progress Software.</p>
+    <div class="hero-pills">
+      <span class="pill">Progress Software · NASDAQ: PRGS</span>
+      <span class="pill">100K+ Enterprise Customers</span>
+      <span class="pill">20+ năm trên thị trường</span>
+      <span class="pill">Giá tốt nhất phân khúc</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- S1: GIỚI THIỆU -->
+<section class="sec" id="s1">
+  <div class="sec-head"><div class="sec-num">1</div><div><h2>Giới thiệu nhanh về Hãng & Giải pháp</h2><p>Để nói chuyện tự tin với khách hàng trong 2 phút đầu</p></div></div>
+
+  <div class="grid-2" style="margin-bottom:16px">
+    <div class="card">
+      <div class="card-icon" style="background:#E8F9EE">🏢</div>
+      <h3>Progress Software Corporation</h3>
+      <p>Công ty phần mềm Mỹ, NASDAQ: PRGS, trụ sở Burlington, MA. Hơn 100.000 khách hàng doanh nghiệp, 1.700+ ISV partners, 3,5 triệu developers. Sản phẩm nổi tiếng: WhatsUp Gold, Flowmon, Telerik, MOVEit.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon" style="background:#E3F2FD">🌐</div>
+      <h3>WhatsUp Gold là gì?</h3>
+      <p>Giải pháp giám sát hạ tầng mạng và ứng dụng toàn diện. Tự động phát hiện, vẽ bản đồ và theo dõi tình trạng của toàn bộ thiết bị IT — <strong>real-time, từ một giao diện duy nhất</strong>. Được dùng hơn 20 năm bởi hàng chục nghìn IT professionals toàn cầu.</p>
+    </div>
+  </div>
+
+  <div class="infobox ib-g">
+    <strong>🎯 Pitch 30 giây cho khách hàng:</strong>
+    "WhatsUp Gold giúp đội IT của quý vị nhìn thấy toàn bộ hệ thống mạng, server, ứng dụng trên một màn hình duy nhất — realtime. Khi có sự cố, biết ngay thiết bị nào lỗi, ở đâu, nguyên nhân gì. Thường phát hiện và xử lý sự cố trước khi người dùng cuối bị ảnh hưởng."
+  </div>
+
+  <div class="grid-3">
+    <div class="card"><div class="card-icon" style="background:#F3E5F5">🗺️</div><h3>Interactive Network Map</h3><p>Bản đồ mạng tự động, live status, click vào bất kỳ thiết bị nào để xem chi tiết — không cần vẽ tay.</p></div>
+    <div class="card"><div class="card-icon" style="background:#FFF3E0">⚡</div><h3>Smart Alerting</h3><p>Cảnh báo thông minh, tự xác định root cause, loại bỏ "bão alert" — chỉ báo đúng thiết bị gây ra vấn đề.</p></div>
+    <div class="card"><div class="card-icon" style="background:#E8F9EE">🔧</div><h3>All-in-One Platform</h3><p>Một tool thay thế nhiều tool: netflow, log, APM, config backup, VM monitor, cloud — tất cả trong WUG.</p></div>
+  </div>
+</section>
+
+<!-- S2: HIỆN TRẠNG -->
+<section class="sec" id="s2">
+  <div class="sec-head"><div class="sec-num">2</div><div><h2>Vấn đề hiện trạng của khách hàng</h2><p>Dùng để "khơi gợi pain" và dẫn dắt nhu cầu</p></div></div>
+
+  <div class="grid-2">
+    <div class="feat-block">
+      <div class="fi" style="background:#FCE4EC">🔍</div>
+      <div><h4>Không có bản đồ mạng — "mù" hệ thống</h4><p>Không biết có bao nhiêu thiết bị, kết nối ra sao. Thiết bị down mà không hay — chờ người dùng phản ánh mới biết.</p></div>
+    </div>
+    <div class="feat-block">
+      <div class="fi" style="background:#FFF3E0">🌊</div>
+      <div><h4>"Bão cảnh báo" — ngập trong alert vô nghĩa</h4><p>Khi core switch down, toàn bộ hệ thống báo lỗi. IT không biết đâu là thiết bị gốc gây ra vấn đề.</p></div>
+    </div>
+    <div class="feat-block">
+      <div class="fi" style="background:#E8EAF6">⏱️</div>
+      <div><h4>Xử lý sự cố chậm — MTTR cao</h4><p>Phải dùng 4-5 tool khác nhau: ping, traceroute, SNMP, log viewer... mất hàng giờ mới xác định được nguyên nhân.</p></div>
+    </div>
+    <div class="feat-block">
+      <div class="fi" style="background:#E8F9EE">📊</div>
+      <div><h4>Không có dữ liệu lịch sử để phân tích</h4><p>Không biết xu hướng CPU/bandwidth có đang xấu dần không. Không có cơ sở để lập kế hoạch nâng cấp hạ tầng.</p></div>
+    </div>
+    <div class="feat-block">
+      <div class="fi" style="background:#FCE4EC">🔒</div>
+      <div><h4>Rủi ro bảo mật & khó audit compliance</h4><p>Không biết ai kết nối đến đâu, thiết bị nào chạy config sai. Khó chứng minh tuân thủ khi có kiểm toán SOX, PCI, HIPAA.</p></div>
+    </div>
+    <div class="feat-block">
+      <div class="fi" style="background:#E3F2FD">🏗️</div>
+      <div><h4>Nhiều site — không có single pane of glass</h4><p>Phải đăng nhập riêng từng chi nhánh. Không có cái nhìn tổng quan từ trung tâm về toàn bộ hệ thống.</p></div>
+    </div>
+  </div>
+
+  <div class="infobox ib-b">
+    <strong>💡 Câu hỏi khơi gợi pain khi gặp khách:</strong>
+    "Hiện tại anh/chị biết thiết bị nào đang down trong vòng 30 giây không?" · "Tuần trước có sự cố gì không, mất bao lâu để xử lý?" · "Có bao nhiêu alert trong ngày? IT phân biệt được quan trọng/không quan trọng không?" · "Nếu router cốt lõi bị thay đổi config, có biết ngay không?"
+  </div>
+</section>
+
+<!-- S3: TÍNH NĂNG -->
+<section class="sec" id="s3">
+  <div class="sec-head"><div class="sec-num">3</div><div><h2>Tính năng giải pháp WhatsUp Gold</h2><p>Ngắn gọn, dễ giải thích cho khách hàng không chuyên IT</p></div></div>
+
+  <div class="feat-block">
+    <div class="fi" style="background:#E8F9EE">🗺️</div>
+    <div>
+      <span class="tag-sm tg-g">Core — Mọi phiên bản</span>
+      <h4>Auto Discovery & Interactive Network Map</h4>
+      <p>Tự động quét mạng, phát hiện tất cả thiết bị (router, switch, server, AP, printer, VM...) và vẽ bản đồ topology tương tác. Click vào thiết bị → thấy ngay trạng thái, metric, lịch sử. Đây là tính năng "wow" nhất khi demo — không đối thủ nào có bản đồ đẹp và tự động như WUG.</p>
+    </div>
+  </div>
+
+  <div class="feat-block">
+    <div class="fi" style="background:#E3F2FD">📈</div>
+    <div>
+      <span class="tag-sm tg-g">Core</span>
+      <h4>Network Performance Monitoring (NPM)</h4>
+      <p>Giám sát liên tục CPU, RAM, disk, bandwidth, tình trạng interface của toàn bộ thiết bị. Alert khi vượt ngưỡng. <strong>Smart Alerting</strong>: khi switch cốt lõi down → chỉ báo 1 alert về switch đó, không spam hàng trăm alert về thiết bị bên dưới.</p>
+    </div>
+  </div>
+
+  <div class="feat-block">
+    <div class="fi" style="background:#FFF3E0">🌊</div>
+    <div>
+      <span class="tag-sm tg-o">Total Plus / Add-on</span>
+      <h4>Network Traffic Analysis — NTA (Giám sát lưu lượng mạng)</h4>
+      <p>Thu thập NetFlow, sFlow, IPFIX từ router/switch → biết ai đang dùng bao nhiêu băng thông, ứng dụng nào, kết nối đến đâu. Phát hiện kết nối đến Dark Web (Tor), IP blacklist. NTA+: tích hợp AI Flowmon phát hiện ransomware, insider threat.</p>
+    </div>
+  </div>
+
+  <div class="feat-block">
+    <div class="fi" style="background:#F3E5F5">📱</div>
+    <div>
+      <span class="tag-sm tg-o">Total Plus / Add-on</span>
+      <h4>Application Performance Monitoring (APM)</h4>
+      <p>Giám sát ứng dụng: Microsoft Exchange, SQL Server, Active Directory, IIS, SharePoint, Apache... Có sẵn template — không cần cấu hình từ đầu. Cảnh báo khi ứng dụng chậm hoặc có nguy cơ down trước khi người dùng phàn nàn.</p>
+    </div>
+  </div>
+
+  <div class="feat-block">
+    <div class="fi" style="background:#E8EAF6">🖥️</div>
+    <div>
+      <span class="tag-sm tg-o">Total Plus / Add-on</span>
+      <h4>Virtualization Monitoring (Giám sát máy ảo)</h4>
+      <p>Tự động phát hiện và giám sát VMware vSphere/vCenter và Hyper-V. Thấy cả host lẫn VM trong cùng một bản đồ. Có thể power on/off/reset VM trực tiếp từ giao diện WUG.</p>
+    </div>
+  </div>
+
+  <div class="feat-block">
+    <div class="fi" style="background:#E8F9EE">📋</div>
+    <div>
+      <span class="tag-sm tg-o">Total Plus / Add-on</span>
+      <h4>Log Management (Quản lý Log tập trung)</h4>
+      <p>Thu thập Syslog và Windows Event Log từ tất cả thiết bị về một chỗ. Lưu trữ dài hạn cho compliance (SOX, PCI, HIPAA). Alert khi log volume bất thường. Backend Elasticsearch — tìm kiếm nhanh.</p>
+    </div>
+  </div>
+
+  <div class="feat-block">
+    <div class="fi" style="background:#FFF3E0">⚙️</div>
+    <div>
+      <span class="tag-sm tg-o">Total Plus / Add-on</span>
+      <h4>Configuration Management (Quản lý cấu hình thiết bị)</h4>
+      <p>Tự động backup cấu hình router, switch, firewall theo lịch vào kho mã hóa. Phát hiện thay đổi config trái phép — alert ngay. So sánh trước/sau thay đổi. Có template compliance sẵn cho Cisco, Juniper theo chuẩn SOX, PCI, HIPAA, FISMA.</p>
+    </div>
+  </div>
+
+  <div class="feat-block">
+    <div class="fi" style="background:#E3F2FD">☁️</div>
+    <div>
+      <span class="tag-sm tg-g">Core</span>
+      <h4>Cloud & Wireless Monitoring</h4>
+      <p>Tự động discover và giám sát AWS, Azure — bao gồm theo dõi <strong>cloud billing</strong> (chi phí cloud). Giám sát Wireless LAN, Meraki Cloud. Lưu metric nhiều năm — vượt qua giới hạn 60-90 ngày của cloud native.</p>
+    </div>
+  </div>
+
+  <div class="feat-block">
+    <div class="fi" style="background:#FCE4EC">🔔</div>
+    <div>
+      <span class="tag-sm tg-g">Core</span>
+      <h4>Alerting & Action Policies (Cảnh báo & Tự động xử lý)</h4>
+      <p>Alert qua Email, SMS, Slack, IFTTT. Action Policy: tự động restart service, rollback config, chạy PowerShell script khi sự cố xảy ra. <strong>Self-healing</strong> — hệ thống tự khắc phục không cần IT can thiệp.</p>
+    </div>
+  </div>
+</section>
+
+<!-- S4: SURVEY -->
+<section class="sec" id="s4">
+  <div class="sec-head"><div class="sec-num">4</div><div><h2>Bộ câu hỏi khảo sát khách hàng</h2><p>Dùng để thu thập thông tin lên BOM và tư vấn phiên bản phù hợp</p></div></div>
+
+  <table class="survey-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Câu hỏi khảo sát</th>
+        <th class="hl">Mục đích / Ghi chú</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="sec-row"><td colspan="3">I. Thông tin chung</td></tr>
+      <tr><td>1</td><td>Khách hàng đang sử dụng công cụ nào để giám sát mạng và ứng dụng?</td><td>Hiểu hiện trạng, điểm đau</td></tr>
+      <tr><td>2</td><td>Công cụ hiện tại chưa giải quyết được vấn đề kỹ thuật nào?</td><td>Khai thác pain point</td></tr>
+      <tr><td>3</td><td>Đã có giải pháp giám sát hiệu năng ứng dụng chưa? Tên giải pháp nếu có?</td><td>Upsell APM nếu chưa có</td></tr>
+      <tr><td>4</td><td>Cung cấp sơ đồ kết nối mạng (số site, kiến trúc, lớp ứng dụng...)</td><td>Xác định mô hình triển khai</td></tr>
+
+      <tr class="sec-row"><td colspan="3">II. Khảo sát nhu cầu, tư vấn WUG</td></tr>
+      <tr><td>1</td><td>Số lượng thiết bị mạng (switch, router, firewall, printer, AP...) cần giám sát?</td><td>→ Xác định số <strong>device</strong> (Premium) hoặc <strong>point</strong> (Total Plus)</td></tr>
+      <tr><td>2</td><td>Số lượng máy chủ vật lý cần giám sát?</td><td>→ Cộng vào tổng device/point</td></tr>
+      <tr><td>3</td><td>Có yêu cầu giám sát máy ảo không? Số lượng VM cần giám sát?</td><td>→ License <strong>Virtual Monitoring</strong></td></tr>
+      <tr><td>4</td><td>Có yêu cầu giám sát hiệu năng ứng dụng không? Số lượng ứng dụng?</td><td>→ License <strong>APM</strong></td></tr>
+      <tr><td>5</td><td>Mô tả yêu cầu giám sát ứng dụng cụ thể? (metric, SLA, ứng dụng nào?)</td><td>→ Xác định profile APM</td></tr>
+      <tr><td>6</td><td>Có yêu cầu giám sát lưu lượng mạng (NetFlow) không? Số Flow source (thiết bị mạng)?</td><td>→ License <strong>NTA</strong></td></tr>
+      <tr><td>7</td><td>Có yêu cầu quản lý log tập trung không? Số log source? (1 device = 1 log source)</td><td>→ License <strong>Log Management</strong></td></tr>
+      <tr><td>8</td><td>Có yêu cầu quản lý cấu hình thiết bị mạng không? Số thiết bị quản lý config?</td><td>→ License <strong>Config Management</strong></td></tr>
+      <tr><td>9</td><td>Khách hàng có thể cài agent trên máy chủ để thu log không?</td><td>→ Agent-based hay centralized log</td></tr>
+      <tr><td>10</td><td>Yêu cầu license perpetual hay subscription?</td><td>→ Tác động đến part number</td></tr>
+      <tr><td>11</td><td>Hệ thống có nhiều site/chi nhánh không? Cần giám sát tập trung từ 1 điểm?</td><td>→ Distributed Edition</td></tr>
+      <tr><td>12</td><td>Số năm bảo hành, dịch vụ hỗ trợ mong muốn? (1 năm / 3 năm)</td><td>→ Service Agreement</td></tr>
+    </tbody>
+  </table>
+
+  <div class="infobox ib-o" style="margin-top:16px">
+    <strong>⚠️ Lưu ý khi lấy thông tin BOM:</strong> Với Premium → đếm theo <strong>số device</strong>. Với Total Plus → đếm theo <strong>số point</strong> (1 device network = 1 point; 1 server = có thể nhiều point hơn tùy monitoring). Luôn hỏi về số site để xác định có cần Distributed Edition không. Hỏi về VM và ứng dụng để upsell đúng module.
+  </div>
+</section>
+
+<!-- S5: SWOT -->
+<section class="sec" id="s5">
+  <div class="sec-head"><div class="sec-num">5</div><div><h2>Phân tích SWOT & Phân khúc khách hàng</h2><p>Hiểu rõ để chào đúng người, đúng thời điểm</p></div></div>
+
+  <div class="swot-grid" style="margin-bottom:24px">
+    <div class="swot-cell sw-s">
+      <h4>💪 STRENGTHS — Điểm mạnh</h4>
+      <ul>
+        <li>Interactive Auto Network Map — độc đáo nhất thị trường</li>
+        <li>All-in-one platform: NPM + NTA + APM + Log + Config + VM + Cloud</li>
+        <li>Smart Alerting tự động loại bỏ alert storm</li>
+        <li>Chi phí thấp nhất phân khúc (2-3x rẻ hơn SolarWinds)</li>
+        <li>Triển khai nhanh, cài đặt đơn giản (30-60 phút)</li>
+        <li>Progress sở hữu cả Flowmon → tích hợp AI/NDR sâu nhất</li>
+        <li>24/7/365 support toàn cầu</li>
+      </ul>
+    </div>
+    <div class="swot-cell sw-w">
+      <h4>⚠️ WEAKNESSES — Điểm yếu</h4>
+      <ul>
+        <li>Không có Deep Packet Inspection (DPI)</li>
+        <li>Không có NetPath (hop-by-hop analysis như SolarWinds)</li>
+        <li>Wireless Heat Map chưa có native</li>
+        <li>Không hỗ trợ Cisco ASA Network Insight chuyên sâu</li>
+        <li>Chỉ cài trên Windows Server (không có Linux server option)</li>
+      </ul>
+    </div>
+    <div class="swot-cell sw-o">
+      <h4>🚀 OPPORTUNITIES — Cơ hội</h4>
+      <ul>
+        <li>Nhiều tổ chức đang dùng tool lẻ tẻ, chưa có NMS tập trung</li>
+        <li>Xu hướng compliance (SOX, PCI, ISO 27001) thúc đẩy nhu cầu</li>
+        <li>Cloud hybrid tăng mạnh → cần visibility đa môi trường</li>
+        <li>Thiếu nhân lực IT → cần automation, self-healing</li>
+        <li>Khách hàng SolarWinds bất mãn về giá → cơ hội thay thế</li>
+      </ul>
+    </div>
+    <div class="swot-cell sw-t">
+      <h4>⚡ THREATS — Thách thức</h4>
+      <ul>
+        <li>SolarWinds có brand mạnh ở enterprise</li>
+        <li>ManageEngine giá cạnh tranh, phổ biến ở SMB</li>
+        <li>PRTG dễ dùng, sensor-based linh hoạt</li>
+        <li>Open-source (Zabbix, Nagios) thu hút khách hàng tiết kiệm</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:14px">🎯 Phân khúc khách hàng phù hợp nhất</h3>
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-icon" style="background:#E8F9EE">🏦</div>
+      <h3>Doanh nghiệp vừa-lớn (SMB→Enterprise)</h3>
+      <p>500 – 5.000 thiết bị. Cần visibility toàn diện, có team IT. Muốn giải pháp all-in-one, không muốn quản lý nhiều tool. <strong>→ Sweet spot của WUG</strong></p>
+    </div>
+    <div class="card">
+      <div class="card-icon" style="background:#E3F2FD">🏛️</div>
+      <h3>Cơ quan nhà nước, đơn vị công</h3>
+      <p>Sở, ban, ngành, đơn vị quân đội, trường học, bệnh viện. Yêu cầu compliance, audit trail, giám sát tập trung nhiều site. <strong>→ WUG rất phù hợp</strong></p>
+    </div>
+    <div class="card">
+      <div class="card-icon" style="background:#FFF3E0">⚡</div>
+      <h3>Điện lực, năng lượng, sản xuất</h3>
+      <p>Hạ tầng OT/IT hội tụ, nhiều site địa lý, cần uptime cao, giám sát distributed. EVN, nhà máy điện, khu công nghiệp. <strong>→ Distributed Edition</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- S6: LICENSE -->
+<section class="sec" id="s6">
+  <div class="sec-head"><div class="sec-num">6</div><div><h2>Cơ chế License — Cách tính & Chọn phiên bản</h2><p>Phần quan trọng nhất để lên BOM chính xác</p></div></div>
+
+  <div class="lic-grid">
+    <!-- PREMIUM -->
+    <div class="lic-card">
+      <h3>Premium Edition</h3>
+      <div class="subtitle">Nền tảng cơ bản — Network & Infrastructure</div>
+      <div class="basis">
+        <strong>🔢 Tính license theo: SỐ DEVICE (Devices)</strong>
+        1 device = 1 router, switch, server, AP, printer, firewall... Đếm tổng thiết bị cần giám sát → chọn tier phù hợp (100, 250, 500, 1000, 2500... devices)
+      </div>
+      <ul class="check-list">
+        <li>Discovery & Auto Network Map</li>
+        <li>Network Performance Monitoring</li>
+        <li>Smart Alerting & Actions</li>
+        <li>Wireless & Cloud Monitoring</li>
+        <li>Storage Monitoring</li>
+        <li>Reporting & Inventory</li>
+        <li>REST API</li>
+        <li class="no">Flow/NTA → Add-on riêng</li>
+        <li class="no">APM → Add-on riêng</li>
+        <li class="no">Virtualization → Add-on riêng</li>
+        <li class="no">Config Mgmt → Add-on riêng</li>
+        <li class="no">Log Mgmt → Add-on riêng</li>
+      </ul>
+      <div class="part-box">
+        <div class="pt">NM-6NHC-0170</div>
+        <div class="pd">Premium 100 New Devices · 3 Years Service</div>
+        <div class="pt" style="margin-top:8px">NM-6NHC-0350</div>
+        <div class="pd">Premium 250 New Devices · 3 Years Service</div>
+      </div>
+    </div>
+
+    <!-- TOTAL PLUS -->
+    <div class="lic-card rec">
+      <h3>Total Plus Edition</h3>
+      <div class="subtitle">Đầy đủ tính năng — Best Value · Recommended</div>
+      <div class="basis">
+        <strong>🔢 Tính license theo: SỐ POINT (Points)</strong>
+        1 point = 1 "monitoring object". Mỗi thiết bị mạng ≈ 1 point. Server có thể = nhiều points tùy số monitor. Chọn tier: 100, 250, 500, 1000, 2500... points
+      </div>
+      <ul class="check-list">
+        <li>Tất cả tính năng Premium</li>
+        <li>Flow / Network Traffic Analysis (NTA)</li>
+        <li>Virtual Monitoring (VMware + Hyper-V)</li>
+        <li>Application Performance Monitoring</li>
+        <li>Configuration Management</li>
+        <li>Log Management</li>
+        <li>Scalability Pollers ✓ ĐÃ INCLUDE</li>
+        <li>Distributed Edition support</li>
+        <li>NTA+ Flowmon AI → Add-on riêng</li>
+      </ul>
+      <div class="part-box">
+        <div class="pt">NM-6UUA-0180</div>
+        <div class="pd">Total Plus 500 New Points · 3 Years Service</div>
+        <div class="pt" style="margin-top:8px">NM-6UUA-0250</div>
+        <div class="pd">Total Plus 250 New Points · 3 Years Service</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="infobox ib-g" style="margin-top:20px">
+    <strong>📌 Ghi nhớ khi lên BOM:</strong>
+    <strong>Premium → đếm số DEVICE.</strong> Ví dụ: 200 switch/router + 50 server = 250 devices → chọn Premium 250 Devices. <br>
+    <strong>Total Plus → đếm số POINT.</strong> Quy tắc: 1 thiết bị mạng ≈ 1 point; 1 server ≈ 5-10 points (tùy số monitor). Ưu tiên chào Total Plus vì value tốt hơn và include nhiều tính năng.<br>
+    <strong>Service Agreement:</strong> 1 Year hoặc 3 Years — 3Y thường có giá tốt hơn và khách ưu tiên. Part number thay đổi theo năm bảo hành.
+  </div>
+
+  <h3 style="font-size:14px;font-weight:700;color:var(--navy);margin:20px 0 12px">Add-on modules cho Premium Edition</h3>
+  <div class="grid-3">
+    <div class="card"><h3>🌊 NTA Add-on</h3><p>Thêm Network Traffic Analysis (NetFlow/sFlow). Tính theo số flow source device.</p></div>
+    <div class="card"><h3>📱 APM Add-on</h3><p>Thêm Application Monitoring. Tính theo số application instance cần giám sát.</p></div>
+    <div class="card"><h3>🖥️ VM Add-on</h3><p>Thêm Virtualization Monitoring (VMware/Hyper-V). Tính theo số VM.</p></div>
+    <div class="card"><h3>📋 Log Add-on</h3><p>Thêm Log Management (Syslog + WEL). Tính theo số log source (1 device = 1 source).</p></div>
+    <div class="card"><h3>⚙️ Config Add-on</h3><p>Thêm Configuration Management. Tính theo số thiết bị cần backup config.</p></div>
+    <div class="card"><h3>🤖 NTA+ Flowmon</h3><p>AI anomaly detection, NDR, ransomware detection. Add-on cho cả Premium và Total Plus.</p></div>
+  </div>
+</section>
+
+<!-- S7: SO SÁNH -->
+<section class="sec" id="s7">
+  <div class="sec-head"><div class="sec-num">7</div><div><h2>So sánh với đối thủ cạnh tranh</h2><p>Để xử lý objection và làm nổi bật điểm mạnh khi khách so sánh</p></div></div>
+
+  <div style="overflow-x:auto;border-radius:var(--r2)">
+    <table class="cmp-table">
+      <thead>
+        <tr>
+          <th>Tiêu chí</th>
+          <th class="col-w">WhatsUp Gold</th>
+          <th>SolarWinds</th>
+          <th>ManageEngine</th>
+          <th>PRTG</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="cat-row"><td colspan="5">LICENSE & CHI PHÍ</td></tr>
+        <tr>
+          <td>Mô hình license</td>
+          <td class="col-w">Device / Point (đơn giản)</td>
+          <td>Interface/Node/Volume (phức tạp)</td>
+          <td>Device-based</td>
+          <td>Sensor-based</td>
+        </tr>
+        <tr>
+          <td>Perpetual license</td>
+          <td class="col-w"><span class="ck">✓</span> Có</td>
+          <td><span class="ck">✓</span> Có</td>
+          <td><span class="ck">✓</span> Có</td>
+          <td><span class="ck">✓</span> Có</td>
+        </tr>
+        <tr>
+          <td>Subscription</td>
+          <td class="col-w"><span class="ck">✓</span> Có</td>
+          <td><span class="ck">✓</span> Có</td>
+          <td><span class="ck">✓</span> Có</td>
+          <td><span class="ck">✓</span> Có</td>
+        </tr>
+        <tr>
+          <td>Chi phí tổng (TCO)</td>
+          <td class="col-w">💰 <strong>Thấp nhất</strong></td>
+          <td>💸 Cao hơn 2-3x</td>
+          <td>💰 Tương đương</td>
+          <td>💰 Tương đương</td>
+        </tr>
+        <tr>
+          <td>Độ phức tạp khi mua</td>
+          <td class="col-w"><span class="ck">✓</span> Đơn giản</td>
+          <td><span class="cx">✗</span> Rất phức tạp</td>
+          <td><span class="cp">⚠</span> Vừa phải</td>
+          <td><span class="ck">✓</span> Đơn giản</td>
+        </tr>
+
+        <tr class="cat-row"><td colspan="5">TÍNH NĂNG CỐT LÕI</td></tr>
+        <tr>
+          <td>Auto Network Map (interactive)</td>
+          <td class="col-w">⭐ <strong>Tốt nhất</strong></td>
+          <td><span class="cx">✗</span> Phải vẽ tay</td>
+          <td><span class="cp">⚠</span> Có, kém hơn</td>
+          <td><span class="cp">⚠</span> Cơ bản</td>
+        </tr>
+        <tr>
+          <td>Smart Alert (dependency)</td>
+          <td class="col-w"><span class="ck">✓</span> Tự động từ discovery</td>
+          <td><span class="cp">⚠</span> Cần cấu hình tay</td>
+          <td><span class="cp">⚠</span> Có</td>
+          <td><span class="cp">⚠</span> Cần config</td>
+        </tr>
+        <tr>
+          <td>NTA (NetFlow/sFlow)</td>
+          <td class="col-w"><span class="ck">✓</span> Native</td>
+          <td><span class="ck">✓</span> Module riêng (đắt)</td>
+          <td><span class="ck">✓</span> Có</td>
+          <td><span class="ck">✓</span> Có</td>
+        </tr>
+        <tr>
+          <td>Application Monitoring</td>
+          <td class="col-w"><span class="ck">✓</span> Template sẵn có</td>
+          <td><span class="ck">✓</span> SAM (đắt)</td>
+          <td><span class="ck">✓</span> Có</td>
+          <td><span class="cp">⚠</span> Giới hạn</td>
+        </tr>
+        <tr>
+          <td>Config Management</td>
+          <td class="col-w"><span class="ck">✓</span> Có, compliance template</td>
+          <td><span class="ck">✓</span> NCM (module riêng)</td>
+          <td><span class="ck">✓</span> Có</td>
+          <td><span class="cx">✗</span> Không native</td>
+        </tr>
+        <tr>
+          <td>Log Management</td>
+          <td class="col-w"><span class="ck">✓</span> Elasticsearch</td>
+          <td><span class="cp">⚠</span> Add-on</td>
+          <td><span class="ck">✓</span> Có</td>
+          <td><span class="cx">✗</span> Không</td>
+        </tr>
+        <tr>
+          <td>AI / NDR (anomaly detection)</td>
+          <td class="col-w"><span class="ck">✓</span> Flowmon AI (native)</td>
+          <td><span class="cp">⚠</span> Giới hạn</td>
+          <td><span class="cp">⚠</span> AIOps add-on</td>
+          <td><span class="cx">✗</span> Cần Rhebo (3rd party)</td>
+        </tr>
+        <tr>
+          <td>Dark Web / Tor detection</td>
+          <td class="col-w"><span class="ck">✓</span> IP Reputation native</td>
+          <td><span class="cx">✗</span> Không</td>
+          <td><span class="cx">✗</span> Không</td>
+          <td><span class="cx">✗</span> Không</td>
+        </tr>
+        <tr>
+          <td>Cloud Billing Monitoring</td>
+          <td class="col-w"><span class="ck">✓</span> Có</td>
+          <td><span class="cx">✗</span> Không</td>
+          <td><span class="cp">⚠</span> Giới hạn</td>
+          <td><span class="cx">✗</span> Không</td>
+        </tr>
+        <tr>
+          <td>Deep Packet Inspection (DPI)</td>
+          <td class="col-w"><span class="cx">✗</span> Không</td>
+          <td><span class="ck">✓</span> Có</td>
+          <td><span class="cx">✗</span> Không</td>
+          <td><span class="cx">✗</span> Không</td>
+        </tr>
+
+        <tr class="cat-row"><td colspan="5">HỖ TRỢ & TRIỂN KHAI</td></tr>
+        <tr>
+          <td>Support 24/7</td>
+          <td class="col-w"><span class="ck">✓</span> 24/7/365</td>
+          <td><span class="ck">✓</span> 24/7</td>
+          <td><span class="ck">✓</span> 24/7</td>
+          <td><span class="ck">✓</span> 24/7</td>
+        </tr>
+        <tr>
+          <td>Thời gian triển khai</td>
+          <td class="col-w">✅ 30–60 phút</td>
+          <td>⏳ Ngày đến tuần</td>
+          <td>⌛ Vài ngày</td>
+          <td>✅ Nhanh</td>
+        </tr>
+        <tr>
+          <td>Độ dễ sử dụng</td>
+          <td class="col-w">⭐ <strong>Tốt nhất</strong></td>
+          <td>❌ Khó, phức tạp</td>
+          <td>👍 Khá tốt</td>
+          <td>👍 Tốt</td>
+        </tr>
+        <tr>
+          <td>Đánh giá G2 (2025)</td>
+          <td class="col-w">⭐ 4.5/5</td>
+          <td>⭐ 4.3/5</td>
+          <td>⭐ 4.4/5</td>
+          <td>⭐ 4.6/5</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="infobox ib-b" style="margin-top:16px">
+    <strong>🥊 Khi khách so sánh với SolarWinds:</strong> "SolarWinds tính license theo interface/volume — rất phức tạp và đắt hơn 2-3 lần. WUG tính theo device — đơn giản, dễ hiểu, dễ scale. Hơn nữa, bản đồ mạng của WUG tự động, SolarWinds phải vẽ tay. Reputation WUG tốt hơn (không có scandal bảo mật như Sunburst 2020 của SolarWinds)."<br><br>
+    <strong>🥊 Khi khách so sánh với PRTG:</strong> "PRTG tính theo sensor nên khó estimate chi phí. WUG rõ ràng hơn theo device/point. PRTG không có Config Management native, Log Management yếu hơn, không có AI anomaly detection tích hợp."
+  </div>
+</section>
+
+<!-- S8: USE CASE -->
+<section class="sec" id="s8">
+  <div class="sec-head"><div class="sec-num">8</div><div><h2>Use Case thực tế</h2><p>Kịch bản cụ thể để kể chuyện với khách hàng</p></div></div>
+
+  <!-- UC 1 -->
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background:#E8F9EE">🏢</div>
+      <div>
+        <h3>Use Case 1: Doanh nghiệp sản xuất / tập đoàn (500 devices)</h3>
+        <div class="sub">Ví dụ: Daikin, Nhôm Đắc Nông, nhà máy điện — mạng phức tạp, nhiều site, yêu cầu uptime cao</div>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px"><strong>Bài toán:</strong> 400 thiết bị mạng (switch/router/firewall), 80 server vật lý, 120 VM VMware, 2 site (nhà máy + văn phòng HQ). Hiện tại không có giám sát tập trung, mỗi sự cố mất 2-4 giờ xử lý.</p>
+    <div class="uc-flow">
+      <div class="uc-step"><div class="num">BƯỚC 1</div><strong>Discovery</strong>Scan toàn bộ 2 site → tự động phát hiện 480 devices</div>
+      <span class="arrow">→</span>
+      <div class="uc-step"><div class="num">BƯỚC 2</div><strong>Network Map</strong>Bản đồ tự động hiển thị topology 2 site, real-time status</div>
+      <span class="arrow">→</span>
+      <div class="uc-step"><div class="num">BƯỚC 3</div><strong>Alerting</strong>Cấu hình ngưỡng CPU/RAM/bandwidth → Smart Alert</div>
+      <span class="arrow">→</span>
+      <div class="uc-step"><div class="num">BƯỚC 4</div><strong>NTA + VM</strong>Giám sát lưu lượng NetFlow + 120 VM trong cùng giao diện</div>
+    </div>
+    <p style="font-size:12.5px;color:var(--muted);margin-bottom:10px"><strong>Kết quả:</strong> MTTR giảm từ 4 giờ → 20 phút. Phát hiện server có CPU 90% liên tục từ 2 tuần trước khi down. Detect kết nối bất thường từ workstation đến IP nước ngoài (potential threat).</p>
+    <div class="bom-pills">
+      <span class="bom-pill">Total Plus 500 Points</span>
+      <span class="bom-pill">Virtual Monitoring</span>
+      <span class="bom-pill">Distributed Edition (2 sites)</span>
+      <span class="bom-pill">3 Years Service</span>
+    </div>
+  </div>
+
+  <!-- UC 2 -->
+  <div class="usecase">
+    <div class="usecase-header">
+      <div class="usecase-icon" style="background:#E3F2FD">🏛️</div>
+      <div>
+        <h3>Use Case 2: Sở Khoa học & Công nghệ tỉnh (150 devices)</h3>
+        <div class="sub">Cơ quan nhà nước, yêu cầu compliance, audit log, giám sát ứng dụng nội bộ</div>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px"><strong>Bài toán:</strong> 120 thiết bị mạng, 30 server, ứng dụng CNTT nội bộ (cổng dịch vụ công, mail server, file server). Yêu cầu: log tập trung để kiểm tra an ninh, backup config thiết bị, báo cáo cho lãnh đạo.</p>
+    <div class="uc-flow">
+      <div class="uc-step"><div class="num">BƯỚC 1</div><strong>Discovery</strong>Scan mạng → map 150 thiết bị, thấy toàn bộ hạ tầng</div>
+      <span class="arrow">→</span>
+      <div class="uc-step"><div class="num">BƯỚC 2</div><strong>Config Backup</strong>Backup config switch/router/FW tự động mỗi ngày</div>
+      <span class="arrow">→</span>
+      <div class="uc-step"><div class="num">BƯỚC 3</div><strong>Log Mgmt</strong>Thu thập syslog + Windows event log từ 150 devices</div>
+      <span class="arrow">→</span>
+      <div class="uc-step"><div class="num">BƯỚC 4</div><strong>Report</strong>Dashboard cho lãnh đạo, báo cáo uptime, compliance</div>
+    </div>
+    <p style="font-size:12.5px;color:var(--muted);margin-bottom:10px"><strong>Kết quả:</strong> Phát hiện thay đổi config firewall ngoài giờ hành chính (alert ngay). Log đủ để đáp ứng kiểm toán an ninh thông tin. Báo cáo uptime hàng tháng tự động gửi lãnh đạo qua email.</p>
+    <div class="bom-pills">
+      <span class="bom-pill">Total Plus 250 Points</span>
+      <span class="bom-pill">Log Management</span>
+      <span class="bom-pill">Config Management</span>
+      <span class="bom-pill">1 Year Service</span>
+    </div>
+  </div>
+</section>
+
+<!-- S9: KHÁCH HÀNG -->
+<section class="sec" id="s9">
+  <div class="sec-head"><div class="sec-num">9</div><div><h2>Khách hàng tham chiếu tại Việt Nam</h2><p>Dùng để tăng credibility khi gặp khách hàng cùng ngành</p></div></div>
+
+  <div class="ref-grid">
+    <div class="ref-item"><div class="ri">⚡</div><div class="rn">Tập đoàn EVN</div><div class="rs">Điện lực · Distributed</div></div>
+    <div class="ref-item"><div class="ri">🛡️</div><div class="rn">Văn phòng Bộ Quốc phòng</div><div class="rs">Nhà nước · Bảo mật</div></div>
+    <div class="ref-item"><div class="ri">🔍</div><div class="rn">Thanh tra BQP</div><div class="rs">Thanh tra · Compliance</div></div>
+    <div class="ref-item"><div class="ri">🔥</div><div class="rn">Nhiệt điện Thái Bình</div><div class="rs">Năng lượng · OT/IT</div></div>
+    <div class="ref-item"><div class="ri">❄️</div><div class="rn">Daikin Việt Nam</div><div class="rs">Sản xuất · Enterprise</div></div>
+    <div class="ref-item"><div class="ri">⚖️</div><div class="rn">Viện Kiểm sát</div><div class="rs">Nhà nước · Log/Audit</div></div>
+    <div class="ref-item"><div class="ri">🚔</div><div class="rn">Bộ Công an</div><div class="rs">An ninh · Tập trung</div></div>
+    <div class="ref-item"><div class="ri">🎓</div><div class="rn">Học viện Tài chính</div><div class="rs">Giáo dục · APM</div></div>
+    <div class="ref-item"><div class="ri">🏭</div><div class="rn">Nhôm Đắc Nông</div><div class="rs">Sản xuất · Multi-site</div></div>
+    <div class="ref-item"><div class="ri">🔬</div><div class="rn">Sở KHCN Đồng Nai</div><div class="rs">Nhà nước · Compliance</div></div>
+  </div>
+
+  <div class="infobox ib-b" style="margin-top:16px">
+    <strong>💬 Cách dùng reference khi bán hàng:</strong> Nếu khách là đơn vị nhà nước → dẫn Bộ Quốc phòng, Viện Kiểm sát, Sở KHCN Đồng Nai. Nếu khách là ngành điện/năng lượng → dẫn EVN, Nhiệt điện Thái Bình. Nếu khách là doanh nghiệp sản xuất → dẫn Daikin, Nhôm Đắc Nông. Cùng ngành → tăng mạnh khả năng tin tưởng.
+  </div>
+</section>
+
+<!-- S10: FAQ -->
+<section class="sec" id="s10">
+  <div class="sec-head"><div class="sec-num">10</div><div><h2>Câu hỏi thường gặp & Trả lời</h2><p>Chuẩn bị sẵn để xử lý ngay trong buổi tư vấn</p></div></div>
+
+  <div class="faq-cat">🏷️ Về sản phẩm & tính năng</div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">
+      <span>WhatsUp Gold có thể giám sát được những loại thiết bị nào?</span>
+      <div class="arrow">▼</div>
+    </div>
+    <div class="faq-a">Bất kỳ thiết bị nào có địa chỉ IP và hỗ trợ SNMP, WMI, SSH, HTTPS đều có thể monitor: router, switch, firewall, server Windows/Linux, storage, printer, access point, wireless controller, camera IP, VM VMware/Hyper-V, AWS/Azure resources, và nhiều hơn nữa.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">
+      <span>WUG có phải vẽ bản đồ mạng thủ công không?</span>
+      <div class="arrow">▼</div>
+    </div>
+    <div class="faq-a">Không. WUG tự động phát hiện toàn bộ thiết bị và vẽ bản đồ topology Layer 2/3 tự động chỉ trong vài phút sau khi discovery. Đây là tính năng độc đáo nhất của WUG — các đối thủ như SolarWinds yêu cầu vẽ map thủ công.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">
+      <span>WUG có hỗ trợ giám sát cloud (AWS, Azure) không?</span>
+      <div class="arrow">▼</div>
+    </div>
+    <div class="faq-a">Có. WUG tự động discover và giám sát AWS và Azure resources, bao gồm theo dõi chi phí cloud (billing). Đặc biệt, WUG lưu metric nhiều năm — vượt qua giới hạn 60-90 ngày của AWS/Azure native tools.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">
+      <span>WUG có hỗ trợ giám sát máy ảo VMware không?</span>
+      <div class="arrow">▼</div>
+    </div>
+    <div class="faq-a">Có, đầy đủ. WUG Virtualization Monitoring hỗ trợ VMware vSphere/vCenter và Microsoft Hyper-V. Tự động discover và vẽ map hosts + guests. Đặc biệt có thể power on/off/reset VM trực tiếp từ giao diện WUG. Module này có trong Total Plus hoặc là add-on cho Premium.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">
+      <span>Khi có hàng trăm alert mỗi ngày, WUG xử lý thế nào?</span>
+      <div class="arrow">▼</div>
+    </div>
+    <div class="faq-a">WUG có "Smart Alerting" dùng dependency map (tự động tạo trong discovery) để loại bỏ alert storm. Khi core switch down, WUG chỉ báo 1 alert về switch đó — không spam hàng trăm alert về thiết bị downstream. Đây là điểm khác biệt lớn so với các giải pháp thông thường.</div>
+  </div>
+
+  <div class="faq-cat">🔢 Về sizing & BOM</div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">
+      <span>Sự khác nhau giữa "Device" (Premium) và "Point" (Total Plus) là gì?</span>
+      <div class="arrow">▼</div>
+    </div>
+    <div class="faq-a"><strong>Premium — Device:</strong> 1 device = 1 thiết bị vật lý hoặc logic cần monitor. Đơn giản nhất. Ví dụ: 200 switch + 50 server = 250 devices.<br><br><strong>Total Plus — Point:</strong> 1 point = 1 "monitoring object". Thiết bị mạng thường = 1 point. Server có thể = nhiều points tùy số monitor cần giám sát (CPU, RAM, disk, interface, services...). Khi sizing Total Plus, nên hỏi kỹ số monitor trên mỗi server để estimate đúng.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">
+      <span>Với 300 switch/router và 50 server, nên chọn bao nhiêu license?</span>
+      <div class="arrow">▼</div>
+    </div>
+    <div class="faq-a">Với <strong>Premium Edition</strong>: 300 + 50 = 350 devices → chọn Premium 500 Devices (tier gần nhất lên trên).<br><br>Với <strong>Total Plus Edition</strong>: 300 thiết bị mạng × 1 point = 300 points + 50 server × ~5 points = 250 points → tổng ~550 points → chọn Total Plus 750 hoặc 1000 Points. Khi không chắc về server points, hỏi thêm khách hoặc buffer thêm 20-30%.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">
+      <span>Nếu có nhiều chi nhánh, cần license gì thêm?</span>
+      <div class="arrow">▼</div>
+    </div>
+    <div class="faq-a">Cần <strong>Distributed Edition</strong> (bao gồm trong Enterprise/Enterprise Plus subscription). Mỗi site có WUG Remote riêng, hoạt động độc lập. Central site nhận dữ liệu tổng hợp từ tất cả Remote. Quan trọng: phải lên kế hoạch firewall cho port 9394 (Remote→Central) và 80/443 (drill-down từ Central xuống Remote).</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">
+      <span>Log Management tính license theo gì? 150 thiết bị cần bao nhiêu log license?</span>
+      <div class="arrow">▼</div>
+    </div>
+    <div class="faq-a">Log Management tính theo số <strong>log source</strong>: 1 device = 1 log source. Nếu 150 thiết bị đều cần thu log → cần 150 log source license. Lưu ý: không nhất thiết phải thu log tất cả thiết bị — hỏi khách họ cần log của device nào (thường là server, firewall, switch cốt lõi).</div>
+  </div>
+
+  <div class="faq-cat">📋 Về license & cơ chế mua hàng</div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">
+      <span>WUG có license perpetual không, hay chỉ subscription?</span>
+      <div class="arrow">▼</div>
+    </div>
+    <div class="faq-a">WUG hỗ trợ cả hai: <strong>Perpetual license</strong> (mua một lần, trả phí maintenance/support hàng năm) và <strong>Subscription</strong> (thuê theo năm, bao gồm support). Với cơ quan nhà nước thường ưu tiên perpetual. Với doanh nghiệp tư nhân có thể flexible hơn. Part number khác nhau theo loại license — cần confirm với Progress/distributor.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">
+      <span>Scalability Pollers có phải mua thêm không?</span>
+      <div class="arrow">▼</div>
+    </div>
+    <div class="faq-a">Không. <strong>Scalability Pollers đã được include trong Total Plus Edition</strong> — không tốn thêm chi phí. Đây là lợi thế lớn khi khách có nhiều thiết bị (>850) cần phân tải polling. Với Premium Edition, Pollers là add-on riêng.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">
+      <span>1 năm vs 3 năm Service Agreement — khác gì nhau?</span>
+      <div class="arrow">▼</div>
+    </div>
+    <div class="faq-a">Cả hai đều bao gồm software updates và technical support. <strong>3 Years Service</strong> thường có giá rẻ hơn tính theo năm (discount) và khách không cần lo renewal hàng năm. Part number của WUG thường bao gồm số năm service (ví dụ: "with 3 Years Service" trong tên part). Khuyến nghị chào 3 năm để deal lớn hơn và khách yên tâm hơn.</div>
+  </div>
+
+  <div class="faq-cat">🚀 Về triển khai & vận hành</div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">
+      <span>WUG cài trên hệ điều hành nào? Có cần server riêng không?</span>
+      <div class="arrow">▼</div>
+    </div>
+    <div class="faq-a">WUG cài trên <strong>Windows Server 2016/2019/2022 (64-bit)</strong>. Cần 1 server riêng — không cài chung với Domain Controller. Nhỏ (&lt;500 devices): 4 CPU, 8GB RAM, 100GB HDD. Vừa (500-1000 devices): 8 CPU, 16GB RAM, 250GB HDD. Database: SQL Express bundle (miễn phí, giới hạn 10GB) hoặc SQL Server đầy đủ cho môi trường lớn.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">
+      <span>Triển khai mất bao lâu? Có cần đội IT chuyên sâu không?</span>
+      <div class="arrow">▼</div>
+    </div>
+    <div class="faq-a">Cài đặt cơ bản mất <strong>30-60 phút</strong>, wizard-driven. Discovery tự động phát hiện thiết bị trong vài phút đầu. IT team thông thường có thể tự cài đặt và vận hành. Không cần professional services cho hầu hết case thông thường. WUG có tài liệu hướng dẫn và video tutorial miễn phí.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">
+      <span>WUG có backup/HA không? Nếu server WUG down thì sao?</span>
+      <div class="arrow">▼</div>
+    </div>
+    <div class="faq-a">WUG có <strong>Failover mode</strong>: Primary + Secondary standby. Tự động chuyển sang Secondary khi Primary down. Với Distributed Edition, các Remote site vẫn tiếp tục giám sát độc lập ngay cả khi mất kết nối với Central — dữ liệu không bị mất.</div>
+  </div>
+
+  <div class="faq-cat">⚔️ Về đối thủ & điểm mạnh</div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">
+      <span>Tại sao chọn WUG thay vì SolarWinds?</span>
+      <div class="arrow">▼</div>
+    </div>
+    <div class="faq-a">3 lý do chính: <strong>1) Chi phí:</strong> WUG rẻ hơn SolarWinds 2-3 lần với tính năng tương đương cho hầu hết use case. <strong>2) Dễ dùng:</strong> Bản đồ mạng WUG tự động — SolarWinds phải vẽ tay. Interface WUG trực quan hơn nhiều. <strong>3) Triển khai nhanh:</strong> 30-60 phút vs ngày/tuần của SolarWinds. Thêm nữa: SolarWinds có lịch sử bảo mật (Sunburst 2020), WUG không có scandal tương tự.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">
+      <span>Tại sao chọn WUG thay vì PRTG?</span>
+      <div class="arrow">▼</div>
+    </div>
+    <div class="faq-a">PRTG tính license theo sensor — khó estimate và có thể đắt bất ngờ khi scale. WUG rõ ràng hơn (device/point). WUG có Config Management native (PRTG không có), Log Management mạnh hơn, AI anomaly detection tích hợp Flowmon (PRTG phải dùng Rhebo là bên thứ 3). WUG cũng có bản đồ mạng đẹp hơn và tự động hơn PRTG.</div>
+  </div>
+
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggle(this)">
+      <span>Khách nói "dùng Zabbix/open-source miễn phí tại sao phải mua WUG?"</span>
+      <div class="arrow">▼</div>
+    </div>
+    <div class="faq-a">Zabbix miễn phí phần mềm nhưng tốn chi phí ẩn: thời gian setup/config rất lâu (weeks/months), cần người có kỹ năng cao, không có support khi sự cố, không có automatic network map, không có config management native, không có APM turnkey. WUG có: commercial support 24/7, auto discovery, interactive map, tất cả tính năng out-of-the-box — IT không mất hàng tháng để build từ đầu. Chi phí thực sự của Zabbix = license + nhân công config + nhân công maintain = thường cao hơn WUG.</div>
+  </div>
+
+</section>
+
+</div><!-- /wrap -->
+
+<!-- FOOTER -->
+<div style="background:var(--navy);padding:24px 40px;text-align:center;margin-top:0">
+  <div style="font-size:14px;font-weight:700;color:var(--g);margin-bottom:4px">Progress® WhatsUp® Gold</div>
+  <div style="font-size:11px;color:rgba(255,255,255,.3)">Tài liệu nội bộ · Cẩm nang Sale · Cập nhật 05/2026 · Không phát hành ra ngoài</div>
+</div>
+
+<script>
+// Scroll progress
+window.addEventListener('scroll',()=>{
+  const t=document.documentElement.scrollHeight-window.innerHeight;
+  document.getElementById('spb').style.transform=`scaleX(${window.scrollY/t})`;
+  // Active nav
+  document.querySelectorAll('.sec[id]').forEach(s=>{
+    const l=document.querySelector(`.nav-links a[href="#${s.id}"]`);
+    if(l) l.classList.toggle('active',window.scrollY>=s.offsetTop-60);
+  });
+});
+// FAQ toggle
+function toggle(el){
+  const item=el.parentElement;
+  item.classList.toggle('open');
+}
+</script>
+</body>
+</html>

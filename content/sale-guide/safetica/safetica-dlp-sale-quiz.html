@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safetica DLP - Sales Assessment Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-color: #0f172a;
+    --card-bg: #1e293b;
+    --border-color: #334155;
+    --primary: #10b981; /* Emerald 500 */
+    --primary-hover: #059669;
+    --secondary: #3b82f6; /* Blue 500 */
+    --text-main: #f8fafc;
+    --text-muted: #cbd5e1;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    --success-bg: rgba(16, 185, 129, 0.1);
+    --danger-bg: rgba(239, 68, 68, 0.1);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .container {
+    background: var(--card-bg);
+    width: 100%;
+    max-width: 800px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--border-color);
+  }
+
+  /* Header & Progress */
+  .quiz-header {
+    padding: 20px 30px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(15, 23, 42, 0.5);
+  }
+
+  .quiz-title { font-weight: 700; font-size: 1.2rem; color: var(--primary); }
+  
+  .progress-container { width: 40%; background: var(--border-color); border-radius: 10px; height: 8px; overflow: hidden; }
+  .progress-bar { height: 100%; background: var(--secondary); width: 0%; transition: width 0.3s ease; }
+  
+  .question-counter { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+
+  /* Screens */
+  .screen { padding: 40px 30px; display: none; animation: fadeIn 0.4s ease-in-out; }
+  .screen.active { display: block; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Start Screen */
+  .start-screen { text-align: center; }
+  .start-screen h1 { font-size: 2.5rem; margin-bottom: 15px; background: -webkit-linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .start-screen p { color: var(--text-muted); margin-bottom: 30px; font-size: 1.1rem; line-height: 1.6; }
+  
+  .btn {
+    background: var(--primary); color: #fff; border: none; padding: 12px 28px; font-size: 1rem;
+    font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.2s;
+  }
+  .btn:hover { background: var(--primary-hover); transform: translateY(-2px); }
+  .btn:disabled { background: var(--border-color); cursor: not-allowed; transform: none; color: var(--text-muted); }
+
+  /* Question Screen */
+  .question-text { font-size: 1.3rem; font-weight: 600; margin-bottom: 25px; line-height: 1.5; }
+  
+  .options-grid { display: grid; gap: 12px; margin-bottom: 30px; }
+  .option {
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    padding: 16px 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    color: var(--text-muted);
+  }
+  .option:hover { border-color: var(--secondary); background: rgba(59, 130, 246, 0.05); }
+  .option.selected { border-color: var(--primary); background: var(--success-bg); color: var(--text-main); }
+  .option.correct-reveal { border-color: var(--primary); background: var(--success-bg); color: var(--text-main); }
+  .option.wrong-reveal { border-color: var(--danger); background: var(--danger-bg); color: #fff; }
+
+  .option-prefix {
+    background: var(--border-color); width: 30px; height: 30px; border-radius: 6px;
+    display: flex; justify-content: center; align-items: center; margin-right: 15px; font-weight: 600;
+  }
+  .option.selected .option-prefix { background: var(--primary); color: #fff; }
+
+  .explanation-box {
+    display: none; background: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--secondary);
+    padding: 15px; border-radius: 0 8px 8px 0; margin-bottom: 25px; font-size: 0.95rem; line-height: 1.5;
+  }
+
+  .quiz-footer { display: flex; justify-content: flex-end; border-top: 1px solid var(--border-color); padding-top: 20px; }
+
+  /* Result Screen */
+  .result-screen { text-align: center; }
+  .result-circle {
+    width: 150px; height: 150px; border-radius: 50%; display: flex; justify-content: center; align-items: center;
+    margin: 0 auto 20px; font-size: 2.5rem; font-weight: 700; border: 8px solid var(--border-color);
+  }
+  .result-circle.pass { border-color: var(--primary); color: var(--primary); }
+  .result-circle.fail { border-color: var(--danger); color: var(--danger); }
+  
+  .result-status { font-size: 1.5rem; font-weight: 700; margin-bottom: 10px; }
+  .status-pass { color: var(--primary); }
+  .status-fail { color: var(--danger); }
+  
+  .review-section { margin-top: 30px; text-align: left; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; max-height: 300px; overflow-y: auto; }
+  .review-item { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid var(--border-color); }
+  .review-item:last-child { border: none; margin: 0; padding: 0; }
+  .review-q { font-weight: 600; margin-bottom: 5px; color: var(--text-main); font-size: 0.95rem;}
+  .review-ans { color: var(--danger); font-size: 0.9rem; margin-bottom: 5px; }
+  .review-corr { color: var(--primary); font-size: 0.9rem; font-weight: 500;}
+</style>
+</head>
+<body>
+
+<div class="container">
+  
+  <!-- Header (Hidden on Start) -->
+  <div class="quiz-header" id="quizHeader" style="display: none;">
+    <div class="quiz-title">Safetica Sales Quiz</div>
+    <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+    <div class="question-counter"><span id="currentQ">1</span> / <span id="totalQ">30</span></div>
+  </div>
+
+  <!-- Start Screen -->
+  <div class="screen active start-screen" id="startScreen">
+    <h1>Safetica Sale Quiz</h1>
+    <p>Bài kiểm tra 30 câu hỏi trắc nghiệm đánh giá năng lực tư vấn giải pháp Safetica DLP. <br>Hãy chứng minh bạn đã nắm vững giải pháp và biết cách xử lý từ chối (Objection Handling) của khách hàng.</p>
+    <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 8px; margin-bottom: 30px; display: inline-block; text-align: left;">
+      <ul style="color: var(--text-muted); font-size: 0.95rem; margin-left: 20px; line-height: 1.6;">
+        <li>Số lượng: <strong>30 câu hỏi</strong></li>
+        <li>Điều kiện Đạt (Pass): <strong>> 75% (Tối thiểu 23/30 câu)</strong></li>
+        <li>Nội dung: Tính năng, Gói cấp phép, Xử lý từ chối, Triển khai.</li>
+      </ul>
+    </div>
+    <br>
+    <button class="btn" onclick="startQuiz()">Bắt Đầu Ngay</button>
+  </div>
+
+  <!-- Question Screen -->
+  <div class="screen" id="quizScreen">
+    <div class="question-text" id="questionText">Nội dung câu hỏi...</div>
+    <div class="options-grid" id="optionsGrid">
+      <!-- Options injected by JS -->
+    </div>
+    <div class="explanation-box" id="explanationBox"></div>
+    <div class="quiz-footer">
+      <button class="btn" id="checkBtn" onclick="checkAnswer()" disabled>Kiểm Tra</button>
+      <button class="btn" id="nextBtn" onclick="nextQuestion()" style="display: none;">Tiếp Theo ➜</button>
+    </div>
+  </div>
+
+  <!-- Result Screen -->
+  <div class="screen result-screen" id="resultScreen">
+    <div class="result-circle" id="resultCircle">0%</div>
+    <div class="result-status" id="resultStatus">Hoàn Thành!</div>
+    <p id="resultMsg" style="color: var(--text-muted); margin-bottom: 20px;">Bạn đã trả lời đúng X/30 câu hỏi.</p>
+    
+    <button class="btn" onclick="location.reload()">Làm Lại Bài Kiểm Tra</button>
+
+    <div class="review-section" id="reviewSection" style="display: none;">
+      <h3 style="margin-bottom: 15px; color: var(--warning); border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">📋 Cần Ôn Tập Lại Các Câu Sau:</h3>
+      <div id="reviewContent"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const quizData = [
+    {
+      q: "Giải pháp Safetica định vị cốt lõi của mình trên thị trường là gì?",
+      options: [
+        "Chuyên về tường lửa và chống mã độc (Firewall & Antivirus)",
+        "Nền tảng Bảo mật Dữ liệu Thông minh kết hợp DLP và Quản lý rủi ro nội bộ (Insider Risk)",
+        "Chuyên về sao lưu và phục hồi dữ liệu (Backup & Recovery)",
+        "Nền tảng quản lý danh tính và quyền truy cập (IAM)"
+      ],
+      correct: 1,
+      rationale: "Safetica định hình là Intelligent Data Security, vượt qua DLP truyền thống bằng cách kết hợp Contextual Defense và quản lý rủi ro từ người dùng nội bộ."
+    },
+    {
+      q: "3 trụ cột công nghệ (USPs) tạo nên sức mạnh và sự khác biệt của Safetica là gì?",
+      options: [
+        "Zero Trust, Micro-segmentation, Threat Intelligence",
+        "Data Encryption, Tokenization, Data Masking",
+        "Smart Classification, Contextual Risk Analysis, Adaptive Security",
+        "Antivirus, Web Filtering, Application Control"
+      ],
+      correct: 2,
+      rationale: "Đây là 3 tính năng cốt lõi (USPs): Phân loại thông minh, Phân tích rủi ro theo ngữ cảnh, và Bảo mật thích ứng."
+    },
+    {
+      q: "Nhóm khách hàng mục tiêu lý tưởng nhất của Safetica là tổ chức có nhu cầu:",
+      options: [
+        "Chỉ cần phần mềm chặn web đen và diệt virus cho nhân viên.",
+        "Cần giám sát màn hình 24/7 và ghi âm mọi cuộc gọi của nhân viên.",
+        "Bảo vệ dữ liệu nhạy cảm (GDPR/ISO) nhưng KHÔNG muốn phá vỡ quy trình làm việc bình thường.",
+        "Cần giải pháp thay thế hoàn toàn cho Microsoft 365."
+      ],
+      correct: 2,
+      rationale: "Điểm bán hàng mạnh nhất của Safetica là khả năng bảo vệ dữ liệu nhưng không gây phiền toái, không làm gián đoạn (disrupting workflows) công việc hợp lệ của nhân viên."
+    },
+    {
+      q: "Gói bản quyền Safetica Essentials phù hợp nhất với kịch bản nào sau đây?",
+      options: [
+        "Khách hàng cần ngăn chặn tuyệt đối (Enforcement) việc sao chép dữ liệu bằng chính sách cứng.",
+        "Khách hàng cần phân tích hình ảnh (OCR) để tìm dữ liệu bị giấu.",
+        "Khách hàng doanh nghiệp mới bắt đầu làm quen DLP, chỉ cần tính năng Khám phá dữ liệu (Discovery) và Audit.",
+        "Khách hàng cần sử dụng lõi AI (Enhanced AI-core)."
+      ],
+      correct: 2,
+      rationale: "Gói Essentials là gói cơ bản nhất, dùng để đánh giá rủi ro (Audit) và Discovery, không bao gồm các tính năng Enforcement chuyên sâu."
+    },
+    {
+      q: "Tính năng nào sau đây KHÔNG có trong gói bản quyền Safetica Pro?",
+      options: [
+        "Công nghệ nhận diện quang học (OCR)",
+        "Tích hợp lõi AI nâng cao (Enhanced AI-core integration)",
+        "Kiểm soát ứng dụng và trang web (Web/App Control)",
+        "Bảo vệ Microsoft 365 và Cloud"
+      ],
+      correct: 1,
+      rationale: "Enhanced AI-core integration và các tuỳ chỉnh nâng cao chỉ có mặt ở gói cao cấp nhất là Premium."
+    },
+    {
+      q: "Thời gian lưu trữ dữ liệu (Retention) trên Cloud đối với gói Safetica Pro là bao lâu?",
+      options: ["6 tháng", "12 tháng", "18 tháng", "36+ tháng"],
+      correct: 2,
+      rationale: "Theo bảng Specs, gói Essentials lưu 6 tháng, Pro lưu 18 tháng, và Premium lưu từ 36 tháng trở lên."
+    },
+    {
+      q: "Đối với mô hình triển khai Safetica On-Premises, giới hạn lưu trữ log (Retention) là bao lâu?",
+      options: [
+        "Tối đa 6 tháng cho mọi gói.",
+        "Giới hạn cứng 36 tháng bất kể cấu hình.",
+        "Hoàn toàn phụ thuộc vào dung lượng máy chủ cơ sở dữ liệu (Database) của khách hàng.",
+        "Phụ thuộc vào gói bản quyền (Essentials/Pro/Premium)."
+      ],
+      correct: 2,
+      rationale: "Khi triển khai On-Premises, giới hạn lưu trữ phụ thuộc vào hạ tầng (Database capacity) do khách hàng tự trang bị."
+    },
+    {
+      q: "Tính năng Smart Classification (Phân loại thông minh) của Safetica hoạt động dựa trên tiêu chí nào?",
+      options: [
+        "Chỉ quét các file có đuôi mở rộng là .doc, .xls, .pdf.",
+        "Chỉ dựa vào dung lượng file (>10MB).",
+        "Người dùng phải tự gắn thẻ (tag) bằng tay cho từng file.",
+        "Tín hiệu ngữ cảnh, phân tích nội dung, nguồn gốc tệp và lịch sử ứng dụng."
+      ],
+      correct: 3,
+      rationale: "Smart Classification của Safetica rất thông minh vì nó kết hợp cả nội dung (content) và ngữ cảnh (context signals) thay vì chỉ dùng regex hay keyword truyền thống."
+    },
+    {
+      q: "Đánh giá rủi ro theo ngữ cảnh (Contextual Risk Analysis) trong Safetica chấm điểm rủi ro dựa vào:",
+      options: [
+        "Thời gian, điểm đến của dữ liệu, phương thức truyền tải và mức độ phân loại dữ liệu.",
+        "Chỉ dựa vào việc nhân viên đó làm việc ở phòng ban nào.",
+        "Dựa vào thương hiệu máy tính nhân viên đang sử dụng.",
+        "Dựa vào số lượng file bị xóa trong một ngày."
+      ],
+      correct: 0,
+      rationale: "Hệ thống chấm điểm rủi ro real-time dựa trên 4 yếu tố: Time, Destination, Method, và Classification."
+    },
+    {
+      q: "Khái niệm 'Adaptive Security' hay 'Dynamic Action' trong Safetica mang ý nghĩa gì?",
+      options: [
+        "Chặn hoàn toàn mạng Internet nếu phát hiện có USB cắm vào.",
+        "Sử dụng máy học (Machine Learning) theo dõi thói quen để tự động thắt chặt hoặc nới lỏng chính sách (từ Log -> Chặn) với từng User.",
+        "Tự động tải về và cài đặt các bản vá bảo mật của Windows.",
+        "Mã hóa toàn bộ ổ cứng máy trạm ngay khi cài đặt."
+      ],
+      correct: 1,
+      rationale: "Dynamic Action là khả năng 'nắn' chính sách theo hành vi thực tế của người dùng, giúp giảm False Positive và không gây ức chế cho nhân viên."
+    },
+    {
+      q: "Safetica Cloud Security bảo vệ dữ liệu cộng tác trên các nền tảng nào?",
+      options: [
+        "Chỉ Google Workspace.",
+        "Microsoft 365, OneDrive, SharePoint, Teams và Exchange Online.",
+        "Chỉ duy nhất trên các Server File Share nội bộ.",
+        "AWS S3 và Azure Blob Storage."
+      ],
+      correct: 1,
+      rationale: "Safetica có sự tích hợp cực mạnh mẽ với hệ sinh thái Microsoft (M365, Teams, SharePoint...)."
+    },
+    {
+      q: "Nếu nhân viên mang máy tính xách tay của công ty ra quán cafe (ngoài mạng LAN), chính sách Safetica có còn hiệu lực không?",
+      options: [
+        "Không, Safetica chỉ hoạt động khi kết nối chung mạng LAN với Server.",
+        "Có, nhưng bắt buộc nhân viên phải kết nối VPN về công ty.",
+        "Có, Safetica tự động áp dụng các kiểm soát bảo vệ ngay cả khi thiết bị nằm ngoài mạng tổ chức.",
+        "Có, nhưng chỉ có thể ghi log chứ không thể Block (chặn) được."
+      ],
+      correct: 2,
+      rationale: "Agent của Safetica hoạt động độc lập ở mức Endpoint, chính sách (Policies) luôn được áp dụng (Enforced) dù thiết bị ở bất kỳ đâu."
+    },
+    {
+      q: "Công nghệ OCR (Nhận diện quang học) trong Safetica giải quyết rủi ro gì?",
+      options: [
+        "Nhân viên gửi email mã độc.",
+        "Nhân viên sao chép tài liệu ra ổ cứng di động.",
+        "Rò rỉ dữ liệu nhạy cảm được ẩn giấu dưới dạng hình ảnh, ảnh chụp màn hình hoặc tài liệu scan.",
+        "Nhân viên chỉnh sửa file hệ thống của Windows."
+      ],
+      correct: 2,
+      rationale: "OCR quét sâu vào nội dung chữ bên trong các tệp hình ảnh để phát hiện số thẻ tín dụng, mã định danh bị chụp lại."
+    },
+    {
+      q: "Safetica có thể gửi cảnh báo thời gian thực (Real-time Alerts) qua các kênh nào cho Quản trị viên?",
+      options: [
+        "SMS và gọi điện tự động.",
+        "Chỉ qua màn hình cmd của Windows.",
+        "Email và hiển thị trực tiếp trên Safetica Maintenance Console.",
+        "Thông báo qua ứng dụng Zalo."
+      ],
+      correct: 2,
+      rationale: "Tính năng Alerts hỗ trợ cấu hình gửi ngay lập tức qua Email hoặc hiển thị noti trên Console của quản trị viên."
+    },
+    {
+      q: "Khi khách hàng hỏi: 'Safetica có tích hợp được với hệ thống SIEM hiện tại của bên anh không?', Sale trả lời thế nào?",
+      options: [
+        "Safetica là giải pháp độc lập, không hỗ trợ xuất log đi đâu cả.",
+        "Chỉ hỗ trợ tích hợp với giải pháp phần cứng của Cisco.",
+        "Có, Safetica tự động báo cáo sự cố đến các SIEM hàng đầu như Splunk, QRadar, LogRhythm, ArcSight.",
+        "Có, nhưng khách hàng phải mua thêm phần mềm trung gian giá rất đắt."
+      ],
+      correct: 2,
+      rationale: "Safetica hỗ trợ sẵn việc đẩy log/alert đến các nền tảng SIEM phổ biến để phục vụ việc giám sát SOC tập trung."
+    },
+    {
+      q: "Tính năng quản lý Ứng dụng & Trang web (App & Web Control) cho phép làm gì?",
+      options: [
+        "Đo lường thời gian nhân viên lướt Facebook để trừ lương.",
+        "Quản lý băng thông (QoS) cho toàn công ty.",
+        "Phân loại ứng dụng (VD: Zalo, Skype) và kiểm soát truy cập để áp dụng chính sách chặn rò rỉ dữ liệu qua các kênh này.",
+        "Chặn hoàn toàn Internet của máy trạm khi có cảnh báo."
+      ],
+      correct: 2,
+      rationale: "Tính năng này giúp thiết lập chính sách giới hạn việc sử dụng các phần mềm nhắn tin (Instant Messaging) hoặc web chia sẻ file để chống thất thoát dữ liệu."
+    },
+    {
+      q: "OBJECTION: Khách hàng yêu cầu: 'Giải pháp của em có ngăn chặn được nhân viên cố tình Xóa (Delete) file mật không?'",
+      options: [
+        "Có, mặc định Safetica sẽ chặn mọi hành vi Xóa file của người dùng.",
+        "Không, Safetica không chặn hành vi xóa file vì nó thuộc tính Khả dụng (Availability), không phải Data Loss.",
+        "Có, nhưng chỉ hỗ trợ chặn xóa file Word/Excel.",
+        "Không, vì luật pháp quốc tế cấm phần mềm can thiệp việc xóa file."
+      ],
+      correct: 1,
+      rationale: "Gartner định nghĩa DLP bảo vệ tính Bảo mật (Confidentiality). Việc xóa (Delete) thuộc về Availability. Hãng đã xác nhận Safetica không kiểm tra hay chặn tác vụ Delete."
+    },
+    {
+      q: "BATTLECARD: Để xử lý từ chối việc Safetica không chặn Xóa file, Sale nên tư vấn Workaround nào là chuẩn nhất (Best-practice)?",
+      options: [
+        "Khuyên khách hàng cài thêm một phần mềm Antivirus đắt tiền để khóa chức năng này.",
+        "Gợi ý khách hàng sử dụng tính năng File System Permissions (NTFS) của Windows/File Server để chặn quyền Delete ở lõi hệ điều hành.",
+        "Hứa hẹn rằng bản cập nhật tháng sau của Safetica sẽ có tính năng này.",
+        "Khuyên khách hàng tịch thu quyền Admin của tất cả nhân viên."
+      ],
+      correct: 1,
+      rationale: "Đây là cách 'lái' kỹ thuật tốt nhất. Dùng tính năng phân quyền có sẵn của Windows (NTFS Deny Delete) hiệu quả và ít tốn tài nguyên hệ thống nhất."
+    },
+    {
+      q: "Tính năng Dynamic Action (hành động động dựa trên AI) KHÔNG hỗ trợ áp dụng cho các kênh truyền tải nào?",
+      options: [
+        "Email, USB và Web Upload.",
+        "In ấn (Print), M365 file sharing, Copy Clipboard và Chụp màn hình (Screen Capture).",
+        "Chỉ không hỗ trợ cho các ứng dụng của Apple.",
+        "Không hỗ trợ cho các file có dung lượng trên 1GB."
+      ],
+      correct: 1,
+      rationale: "AI Dynamic Action rất mạnh nhưng hãng công bố giới hạn (Limitations) không áp dụng cho Print, Git, Clipboard và Screen Capture do bản chất giao thức."
+    },
+    {
+      q: "BATTLECARD: Quản trị viên phải xử lý thế nào để bảo vệ dữ liệu trên các kênh mà Dynamic Action không hỗ trợ (như Print, Clipboard)?",
+      options: [
+        "Bỏ qua và không áp dụng bất kỳ luật bảo vệ nào cho các kênh này.",
+        "Gửi email cảnh báo toàn công ty không được dùng máy in.",
+        "Áp dụng Strict Policy (Chính sách tĩnh tuyệt đối), thiết lập Block cứng hoặc Block with override cho các kênh này.",
+        "Mua thêm một phần mềm của hãng khác để kiểm soát máy in."
+      ],
+      correct: 2,
+      rationale: "Thay vì để AI dự đoán (có thể gây lỗi False Positive), best-practice là dùng luật chặn cứng (Strict Rules) cho Print và Clipboard để đảm bảo tuân thủ 100%."
+    },
+    {
+      q: "Safetica Client phiên bản 2025 có cải tiến gì đáng giá liên quan đến Antivirus?",
+      options: [
+        "Safetica tự động gỡ cài đặt mọi Antivirus khác trên máy.",
+        "Cải thiện khả năng tương thích, không còn dùng Certificates để loại trừ, giúp giảm xung đột với các trình diệt virus (Endpoint Protection).",
+        "Tích hợp sẵn bộ máy quét virus của Kaspersky.",
+        "Chạy ẩn hoàn toàn khiến Antivirus không thể phát hiện."
+      ],
+      correct: 1,
+      rationale: "Trong Changelog 2025, Safetica cải tiến lớn về Antivirus Compatibility (từ bản 11.23.4+), giúp hệ thống chạy mượt mà, bớt xung đột."
+    },
+    {
+      q: "Lỗi hiển thị giờ UTC khó chịu trong các báo cáo xuất ra (Exports) đã được xử lý như thế nào trong bản cập nhật Safetica 2025?",
+      options: [
+        "Vẫn chưa xử lý, người dùng tự cộng/trừ giờ.",
+        "Đã xử lý, dữ liệu xuất hiện nay hiển thị timestamp chuẩn theo múi giờ (Timezone) địa phương của người dùng.",
+        "Chỉ xử lý cho khách hàng mua gói Premium.",
+        "Safetica cấm xuất báo cáo Excel, chỉ cho xem trên Web."
+      ],
+      correct: 1,
+      rationale: "Theo bản cập nhật 11.8.5, Exports nay đã lấy detected timezone của người dùng thay vì giờ UTC mặc định."
+    },
+    {
+      q: "Safetica có thể tự động trích xuất và gửi báo cáo (Scheduled Reports) định kỳ qua Email cho ban giám đốc không?",
+      options: [
+        "Không, hệ thống chỉ hỗ trợ xem trực tiếp.",
+        "Có, hỗ trợ gửi báo cáo hàng ngày, hàng tuần hoặc hàng tháng dựa trên các Layout thiết lập sẵn.",
+        "Có, nhưng báo cáo chỉ có dạng thô (Raw CSV) rất khó đọc.",
+        "Chỉ gói Cloud mới có tính năng này, On-prem thì không."
+      ],
+      correct: 1,
+      rationale: "Safetica có module Reporting rất mạnh, tự động xuất báo cáo đẹp mắt theo chu kỳ (Daily/Weekly/Monthly) gửi thẳng vào email."
+    },
+    {
+      q: "Lợi thế lớn nhất khi chào mô hình triển khai Safetica Cloud (SaaS) là gì?",
+      options: [
+        "Khách hàng sở hữu toàn bộ Database SQL.",
+        "Không tốn chi phí/công sức thiết lập hạ tầng Server, thời gian Go-live dự án cực kỳ nhanh chóng.",
+        "Giá bản quyền rẻ hơn một nửa so với mua On-Premises.",
+        "Phần mềm Client nhẹ hơn 50% so với bản On-Premises."
+      ],
+      correct: 1,
+      rationale: "Mô hình SaaS giải phóng khách hàng khỏi gánh nặng mua sắm Server và vận hành Database."
+    },
+    {
+      q: "Khách hàng là Ngân hàng, có hệ thống mạng khép kín không kết nối Internet (Air-gapped) và quy định cấm đưa dữ liệu ra Cloud. Sale chào mô hình nào?",
+      options: [
+        "Safetica Cloud Essentials",
+        "Safetica Cloud Premium",
+        "Safetica On-Premises",
+        "Safetica Hybrid"
+      ],
+      correct: 2,
+      rationale: "On-Premises là lựa chọn bắt buộc cho các môi trường Air-gapped và yêu cầu Data Sovereignty (chủ quyền dữ liệu) tuyệt đối như khối Bank/Gov."
+    },
+    {
+      q: "Khách hàng muốn ngăn chặn nhân viên chụp màn hình (Screen Capture) các bản vẽ kỹ thuật mật. Safetica xử lý thế nào?",
+      options: [
+        "Tạo Data Policy và tick chọn 'Block screen capture' trong phần Options, hỗ trợ chặn hiệu quả.",
+        "Safetica không thể can thiệp vào tính năng chụp màn hình của Windows.",
+        "Khuyên khách hàng tịch thu điện thoại của nhân viên.",
+        "Chỉ gửi cảnh báo chứ hình ảnh vẫn bị lưu lại."
+      ],
+      correct: 0,
+      rationale: "Safetica hoàn toàn chặn được API chụp màn hình thông qua tuỳ chọn 'Block screen capture' trong cấu hình Policy."
+    },
+    {
+      q: "Khách hàng than phiền: 'DLP thường gây ra quá nhiều False Positive (cảnh báo nhầm) khiến nhân viên không làm việc được'. Điểm USP nào của Safetica giải quyết rào cản này?",
+      options: [
+        "Tính năng tự động tắt agent khi có cảnh báo.",
+        "Sự kết hợp giữa AI theo dõi ngữ cảnh hành vi (Contextual/Adaptive Security) và tùy chọn 'Block with override' giúp nhân viên tự xác nhận công việc hợp lệ.",
+        "Dùng chế độ Silent, giấu hoàn toàn các cảnh báo.",
+        "Bắt buộc IT phải phê duyệt thủ công mọi lệnh copy của nhân viên."
+      ],
+      correct: 1,
+      rationale: "Thay vì Block cứng mù quáng, Safetica học hành vi người dùng và cho phép cơ chế Override (nhân viên giải trình để đi tiếp) để workflow trơn tru."
+    },
+    {
+      q: "Trong quá trình tạo Data Policy, tại sao tính năng 'Destination types' lại quan trọng?",
+      options: [
+        "Để xác định thời gian nhân viên bật máy.",
+        "Để giới hạn luật chỉ áp dụng khi dữ liệu đi ra các điểm đến rủi ro (Ví dụ: USB, Webmail cá nhân) thay vì cấm copy nội bộ.",
+        "Để tính toán dung lượng mạng tiêu thụ.",
+        "Chỉ để cho có giao diện đẹp mắt."
+      ],
+      correct: 1,
+      rationale: "DLP hiện đại phải biết đích đến của dữ liệu là đâu (Destination). Copy ra USB cá nhân thì chặn, nhưng copy lên Share folder công ty thì cho phép."
+    },
+    {
+      q: "Đối với khách hàng Enterprise, cần tuân thủ nghiêm ngặt và yêu cầu lưu trữ Log trên Cloud ít nhất 3 năm để phục vụ Audit. Bắt buộc phải mua gói nào?",
+      options: [
+        "Essentials",
+        "Pro",
+        "Premium",
+        "Gói nào cũng được"
+      ],
+      correct: 2,
+      rationale: "Chỉ có gói Premium mới hỗ trợ Data Retention trên Cloud từ 36+ tháng (3 năm). Essentials là 6 tháng, Pro là 18 tháng."
+    },
+    {
+      q: "Lưu ý triển khai: Vì sao kỹ thuật KHÔNG BAO GIỜ được dùng bản cài đặt Client 11.23.4?",
+      options: [
+        "Vì bản đó giao diện quá cũ.",
+        "Vì bản 11.23.4 có lỗi nghiêm trọng về Network Integration (tích hợp mạng), luôn phải tư vấn dùng bản 11.23.6 trở lên.",
+        "Vì bản đó chỉ dành cho máy Mac.",
+        "Vì bản đó không có tiếng Anh."
+      ],
+      correct: 1,
+      rationale: "Đây là cảnh báo đỏ trong Changelog 2025. Bản 11.23.4 có Critical Bug, phải bypass và cài từ 11.23.6 trở đi."
+    }
+  ];
+
+  let currentQuestion = 0;
+  let score = 0;
+  let hasAnswered = false;
+  let wrongAnswers = [];
+
+  const startScreen = document.getElementById('startScreen');
+  const quizScreen = document.getElementById('quizScreen');
+  const resultScreen = document.getElementById('resultScreen');
+  const quizHeader = document.getElementById('quizHeader');
+  
+  const questionText = document.getElementById('questionText');
+  const optionsGrid = document.getElementById('optionsGrid');
+  const checkBtn = document.getElementById('checkBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const explanationBox = document.getElementById('explanationBox');
+  const progressBar = document.getElementById('progressBar');
+  
+  function startQuiz() {
+    startScreen.classList.remove('active');
+    quizHeader.style.display = 'flex';
+    quizScreen.classList.add('active');
+    document.getElementById('totalQ').innerText = quizData.length;
+    loadQuestion();
+  }
+
+  function loadQuestion() {
+    hasAnswered = false;
+    checkBtn.style.display = 'inline-block';
+    checkBtn.disabled = true;
+    nextBtn.style.display = 'none';
+    explanationBox.style.display = 'none';
+    
+    document.getElementById('currentQ').innerText = currentQuestion + 1;
+    progressBar.style.width = `${((currentQuestion) / quizData.length) * 100}%`;
+    
+    const qData = quizData[currentQuestion];
+    questionText.innerText = `Câu ${currentQuestion + 1}: ${qData.q}`;
+    
+    optionsGrid.innerHTML = '';
+    const letters = ['A', 'B', 'C', 'D'];
+    
+    qData.options.forEach((opt, index) => {
+      const div = document.createElement('div');
+      div.className = 'option';
+      div.onclick = () => selectOption(index, div);
+      div.innerHTML = `<div class="option-prefix">${letters[index]}</div><div>${opt}</div>`;
+      optionsGrid.appendChild(div);
+    });
+  }
+
+  let selectedOptionIdx = -1;
+  function selectOption(index, element) {
+    if (hasAnswered) return;
+    
+    const options = document.querySelectorAll('.option');
+    options.forEach(opt => opt.classList.remove('selected'));
+    
+    element.classList.add('selected');
+    selectedOptionIdx = index;
+    checkBtn.disabled = false;
+  }
+
+  function checkAnswer() {
+    if (selectedOptionIdx === -1 || hasAnswered) return;
+    hasAnswered = true;
+    
+    const qData = quizData[currentQuestion];
+    const options = document.querySelectorAll('.option');
+    
+    if (selectedOptionIdx === qData.correct) {
+      options[selectedOptionIdx].classList.add('correct-reveal');
+      score++;
+    } else {
+      options[selectedOptionIdx].classList.add('wrong-reveal');
+      options[qData.correct].classList.add('correct-reveal');
+      
+      wrongAnswers.push({
+        q: qData.q,
+        userAns: qData.options[selectedOptionIdx],
+        corrAns: qData.options[qData.correct]
+      });
+    }
+    
+    explanationBox.innerHTML = `<strong>Giải thích:</strong> ${qData.rationale}`;
+    explanationBox.style.display = 'block';
+    
+    checkBtn.style.display = 'none';
+    nextBtn.style.display = 'inline-block';
+  }
+
+  function nextQuestion() {
+    currentQuestion++;
+    if (currentQuestion < quizData.length) {
+      loadQuestion();
+    } else {
+      showResults();
+    }
+  }
+
+  function showResults() {
+    quizHeader.style.display = 'none';
+    quizScreen.classList.remove('active');
+    resultScreen.classList.add('active');
+    
+    const percentage = Math.round((score / quizData.length) * 100);
+    const circle = document.getElementById('resultCircle');
+    const status = document.getElementById('resultStatus');
+    const msg = document.getElementById('resultMsg');
+    
+    circle.innerText = `${percentage}%`;
+    msg.innerText = `Bạn đã trả lời đúng ${score}/${quizData.length} câu hỏi.`;
+    
+    if (percentage > 75) {
+      circle.classList.add('pass');
+      status.innerText = '🎉 PASS - XUẤT SẮC!';
+      status.className = 'result-status status-pass';
+    } else {
+      circle.classList.add('fail');
+      status.innerText = '⚠️ FAILED - CẦN ÔN TẬP THÊM';
+      status.className = 'result-status status-fail';
+    }
+
+    if (wrongAnswers.length > 0) {
+      document.getElementById('reviewSection').style.display = 'block';
+      const revContent = document.getElementById('reviewContent');
+      let html = '';
+      wrongAnswers.forEach((item, i) => {
+        html += `<div class="review-item">
+          <div class="review-q">${i+1}. ${item.q}</div>
+          <div class="review-ans">❌ Bạn chọn: ${item.userAns}</div>
+          <div class="review-corr">✅ Đáp án đúng: ${item.corrAns}</div>
+        </div>`;
+      });
+      revContent.innerHTML = html;
+    }
+  }
+</script>
+
+</body>
+</html>

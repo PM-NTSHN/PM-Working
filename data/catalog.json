@@ -1,0 +1,1492 @@
+{
+ "generatedAt": "2026-10-27T17:02:58.793Z",
+ "sections": [
+  {
+   "id": "bom",
+   "title": "Tool chạy BOM",
+   "short": "BOM",
+   "icon": "calculator",
+   "kind": "collection",
+   "locked": true,
+   "desc": "Bộ công cụ lên cấu hình & báo giá cho từng giải pháp. Nội dung được mã hóa AES-256, cần mở khóa bằng tài khoản PM."
+  },
+  {
+   "id": "dealreg",
+   "group": "Tổng hợp & Báo cáo",
+   "title": "Tổng hợp Dealreg",
+   "short": "Dealreg",
+   "icon": "handshake",
+   "kind": "app",
+   "desc": "Tổng hợp & phân tích Deal Registration (Base service) từ file Excel export.",
+   "tags": [
+    "Dealreg",
+    "Deal registration",
+    "Base",
+    "Đăng ký cơ hội"
+   ]
+  },
+  {
+   "id": "po",
+   "group": "Tổng hợp & Báo cáo",
+   "title": "Tổng hợp yêu cầu đặt hàng",
+   "short": "Đặt hàng (PO)",
+   "icon": "cart",
+   "kind": "app",
+   "desc": "Tổng hợp yêu cầu đặt hàng / PO, theo dõi trạng thái và xuất báo cáo Excel.",
+   "tags": [
+    "PO",
+    "Đặt hàng",
+    "Purchase order",
+    "Đơn hàng"
+   ]
+  },
+  {
+   "id": "crm",
+   "group": "Tổng hợp & Báo cáo",
+   "title": "Tổng hợp CRM",
+   "short": "CRM",
+   "icon": "chart",
+   "kind": "app",
+   "desc": "Tổng hợp cơ hội kinh doanh từ CRM: pipeline, dashboard và báo cáo.",
+   "tags": [
+    "CRM",
+    "Pipeline",
+    "Cơ hội",
+    "Deal",
+    "Khách hàng"
+   ]
+  },
+  {
+   "id": "kpi",
+   "group": "Tổng hợp & Báo cáo",
+   "title": "Tổng hợp KPI (HR)",
+   "short": "KPI",
+   "icon": "target",
+   "kind": "app",
+   "desc": "Tổng hợp & đánh giá KPI nhân sự (HCNS) từ file Excel.",
+   "tags": [
+    "KPI",
+    "HR",
+    "HCNS",
+    "Nhân sự",
+    "Đánh giá"
+   ]
+  },
+  {
+   "id": "sale-guide",
+   "group": "Kiến thức",
+   "title": "Sale Guide",
+   "short": "Sale Guide",
+   "icon": "book",
+   "kind": "sale-guide",
+   "desc": "Cẩm nang bán hàng, tài liệu nghiên cứu và bài kiểm tra theo hãng & dòng giải pháp."
+  },
+  {
+   "id": "update-solution",
+   "group": "Kiến thức",
+   "title": "Update Solution",
+   "short": "Update Solution",
+   "icon": "sparkles",
+   "kind": "collection",
+   "desc": "Cập nhật giải pháp, khung pháp lý và tiêu chuẩn kỹ thuật phục vụ tư vấn."
+  },
+  {
+   "id": "learning",
+   "group": "Kiến thức",
+   "title": "Learning Center",
+   "short": "Learning",
+   "icon": "graduation",
+   "kind": "collection",
+   "desc": "Các khóa học nội bộ: quản lý cấp trung, kỹ năng bán hàng B2B."
+  }
+ ],
+ "items": [
+  {
+   "id": "bom-kemp",
+   "section": "bom",
+   "title": "BOM Kemp LoadMaster",
+   "kind": "bom",
+   "src": "content/bom/kemp.bin",
+   "vendor": "Progress",
+   "product": "kemp",
+   "icon": "server",
+   "desc": "Lên cấu hình & báo giá Kemp LoadMaster (ADC / cân bằng tải).",
+   "tags": [
+    "Kemp",
+    "LoadMaster",
+    "ADC",
+    "Cân bằng tải",
+    "BOM"
+   ]
+  },
+  {
+   "id": "bom-ddos",
+   "section": "bom",
+   "title": "BOM Netscout DDoS",
+   "kind": "bom",
+   "src": "content/bom/netscout-ddos.bin",
+   "vendor": "NETSCOUT",
+   "product": "netscout-ddos",
+   "icon": "shield",
+   "desc": "Lên cấu hình & báo giá Netscout chống DDoS (gói 500M / 1G / 2G / 5G).",
+   "tags": [
+    "DDoS",
+    "Netscout",
+    "Arbor",
+    "Sightline",
+    "TMS",
+    "BOM"
+   ]
+  },
+  {
+   "id": "bom-wug",
+   "section": "bom",
+   "title": "BOM WhatsUp Gold",
+   "kind": "bom",
+   "src": "content/bom/whatsup-gold.bin",
+   "vendor": "Progress",
+   "product": "wug",
+   "icon": "activity",
+   "desc": "Lên cấu hình & báo giá WhatsUp Gold (giám sát hạ tầng mạng).",
+   "tags": [
+    "WhatsUp Gold",
+    "WUG",
+    "NPM",
+    "Giám sát mạng",
+    "BOM"
+   ]
+  },
+  {
+   "id": "bom-gtb",
+   "section": "bom",
+   "title": "BOM GTB",
+   "kind": "bom",
+   "status": "soon",
+   "vendor": "GTB",
+   "product": "gtb",
+   "icon": "lock",
+   "desc": "Lên cấu hình & báo giá GTB DLP.",
+   "tags": [
+    "GTB",
+    "DLP",
+    "BOM"
+   ]
+  },
+  {
+   "id": "bom-easynac",
+   "section": "bom",
+   "title": "BOM Easy NAC",
+   "kind": "bom",
+   "status": "soon",
+   "vendor": "InfoExpress",
+   "product": "easynac",
+   "icon": "network",
+   "desc": "Lên cấu hình & báo giá Easy NAC (InfoExpress).",
+   "tags": [
+    "Easy NAC",
+    "NAC",
+    "InfoExpress",
+    "BOM"
+   ]
+  },
+  {
+   "id": "us-khung-phap-ly-attt",
+   "section": "update-solution",
+   "title": "Khung pháp lý & tiêu chuẩn ATTT theo cấp độ",
+   "kind": "html",
+   "src": "content/update-solution/khung-phap-ly-attt.html",
+   "icon": "scale",
+   "type": "Infographic",
+   "desc": "Luật 86/2015, NĐ 85/2016, TT 12/2022, TCVN 11930:2017, CV 708 — mối quan hệ phân cấp và mốc thời gian.",
+   "tags": [
+    "Cấp độ",
+    "ATTT",
+    "Nghị định 85",
+    "Thông tư 12",
+    "TCVN 11930",
+    "Pháp lý",
+    "Đề án 06"
+   ]
+  },
+  {
+   "id": "lc-mmm",
+   "section": "learning",
+   "title": "Khóa học quản lý cấp trung (MMM)",
+   "kind": "external",
+   "src": "https://pm-ntshn.github.io/MMM-course/",
+   "repo": "MMM-course",
+   "icon": "users",
+   "type": "Khóa học",
+   "desc": "Chân dung quản lý cấp trung, quản trị thay đổi, quản trị đội ngũ, kiến tạo văn hóa — kèm bài test.",
+   "tags": [
+    "Quản lý cấp trung",
+    "Lãnh đạo",
+    "Quản trị đội ngũ",
+    "Văn hóa",
+    "Quản trị thay đổi"
+   ]
+  },
+  {
+   "id": "lc-b2b-sales",
+   "section": "learning",
+   "title": "B2B Sales Master — Kỹ năng bán hàng",
+   "kind": "html",
+   "src": "content/learning/b2b-sales-master.html",
+   "icon": "trophy",
+   "type": "Khóa học",
+   "desc": "Khóa học kỹ năng bán hàng B2B dành cho đội ngũ kinh doanh NTS Hà Nội.",
+   "tags": [
+    "Kỹ năng bán hàng",
+    "B2B",
+    "Sales",
+    "Đàm phán",
+    "Tư vấn"
+   ]
+  },
+  {
+   "id": "dealreg",
+   "section": "dealreg",
+   "kind": "external",
+   "title": "Tổng hợp Dealreg",
+   "src": "https://pm-ntshn.github.io/Tools-Dealreg/",
+   "repo": "Tools-Dealreg",
+   "desc": "Tổng hợp & phân tích Deal Registration (Base service) từ file Excel export.",
+   "tags": [
+    "Dealreg",
+    "Deal registration",
+    "Base",
+    "Đăng ký cơ hội"
+   ],
+   "icon": "handshake",
+   "app": true
+  },
+  {
+   "id": "po",
+   "section": "po",
+   "kind": "external",
+   "title": "Tổng hợp yêu cầu đặt hàng",
+   "src": "https://pm-ntshn.github.io/Tool_tonghop_PO/",
+   "repo": "Tool_tonghop_PO",
+   "desc": "Tổng hợp yêu cầu đặt hàng / PO, theo dõi trạng thái và xuất báo cáo Excel.",
+   "tags": [
+    "PO",
+    "Đặt hàng",
+    "Purchase order",
+    "Đơn hàng"
+   ],
+   "icon": "cart",
+   "app": true
+  },
+  {
+   "id": "crm",
+   "section": "crm",
+   "kind": "external",
+   "title": "Tổng hợp CRM",
+   "src": "https://pm-ntshn.github.io/Tool_CRM_v2/",
+   "repo": "Tool_CRM_v2",
+   "desc": "Tổng hợp cơ hội kinh doanh từ CRM: pipeline, dashboard và báo cáo.",
+   "tags": [
+    "CRM",
+    "Pipeline",
+    "Cơ hội",
+    "Deal",
+    "Khách hàng"
+   ],
+   "icon": "chart",
+   "app": true
+  },
+  {
+   "id": "kpi",
+   "section": "kpi",
+   "kind": "external",
+   "title": "Tổng hợp KPI (HR)",
+   "src": "https://pm-ntshn.github.io/HCNS-KPI/",
+   "repo": "HCNS-KPI",
+   "desc": "Tổng hợp & đánh giá KPI nhân sự (HCNS) từ file Excel.",
+   "tags": [
+    "KPI",
+    "HR",
+    "HCNS",
+    "Nhân sự",
+    "Đánh giá"
+   ],
+   "icon": "target",
+   "app": true
+  },
+  {
+   "id": "sg-delinea-delinea-secret-server-sale-playbook",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Cẩm Nang Giải Pháp Delinea Secret Server",
+   "src": "content/sale-guide/delinea/delinea-secret-server-sale-playbook.html",
+   "vendor": "Delinea",
+   "product": null,
+   "solution": "PAM — Secret Server",
+   "cat": "pam",
+   "type": "Cẩm nang bán hàng",
+   "tags": [
+    "PAM",
+    "Vault"
+   ]
+  },
+  {
+   "id": "sg-delinea-delinea-pam-sale-quiz",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Bài Kiểm Tra: Giải Pháp PAM Delinea (Dành Cho Sale)",
+   "src": "content/sale-guide/delinea/delinea-pam-sale-quiz.html",
+   "vendor": "Delinea",
+   "product": null,
+   "solution": "PAM — Secret Server",
+   "cat": "pam",
+   "type": "Bài kiểm tra",
+   "tags": [
+    "PAM",
+    "Quiz"
+   ]
+  },
+  {
+   "id": "sg-easy-nac-easy-nac-sale-guide",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Easy NAC — Sales Cheat Sheet",
+   "src": "content/sale-guide/easy-nac/easy-nac-sale-guide.html",
+   "vendor": "InfoExpress",
+   "product": "easynac",
+   "solution": "NAC — Network Access Control",
+   "cat": "nac",
+   "type": "Cẩm nang bán hàng",
+   "tags": [
+    "NAC",
+    "ARP Enforcement"
+   ]
+  },
+  {
+   "id": "sg-easy-nac-easy-nac-sale-quiz",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Easy NAC — Sales Assessment Quiz",
+   "src": "content/sale-guide/easy-nac/easy-nac-sale-quiz.html",
+   "vendor": "InfoExpress",
+   "product": "easynac",
+   "solution": "NAC — Network Access Control",
+   "cat": "nac",
+   "type": "Bài kiểm tra",
+   "tags": [
+    "NAC",
+    "Quiz"
+   ]
+  },
+  {
+   "id": "sg-gtb-gtb-dlp-research",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "GTB Technologies DLP — Nghiên Cứu Tổng Hợp Toàn Diện 2026",
+   "src": "content/sale-guide/gtb/gtb-dlp-research.html",
+   "vendor": "GTB",
+   "product": "gtb",
+   "solution": "DLP — Data Loss Prevention",
+   "cat": "dlp",
+   "type": "Nghiên cứu",
+   "tags": [
+    "DLP",
+    "Endpoint"
+   ]
+  },
+  {
+   "id": "sg-netscout-service-assurance-netscout-sa-research",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "NETSCOUT Service Assurance — Phân Tích Chuyên Sâu Toàn Diện",
+   "src": "content/sale-guide/netscout/service-assurance/netscout-sa-research.html",
+   "vendor": "NETSCOUT",
+   "product": null,
+   "solution": "Service Assurance — NPM",
+   "cat": "npm",
+   "type": "Nghiên cứu",
+   "tags": [
+    "NPM",
+    "nGeniusONE"
+   ]
+  },
+  {
+   "id": "sg-netscout-service-assurance-netscout-virtual-monitoring-presales",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "NETSCOUT — Giám sát Môi trường Ảo hoá | Tài liệu Presales",
+   "src": "content/sale-guide/netscout/service-assurance/netscout-virtual-monitoring-presales.html",
+   "vendor": "NETSCOUT",
+   "product": null,
+   "solution": "Service Assurance — NPM",
+   "cat": "npm",
+   "type": "Presales",
+   "tags": [
+    "vSTREAM",
+    "Virtual"
+   ]
+  },
+  {
+   "id": "sg-netscout-service-assurance-netscout-sa-presale-quiz",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Ôn tập Presale — Kiến trúc K8s, KlearSight, vSTREAM & Nguyên lý Giám sát",
+   "src": "content/sale-guide/netscout/service-assurance/netscout-sa-presale-quiz.html",
+   "vendor": "NETSCOUT",
+   "product": null,
+   "solution": "Service Assurance — NPM",
+   "cat": "npm",
+   "type": "Bài kiểm tra",
+   "tags": [
+    "K8s",
+    "KlearSight"
+   ]
+  },
+  {
+   "id": "sg-netscout-sightline-insight-netscout-sightline-insight",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "NETSCOUT Sightline Insight — Tài Liệu Thuyết Minh Chuyên Sâu",
+   "src": "content/sale-guide/netscout/sightline-insight/netscout-sightline-insight.html",
+   "vendor": "NETSCOUT",
+   "product": "netscout-ddos",
+   "solution": "Sightline Insight — DDoS",
+   "cat": "ddos",
+   "type": "Nghiên cứu",
+   "tags": [
+    "DDoS",
+    "Arbor"
+   ]
+  },
+  {
+   "id": "sg-netscout-sightline-tms-netscout-sightline-tms-analysis",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "NETSCOUT Arbor Sightline/TMS — Phân tích chuyên sâu cho Presales",
+   "src": "content/sale-guide/netscout/sightline-tms/netscout-sightline-tms-analysis.html",
+   "vendor": "NETSCOUT",
+   "product": "netscout-ddos",
+   "solution": "Sightline / TMS — DDoS",
+   "cat": "ddos",
+   "type": "Nghiên cứu",
+   "tags": [
+    "DDoS",
+    "TMS",
+    "Mitigation"
+   ]
+  },
+  {
+   "id": "sg-opentext-arcsight-esm-arcsight-esm-research",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "ArcSight ESM — Nghiên Cứu Toàn Diện | OpenText SIEM",
+   "src": "content/sale-guide/opentext/arcsight-esm/arcsight-esm-research.html",
+   "vendor": "OpenText",
+   "product": null,
+   "solution": "ArcSight ESM — SIEM",
+   "cat": "siem",
+   "type": "Nghiên cứu",
+   "tags": [
+    "SIEM",
+    "Correlation"
+   ]
+  },
+  {
+   "id": "sg-opentext-arcsight-esm-arcsight-esm-quiz-50q",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "ArcSight ESM — Bộ Câu Hỏi Kỹ Thuật 50 Câu",
+   "src": "content/sale-guide/opentext/arcsight-esm/arcsight-esm-quiz-50q.html",
+   "vendor": "OpenText",
+   "product": null,
+   "solution": "ArcSight ESM — SIEM",
+   "cat": "siem",
+   "type": "Bài kiểm tra",
+   "tags": [
+    "SIEM",
+    "50 câu"
+   ]
+  },
+  {
+   "id": "sg-opentext-data-protector-data-protector-study-guide",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "OpenText Data Protector — Tài liệu học",
+   "src": "content/sale-guide/opentext/data-protector/data-protector-study-guide.html",
+   "vendor": "OpenText",
+   "product": null,
+   "solution": "Data Protector — Backup",
+   "cat": "backup",
+   "type": "Nghiên cứu",
+   "tags": [
+    "Backup",
+    "Recovery"
+   ]
+  },
+  {
+   "id": "sg-opentext-data-protector-data-protector-quiz",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Data Protector — Bài kiểm tra kiến thức",
+   "src": "content/sale-guide/opentext/data-protector/data-protector-quiz.html",
+   "vendor": "OpenText",
+   "product": null,
+   "solution": "Data Protector — Backup",
+   "cat": "backup",
+   "type": "Bài kiểm tra",
+   "tags": [
+    "Backup",
+    "Quiz"
+   ]
+  },
+  {
+   "id": "sg-opentext-fortify-dast-fortify-dast-sale-guide",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Cẩm Nang DAST Fortify | OpenText — Hỗ Trợ Sale",
+   "src": "content/sale-guide/opentext/fortify-dast/fortify-dast-sale-guide.html",
+   "vendor": "OpenText",
+   "product": null,
+   "solution": "Fortify DAST — AppSec",
+   "cat": "appsec",
+   "type": "Cẩm nang bán hàng",
+   "tags": [
+    "DAST",
+    "AppSec"
+   ]
+  },
+  {
+   "id": "sg-opentext-fortify-dast-fortify-appsec-quiz-tech",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Fortify AppSec — Bài Kiểm Tra Kỹ Thuật",
+   "src": "content/sale-guide/opentext/fortify-dast/fortify-appsec-quiz-tech.html",
+   "vendor": "OpenText",
+   "product": null,
+   "solution": "Fortify DAST — AppSec",
+   "cat": "appsec",
+   "type": "Bài kiểm tra",
+   "tags": [
+    "DAST",
+    "Quiz"
+   ]
+  },
+  {
+   "id": "sg-opentext-fortify-sast-fortify-sast-sale-guide",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Cẩm Nang Sale | Fortify SAST — OpenText",
+   "src": "content/sale-guide/opentext/fortify-sast/fortify-sast-sale-guide.html",
+   "vendor": "OpenText",
+   "product": null,
+   "solution": "Fortify SAST — AppSec",
+   "cat": "appsec",
+   "type": "Cẩm nang bán hàng",
+   "tags": [
+    "SAST",
+    "AppSec"
+   ]
+  },
+  {
+   "id": "sg-opentext-fortify-sast-fortify-appsec-quiz-tech",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Fortify AppSec — Bài Kiểm Tra Kỹ Thuật",
+   "src": "content/sale-guide/opentext/fortify-sast/fortify-appsec-quiz-tech.html",
+   "vendor": "OpenText",
+   "product": null,
+   "solution": "Fortify SAST — AppSec",
+   "cat": "appsec",
+   "type": "Bài kiểm tra",
+   "tags": [
+    "SAST",
+    "Quiz"
+   ]
+  },
+  {
+   "id": "sg-opentext-voltage-voltage-research-study-guide",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "OpenText Voltage — Nghiên Cứu Chuyên Sâu Giải Pháp Bảo Mật Dữ Liệu",
+   "src": "content/sale-guide/opentext/voltage/voltage-research-study-guide.html",
+   "vendor": "OpenText",
+   "product": null,
+   "solution": "Voltage — Data Security",
+   "cat": "data",
+   "type": "Nghiên cứu",
+   "tags": [
+    "Encryption",
+    "Tokenization"
+   ]
+  },
+  {
+   "id": "sg-opentext-voltage-voltage-assessment",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "OpenText Voltage — Bộ Câu Hỏi Đánh Giá Chuyên Sâu",
+   "src": "content/sale-guide/opentext/voltage/voltage-assessment.html",
+   "vendor": "OpenText",
+   "product": null,
+   "solution": "Voltage — Data Security",
+   "cat": "data",
+   "type": "Bài kiểm tra",
+   "tags": [
+    "Voltage",
+    "Quiz"
+   ]
+  },
+  {
+   "id": "sg-opswat-diode-opswat-diode-bsg-sale-guide",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Cẩm Nang Giải Pháp: OPSWAT Optical Diode & BSG",
+   "src": "content/sale-guide/opswat/diode/opswat-diode-bsg-sale-guide.html",
+   "vendor": "OPSWAT",
+   "product": null,
+   "solution": "Optical Diode & BSG — OT Security",
+   "cat": "ot",
+   "type": "Cẩm nang bán hàng",
+   "tags": [
+    "Data Diode",
+    "OT"
+   ]
+  },
+  {
+   "id": "sg-opswat-diode-opswat-sales-quiz",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "OPSWAT Sales Assessment — NTS Hanoi",
+   "src": "content/sale-guide/opswat/diode/opswat-sales-quiz.html",
+   "vendor": "OPSWAT",
+   "product": null,
+   "solution": "Optical Diode & BSG — OT Security",
+   "cat": "ot",
+   "type": "Bài kiểm tra",
+   "tags": [
+    "OPSWAT",
+    "Quiz"
+   ]
+  },
+  {
+   "id": "sg-opswat-md-core-opswat-md-core-battlecard",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "OPSWAT MetaDefender Core — Battlecard",
+   "src": "content/sale-guide/opswat/md-core/opswat-md-core-battlecard.html",
+   "vendor": "OPSWAT",
+   "product": null,
+   "solution": "MetaDefender Core — CDR",
+   "cat": "cdr",
+   "type": "Cẩm nang bán hàng",
+   "tags": [
+    "CDR",
+    "Multiscanning"
+   ]
+  },
+  {
+   "id": "sg-opswat-md-core-opswat-md-core-quiz",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "OPSWAT MetaDefender Core — Kiểm tra Sales",
+   "src": "content/sale-guide/opswat/md-core/opswat-md-core-quiz.html",
+   "vendor": "OPSWAT",
+   "product": null,
+   "solution": "MetaDefender Core — CDR",
+   "cat": "cdr",
+   "type": "Bài kiểm tra",
+   "tags": [
+    "CDR",
+    "Quiz"
+   ]
+  },
+  {
+   "id": "sg-pentera-pentera-sale-playbook",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Pentera Platform — Unified Sales Playbook",
+   "src": "content/sale-guide/pentera/pentera-sale-playbook.html",
+   "vendor": "Pentera",
+   "product": null,
+   "solution": "ASV — Automated Security Validation",
+   "cat": "pentest",
+   "type": "Cẩm nang bán hàng",
+   "tags": [
+    "ASV",
+    "Pentest"
+   ]
+  },
+  {
+   "id": "sg-pentera-pentera-sale-quiz",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Sales Training Quiz — Pentera Automated Security Validation",
+   "src": "content/sale-guide/pentera/pentera-sale-quiz.html",
+   "vendor": "Pentera",
+   "product": null,
+   "solution": "ASV — Automated Security Validation",
+   "cat": "pentest",
+   "type": "Bài kiểm tra",
+   "tags": [
+    "ASV",
+    "Quiz"
+   ]
+  },
+  {
+   "id": "sg-progress-kemp-kemp-sale-guide",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Cẩm nang giải pháp KEMP hỗ trợ sale bán hàng",
+   "src": "content/sale-guide/progress/kemp/kemp-sale-guide.html",
+   "vendor": "Progress",
+   "product": "kemp",
+   "solution": "Kemp LoadMaster — ADC",
+   "cat": "adc",
+   "type": "Cẩm nang bán hàng",
+   "tags": [
+    "ADC",
+    "Load Balancer"
+   ]
+  },
+  {
+   "id": "sg-progress-kemp-kemp-sale-quiz",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Sales Training Quiz — Progress Kemp LoadMaster",
+   "src": "content/sale-guide/progress/kemp/kemp-sale-quiz.html",
+   "vendor": "Progress",
+   "product": "kemp",
+   "solution": "Kemp LoadMaster — ADC",
+   "cat": "adc",
+   "type": "Bài kiểm tra",
+   "tags": [
+    "ADC",
+    "Quiz"
+   ]
+  },
+  {
+   "id": "sg-progress-whatsup-gold-whatsup-gold-research",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "WhatsUp Gold — Nghiên Cứu Toàn Diện",
+   "src": "content/sale-guide/progress/whatsup-gold/whatsup-gold-research.html",
+   "vendor": "Progress",
+   "product": "wug",
+   "solution": "WhatsUp Gold — NPM",
+   "cat": "npm",
+   "type": "Nghiên cứu",
+   "tags": [
+    "NPM",
+    "Monitoring"
+   ]
+  },
+  {
+   "id": "sg-progress-whatsup-gold-whatsup-gold-sale-guide",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Cẩm nang giải pháp WhatsUp Gold hỗ trợ Sale bán hàng",
+   "src": "content/sale-guide/progress/whatsup-gold/whatsup-gold-sale-guide.html",
+   "vendor": "Progress",
+   "product": "wug",
+   "solution": "WhatsUp Gold — NPM",
+   "cat": "npm",
+   "type": "Cẩm nang bán hàng",
+   "tags": [
+    "NPM",
+    "Sale"
+   ]
+  },
+  {
+   "id": "sg-progress-whatsup-gold-whatsup-gold-sale-quiz",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Kiểm tra kiến thức WhatsUp Gold — Dành cho Sale & Tư vấn giải pháp",
+   "src": "content/sale-guide/progress/whatsup-gold/whatsup-gold-sale-quiz.html",
+   "vendor": "Progress",
+   "product": "wug",
+   "solution": "WhatsUp Gold — NPM",
+   "cat": "npm",
+   "type": "Bài kiểm tra",
+   "tags": [
+    "NPM",
+    "Quiz"
+   ]
+  },
+  {
+   "id": "sg-proofpoint-platform-proofpoint-sale-playbook",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Proofpoint Sales Playbook — Tài Liệu Dành Cho Sales",
+   "src": "content/sale-guide/proofpoint/platform/proofpoint-sale-playbook.html",
+   "vendor": "Proofpoint",
+   "product": null,
+   "solution": "Human-Centric Security — Platform",
+   "cat": "platform",
+   "type": "Cẩm nang bán hàng",
+   "tags": [
+    "Platform",
+    "Overview"
+   ]
+  },
+  {
+   "id": "sg-proofpoint-platform-proofpoint-sale-quiz",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Sales Training Quiz — Proofpoint Human-Centric Security",
+   "src": "content/sale-guide/proofpoint/platform/proofpoint-sale-quiz.html",
+   "vendor": "Proofpoint",
+   "product": null,
+   "solution": "Human-Centric Security — Platform",
+   "cat": "platform",
+   "type": "Bài kiểm tra",
+   "tags": [
+    "Platform",
+    "Quiz"
+   ]
+  },
+  {
+   "id": "sg-proofpoint-email-security-proofpoint-email-security-research",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Proofpoint Email Security — Nghiên Cứu Toàn Diện 2025",
+   "src": "content/sale-guide/proofpoint/email-security/proofpoint-email-security-research.html",
+   "vendor": "Proofpoint",
+   "product": null,
+   "solution": "Email Security",
+   "cat": "email",
+   "type": "Nghiên cứu",
+   "tags": [
+    "Email",
+    "Anti-Phishing"
+   ]
+  },
+  {
+   "id": "sg-proofpoint-email-security-proofpoint-email-security-sales-guide",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Proofpoint Email Security — Sales Guide 2025",
+   "src": "content/sale-guide/proofpoint/email-security/proofpoint-email-security-sales-guide.html",
+   "vendor": "Proofpoint",
+   "product": null,
+   "solution": "Email Security",
+   "cat": "email",
+   "type": "Cẩm nang bán hàng",
+   "tags": [
+    "Email",
+    "Sale"
+   ]
+  },
+  {
+   "id": "sg-proofpoint-email-security-proofpoint-email-security-quiz",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Proofpoint Email Security — Quiz Đánh Giá Sales & Pre-Sales",
+   "src": "content/sale-guide/proofpoint/email-security/proofpoint-email-security-quiz.html",
+   "vendor": "Proofpoint",
+   "product": null,
+   "solution": "Email Security",
+   "cat": "email",
+   "type": "Bài kiểm tra",
+   "tags": [
+    "Email",
+    "Quiz"
+   ]
+  },
+  {
+   "id": "sg-proofpoint-itm-dlp-proofpoint-dlp-itm-zenguide-sales",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Proofpoint — Sales Brief: DLP · ITM · ZenGuide",
+   "src": "content/sale-guide/proofpoint/itm-dlp/proofpoint-dlp-itm-zenguide-sales.html",
+   "vendor": "Proofpoint",
+   "product": null,
+   "solution": "ITM & DLP — Insider Threat",
+   "cat": "itm",
+   "type": "Cẩm nang bán hàng",
+   "tags": [
+    "ITM",
+    "DLP"
+   ]
+  },
+  {
+   "id": "sg-proofpoint-itm-dlp-proofpoint-itm-research-brief",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Product Research Brief — Proofpoint Insider Threat Management (ITM)",
+   "src": "content/sale-guide/proofpoint/itm-dlp/proofpoint-itm-research-brief.html",
+   "vendor": "Proofpoint",
+   "product": null,
+   "solution": "ITM & DLP — Insider Threat",
+   "cat": "itm",
+   "type": "Nghiên cứu",
+   "tags": [
+    "ITM",
+    "Research"
+   ]
+  },
+  {
+   "id": "sg-qualys-qualys-vmdr-sale-guide",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Qualys VMDR — Cẩm Nang Bán Hàng",
+   "src": "content/sale-guide/qualys/qualys-vmdr-sale-guide.html",
+   "vendor": "Qualys",
+   "product": null,
+   "solution": "VMDR — Vulnerability Management",
+   "cat": "vm",
+   "type": "Cẩm nang bán hàng",
+   "tags": [
+    "VMDR",
+    "Patch"
+   ]
+  },
+  {
+   "id": "sg-qualys-qualys-vmdr-sale-quiz",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Qualys VMDR — Sales Certification Quiz",
+   "src": "content/sale-guide/qualys/qualys-vmdr-sale-quiz.html",
+   "vendor": "Qualys",
+   "product": null,
+   "solution": "VMDR — Vulnerability Management",
+   "cat": "vm",
+   "type": "Bài kiểm tra",
+   "tags": [
+    "VMDR",
+    "Quiz"
+   ]
+  },
+  {
+   "id": "sg-safetica-safetica-dlp-sale-guide",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Safetica DLP — Cẩm Nang Bán Hàng Dành Cho Sale",
+   "src": "content/sale-guide/safetica/safetica-dlp-sale-guide.html",
+   "vendor": "Safetica",
+   "product": null,
+   "solution": "DLP — Data Loss Prevention",
+   "cat": "dlp",
+   "type": "Cẩm nang bán hàng",
+   "tags": [
+    "DLP",
+    "Insider Risk"
+   ]
+  },
+  {
+   "id": "sg-safetica-safetica-dlp-sale-quiz",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Safetica DLP — Sales Assessment Quiz",
+   "src": "content/sale-guide/safetica/safetica-dlp-sale-quiz.html",
+   "vendor": "Safetica",
+   "product": null,
+   "solution": "DLP — Data Loss Prevention",
+   "cat": "dlp",
+   "type": "Bài kiểm tra",
+   "tags": [
+    "DLP",
+    "Quiz"
+   ]
+  },
+  {
+   "id": "sg-secpod-secpod-sanernow-cam-nang-tu-van",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Cẩm Nang Tư Vấn — SecPod SanerNow CVEM",
+   "src": "content/sale-guide/secpod/secpod-sanernow-cam-nang-tu-van.html",
+   "vendor": "SecPod",
+   "product": null,
+   "solution": "SanerNow CVEM — Vulnerability Mgmt",
+   "cat": "vm",
+   "type": "Cẩm nang bán hàng",
+   "tags": [
+    "CVEM",
+    "Patch"
+   ]
+  },
+  {
+   "id": "sg-secpod-secpod-phan-tich-chuyen-sau",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Phân Tích Chuyên Sâu: Giải Pháp Dò Quét Lỗ Hổng Bảo Mật Mạng",
+   "src": "content/sale-guide/secpod/secpod-phan-tich-chuyen-sau.html",
+   "vendor": "SecPod",
+   "product": null,
+   "solution": "SanerNow CVEM — Vulnerability Mgmt",
+   "cat": "vm",
+   "type": "Nghiên cứu",
+   "tags": [
+    "CVEM",
+    "Research"
+   ]
+  },
+  {
+   "id": "sg-stellar-cyber-stellar-cyber-sale-guide",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Stellar Cyber — Sale Guide",
+   "src": "content/sale-guide/stellar-cyber/stellar-cyber-sale-guide.html",
+   "vendor": "Stellar Cyber",
+   "product": null,
+   "solution": "NG-SIEM / Open XDR",
+   "cat": "siem",
+   "type": "Cẩm nang bán hàng",
+   "tags": [
+    "Open XDR",
+    "NG-SIEM"
+   ]
+  },
+  {
+   "id": "sg-stellar-cyber-stellar-cyber-ngsiem-research",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Stellar Cyber NG-SIEM — Nghiên cứu chuyên sâu",
+   "src": "content/sale-guide/stellar-cyber/stellar-cyber-ngsiem-research.html",
+   "vendor": "Stellar Cyber",
+   "product": null,
+   "solution": "NG-SIEM / Open XDR",
+   "cat": "siem",
+   "type": "Nghiên cứu",
+   "tags": [
+    "NG-SIEM",
+    "Research"
+   ]
+  },
+  {
+   "id": "sg-stellar-cyber-stellar-cyber-sale-quiz",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Stellar Cyber — Bài Kiểm Tra Đánh Giá Năng Lực Sale",
+   "src": "content/sale-guide/stellar-cyber/stellar-cyber-sale-quiz.html",
+   "vendor": "Stellar Cyber",
+   "product": null,
+   "solution": "NG-SIEM / Open XDR",
+   "cat": "siem",
+   "type": "Bài kiểm tra",
+   "tags": [
+    "Open XDR",
+    "Quiz"
+   ]
+  }
+ ],
+ "vendors": [
+  {
+   "id": "progress",
+   "name": "Progress",
+   "solutions": [
+    "Kemp LoadMaster — ADC",
+    "WhatsUp Gold — NPM"
+   ],
+   "cats": [
+    "adc",
+    "npm"
+   ],
+   "count": 5
+  },
+  {
+   "id": "opentext",
+   "name": "OpenText",
+   "solutions": [
+    "ArcSight ESM — SIEM",
+    "Data Protector — Backup",
+    "Fortify DAST — AppSec",
+    "Fortify SAST — AppSec",
+    "Voltage — Data Security"
+   ],
+   "cats": [
+    "siem",
+    "backup",
+    "appsec",
+    "data"
+   ],
+   "count": 10
+  },
+  {
+   "id": "netscout",
+   "name": "NETSCOUT",
+   "solutions": [
+    "Service Assurance — NPM",
+    "Sightline Insight — DDoS",
+    "Sightline / TMS — DDoS"
+   ],
+   "cats": [
+    "npm",
+    "ddos"
+   ],
+   "count": 5
+  },
+  {
+   "id": "delinea",
+   "name": "Delinea",
+   "solutions": [
+    "PAM — Secret Server"
+   ],
+   "cats": [
+    "pam"
+   ],
+   "count": 2
+  },
+  {
+   "id": "infoexpress",
+   "name": "InfoExpress",
+   "solutions": [
+    "NAC — Network Access Control"
+   ],
+   "cats": [
+    "nac"
+   ],
+   "count": 2
+  },
+  {
+   "id": "gtb",
+   "name": "GTB",
+   "solutions": [
+    "DLP — Data Loss Prevention"
+   ],
+   "cats": [
+    "dlp"
+   ],
+   "count": 1
+  },
+  {
+   "id": "opswat",
+   "name": "OPSWAT",
+   "solutions": [
+    "Optical Diode & BSG — OT Security",
+    "MetaDefender Core — CDR"
+   ],
+   "cats": [
+    "ot",
+    "cdr"
+   ],
+   "count": 4
+  },
+  {
+   "id": "pentera",
+   "name": "Pentera",
+   "solutions": [
+    "ASV — Automated Security Validation"
+   ],
+   "cats": [
+    "pentest"
+   ],
+   "count": 2
+  },
+  {
+   "id": "proofpoint",
+   "name": "Proofpoint",
+   "solutions": [
+    "Human-Centric Security — Platform",
+    "Email Security",
+    "ITM & DLP — Insider Threat"
+   ],
+   "cats": [
+    "platform",
+    "email",
+    "itm"
+   ],
+   "count": 7
+  },
+  {
+   "id": "qualys",
+   "name": "Qualys",
+   "solutions": [
+    "VMDR — Vulnerability Management"
+   ],
+   "cats": [
+    "vm"
+   ],
+   "count": 2
+  },
+  {
+   "id": "safetica",
+   "name": "Safetica",
+   "solutions": [
+    "DLP — Data Loss Prevention"
+   ],
+   "cats": [
+    "dlp"
+   ],
+   "count": 2
+  },
+  {
+   "id": "secpod",
+   "name": "SecPod",
+   "solutions": [
+    "SanerNow CVEM — Vulnerability Mgmt"
+   ],
+   "cats": [
+    "vm"
+   ],
+   "count": 2
+  },
+  {
+   "id": "stellar-cyber",
+   "name": "Stellar Cyber",
+   "solutions": [
+    "NG-SIEM / Open XDR"
+   ],
+   "cats": [
+    "siem"
+   ],
+   "count": 3
+  }
+ ],
+ "cats": {
+  "pam": {
+   "label": "PAM / Quản trị đặc quyền",
+   "color": "#4da6ff",
+   "icon": "<rect x=\"4\" y=\"10.5\" width=\"16\" height=\"10\" rx=\"2\"/><path d=\"M8 10.5V7a4 4 0 0 1 8 0v3.5\"/><circle cx=\"12\" cy=\"15.5\" r=\"1.4\"/>"
+  },
+  "nac": {
+   "label": "NAC / Kiểm soát truy cập",
+   "color": "#38d9c4",
+   "icon": "<circle cx=\"12\" cy=\"12\" r=\"3\"/><circle cx=\"4\" cy=\"6\" r=\"2\"/><circle cx=\"20\" cy=\"6\" r=\"2\"/><circle cx=\"4\" cy=\"18\" r=\"2\"/><circle cx=\"20\" cy=\"18\" r=\"2\"/><path d=\"M6 7l3.5 3.5M18 7l-3.5 3.5M6 17l3.5-3.5M18 17l-3.5-3.5\"/>"
+  },
+  "dlp": {
+   "label": "DLP / Chống thất thoát dữ liệu",
+   "color": "#ffb454",
+   "icon": "<path d=\"M12 3l7.5 3v5.5c0 4.4-3 8.2-7.5 9.5-4.5-1.3-7.5-5.1-7.5-9.5V6z\"/><path d=\"M9.5 12h5M12 9.5v5\"/>"
+  },
+  "ddos": {
+   "label": "DDoS / Chống tấn công từ chối dịch vụ",
+   "color": "#ff7aa8",
+   "icon": "<path d=\"M12 3l7.5 3v5.5c0 4.4-3 8.2-7.5 9.5-4.5-1.3-7.5-5.1-7.5-9.5V6z\"/><path d=\"M12.8 8.5l-2.8 4h3l-1.2 3.5\"/>"
+  },
+  "npm": {
+   "label": "NPM / Giám sát hạ tầng mạng",
+   "color": "#7ee7c7",
+   "icon": "<path d=\"M3 15l4-5 3.5 3.5L15 6l6 9\"/><path d=\"M3 20h18\"/>"
+  },
+  "siem": {
+   "label": "SIEM / XDR / SOC",
+   "color": "#8b7cf6",
+   "icon": "<circle cx=\"12\" cy=\"12\" r=\"8.5\"/><circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M12 3.5v3M12 17.5v3M3.5 12h3M17.5 12h3\"/>"
+  },
+  "backup": {
+   "label": "Backup / Sao lưu phục hồi",
+   "color": "#5be0d0",
+   "icon": "<ellipse cx=\"12\" cy=\"6.5\" rx=\"7.5\" ry=\"3\"/><path d=\"M4.5 6.5v11c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3v-11\"/><path d=\"M4.5 12c0 1.7 3.4 3 7.5 3s7.5-1.3 7.5-3\"/>"
+  },
+  "appsec": {
+   "label": "AppSec / Bảo mật ứng dụng",
+   "color": "#ff8a5b",
+   "icon": "<path d=\"M8.5 8.5L5 12l3.5 3.5\"/><path d=\"M15.5 8.5L19 12l-3.5 3.5\"/><path d=\"M13.5 5.5l-3 13\"/>"
+  },
+  "data": {
+   "label": "Data Security / Mã hoá",
+   "color": "#c084fc",
+   "icon": "<circle cx=\"8.5\" cy=\"12\" r=\"3.5\"/><path d=\"M12 12h9\"/><path d=\"M17 12v3.5M20 12v2.5\"/>"
+  },
+  "ot": {
+   "label": "OT Security / Data Diode",
+   "color": "#f2c14e",
+   "icon": "<rect x=\"7.5\" y=\"7.5\" width=\"9\" height=\"9\" rx=\"1.5\"/><path d=\"M4 10h3.5M4 14h3.5M16.5 10H20M16.5 14H20M10 4v3.5M14 4v3.5M10 16.5V20M14 16.5V20\"/>"
+  },
+  "cdr": {
+   "label": "CDR / Chống mã độc file",
+   "color": "#4ade80",
+   "icon": "<path d=\"M13.5 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z\"/><path d=\"M13.5 3v5.5H19\"/><path d=\"M9.5 15.5l2 2 3.5-4\"/>"
+  },
+  "pentest": {
+   "label": "Pentest / Kiểm thử tấn công",
+   "color": "#fb7185",
+   "icon": "<circle cx=\"12\" cy=\"12\" r=\"8.5\"/><circle cx=\"12\" cy=\"12\" r=\"4.5\"/><circle cx=\"12\" cy=\"12\" r=\"1\"/><path d=\"M12 2v3M12 19v3M2 12h3M19 12h3\"/>"
+  },
+  "vm": {
+   "label": "Vulnerability / Quản trị lỗ hổng",
+   "color": "#60d394",
+   "icon": "<rect x=\"8\" y=\"8.5\" width=\"8\" height=\"9\" rx=\"4\"/><path d=\"M9.5 6.5l1.5 2M14.5 6.5L13 8.5\"/><path d=\"M4.5 11H8M16 11h3.5M4.5 15.5H8M16 15.5h3.5\"/>"
+  },
+  "adc": {
+   "label": "ADC / Cân bằng tải",
+   "color": "#38bdf8",
+   "icon": "<path d=\"M4 7h5l4 10h7\"/><path d=\"M4 17h5l2-5\"/><path d=\"M17 4l3 3-3 3\"/><path d=\"M17 14l3 3-3 3\"/>"
+  },
+  "email": {
+   "label": "Email Security",
+   "color": "#f472b6",
+   "icon": "<rect x=\"3\" y=\"5.5\" width=\"18\" height=\"13\" rx=\"2\"/><path d=\"M3.5 7l8.5 6 8.5-6\"/>"
+  },
+  "itm": {
+   "label": "Insider Threat / ITM",
+   "color": "#fbbf24",
+   "icon": "<circle cx=\"12\" cy=\"8\" r=\"3.5\"/><path d=\"M5.5 20c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5\"/>"
+  },
+  "platform": {
+   "label": "Nền tảng tổng thể",
+   "color": "#4da6ff",
+   "icon": "<rect x=\"3.5\" y=\"4\" width=\"7\" height=\"7\" rx=\"1.5\"/><rect x=\"13.5\" y=\"4\" width=\"7\" height=\"7\" rx=\"1.5\"/><rect x=\"3.5\" y=\"14\" width=\"7\" height=\"6\" rx=\"1.5\"/><rect x=\"13.5\" y=\"14\" width=\"7\" height=\"6\" rx=\"1.5\"/>"
+  }
+ },
+ "types": [
+  "Cẩm nang bán hàng",
+  "Nghiên cứu",
+  "Bài kiểm tra",
+  "Presales"
+ ],
+ "synonyms": [
+  [
+   "dlp",
+   "chống thất thoát dữ liệu",
+   "rò rỉ dữ liệu",
+   "data loss prevention",
+   "gtb",
+   "safetica"
+  ],
+  [
+   "nac",
+   "kiểm soát truy cập mạng",
+   "network access control",
+   "easy nac",
+   "infoexpress"
+  ],
+  [
+   "pam",
+   "quản trị đặc quyền",
+   "privileged access",
+   "secret server",
+   "delinea"
+  ],
+  [
+   "ddos",
+   "tấn công từ chối dịch vụ",
+   "sightline",
+   "arbor",
+   "tms"
+  ],
+  [
+   "npm",
+   "giám sát mạng",
+   "network monitoring",
+   "whatsup gold",
+   "wug"
+  ],
+  [
+   "adc",
+   "cân bằng tải",
+   "load balancer",
+   "kemp",
+   "loadmaster"
+  ],
+  [
+   "siem",
+   "soc",
+   "xdr",
+   "giám sát an ninh",
+   "arcsight",
+   "stellar"
+  ],
+  [
+   "bom",
+   "báo giá",
+   "cấu hình",
+   "bill of materials",
+   "sizing"
+  ],
+  [
+   "dealreg",
+   "deal registration",
+   "đăng ký cơ hội",
+   "base"
+  ],
+  [
+   "po",
+   "đặt hàng",
+   "đơn hàng",
+   "purchase order"
+  ],
+  [
+   "crm",
+   "cơ hội",
+   "pipeline",
+   "khách hàng"
+  ],
+  [
+   "kpi",
+   "đánh giá",
+   "hiệu suất",
+   "nhân sự",
+   "hr",
+   "hcns"
+  ],
+  [
+   "quiz",
+   "bài kiểm tra",
+   "trắc nghiệm",
+   "test"
+  ],
+  [
+   "appsec",
+   "bảo mật ứng dụng",
+   "sast",
+   "dast",
+   "fortify"
+  ],
+  [
+   "lỗ hổng",
+   "vulnerability",
+   "vmdr",
+   "qualys",
+   "secpod",
+   "sanernow"
+  ],
+  [
+   "backup",
+   "sao lưu",
+   "phục hồi",
+   "data protector"
+  ],
+  [
+   "email",
+   "thư điện tử",
+   "phishing",
+   "lừa đảo",
+   "proofpoint"
+  ],
+  [
+   "ot",
+   "data diode",
+   "công nghiệp",
+   "opswat"
+  ],
+  [
+   "cdr",
+   "mã độc",
+   "metadefender",
+   "file"
+  ],
+  [
+   "attt",
+   "an toàn thông tin",
+   "cấp độ",
+   "nghị định 85",
+   "thông tư 12",
+   "tcvn 11930"
+  ],
+  [
+   "bán hàng",
+   "sales",
+   "kỹ năng bán hàng",
+   "b2b",
+   "playbook",
+   "cẩm nang"
+  ],
+  [
+   "quản lý",
+   "lãnh đạo",
+   "quản lý cấp trung",
+   "mmm"
+  ],
+  [
+   "pentest",
+   "kiểm thử xâm nhập",
+   "pentera",
+   "security validation"
+  ],
+  [
+   "itm",
+   "insider threat",
+   "nội gián",
+   "zenguide"
+  ]
+ ]
+}

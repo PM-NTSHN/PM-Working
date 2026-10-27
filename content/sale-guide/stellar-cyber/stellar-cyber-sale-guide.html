@@ -1,0 +1,1346 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stellar Cyber — Sale Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #07101f;
+  --bg2: #0d1a30;
+  --bg3: #112240;
+  --accent: #00c4e8;
+  --accent2: #0090b8;
+  --orange: #f97316;
+  --green: #22c55e;
+  --yellow: #fbbf24;
+  --red: #ef4444;
+  --purple: #a855f7;
+  --text: #e2e8f0;
+  --text2: #94a3b8;
+  --text3: #4a6080;
+  --border: rgba(0,196,232,0.12);
+  --card: rgba(255,255,255,0.03);
+  --card-hover: rgba(0,196,232,0.06);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Be Vietnam Pro', sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+}
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 70% -10%, rgba(0,196,232,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 30% at -10% 80%, rgba(249,115,22,0.05) 0%, transparent 60%);
+  pointer-events: none; z-index: 0;
+}
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg2); }
+::-webkit-scrollbar-thumb { background: var(--accent2); border-radius: 2px; }
+#nav {
+  position: fixed; left: 0; top: 0; bottom: 0; width: 240px;
+  background: rgba(13,26,48,0.97);
+  border-right: 1px solid var(--border);
+  z-index: 100; overflow-y: auto;
+  display: flex; flex-direction: column;
+  padding: 20px 0;
+}
+.nav-brand { padding: 0 18px 18px; border-bottom: 1px solid var(--border); margin-bottom: 10px; }
+.nav-brand .tag { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--accent); letter-spacing: 3px; text-transform: uppercase; display: block; margin-bottom: 6px; }
+.nav-brand h2 { font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.4; }
+.nav-brand .sub { font-size: 10px; color: var(--text3); margin-top: 4px; }
+.nav-section-label { font-size: 9px; font-weight: 600; color: var(--text3); letter-spacing: 2px; text-transform: uppercase; padding: 12px 18px 4px; }
+#nav a { display: flex; align-items: flex-start; gap: 8px; padding: 7px 18px; text-decoration: none; color: var(--text2); font-size: 11.5px; font-weight: 400; border-left: 2px solid transparent; transition: all 0.15s; line-height: 1.4; }
+#nav a .ic { font-size: 12px; min-width: 16px; margin-top: 1px; opacity: 0.7; }
+#nav a:hover, #nav a.active { color: var(--accent); background: rgba(0,196,232,0.06); border-left-color: var(--accent); }
+#nav a.active .ic { opacity: 1; }
+#main { margin-left: 240px; position: relative; z-index: 1; }
+#hero { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; padding: 80px 64px 60px; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+.hero-eyebrow { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.hero-eyebrow span { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--accent); letter-spacing: 3px; text-transform: uppercase; }
+.hero-eyebrow::before { content: ''; width: 32px; height: 1px; background: var(--accent); }
+#hero h1 { font-size: clamp(32px, 4vw, 58px); font-weight: 800; line-height: 1.08; margin-bottom: 12px; }
+#hero h1 .line1 { display: block; color: var(--text); }
+#hero h1 .line2 { display: block; background: linear-gradient(90deg, var(--accent) 0%, #7dd3fc 60%, var(--orange) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.hero-desc { font-size: 15px; color: var(--text2); max-width: 520px; margin-bottom: 36px; font-weight: 300; }
+.hero-pills { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 40px; }
+.pill { padding: 5px 14px; border: 1px solid var(--border); border-radius: 20px; font-size: 11px; color: var(--text2); font-family: 'JetBrains Mono', monospace; background: var(--card); }
+.pill.hot { border-color: var(--accent); color: var(--accent); }
+.hero-kpi { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; max-width: 640px; }
+.kpi-cell { background: var(--bg2); padding: 16px 20px; }
+.kpi-num { font-family: 'JetBrains Mono', monospace; font-size: 22px; font-weight: 600; color: var(--accent); line-height: 1; }
+.kpi-label { font-size: 10px; color: var(--text3); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+section { padding: 64px; border-bottom: 1px solid var(--border); }
+section:nth-child(even) { background: rgba(13,26,48,0.4); }
+.section-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 32px; }
+.section-icon { width: 40px; height: 40px; background: rgba(0,196,232,0.1); border: 1px solid rgba(0,196,232,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.section-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: var(--accent); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 4px; }
+.section-title { font-size: 22px; font-weight: 700; color: var(--text); line-height: 1.2; }
+.section-desc { font-size: 13px; color: var(--text2); margin-top: 4px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 18px; transition: all 0.2s; }
+.card:hover { background: var(--card-hover); border-color: rgba(0,196,232,0.25); }
+.card-icon { font-size: 22px; margin-bottom: 10px; }
+.card h4 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.card p { font-size: 12px; color: var(--text2); line-height: 1.6; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.tag { padding: 3px 9px; border-radius: 4px; font-size: 10px; font-weight: 500; font-family: 'JetBrains Mono', monospace; }
+.tag-blue { background: rgba(0,196,232,0.12); color: var(--accent); border: 1px solid rgba(0,196,232,0.2); }
+.tag-orange { background: rgba(249,115,22,0.12); color: var(--orange); border: 1px solid rgba(249,115,22,0.2); }
+.tag-green { background: rgba(34,197,94,0.12); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
+.tag-purple { background: rgba(168,85,247,0.12); color: var(--purple); border: 1px solid rgba(168,85,247,0.2); }
+.tag-yellow { background: rgba(251,191,36,0.12); color: var(--yellow); border: 1px solid rgba(251,191,36,0.2); }
+.tag-red { background: rgba(239,68,68,0.12); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+.tbl-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+thead { background: var(--bg3); }
+th { padding: 11px 14px; text-align: left; font-size: 10px; font-weight: 600; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; border-bottom: 1px solid var(--border); white-space: nowrap; }
+td { padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text2); vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--card-hover); }
+td.hi { color: var(--accent); font-weight: 500; }
+td.ok { color: var(--green); }
+td.warn { color: var(--yellow); }
+td.bad { color: var(--red); }
+td.label { color: var(--text); font-weight: 600; }
+.law-box { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 14px; }
+.law-header { display: flex; align-items: center; gap: 12px; padding: 13px 18px; background: var(--bg3); }
+.law-badge { font-family: 'JetBrains Mono', monospace; font-size: 9px; padding: 3px 8px; border-radius: 4px; font-weight: 600; background: rgba(0,196,232,0.15); color: var(--accent); white-space: nowrap; }
+.law-header h4 { font-size: 13px; font-weight: 600; color: var(--text); flex: 1; }
+.law-body { padding: 16px 18px; font-size: 12px; color: var(--text2); line-height: 1.7; }
+.law-body ul { padding-left: 16px; }
+.law-body li { margin-bottom: 4px; }
+.callout { padding: 16px 20px; border-radius: 8px; border-left: 3px solid; margin: 16px 0; font-size: 13px; }
+.callout-info { background: rgba(0,196,232,0.07); border-color: var(--accent); color: var(--text2); }
+.callout-warn { background: rgba(251,191,36,0.07); border-color: var(--yellow); color: var(--text2); }
+.callout-green { background: rgba(34,197,94,0.07); border-color: var(--green); color: var(--text2); }
+.callout-red { background: rgba(239,68,68,0.07); border-color: var(--red); color: var(--text2); }
+.callout strong { color: var(--text); }
+.feat-list { display: flex; flex-direction: column; gap: 8px; }
+.feat-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; background: var(--card); border: 1px solid var(--border); border-radius: 8px; }
+.feat-item .fi-icon { font-size: 16px; min-width: 20px; margin-top: 1px; }
+.feat-item .fi-title { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+.feat-item .fi-desc { font-size: 11.5px; color: var(--text2); }
+.persona-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.persona-card { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.persona-head { padding: 16px; background: var(--bg3); display: flex; align-items: center; gap: 12px; }
+.persona-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.persona-name { font-size: 13px; font-weight: 700; color: var(--text); }
+.persona-role { font-size: 10px; color: var(--text3); }
+.persona-body { padding: 16px; }
+.persona-concern { font-size: 11px; color: var(--yellow); font-weight: 600; margin-bottom: 8px; }
+.persona-script { font-size: 11.5px; color: var(--text2); line-height: 1.6; border-left: 2px solid var(--accent); padding-left: 12px; margin-bottom: 10px; }
+.persona-hook { background: rgba(0,196,232,0.06); border-radius: 6px; padding: 10px 12px; font-size: 11px; color: var(--accent); font-style: italic; }
+.qa-item { border: 1px solid var(--border); border-radius: 8px; margin-bottom: 8px; overflow: hidden; }
+.qa-q { padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; background: var(--card); font-size: 13px; font-weight: 500; color: var(--text); transition: background 0.15s; }
+.qa-q:hover { background: var(--card-hover); }
+.qa-q .arr { color: var(--accent); font-size: 16px; transition: transform 0.2s; }
+.qa-q.open .arr { transform: rotate(45deg); }
+.qa-a { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; background: var(--bg2); }
+.qa-a-inner { padding: 14px 16px; font-size: 12.5px; color: var(--text2); line-height: 1.7; }
+.qa-a-inner ul { padding-left: 18px; }
+.qa-a-inner li { margin-bottom: 4px; }
+.qa-a-inner strong { color: var(--text); }
+.swot-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.swot-cell { border-radius: 10px; padding: 20px; border: 1px solid; }
+.swot-s { background: rgba(34,197,94,0.06); border-color: rgba(34,197,94,0.2); }
+.swot-w { background: rgba(251,191,36,0.06); border-color: rgba(251,191,36,0.2); }
+.swot-o { background: rgba(0,196,232,0.06); border-color: rgba(0,196,232,0.2); }
+.swot-t { background: rgba(239,68,68,0.06); border-color: rgba(239,68,68,0.2); }
+.swot-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.swot-s .swot-label { color: var(--green); }
+.swot-w .swot-label { color: var(--yellow); }
+.swot-o .swot-label { color: var(--accent); }
+.swot-t .swot-label { color: var(--red); }
+.swot-cell ul { padding-left: 16px; }
+.swot-cell li { font-size: 12px; color: var(--text2); margin-bottom: 5px; line-height: 1.5; }
+.rank-row { display: flex; align-items: center; gap: 14px; margin-bottom: 10px; }
+.rank-label { font-size: 12px; color: var(--text); min-width: 160px; font-weight: 500; }
+.rank-bar-bg { flex: 1; height: 8px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; }
+.rank-bar { height: 100%; border-radius: 4px; }
+.rank-score { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text3); min-width: 36px; text-align: right; }
+.ref-item { display: flex; gap: 12px; padding: 10px 14px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 11.5px; }
+.ref-item:last-child { border-bottom: none; }
+.ref-badge { font-family: 'JetBrains Mono', monospace; font-size: 9px; padding: 2px 7px; background: var(--bg3); color: var(--text3); border-radius: 4px; white-space: nowrap; align-self: flex-start; margin-top: 2px; }
+.ref-content { color: var(--text2); line-height: 1.5; }
+.ref-content strong { color: var(--text); }
+.nav-toggle { display: none; position: fixed; top: 14px; left: 14px; z-index: 200; width: 36px; height: 36px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; align-items: center; justify-content: center; font-size: 16px; color: var(--text); }
+@media (max-width: 900px) {
+  #nav { transform: translateX(-100%); transition: transform 0.3s; }
+  #nav.open { transform: translateX(0); }
+  #main { margin-left: 0; }
+  .nav-toggle { display: flex; }
+  section, #hero { padding: 48px 24px; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .persona-grid { grid-template-columns: 1fr; }
+  .swot-grid { grid-template-columns: 1fr; }
+  .hero-kpi { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<button class="nav-toggle" onclick="document.getElementById('nav').classList.toggle('open')">☰</button>
+<nav id="nav">
+  <div class="nav-brand">
+    <span class="tag">NTS Technology</span>
+    <h2>Stellar Cyber<br>Sale Guide</h2>
+    <div class="sub">Phiên bản 2026 · Tiếng Việt</div>
+  </div>
+  <div class="nav-section-label">Nội dung</div>
+  <a href="#s01"><span class="ic">⚖️</span> Khung pháp lý VN</a>
+  <a href="#s02"><span class="ic">🔥</span> Pain Points KH</a>
+  <a href="#s03"><span class="ic">🌐</span> Thị trường SIEM</a>
+  <a href="#s04"><span class="ic">🔧</span> Tính năng cơ bản SIEM</a>
+  <a href="#s05"><span class="ic">🏢</span> Giới thiệu Stellar</a>
+  <a href="#s06"><span class="ic">⚡</span> Tính năng Stellar</a>
+  <a href="#s07"><span class="ic">🤖</span> Điểm mạnh công nghệ</a>
+  <a href="#s08"><span class="ic">🏗️</span> Kiến trúc &amp; Triển khai</a>
+  <a href="#s09"><span class="ic">💰</span> License &amp; Sizing</a>
+  <a href="#s10"><span class="ic">🥇</span> Lợi thế cạnh tranh</a>
+  <a href="#s11"><span class="ic">🎯</span> Khách hàng mục tiêu</a>
+  <a href="#s12"><span class="ic">📊</span> Phân tích SWOT</a>
+  <a href="#s13"><span class="ic">💎</span> Lợi ích mang lại</a>
+  <a href="#s14"><span class="ic">🏆</span> Xếp hạng thị trường</a>
+  <a href="#s15"><span class="ic">💬</span> Tình huống thường gặp</a>
+  <a href="#s16"><span class="ic">📚</span> Tài liệu tham chiếu</a>
+</nav>
+<main id="main">
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-eyebrow"><span>Sale Guide · SIEM / Open XDR</span></div>
+  <h1><span class="line1">Stellar Cyber</span><span class="line2">NG-SIEM &amp; Open XDR</span></h1>
+  <p class="hero-desc">Tài liệu định hướng bán hàng dành cho đội ngũ Sale — nắm vững giải pháp, tự tin tư vấn khách hàng.</p>
+  <div class="hero-pills">
+    <span class="pill hot">NG-SIEM</span><span class="pill hot">Open XDR</span>
+    <span class="pill">NDR · UEBA · ITDR · SOAR</span>
+    <span class="pill">On-Prem / Cloud / Hybrid</span>
+    <span class="pill">Multi-Layer AI™</span>
+    <span class="pill">Gartner NDR Challenger 2025</span>
+  </div>
+  <div class="hero-kpi">
+    <div class="kpi-cell"><div class="kpi-num">16K+</div><div class="kpi-label">Tổ chức bảo vệ</div></div>
+    <div class="kpi-cell"><div class="kpi-num">80+</div><div class="kpi-label">Top 250 MSSP</div></div>
+    <div class="kpi-cell"><div class="kpi-num">600+</div><div class="kpi-label">Detections sẵn có</div></div>
+    <div class="kpi-cell"><div class="kpi-num">400%</div><div class="kpi-label">Giảm MTTR</div></div>
+  </div>
+</section>
+
+<!-- S01 KHUNG PHÁP LÝ -->
+<section id="s01">
+  <div class="section-header">
+    <div class="section-icon">⚖️</div>
+    <div class="section-title-block">
+      <div class="section-eyebrow">01 · Compliance</div>
+      <h2 class="section-title">Khung pháp lý &amp; yêu cầu tuân thủ tại Việt Nam</h2>
+      <p class="section-desc">Các quy định bắt buộc hoặc khuyến nghị trang bị SIEM/giám sát an toàn thông tin</p>
+    </div>
+  </div>
+  <div class="callout callout-warn"><strong>Lưu ý bán hàng:</strong> Pháp lý là "must-have driver" — khách hàng bị bắt buộc tuân thủ. Sử dụng các văn bản này để tạo urgency và justification ngân sách.</div>
+  <div class="law-box">
+    <div class="law-header"><span class="law-badge">TT 12/2022 + TT 31/2022 — Bộ TT&amp;TT</span><h4>Quy định về an toàn hệ thống thông tin theo cấp độ</h4></div>
+    <div class="law-body"><ul>
+      <li>Thông tư 12/2022/TT-BTTTT: Hệ thống cấp độ <strong>3, 4, 5 bắt buộc có giám sát ATTT tập trung</strong> (SOC/SIEM).</li>
+      <li>Thông tư 31/2022/TT-BTTTT: Quy định hoạt động giám sát an toàn không gian mạng — thu thập log, phân tích sự kiện, phát hiện sớm tấn công.</li>
+      <li><strong>Hầu hết cơ quan nhà nước, bộ ngành, tập đoàn lớn có hệ thống cấp độ 3+</strong> → bắt buộc phải có SIEM.</li>
+    </ul></div>
+  </div>
+  <div class="law-box">
+    <div class="law-header"><span class="law-badge">Luật ATTT 2015 + NĐ 13/2023</span><h4>Luật An toàn thông tin mạng &amp; Bảo vệ dữ liệu cá nhân (PDPD)</h4></div>
+    <div class="law-body"><ul>
+      <li>Nghị định 13/2023/NĐ-CP: Tổ chức phải có biện pháp kỹ thuật <strong>giám sát truy cập và phát hiện sự cố</strong> dữ liệu cá nhân.</li>
+      <li>SIEM cung cấp audit trail, log retention và alert khi có truy cập bất thường vào CSDL cá nhân.</li>
+    </ul></div>
+  </div>
+  <div class="law-box">
+    <div class="law-header"><span class="law-badge">Luật An ninh mạng 2018</span><h4>Bảo vệ hạ tầng quan trọng quốc gia</h4></div>
+    <div class="law-body"><ul>
+      <li>Cơ sở hạ tầng quan trọng (năng lượng, viễn thông, tài chính) phải triển khai <strong>hệ thống phát hiện và ứng phó sự cố</strong>.</li>
+      <li>Dữ liệu phải lưu trữ trong nước — SIEM On-Premises đáp ứng yêu cầu data sovereignty.</li>
+      <li>Yêu cầu báo cáo sự cố an ninh mạng trong vòng <strong>12 giờ</strong> lên cơ quan chức năng.</li>
+    </ul></div>
+  </div>
+  <div class="law-box">
+    <div class="law-header"><span class="law-badge">NHNN — Ngân hàng</span><h4>Quy định an toàn hệ thống thanh toán</h4></div>
+    <div class="law-body"><ul>
+      <li>Thông tư 09/2020/TT-NHNN: Ngân hàng bắt buộc có <strong>hệ thống giám sát, phát hiện bất thường</strong> trong giao dịch.</li>
+      <li>Yêu cầu <strong>lưu trữ log giao dịch tối thiểu 5 năm</strong>, phát hiện truy cập trái phép.</li>
+      <li>PCI DSS (cho ngân hàng phát hành thẻ quốc tế): Requirement 10 — Log monitoring hàng ngày bắt buộc.</li>
+    </ul></div>
+  </div>
+  <div class="law-box">
+    <div class="law-header"><span class="law-badge">Tiêu chuẩn quốc tế</span><h4>ISO 27001 · PCI DSS · GDPR (doanh nghiệp FDI)</h4></div>
+    <div class="law-body"><ul>
+      <li><strong>ISO 27001</strong>: Kiểm soát A.12.4 — Logging &amp; Monitoring bắt buộc với tổ chức được chứng nhận.</li>
+      <li><strong>PCI DSS v4.0</strong>: Req 10 — Log monitoring; Req 11.5 — Intrusion Detection.</li>
+      <li><strong>GDPR</strong>: Công ty VN xử lý dữ liệu công dân EU phải phát hiện và báo cáo breach trong <strong>72 giờ</strong>.</li>
+    </ul></div>
+  </div>
+  <div class="callout callout-green"><strong>💡 Câu chốt bán hàng:</strong> "Thưa anh/chị, hệ thống của quý đơn vị đang ở cấp độ mấy? Theo Thông tư 12 của Bộ TT&amp;TT, từ cấp độ 3 trở lên bắt buộc phải có hệ thống giám sát ATTT tập trung. Stellar Cyber đáp ứng đầy đủ yêu cầu này và còn vượt xa bằng AI."</div>
+</section>
+
+<!-- S02 PAIN POINTS -->
+<section id="s02">
+  <div class="section-header">
+    <div class="section-icon">🔥</div>
+    <div class="section-title-block">
+      <div class="section-eyebrow">02 · Market Need</div>
+      <h2 class="section-title">Pain Points thực tế của khách hàng</h2>
+      <p class="section-desc">Lý do khách hàng cần trang bị SIEM / Open XDR ngay hôm nay</p>
+    </div>
+  </div>
+  <div class="grid-2" style="margin-bottom:16px;">
+    <div class="card"><div class="card-icon">🚨</div><h4>Alert Overload — Bão cảnh báo</h4><p>Trung bình 4.484 cảnh báo/ngày. <strong style="color:var(--text)">67% không được xem xét</strong>. Analyst kiệt sức, bỏ lỡ mối đe dọa thực sự.</p></div>
+    <div class="card"><div class="card-icon">🔍</div><h4>Thiếu Visibility toàn diện</h4><p>Mỗi công cụ chỉ thấy một phần. Không có "single pane of glass". Blind spot với lateral movement trong mạng nội bộ.</p></div>
+    <div class="card"><div class="card-icon">⚙️</div><h4>Correlation thủ công tốn kém</h4><p>Analyst viết và duy trì hàng nghìn correlation rules. Dễ bỏ sót APT và tấn công phức tạp nhiều giai đoạn.</p></div>
+    <div class="card"><div class="card-icon">💸</div><h4>TCO cao, phức tạp nhiều vendor</h4><p>SIEM + SOAR + NDR + UEBA = 4–8 vendor riêng lẻ. License, tích hợp, training, support — chi phí vận hành không kiểm soát được.</p></div>
+    <div class="card"><div class="card-icon">🐢</div><h4>Response chậm — MTTR kéo dài</h4><p>Analyst phải tự chạy playbook thủ công. MTTR kéo dài hàng giờ đến hàng ngày. Thiệt hại tăng theo mỗi giờ chậm trễ.</p></div>
+    <div class="card"><div class="card-icon">👥</div><h4>Thiếu nhân lực chuyên môn</h4><p>Thiếu hụt 3,5 triệu chuyên gia ATTT toàn cầu. Đội SOC nhỏ phải làm việc của đội lớn.</p></div>
+    <div class="card"><div class="card-icon">📋</div><h4>Compliance ngày càng phức tạp</h4><p>TT 12/2022, NĐ 13/2023, NHNN, ISO 27001, PCI DSS — mỗi quy định cần reporting riêng. Legacy SIEM thiếu linh hoạt.</p></div>
+    <div class="card"><div class="card-icon">🔒</div><h4>Legacy SIEM lỗi thời</h4><p>Thiết kế cho thời đại log-centric. Không có AI native, không có NDR, tính phí per-GB gây "data-shaming", khó scale.</p></div>
+  </div>
+  <div class="callout callout-info"><strong>Con số thực tế:</strong> IBM Cost of Data Breach 2024 — Chi phí vi phạm dữ liệu trung bình <strong>$4,88 triệu/vụ</strong>. Một vụ tấn công thành công vào ngân hàng hoặc telco có thể gây thiệt hại hàng chục tỷ đồng và tổn hại uy tín khó phục hồi.</div>
+</section>
+
+<!-- S03 THỊ TRƯỜNG -->
+<section id="s03">
+  <div class="section-header">
+    <div class="section-icon">🌐</div>
+    <div class="section-title-block">
+      <div class="section-eyebrow">03 · Market Landscape</div>
+      <h2 class="section-title">Hiện trạng thị trường giải pháp SIEM</h2>
+      <p class="section-desc">Các hãng chính và vị thế trên thị trường</p>
+    </div>
+  </div>
+  <div class="tbl-wrap" style="margin-bottom:20px;">
+    <table>
+      <thead><tr><th>Hãng / Giải pháp</th><th>Phân khúc</th><th>Gartner MQ 2025</th><th>Mô hình</th><th>Điểm đặc trưng</th></tr></thead>
+      <tbody>
+        <tr><td class="label">Splunk Enterprise Security</td><td>Enterprise, Large</td><td class="ok">MQ Leader</td><td>On-Prem / Cloud</td><td>Log analytics mạnh; chi phí per-GB rất cao</td></tr>
+        <tr><td class="label">IBM QRadar SIEM</td><td>Enterprise, Gov</td><td class="warn">MQ (uncertain)</td><td>On-Prem / Cloud→Palo Alto</td><td>QRadar Cloud bị bán cho Palo Alto; roadmap không rõ</td></tr>
+        <tr><td class="label">Microsoft Sentinel</td><td>Azure ecosystem</td><td class="ok">MQ Leader</td><td>Cloud-only (Azure)</td><td>Tích hợp tốt với M365; phụ thuộc Azure hoàn toàn</td></tr>
+        <tr><td class="label">OpenText ArcSight</td><td>Enterprise, Legacy</td><td class="warn">Visionary (2022)</td><td>On-Prem</td><td>Kiến trúc legacy; phức tạp vận hành</td></tr>
+        <tr><td class="label">Palo Alto Cortex XSIAM</td><td>Enterprise</td><td class="ok">MQ Leader</td><td>Cloud SaaS</td><td>Mạnh với Palo Alto ecosystem; đắt tiền</td></tr>
+        <tr><td class="label">LogRhythm/Exabeam</td><td>Mid-Enterprise</td><td class="warn">MQ Challenger</td><td>On-Prem / Cloud</td><td>UEBA tốt; đã merge với Exabeam</td></tr>
+        <tr><td class="label">Graylog Security</td><td>SME, Cost-conscious</td><td class="bad">Không có</td><td>On-Prem / Cloud</td><td>Giá thấp; thiếu advanced AI và NDR</td></tr>
+        <tr><td class="hi label">✦ Stellar Cyber NG-SIEM</td><td class="hi">Mid-Enterprise, MSSP</td><td class="ok">NDR MQ Challenger ★</td><td class="hi">On-Prem / Cloud / Hybrid</td><td class="hi">All-in-one XDR native; Multi-Layer AI™; TCO thấp nhất</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout callout-warn"><strong>⚠️ Cơ hội từ QRadar:</strong> IBM đã bán QRadar Cloud SIEM cho Palo Alto. Khách hàng QRadar On-Prem đang bất định về roadmap. <strong>Đây là thời điểm lý tưởng tiếp cận và đề xuất migration sang Stellar Cyber.</strong></div>
+</section>
+
+<!-- S04 TÍNH NĂNG CƠ BẢN SIEM -->
+<section id="s04">
+  <div class="section-header">
+    <div class="section-icon">🔧</div>
+    <div class="section-title-block">
+      <div class="section-eyebrow">04 · SIEM Basics</div>
+      <h2 class="section-title">Các tính năng cơ bản của một giải pháp SIEM</h2>
+      <p class="section-desc">Để sale hiểu nền tảng, trả lời câu hỏi kỹ thuật cơ bản từ khách hàng</p>
+    </div>
+  </div>
+  <div class="grid-3">
+    <div class="card"><div class="card-icon">📥</div><h4>Log Collection &amp; Aggregation</h4><p>Thu thập log từ toàn bộ nguồn: server, endpoint, firewall, cloud, ứng dụng. Tập trung về một điểm duy nhất.</p></div>
+    <div class="card"><div class="card-icon">🔄</div><h4>Normalization &amp; Parsing</h4><p>Chuẩn hóa log từ nhiều định dạng (syslog, CEF, JSON...) sang ngôn ngữ chung để phân tích đồng nhất.</p></div>
+    <div class="card"><div class="card-icon">🔗</div><h4>Event Correlation</h4><p>Kết nối các sự kiện rời rạc từ nhiều nguồn theo thời gian để phát hiện tấn công nhiều bước.</p></div>
+    <div class="card"><div class="card-icon">🚨</div><h4>Alert &amp; Threat Detection</h4><p>Phát hiện mối đe dọa và tạo cảnh báo dựa trên rule, signature, hoặc AI/ML anomaly detection.</p></div>
+    <div class="card"><div class="card-icon">🗄️</div><h4>Log Storage &amp; Retention</h4><p>Lưu trữ log dài hạn (thường 1–3 năm) để phục vụ forensic, compliance audit và threat hunting.</p></div>
+    <div class="card"><div class="card-icon">📊</div><h4>Dashboards &amp; Reporting</h4><p>Hiển thị trực quan trạng thái an ninh, báo cáo sự cố, báo cáo compliance cho lãnh đạo.</p></div>
+    <div class="card"><div class="card-icon">🔍</div><h4>Threat Hunting &amp; Search</h4><p>Cho phép analyst chủ động tìm kiếm mối đe dọa ẩn chưa được phát hiện trong dữ liệu lịch sử.</p></div>
+    <div class="card"><div class="card-icon">📋</div><h4>Compliance Management</h4><p>Tự động map sự kiện với framework (ISO 27001, PCI DSS...) và tạo báo cáo audit sẵn sàng.</p></div>
+    <div class="card"><div class="card-icon">🤖</div><h4>Incident Response (SOAR)</h4><p>Tự động hóa hoặc hỗ trợ phản ứng sự cố: cô lập máy tính, chặn IP, reset tài khoản...</p></div>
+  </div>
+</section>
+
+<!-- S05 GIỚI THIỆU STELLAR -->
+<section id="s05">
+  <div class="section-header">
+    <div class="section-icon">🏢</div>
+    <div class="section-title-block">
+      <div class="section-eyebrow">05 · Company Overview</div>
+      <h2 class="section-title">Giới thiệu Stellar Cyber</h2>
+      <p class="section-desc">Từ Silicon Valley đến nền tảng Open XDR hàng đầu thế giới</p>
+    </div>
+  </div>
+  <div class="grid-2" style="margin-bottom:20px;">
+    <div>
+      <div class="feat-list">
+        <div class="feat-item"><div class="fi-icon">📍</div><div class="fi-body"><div class="fi-title">Trụ sở &amp; Định vị</div><div class="fi-desc">San Jose, California — Silicon Valley. Tiên phong công nghệ Open XDR. Định vị là "the illumination company" trong an ninh mạng.</div></div></div>
+        <div class="feat-item"><div class="fi-icon">🎯</div><div class="fi-body"><div class="fi-title">Sứ mệnh</div><div class="fi-desc">"Chiếu sáng những góc tối nhất trong vận hành bảo mật — giúp tổ chức nhìn thấy cuộc tấn công, biết cách chống lại và hành động quyết đoán."</div></div></div>
+        <div class="feat-item"><div class="fi-icon">💡</div><div class="fi-body"><div class="fi-title">Giải pháp cốt lõi</div><div class="fi-desc">Automation-Driven Open &amp; Unified SecOps Platform — nền tảng vận hành bảo mật mở, thống nhất, điều khiển bằng AI và tự động hóa.</div></div></div>
+        <div class="feat-item"><div class="fi-icon">🌍</div><div class="fi-body"><div class="fi-title">Quy mô hiện tại</div><div class="fi-desc">16.000+ tổ chức tại 50+ quốc gia. 80+ trong Top 250 MSSP toàn cầu tin dùng. Xử lý hàng trăm TB mỗi ngày.</div></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="callout callout-info" style="margin-bottom:12px;"><strong>NG-SIEM trong nền tảng Open XDR</strong><br>Không phải SIEM độc lập. NG-SIEM là native capability đi kèm <strong>NDR + UEBA + ITDR + IDS + FIM + SOAR + TIP</strong> trong <strong>một license duy nhất</strong>.</div>
+      <div style="border:1px solid var(--border); border-radius:10px; overflow:hidden;">
+        <div style="padding:11px 16px; background:var(--bg3); font-size:10px; color:var(--accent); font-weight:600; letter-spacing:1px;">MỘT PLATFORM — THAY THẾ 7+ GIẢI PHÁP</div>
+        <div style="padding:14px 16px; display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+          <div style="font-size:12px; color:var(--text2);">✦ NG-SIEM <span style="color:var(--text3)">← Splunk, QRadar</span></div>
+          <div style="font-size:12px; color:var(--text2);">✦ NDR <span style="color:var(--text3)">← Darktrace, ExtraHop</span></div>
+          <div style="font-size:12px; color:var(--text2);">✦ UEBA <span style="color:var(--text3)">← Exabeam</span></div>
+          <div style="font-size:12px; color:var(--text2);">✦ ITDR <span style="color:var(--text3)">← CrowdStrike Identity</span></div>
+          <div style="font-size:12px; color:var(--text2);">✦ IDS/Sandbox <span style="color:var(--text3)">← Snort/Cuckoo</span></div>
+          <div style="font-size:12px; color:var(--text2);">✦ FIM <span style="color:var(--text3)">← Tripwire</span></div>
+          <div style="font-size:12px; color:var(--text2);">✦ SOAR <span style="color:var(--text3)">← Palo Alto XSOAR</span></div>
+          <div style="font-size:12px; color:var(--text2);">✦ TIP <span style="color:var(--text3)">← ThreatConnect</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="border:1px solid var(--border); border-radius:10px; padding:20px; background:var(--card);">
+    <div style="font-size:11px; color:var(--text3); font-weight:600; letter-spacing:1px; margin-bottom:14px; text-transform:uppercase;">Khách hàng nói gì</div>
+    <div class="grid-3">
+      <div style="border-left:2px solid var(--accent); padding-left:12px;"><p style="font-size:12px; color:var(--text2); font-style:italic; margin-bottom:6px;">"Stellar Cyber là XDR hiệu quả nhất về chi phí, được hỗ trợ bởi AI."</p><p style="font-size:10px; color:var(--text3);">— Erwin Eimers, CISO Sumitomo Chemical</p></div>
+      <div style="border-left:2px solid var(--orange); padding-left:12px;"><p style="font-size:12px; color:var(--text2); font-style:italic; margin-bottom:6px;">"Multi-Layer AI™ mang lại tốc độ phát hiện và phản ứng nhanh hơn hàng bậc so với các sản phẩm khác."</p><p style="font-size:10px; color:var(--text3);">— Joshua Cole, CTO Assura Inc.</p></div>
+      <div style="border-left:2px solid var(--green); padding-left:12px;"><p style="font-size:12px; color:var(--text2); font-style:italic; margin-bottom:6px;">"Tôi mất chưa đến 1 ngày làm việc để cài đặt Stellar Cyber. Hệ thống cũ mất hơn 1 tuần."</p><p style="font-size:10px; color:var(--text3);">— INSOC (chuyển từ AlienVault)</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- S06 TÍNH NĂNG STELLAR -->
+<section id="s06">
+  <div class="section-header">
+    <div class="section-icon">⚡</div>
+    <div class="section-title-block">
+      <div class="section-eyebrow">06 · Product Features</div>
+      <h2 class="section-title">Tính năng giải pháp SIEM của Stellar Cyber</h2>
+      <p class="section-desc">Mức độ vừa đủ cho sale nắm để tư vấn khách hàng</p>
+    </div>
+  </div>
+  <div class="grid-2">
+    <div>
+      <div style="font-size:11px; font-weight:600; color:var(--accent); margin-bottom:10px; letter-spacing:1px; text-transform:uppercase;">Thu thập &amp; Chuẩn hóa</div>
+      <div class="feat-list">
+        <div class="feat-item"><div class="fi-icon">🖥️</div><div class="fi-body"><div class="fi-title">500+ Integrations sẵn có</div><div class="fi-desc">Endpoint (CrowdStrike, SentinelOne), Cloud (AWS, Azure, GCP, M365), Identity (AD, Okta), Network, Email, Syslog, API...</div></div></div>
+        <div class="feat-item"><div class="fi-icon">⚙️</div><div class="fi-body"><div class="fi-title">Auto Normalize &amp; Enrich</div><div class="fi-desc">Tự động chuẩn hóa sang ASIM/ECS, làm giàu với GeoIP, Threat Intel TRƯỚC khi lưu — nền tảng cho AI fidelity cao.</div></div></div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:11px; font-weight:600; color:var(--accent); margin-bottom:10px; letter-spacing:1px; text-transform:uppercase;">Phát hiện Mối đe dọa</div>
+      <div class="feat-list">
+        <div class="feat-item"><div class="fi-icon">🛡️</div><div class="fi-body"><div class="fi-title">600+ Built-in Detections</div><div class="fi-desc">Sẵn có từ ngày 1, không cần cấu hình. Align MITRE ATT&amp;CK — mọi alert tự động gắn technique/tactic.</div></div></div>
+        <div class="feat-item"><div class="fi-icon">🤖</div><div class="fi-body"><div class="fi-title">ML/DL Anomaly Detection</div><div class="fi-desc">Unsupervised ML phát hiện zero-day, unknown threats không cần viết rule. Supervised ML cho threats đã biết.</div></div></div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:11px; font-weight:600; color:var(--accent); margin-bottom:10px; letter-spacing:1px; text-transform:uppercase;">Case Management &amp; Response</div>
+      <div class="feat-list">
+        <div class="feat-item"><div class="fi-icon">📁</div><div class="fi-body"><div class="fi-title">Case-Centric AI Approach</div><div class="fi-desc">AI nhóm tự động hàng nghìn alerts thành vài chục cases/ngày. Giảm 8X khối lượng công việc analyst.</div></div></div>
+        <div class="feat-item"><div class="fi-icon">⚡</div><div class="fi-body"><div class="fi-title">Automated Response + Agentic AI</div><div class="fi-desc">One-click hoặc fully automated response. GenAI Playbooks tự điều chỉnh theo context. Phishing auto-triage vài phút.</div></div></div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:11px; font-weight:600; color:var(--accent); margin-bottom:10px; letter-spacing:1px; text-transform:uppercase;">Threat Hunting &amp; Compliance</div>
+      <div class="feat-list">
+        <div class="feat-item"><div class="fi-icon">💬</div><div class="fi-body"><div class="fi-title">AI Investigator (NLP Query)</div><div class="fi-desc">Hỏi bằng tiếng Anh tự nhiên: "Show incidents where data was exported 12–9AM". Không cần biết query syntax.</div></div></div>
+        <div class="feat-item"><div class="fi-icon">📋</div><div class="fi-body"><div class="fi-title">Compliance Out-of-the-Box</div><div class="fi-desc">GDPR, PCI DSS, ISO 27001, HIPAA, SOX, NIST, NIS2 sẵn có. Báo cáo đẹp, tự động theo lịch, tùy chỉnh logo.</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S07 ĐIỂM MẠNH CÔNG NGHỆ -->
+<section id="s07">
+  <div class="section-header">
+    <div class="section-icon">🤖</div>
+    <div class="section-title-block">
+      <div class="section-eyebrow">07 · Technology Edge</div>
+      <h2 class="section-title">Điểm mạnh công nghệ — Multi-Layer AI™</h2>
+      <p class="section-desc">Công nghệ độc quyền tạo ra sự khác biệt không thể bắt chước</p>
+    </div>
+  </div>
+  <div style="border:1px solid var(--border); border-radius:12px; overflow:hidden; margin-bottom:20px;">
+    <div style="padding:13px 20px; background:var(--bg3); font-size:11px; font-weight:600; color:var(--accent); letter-spacing:1px;">MULTI-LAYER AI™ — 6 LỚP AI HOẠT ĐỘNG SONG SONG</div>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--border);">
+      <div style="background:var(--bg2); padding:16px 18px;"><div style="font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--text3); margin-bottom:6px;">L1</div><div style="font-size:12px; font-weight:600; color:var(--text); margin-bottom:4px;">Normalization AI</div><div style="font-size:11px; color:var(--text2);">Chuẩn hóa &amp; làm giàu data TRƯỚC khi lưu — nền tảng cho AI fidelity cao</div></div>
+      <div style="background:var(--bg2); padding:16px 18px;"><div style="font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--text3); margin-bottom:6px;">L2</div><div style="font-size:12px; font-weight:600; color:var(--text); margin-bottom:4px;">ML/DL Detection</div><div style="font-size:11px; color:var(--text2);">Supervised + Unsupervised ML. Phát hiện zero-day không cần viết rule</div></div>
+      <div style="background:var(--bg2); padding:16px 18px;"><div style="font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--accent); margin-bottom:6px;">L3 ★ UNIQUE</div><div style="font-size:12px; font-weight:600; color:var(--accent); margin-bottom:4px;">GraphML Correlation</div><div style="font-size:11px; color:var(--text2);">Graph Neural Network độc quyền. Kết nối attack chain phức tạp tự động trong seconds</div></div>
+      <div style="background:var(--bg2); padding:16px 18px;"><div style="font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--text3); margin-bottom:6px;">L4</div><div style="font-size:12px; font-weight:600; color:var(--text); margin-bottom:4px;">Predictive AI</div><div style="font-size:11px; color:var(--text2);">Dự báo mối đe dọa mới; giảm 40–70% false positives so với signature-based</div></div>
+      <div style="background:var(--bg2); padding:16px 18px;"><div style="font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--text3); margin-bottom:6px;">L5</div><div style="font-size:12px; font-weight:600; color:var(--text); margin-bottom:4px;">GenAI / LLM</div><div style="font-size:11px; color:var(--text2);">AI Investigator — hỏi tiếng Anh tự nhiên; tóm tắt case; tạo threat narrative</div></div>
+      <div style="background:var(--bg2); padding:16px 18px;"><div style="font-family:'JetBrains Mono',monospace; font-size:9px; color:var(--text3); margin-bottom:6px;">L6</div><div style="font-size:12px; font-weight:600; color:var(--text); margin-bottom:4px;">Agentic AI</div><div style="font-size:11px; color:var(--text2);">AI agents tự động triage, điều tra, quyết định response. Người chỉ cần approve</div></div>
+    </div>
+  </div>
+  <div class="callout callout-green"><strong>Câu nói đơn giản cho C-level:</strong> "GraphML là AI 'nhìn mạng như nhìn bản đồ tấn công' — kết nối tự động các sự kiện rời rạc thành bức tranh tấn công hoàn chỉnh trong seconds. Không hãng SIEM nào khác có công nghệ này native."</div>
+</section>
+
+<!-- S08: KIẾN TRÚC & TRIỂN KHAI -->
+<section id="s08">
+  <div class="section-label">08</div>
+  <h2>Kiến Trúc & Triển Khai</h2>
+  <p class="lead">Stellar Cyber được thiết kế theo kiến trúc module, có thể triển khai trên bất kỳ môi trường nào — on-prem, cloud, hybrid hoặc air-gapped — mà không cần thay đổi kiến trúc bảo mật cốt lõi.</p>
+
+  <h3>Kiến Trúc 5 Lớp</h3>
+  <div style="display:grid; gap:3px; margin-bottom:28px;">
+    <div style="display:flex; align-items:center; background:linear-gradient(90deg,#0f2a3f,#0a1929); border-left:4px solid #00c4e8; padding:14px 18px; border-radius:4px;">
+      <div style="width:32px; height:32px; background:#00c4e8; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:#07101f; margin-right:14px; flex-shrink:0;">1</div>
+      <div><strong style="color:#00c4e8;">Data Collectors / Sensors</strong> <span style="color:var(--text2); margin-left:8px;">— 500+ connectors: agents, syslog, API, cloud, flow, PCAP</span></div>
+    </div>
+    <div style="display:flex; align-items:center; background:linear-gradient(90deg,#0f2a3f,#0a1929); border-left:4px solid #7c3aed; padding:14px 18px; border-radius:4px;">
+      <div style="width:32px; height:32px; background:#7c3aed; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; margin-right:14px; flex-shrink:0;">2</div>
+      <div><strong style="color:#a78bfa;">Stellar Ingestor</strong> <span style="color:var(--text2); margin-left:8px;">— Parse, normalize, enrich → định dạng chuẩn Schema 1000+</span></div>
+    </div>
+    <div style="display:flex; align-items:center; background:linear-gradient(90deg,#0f2a3f,#0a1929); border-left:4px solid #f97316; padding:14px 18px; border-radius:4px;">
+      <div style="width:32px; height:32px; background:#f97316; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; margin-right:14px; flex-shrink:0;">3</div>
+      <div><strong style="color:#fb923c;">Multi-Layer AI™ Engine</strong> <span style="color:var(--text2); margin-left:8px;">— ML, DL, GraphML, Predictive, GenAI, Agentic AI chạy song song</span></div>
+    </div>
+    <div style="display:flex; align-items:center; background:linear-gradient(90deg,#0f2a3f,#0a1929); border-left:4px solid #10b981; padding:14px 18px; border-radius:4px;">
+      <div style="width:32px; height:32px; background:#10b981; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; margin-right:14px; flex-shrink:0;">4</div>
+      <div><strong style="color:#34d399;">Case Manager / SOAR</strong> <span style="color:var(--text2); margin-left:8px;">— Tự động tạo case, correlation, playbook response</span></div>
+    </div>
+    <div style="display:flex; align-items:center; background:linear-gradient(90deg,#0f2a3f,#0a1929); border-left:4px solid #f59e0b; padding:14px 18px; border-radius:4px;">
+      <div style="width:32px; height:32px; background:#f59e0b; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; margin-right:14px; flex-shrink:0;">5</div>
+      <div><strong style="color:#fbbf24;">Portal / Dashboard</strong> <span style="color:var(--text2); margin-left:8px;">— Single pane of glass: alert, investigation, reporting, threat hunt</span></div>
+    </div>
+  </div>
+
+  <h3>4 Phương Thức Triển Khai</h3>
+  <div class="card-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+    <div class="card">
+      <div style="font-size:28px; margin-bottom:8px;">🏢</div>
+      <div class="card-title">On-Premises</div>
+      <div style="font-size:12px; color:var(--text2); margin-bottom:10px;">VM hoặc hardware appliance tại datacenter khách hàng</div>
+      <div style="font-size:11px; color:var(--accent);">⏱ 4–8 tuần</div>
+      <div style="font-size:11px; color:var(--text3); margin-top:4px;">Phù hợp: Gov, Ngân hàng, Telco</div>
+    </div>
+    <div class="card">
+      <div style="font-size:28px; margin-bottom:8px;">☁️</div>
+      <div class="card-title">SaaS Cloud</div>
+      <div style="font-size:12px; color:var(--text2); margin-bottom:10px;">Stellar Cyber quản lý hoàn toàn, khách hàng chỉ cần cấu hình collector</div>
+      <div style="font-size:11px; color:var(--accent);">⏱ 2–4 tuần</div>
+      <div style="font-size:11px; color:var(--text3); margin-top:4px;">Phù hợp: SME, MSSP nhanh</div>
+    </div>
+    <div class="card">
+      <div style="font-size:28px; margin-bottom:8px;">🔀</div>
+      <div class="card-title">Hybrid</div>
+      <div style="font-size:12px; color:var(--text2); margin-bottom:10px;">Collector on-prem, AI engine và storage trên cloud</div>
+      <div style="font-size:11px; color:var(--accent);">⏱ 3–6 tuần</div>
+      <div style="font-size:11px; color:var(--text3); margin-top:4px;">Phù hợp: Đa chi nhánh, tối ưu chi phí</div>
+    </div>
+    <div class="card">
+      <div style="font-size:28px; margin-bottom:8px;">🔒</div>
+      <div class="card-title">Air-Gapped</div>
+      <div style="font-size:12px; color:var(--text2); margin-bottom:10px;">Hardware appliance hoàn toàn offline, không kết nối internet</div>
+      <div style="font-size:11px; color:var(--accent);">⏱ 6–10 tuần</div>
+      <div style="font-size:11px; color:var(--text3); margin-top:4px;">Phù hợp: Cơ sở hạ tầng quan trọng quốc gia</div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:28px;">6 Bước Triển Khai Thực Tế</h3>
+  <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:12px;">
+    <div style="display:flex; gap:12px; align-items:flex-start; padding:14px; background:var(--bg2); border-radius:8px;">
+      <div style="width:28px; height:28px; background:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:#07101f; font-size:12px; flex-shrink:0;">W1</div>
+      <div><strong style="font-size:13px;">Planning & Sizing</strong><div style="font-size:11px; color:var(--text2); margin-top:3px;">Inventory assets, tính GB/day, chọn deployment model, cấu hình hạ tầng</div></div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:flex-start; padding:14px; background:var(--bg2); border-radius:8px;">
+      <div style="width:28px; height:28px; background:var(--accent); border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:#07101f; font-size:12px; flex-shrink:0;">W2</div>
+      <div><strong style="font-size:13px;">Core Installation</strong><div style="font-size:11px; color:var(--text2); margin-top:3px;">Deploy Stellar Cyber platform, cấu hình network, storage, HA nếu cần</div></div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:flex-start; padding:14px; background:var(--bg2); border-radius:8px;">
+      <div style="width:28px; height:28px; background:#f97316; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; font-size:12px; flex-shrink:0;">W3</div>
+      <div><strong style="font-size:13px;">Data Source Onboarding</strong><div style="font-size:11px; color:var(--text2); margin-top:3px;">Kết nối 500+ connectors: firewall, EDR, AD, cloud apps, syslog sources</div></div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:flex-start; padding:14px; background:var(--bg2); border-radius:8px;">
+      <div style="width:28px; height:28px; background:#f97316; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; font-size:12px; flex-shrink:0;">W4</div>
+      <div><strong style="font-size:13px;">AI Tuning & Baseline</strong><div style="font-size:11px; color:var(--text2); margin-top:3px;">AI học baseline hành vi mạng 7–14 ngày, tinh chỉnh ngưỡng alert</div></div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:flex-start; padding:14px; background:var(--bg2); border-radius:8px;">
+      <div style="width:28px; height:28px; background:#10b981; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; font-size:12px; flex-shrink:0;">W6</div>
+      <div><strong style="font-size:13px;">SOC Integration & Training</strong><div style="font-size:11px; color:var(--text2); margin-top:3px;">Tích hợp với ticket system, đào tạo SOC analyst, bàn giao runbook</div></div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:flex-start; padding:14px; background:var(--bg2); border-radius:8px;">
+      <div style="width:28px; height:28px; background:#10b981; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; font-size:12px; flex-shrink:0;">W8</div>
+      <div><strong style="font-size:13px;">Go Live & Hypercare</strong><div style="font-size:11px; color:var(--text2); margin-top:3px;">Production mode, Stellar Cyber hỗ trợ 24/7 trong 30 ngày đầu</div></div>
+    </div>
+  </div>
+
+  <div class="callout callout-blue" style="margin-top:20px;"><strong>💡 Điểm bán:</strong> Stellar Cyber có đội Professional Services và partner NTS hỗ trợ toàn bộ quá trình triển khai. Khách hàng không cần tự lo về kỹ thuật phức tạp — đây là lợi thế so với Splunk cần nhiều tháng customization.</div>
+</section>
+
+<!-- S09: LICENSE & SIZING -->
+<section id="s09">
+  <div class="section-label">09</div>
+  <h2>License & Sizing</h2>
+  <p class="lead">Stellar Cyber sử dụng mô hình <strong>subscription</strong> (không có perpetual license). Có 2 phương thức tính phí chính — linh hoạt để phù hợp mọi loại tổ chức.</p>
+
+  <div class="card-grid" style="grid-template-columns:1fr 1fr; gap:16px; margin-bottom:28px;">
+    <div class="card" style="border-color:#00c4e8;">
+      <div class="card-title" style="color:#00c4e8; font-size:15px;">📊 Volume-Based (GB/Day)</div>
+      <div style="font-size:12px; color:var(--text2); margin:10px 0;">Trả tiền theo lượng log ingest mỗi ngày. Phù hợp khi khó đếm số assets.</div>
+      <div style="background:var(--bg); padding:10px; border-radius:6px; margin-bottom:8px;">
+        <div style="font-size:11px; color:var(--text3); margin-bottom:4px;">Starter Pack</div>
+        <div style="font-size:13px; font-weight:600;">100 GB/day</div>
+      </div>
+      <div style="font-size:11px; color:var(--text2);">+ Add-on: 25 / 50 / 100 GB/day increments</div>
+      <div style="font-size:11px; color:var(--accent); margin-top:8px;">✓ Dễ dự toán ngân sách • Không bị phạt đột biến</div>
+    </div>
+    <div class="card" style="border-color:#f97316;">
+      <div class="card-title" style="color:#f97316; font-size:15px;">🖥️ Asset-Based (Per IP / Identity)</div>
+      <div style="font-size:12px; color:var(--text2); margin:10px 0;">Trả tiền theo số private IP hoặc tài khoản user. Phù hợp môi trường kiểm soát tốt số lượng thiết bị.</div>
+      <div style="background:var(--bg); padding:10px; border-radius:6px; margin-bottom:8px;">
+        <div style="font-size:11px; color:var(--text3); margin-bottom:4px;">Metric</div>
+        <div style="font-size:13px; font-weight:600;">Per Private IP <span style="color:var(--text3);">hoặc</span> Per Identity Account</div>
+      </div>
+      <div style="font-size:11px; color:var(--text2);">Phù hợp: Doanh nghiệp có asset inventory tốt</div>
+      <div style="font-size:11px; color:#f97316; margin-top:8px;">✓ Predictable • Tốt cho enterprise licensing</div>
+    </div>
+  </div>
+
+  <h3>Công Thức Sizing GB/Day</h3>
+  <div style="background:var(--bg2); border:1px solid #1e3a5f; border-radius:10px; padding:20px; margin-bottom:20px;">
+    <div style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#a78bfa; margin-bottom:14px; background:var(--bg); padding:12px; border-radius:6px; line-height:1.8;">
+      GB/day = (servers × <span style="color:#00c4e8;">2</span>) + (endpoints × <span style="color:#f97316;">0.5</span>) + (cloud_apps × <span style="color:#10b981;">5</span>) + <span style="color:#fbbf24;">20%</span> buffer
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px;">
+      <div style="text-align:center; padding:10px; background:var(--bg); border-radius:6px;">
+        <div style="font-size:20px; font-weight:700; color:#00c4e8;">2 GB</div>
+        <div style="font-size:11px; color:var(--text2);">/ server / ngày</div>
+      </div>
+      <div style="text-align:center; padding:10px; background:var(--bg); border-radius:6px;">
+        <div style="font-size:20px; font-weight:700; color:#f97316;">0.5 GB</div>
+        <div style="font-size:11px; color:var(--text2);">/ endpoint / ngày</div>
+      </div>
+      <div style="text-align:center; padding:10px; background:var(--bg); border-radius:6px;">
+        <div style="font-size:20px; font-weight:700; color:#10b981;">5 GB</div>
+        <div style="font-size:11px; color:var(--text2);">/ cloud app / ngày</div>
+      </div>
+      <div style="text-align:center; padding:10px; background:var(--bg); border-radius:6px;">
+        <div style="font-size:20px; font-weight:700; color:#fbbf24;">+20%</div>
+        <div style="font-size:11px; color:var(--text2);">buffer an toàn</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Ví Dụ Sizing Thực Tế</h3>
+  <div style="overflow-x:auto;">
+    <table>
+      <thead><tr><th>Loại tổ chức</th><th>Servers</th><th>Endpoints</th><th>Cloud Apps</th><th>GB/day (tính)</th><th>Gói đề xuất</th></tr></thead>
+      <tbody>
+        <tr><td>SME 200 nhân viên</td><td>20</td><td>200</td><td>5</td><td>~165 GB</td><td>Starter + 1 add-on 100GB</td></tr>
+        <tr><td>Mid-Market 500NV</td><td>50</td><td>500</td><td>10</td><td>~410 GB</td><td>Starter + 4 add-on</td></tr>
+        <tr><td>Enterprise 2000NV</td><td>200</td><td>2000</td><td>30</td><td>~1,680 GB</td><td>Custom volume tier</td></tr>
+        <tr><td>MSSP (10 khách)</td><td>—</td><td>—</td><td>—</td><td>Pooled capacity</td><td>MSSP license pool</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-orange" style="margin-top:16px;"><strong>⚠️ Lưu ý quan trọng:</strong> Stellar Cyber <strong>không có perpetual license</strong>. Đây là điểm cần làm rõ với khách hàng trong buổi đầu. Tuy nhiên, TCO 3 năm thường thấp hơn Splunk 40–60% do không cần licence riêng cho từng module (NDR, UEBA, SOAR đều included). Nhấn mạnh <strong>tổng chi phí sở hữu</strong>, không so sánh đơn thuần theo năm đầu.</div>
+</section>
+
+<!-- S10: LỢI THẾ CẠNH TRANH -->
+<section id="s10">
+  <div class="section-label">10</div>
+  <h2>Lợi Thế Cạnh Tranh</h2>
+  <p class="lead">So sánh Stellar Cyber với 4 đối thủ chính phổ biến tại thị trường Việt Nam. Dùng bảng này khi khách hàng so sánh giải pháp.</p>
+
+  <div style="overflow-x:auto; margin-bottom:24px;">
+    <table style="min-width:700px;">
+      <thead>
+        <tr>
+          <th style="min-width:200px;">Tiêu chí</th>
+          <th style="color:#00c4e8;">Stellar Cyber</th>
+          <th>Splunk ES</th>
+          <th>IBM QRadar</th>
+          <th>ArcSight</th>
+          <th>Graylog</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Mô hình triển khai</strong></td>
+          <td style="color:#34d399;">On-prem / Cloud / Hybrid / Air-gap</td>
+          <td>On-prem / Cloud</td>
+          <td>On-prem / Cloud (⚠️ sold to Palo Alto)</td>
+          <td>On-prem chủ yếu</td>
+          <td>On-prem / Cloud</td>
+        </tr>
+        <tr>
+          <td><strong>AI/ML tích hợp</strong></td>
+          <td style="color:#34d399;">Multi-Layer AI™ (6 lớp) native</td>
+          <td>MLTK (add-on riêng)</td>
+          <td>UEBA riêng, tính phí thêm</td>
+          <td>Rất hạn chế</td>
+          <td>Không có</td>
+        </tr>
+        <tr>
+          <td><strong>NDR tích hợp</strong></td>
+          <td style="color:#34d399;">✅ Native (built-in)</td>
+          <td>❌ Cần Splunk UBA + third-party</td>
+          <td>❌ QRadar NDR riêng biệt</td>
+          <td>❌ Không có</td>
+          <td>❌ Không có</td>
+        </tr>
+        <tr>
+          <td><strong>UEBA tích hợp</strong></td>
+          <td style="color:#34d399;">✅ Native</td>
+          <td>⚠️ Add-on tính phí</td>
+          <td>⚠️ Tính phí riêng</td>
+          <td>❌ Không có</td>
+          <td>❌ Không có</td>
+        </tr>
+        <tr>
+          <td><strong>SOAR tích hợp</strong></td>
+          <td style="color:#34d399;">✅ Native playbooks</td>
+          <td>⚠️ Splunk SOAR riêng (~$50K+)</td>
+          <td>⚠️ QRadar SOAR riêng</td>
+          <td>❌ Không có</td>
+          <td>❌ Không có</td>
+        </tr>
+        <tr>
+          <td><strong>GraphML Correlation</strong></td>
+          <td style="color:#34d399;">✅ Graph Neural Network native</td>
+          <td>❌</td>
+          <td>❌</td>
+          <td>❌</td>
+          <td>❌</td>
+        </tr>
+        <tr>
+          <td><strong>Time-to-Value</strong></td>
+          <td style="color:#34d399;">2–8 tuần</td>
+          <td>3–6 tháng</td>
+          <td>2–4 tháng</td>
+          <td>3–6 tháng</td>
+          <td>1–3 tháng</td>
+        </tr>
+        <tr>
+          <td><strong>Tích hợp mới</strong></td>
+          <td style="color:#34d399;">Miễn phí (500+)</td>
+          <td>Tính phí theo app</td>
+          <td>Tính phí theo DSM</td>
+          <td>Tính phí</td>
+          <td>Community/manual</td>
+        </tr>
+        <tr>
+          <td><strong>Multi-tenancy MSSP</strong></td>
+          <td style="color:#34d399;">✅ Native, pooled license</td>
+          <td>⚠️ Phức tạp, tốn kém</td>
+          <td>⚠️ Hỗ trợ nhưng phức tạp</td>
+          <td>❌ Rất hạn chế</td>
+          <td>⚠️ Enterprise only</td>
+        </tr>
+        <tr>
+          <td><strong>TCO 3 năm (tương đối)</strong></td>
+          <td style="color:#34d399;">Thấp nhất (1×)</td>
+          <td>Cao nhất (3–4×)</td>
+          <td>Cao (2–3×)</td>
+          <td>Trung bình (1.5–2×)</td>
+          <td>Thấp nhưng thiếu tính năng</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout callout-blue"><strong>🎯 Cơ hội từ IBM QRadar:</strong> Palo Alto Networks đã mua lại QRadar Cloud từ IBM. Khách hàng đang dùng QRadar on-prem đang bất an về tương lai sản phẩm. Đây là <strong>migration window</strong> tốt nhất để tiếp cận và đề xuất Stellar Cyber.</div>
+
+  <h3>9 Tính Năng Stellar Cyber Không Đối Thủ Nào Có</h3>
+  <div class="card-grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));">
+    <div class="card" style="text-align:center;">
+      <div style="font-size:22px; margin-bottom:6px;">🕸️</div>
+      <div class="card-title" style="font-size:12px;">GraphML Correlation</div>
+      <div style="font-size:11px; color:var(--text2);">Graph Neural Network kết nối attack chain</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:22px; margin-bottom:6px;">📦</div>
+      <div class="card-title" style="font-size:12px;">All-in-One License</div>
+      <div style="font-size:11px; color:var(--text2);">SIEM+NDR+UEBA+SOAR+TIP trong 1 giá</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:22px; margin-bottom:6px;">🤖</div>
+      <div class="card-title" style="font-size:12px;">Agentic AI</div>
+      <div style="font-size:11px; color:var(--text2);">AI agent tự điều tra, quyết định response</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:22px; margin-bottom:6px;">🏢</div>
+      <div class="card-title" style="font-size:12px;">MSSP Native</div>
+      <div style="font-size:11px; color:var(--text2);">Multi-tenant pooled license true MSSP</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:22px; margin-bottom:6px;">🔌</div>
+      <div class="card-title" style="font-size:12px;">Free Integrations</div>
+      <div style="font-size:11px; color:var(--text2);">500+ connectors, thêm mới miễn phí</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:22px; margin-bottom:6px;">🔒</div>
+      <div class="card-title" style="font-size:12px;">Air-Gap Support</div>
+      <div style="font-size:11px; color:var(--text2);">Hoàn toàn offline cho hạ tầng quan trọng</div>
+    </div>
+  </div>
+</section>
+
+<!-- S11: KHÁCH HÀNG MỤC TIÊU -->
+<section id="s11">
+  <div class="section-label">11</div>
+  <h2>Khách Hàng Mục Tiêu Việt Nam</h2>
+  <p class="lead">6 phân khúc khách hàng tiềm năng nhất tại thị trường Việt Nam, được xếp hạng theo mức độ ưu tiên và phù hợp với giải pháp.</p>
+
+  <div style="display:grid; gap:12px;">
+    <div class="card" style="display:flex; align-items:flex-start; gap:16px; padding:18px;">
+      <div style="font-size:32px; flex-shrink:0;">🏛️</div>
+      <div style="flex:1;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+          <strong style="font-size:14px;">Cơ quan Nhà nước & Hạ tầng Quan trọng Quốc gia</strong>
+          <span style="background:#dc2626; color:#fff; font-size:10px; padding:2px 8px; border-radius:10px; font-weight:600;">ƯU TIÊN CAO</span>
+        </div>
+        <div style="font-size:12px; color:var(--text2); margin-bottom:8px;">Bộ ngành, tỉnh thành, cơ sở hạ tầng điện, nước, giao thông. Bắt buộc tuân thủ Luật ANM 2018, TT12/2022.</div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <span style="background:rgba(0,196,232,0.1); color:var(--accent); font-size:10px; padding:2px 8px; border-radius:4px;">Air-gapped deployment</span>
+          <span style="background:rgba(0,196,232,0.1); color:var(--accent); font-size:10px; padding:2px 8px; border-radius:4px;">On-prem mandatory</span>
+          <span style="background:rgba(0,196,232,0.1); color:var(--accent); font-size:10px; padding:2px 8px; border-radius:4px;">Compliance reporting</span>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="display:flex; align-items:flex-start; gap:16px; padding:18px;">
+      <div style="font-size:32px; flex-shrink:0;">🏦</div>
+      <div style="flex:1;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+          <strong style="font-size:14px;">Ngân hàng, Tài chính, Bảo hiểm (BFSI)</strong>
+          <span style="background:#dc2626; color:#fff; font-size:10px; padding:2px 8px; border-radius:10px; font-weight:600;">ƯU TIÊN CAO</span>
+        </div>
+        <div style="font-size:12px; color:var(--text2); margin-bottom:8px;">Ngân hàng thương mại, công ty chứng khoán, bảo hiểm. TT09/2020/NHNN yêu cầu SIEM giám sát giao dịch, lưu log 5 năm.</div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <span style="background:rgba(249,115,22,0.1); color:#fb923c; font-size:10px; padding:2px 8px; border-radius:4px;">UEBA fraud detection</span>
+          <span style="background:rgba(249,115,22,0.1); color:#fb923c; font-size:10px; padding:2px 8px; border-radius:4px;">5-year log retention</span>
+          <span style="background:rgba(249,115,22,0.1); color:#fb923c; font-size:10px; padding:2px 8px; border-radius:4px;">PCI DSS compliance</span>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="display:flex; align-items:flex-start; gap:16px; padding:18px;">
+      <div style="font-size:32px; flex-shrink:0;">📡</div>
+      <div style="flex:1;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+          <strong style="font-size:14px;">Viễn thông & MSSP/MDR</strong>
+          <span style="background:#d97706; color:#fff; font-size:10px; padding:2px 8px; border-radius:10px; font-weight:600;">ƯU TIÊN CAO</span>
+        </div>
+        <div style="font-size:12px; color:var(--text2); margin-bottom:8px;">VNPT, Viettel, MobiFone và các MSSP cung cấp dịch vụ SOC cho khách hàng. Multi-tenancy native là lợi thế tuyệt đối.</div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <span style="background:rgba(16,185,129,0.1); color:#34d399; font-size:10px; padding:2px 8px; border-radius:4px;">Multi-tenant MSSP</span>
+          <span style="background:rgba(16,185,129,0.1); color:#34d399; font-size:10px; padding:2px 8px; border-radius:4px;">Pooled license</span>
+          <span style="background:rgba(16,185,129,0.1); color:#34d399; font-size:10px; padding:2px 8px; border-radius:4px;">White-label SOC</span>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="display:flex; align-items:flex-start; gap:16px; padding:18px;">
+      <div style="font-size:32px; flex-shrink:0;">🏭</div>
+      <div style="flex:1;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+          <strong style="font-size:14px;">Sản xuất & Năng lượng (OT/ICS)</strong>
+          <span style="background:#7c3aed; color:#fff; font-size:10px; padding:2px 8px; border-radius:10px; font-weight:600;">TIỀM NĂNG LỚN</span>
+        </div>
+        <div style="font-size:12px; color:var(--text2); margin-bottom:8px;">Nhà máy sản xuất, điện lực, dầu khí với môi trường OT/ICS. Stellar Cyber hỗ trợ OT protocols (Modbus, DNP3, IEC 61850).</div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <span style="background:rgba(124,58,237,0.1); color:#a78bfa; font-size:10px; padding:2px 8px; border-radius:4px;">OT/ICS visibility</span>
+          <span style="background:rgba(124,58,237,0.1); color:#a78bfa; font-size:10px; padding:2px 8px; border-radius:4px;">IT/OT convergence</span>
+          <span style="background:rgba(124,58,237,0.1); color:#a78bfa; font-size:10px; padding:2px 8px; border-radius:4px;">Air-gap option</span>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="display:flex; align-items:flex-start; gap:16px; padding:18px;">
+      <div style="font-size:32px; flex-shrink:0;">🏥</div>
+      <div style="flex:1;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+          <strong style="font-size:14px;">Y tế & Bệnh viện</strong>
+          <span style="background:#0891b2; color:#fff; font-size:10px; padding:2px 8px; border-radius:10px; font-weight:600;">ĐANG TĂNG TRƯỞNG</span>
+        </div>
+        <div style="font-size:12px; color:var(--text2); margin-bottom:8px;">Bệnh viện lớn, cơ sở y tế số hóa. NĐ 13/2023 bảo vệ dữ liệu bệnh nhân, nguy cơ ransomware rất cao.</div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <span style="background:rgba(8,145,178,0.1); color:#22d3ee; font-size:10px; padding:2px 8px; border-radius:4px;">PDPD compliance</span>
+          <span style="background:rgba(8,145,178,0.1); color:#22d3ee; font-size:10px; padding:2px 8px; border-radius:4px;">Ransomware detection</span>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="display:flex; align-items:flex-start; gap:16px; padding:18px;">
+      <div style="font-size:32px; flex-shrink:0;">🛒</div>
+      <div style="flex:1;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
+          <strong style="font-size:14px;">Bán lẻ, E-commerce & Fintech</strong>
+          <span style="background:#0891b2; color:#fff; font-size:10px; padding:2px 8px; border-radius:10px; font-weight:600;">ĐANG TĂNG TRƯỞNG</span>
+        </div>
+        <div style="font-size:12px; color:var(--text2); margin-bottom:8px;">Thương mại điện tử, ví điện tử, công ty Fintech. Môi trường cloud-native, cần bảo vệ API và dữ liệu khách hàng.</div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px;">
+          <span style="background:rgba(8,145,178,0.1); color:#22d3ee; font-size:10px; padding:2px 8px; border-radius:4px;">Cloud-native SIEM</span>
+          <span style="background:rgba(8,145,178,0.1); color:#22d3ee; font-size:10px; padding:2px 8px; border-radius:4px;">API security</span>
+          <span style="background:rgba(8,145,178,0.1); color:#22d3ee; font-size:10px; padding:2px 8px; border-radius:4px;">PCI DSS</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- S12: SWOT -->
+<section id="s12">
+  <div class="section-label">12</div>
+  <h2>Phân Tích SWOT</h2>
+  <p class="lead">Đánh giá khách quan Stellar Cyber để sales team chuẩn bị tốt hơn khi đối mặt với câu hỏi khó từ khách hàng.</p>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+    <div style="background:linear-gradient(135deg,rgba(16,185,129,0.1),rgba(16,185,129,0.05)); border:1px solid rgba(16,185,129,0.3); border-radius:10px; padding:20px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+        <div style="width:36px; height:36px; background:#10b981; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px;">💪</div>
+        <strong style="color:#34d399; font-size:15px;">STRENGTHS — Điểm Mạnh</strong>
+      </div>
+      <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;">
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#34d399;">✓</span> Multi-Layer AI™ 6 lớp — GraphML độc quyền</li>
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#34d399;">✓</span> All-in-one platform: SIEM+NDR+UEBA+SOAR trong 1 license</li>
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#34d399;">✓</span> TCO thấp nhất phân khúc enterprise</li>
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#34d399;">✓</span> Triển khai nhanh 2–8 tuần, 600+ detections ngay ngày 1</li>
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#34d399;">✓</span> Multi-tenancy native — lý tưởng cho MSSP/MDR</li>
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#34d399;">✓</span> Gartner NDR Magic Quadrant Challenger 2025</li>
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#34d399;">✓</span> 500+ integrations miễn phí</li>
+      </ul>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(239,68,68,0.1),rgba(239,68,68,0.05)); border:1px solid rgba(239,68,68,0.3); border-radius:10px; padding:20px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+        <div style="width:36px; height:36px; background:#ef4444; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px;">⚠️</div>
+        <strong style="color:#fca5a5; font-size:15px;">WEAKNESSES — Điểm Yếu</strong>
+      </div>
+      <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;">
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#ef4444;">✗</span> Không có perpetual license — khó với ngân sách CAPEX</li>
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#ef4444;">✗</span> Brand awareness tại VN còn thấp hơn Splunk, IBM</li>
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#ef4444;">✗</span> Tài liệu hỗ trợ tiếng Việt chưa đầy đủ</li>
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#ef4444;">✗</span> Reference case tại Đông Nam Á còn hạn chế so với Splunk</li>
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#ef4444;">✗</span> Đội ngũ kỹ thuật local cần được đào tạo chuyên sâu</li>
+      </ul>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(59,130,246,0.05)); border:1px solid rgba(59,130,246,0.3); border-radius:10px; padding:20px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+        <div style="width:36px; height:36px; background:#3b82f6; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px;">🚀</div>
+        <strong style="color:#93c5fd; font-size:15px;">OPPORTUNITIES — Cơ Hội</strong>
+      </div>
+      <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;">
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#3b82f6;">◆</span> IBM QRadar sold to Palo Alto — migration window cho khách cũ</li>
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#3b82f6;">◆</span> TT12/2022 bắt buộc SIEM — nhu cầu mới từ cơ quan nhà nước</li>
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#3b82f6;">◆</span> MSSP/MDR market VN tăng trưởng mạnh 2024–2027</li>
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#3b82f6;">◆</span> Thiếu SOC analyst → cần AI automation nhiều hơn</li>
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#3b82f6;">◆</span> OT/ICS security đang nổi lên mạnh (năng lượng, sản xuất)</li>
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#3b82f6;">◆</span> Agentic AI — xu hướng mới mà đối thủ chưa có</li>
+      </ul>
+    </div>
+    <div style="background:linear-gradient(135deg,rgba(245,158,11,0.1),rgba(245,158,11,0.05)); border:1px solid rgba(245,158,11,0.3); border-radius:10px; padding:20px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+        <div style="width:36px; height:36px; background:#f59e0b; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px;">🌩️</div>
+        <strong style="color:#fde68a; font-size:15px;">THREATS — Thách Thức</strong>
+      </div>
+      <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:8px;">
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#f59e0b;">!</span> Microsoft Sentinel tích hợp sẵn M365 — khó cạnh tranh tại mid-market</li>
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#f59e0b;">!</span> Palo Alto Cortex XSIAM đang đầu tư mạnh marketing APAC</li>
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#f59e0b;">!</span> Graylog/open-source cạnh tranh về giá ở SME</li>
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#f59e0b;">!</span> Ngân sách IT nhiều tổ chức VN còn bị giới hạn</li>
+        <li style="font-size:12px; display:flex; gap:6px;"><span style="color:#f59e0b;">!</span> Yêu cầu dữ liệu lưu tại chỗ (data residency) cần on-prem</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- S13: LỢI ÍCH MANG LẠI -->
+<section id="s13">
+  <div class="section-label">13</div>
+  <h2>Lợi Ích Mang Lại</h2>
+  <p class="lead">8 nhóm lợi ích cụ thể, có số liệu thực tế để trình bày với khách hàng — từ cấp kỹ thuật đến cấp C-level.</p>
+
+  <div class="card-grid">
+    <div class="card" style="border-left:3px solid #00c4e8;">
+      <div style="font-size:28px; margin-bottom:8px;">⚡</div>
+      <div class="card-title">Phát hiện nhanh hơn 8×</div>
+      <div style="font-size:12px; color:var(--text2);">Case-Centric approach + GraphML giảm số alert phải xử lý thủ công 8 lần. Analyst tập trung vào case có ý nghĩa, không phải alert rác.</div>
+      <div style="margin-top:10px; font-size:11px; color:var(--accent); font-weight:600;">📊 Verified by customer case studies</div>
+    </div>
+    <div class="card" style="border-left:3px solid #f97316;">
+      <div style="font-size:28px; margin-bottom:8px;">🎯</div>
+      <div class="card-title">Giảm False Positive 40–70%</div>
+      <div style="font-size:12px; color:var(--text2);">Multi-Layer AI correlate context từ nhiều nguồn, loại bỏ noise. SOC team không còn bị overwhelm bởi false alarm vô nghĩa.</div>
+      <div style="margin-top:10px; font-size:11px; color:#fb923c; font-weight:600;">📊 40–70% reduction reported</div>
+    </div>
+    <div class="card" style="border-left:3px solid #10b981;">
+      <div style="font-size:28px; margin-bottom:8px;">🕐</div>
+      <div class="card-title">MTTR giảm 400%</div>
+      <div style="font-size:12px; color:var(--text2);">Automated SOAR playbooks + AI investigation giúp response time từ giờ xuống phút. Thiệt hại từ breach được giảm thiểu tối đa.</div>
+      <div style="margin-top:10px; font-size:11px; color:#34d399; font-weight:600;">📊 Mean Time To Respond -400%</div>
+    </div>
+    <div class="card" style="border-left:3px solid #7c3aed;">
+      <div style="font-size:28px; margin-bottom:8px;">💰</div>
+      <div class="card-title">TCO thấp hơn 40–60%</div>
+      <div style="font-size:12px; color:var(--text2);">So với Splunk ES + SOAR + UEBA mua riêng. 1 license cho tất cả — không phí ẩn, không add-on, không surprise bill.</div>
+      <div style="margin-top:10px; font-size:11px; color:#a78bfa; font-weight:600;">📊 vs Splunk comparable deployment</div>
+    </div>
+    <div class="card" style="border-left:3px solid #f59e0b;">
+      <div style="font-size:28px; margin-bottom:8px;">🚀</div>
+      <div class="card-title">Live trong 2–8 tuần</div>
+      <div style="font-size:12px; color:var(--text2);">600+ detection rules ngay ngày 1, không cần tuning phức tạp. So với Splunk 3–6 tháng để có giá trị tương đương.</div>
+      <div style="margin-top:10px; font-size:11px; color:#fbbf24; font-weight:600;">📊 vs 3–6 months for Splunk</div>
+    </div>
+    <div class="card" style="border-left:3px solid #06b6d4;">
+      <div style="font-size:28px; margin-bottom:8px;">📋</div>
+      <div class="card-title">Compliance tự động</div>
+      <div style="font-size:12px; color:var(--text2);">Report tự động cho PCI DSS, ISO 27001, NIST, SOC 2. Giảm 80% công sức chuẩn bị audit hàng năm.</div>
+      <div style="margin-top:10px; font-size:11px; color:#22d3ee; font-weight:600;">📊 Auto-generated compliance reports</div>
+    </div>
+    <div class="card" style="border-left:3px solid #ec4899;">
+      <div style="font-size:28px; margin-bottom:8px;">👥</div>
+      <div class="card-title">Giải bài toán thiếu người</div>
+      <div style="font-size:12px; color:var(--text2);">AI automation cho phép đội 3–5 analyst quản lý SOC quy mô enterprise. Không cần tuyển dụng đội ngũ lớn.</div>
+      <div style="margin-top:10px; font-size:11px; color:#f472b6; font-weight:600;">📊 Lean SOC team enablement</div>
+    </div>
+    <div class="card" style="border-left:3px solid #84cc16;">
+      <div style="font-size:28px; margin-bottom:8px;">🔮</div>
+      <div class="card-title">Nền tảng tương lai</div>
+      <div style="font-size:12px; color:var(--text2);">Agentic AI, GenAI investigation đã sẵn sàng. Đầu tư hôm nay = platform sử dụng 5–7 năm không lỗi thời.</div>
+      <div style="margin-top:10px; font-size:11px; color:#a3e635; font-weight:600;">📊 Future-proof roadmap</div>
+    </div>
+  </div>
+</section>
+
+<!-- S14: XẾP HẠNG THỊ TRƯỜNG -->
+<section id="s14">
+  <div class="section-label">14</div>
+  <h2>Xếp Hạng Thị Trường</h2>
+  <p class="lead">Vị trí Stellar Cyber theo các analyst firm uy tín — sử dụng khi khách hàng yêu cầu bằng chứng từ bên thứ ba.</p>
+
+  <div class="card-grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); margin-bottom:28px;">
+    <div class="card" style="border-color:#00c4e8;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+        <div style="width:40px; height:40px; background:#00c4e8; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:20px;">📊</div>
+        <div><div style="font-weight:700; font-size:14px; color:var(--accent);">Gartner</div><div style="font-size:11px; color:var(--text2);">Magic Quadrant for NDR</div></div>
+      </div>
+      <div style="background:var(--bg); padding:12px; border-radius:6px; margin-bottom:10px;">
+        <div style="font-size:22px; font-weight:700; color:#fbbf24;">CHALLENGER</div>
+        <div style="font-size:11px; color:var(--text2);">Network Detection & Response, 2025</div>
+      </div>
+      <div style="font-size:11px; color:var(--text2);">Công nhận năng lực AI-driven network detection vượt trội. Đang trên đường trở thành Leader.</div>
+    </div>
+    <div class="card" style="border-color:#7c3aed;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+        <div style="width:40px; height:40px; background:#7c3aed; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:20px;">📊</div>
+        <div><div style="font-weight:700; font-size:14px; color:#a78bfa;">Gartner</div><div style="font-size:11px; color:var(--text2);">Market Guide for XDR</div></div>
+      </div>
+      <div style="background:var(--bg); padding:12px; border-radius:6px; margin-bottom:10px;">
+        <div style="font-size:22px; font-weight:700; color:#a78bfa;">REPRESENTATIVE VENDOR</div>
+        <div style="font-size:11px; color:var(--text2);">XDR 2023 & 2024 (2 năm liên tiếp)</div>
+      </div>
+      <div style="font-size:11px; color:var(--text2);">Được công nhận là nhà cung cấp tiêu biểu trong danh mục Open XDR — 2 năm liên tiếp.</div>
+    </div>
+    <div class="card" style="border-color:#f97316;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+        <div style="width:40px; height:40px; background:#f97316; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:20px;">🏅</div>
+        <div><div style="font-weight:700; font-size:14px; color:#fb923c;">SC Awards</div><div style="font-size:11px; color:var(--text2);">SC Media Industry Awards</div></div>
+      </div>
+      <div style="background:var(--bg); padding:12px; border-radius:6px; margin-bottom:10px;">
+        <div style="font-size:22px; font-weight:700; color:#fb923c;">BEST SIEM</div>
+        <div style="font-size:11px; color:var(--text2);">SC Awards Europe 2023</div>
+      </div>
+      <div style="font-size:11px; color:var(--text2);">Giải thưởng Best SIEM từ tổ chức truyền thông an ninh mạng hàng đầu châu Âu.</div>
+    </div>
+  </div>
+
+  <h3>So Sánh Điểm Mạnh Tổng Thể</h3>
+  <div style="background:var(--bg2); border-radius:10px; padding:20px;">
+    <div style="display:grid; gap:12px;">
+      <div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+          <span style="font-size:12px; color:var(--text);">AI/ML Capabilities</span>
+          <span style="font-size:12px; color:var(--accent); font-weight:600;">95/100</span>
+        </div>
+        <div style="height:8px; background:var(--bg); border-radius:4px;">
+          <div style="height:8px; width:95%; background:linear-gradient(90deg,#00c4e8,#0891b2); border-radius:4px;"></div>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+          <span style="font-size:12px; color:var(--text);">Time-to-Value</span>
+          <span style="font-size:12px; color:var(--accent); font-weight:600;">92/100</span>
+        </div>
+        <div style="height:8px; background:var(--bg); border-radius:4px;">
+          <div style="height:8px; width:92%; background:linear-gradient(90deg,#00c4e8,#0891b2); border-radius:4px;"></div>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+          <span style="font-size:12px; color:var(--text);">Platform Completeness</span>
+          <span style="font-size:12px; color:var(--accent); font-weight:600;">90/100</span>
+        </div>
+        <div style="height:8px; background:var(--bg); border-radius:4px;">
+          <div style="height:8px; width:90%; background:linear-gradient(90deg,#00c4e8,#0891b2); border-radius:4px;"></div>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+          <span style="font-size:12px; color:var(--text);">MSSP Readiness</span>
+          <span style="font-size:12px; color:var(--accent); font-weight:600;">95/100</span>
+        </div>
+        <div style="height:8px; background:var(--bg); border-radius:4px;">
+          <div style="height:8px; width:95%; background:linear-gradient(90deg,#00c4e8,#0891b2); border-radius:4px;"></div>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+          <span style="font-size:12px; color:var(--text);">TCO Advantage</span>
+          <span style="font-size:12px; color:var(--accent); font-weight:600;">88/100</span>
+        </div>
+        <div style="height:8px; background:var(--bg); border-radius:4px;">
+          <div style="height:8px; width:88%; background:linear-gradient(90deg,#00c4e8,#0891b2); border-radius:4px;"></div>
+        </div>
+      </div>
+      <div>
+        <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+          <span style="font-size:12px; color:var(--text);">Brand Recognition (VN)</span>
+          <span style="font-size:12px; color:#fbbf24; font-weight:600;">55/100</span>
+        </div>
+        <div style="height:8px; background:var(--bg); border-radius:4px;">
+          <div style="height:8px; width:55%; background:linear-gradient(90deg,#f59e0b,#d97706); border-radius:4px;"></div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:11px; color:var(--text3); margin-top:10px;">* Đánh giá nội bộ NTS dựa trên nghiên cứu kỹ thuật và thị trường</div>
+  </div>
+</section>
+
+<!-- S15: TÌNH HUỐNG THƯỜNG GẶP -->
+<section id="s15">
+  <div class="section-label">15</div>
+  <h2>Tình Huống Thường Gặp</h2>
+  <p class="lead">Các câu hỏi và phản đối điển hình từ 3 nhóm persona khách hàng. Chuẩn bị kỹ để không bị bất ngờ trong buổi demo hoặc họp bán hàng.</p>
+
+  <h3>Persona Khách Hàng</h3>
+  <div class="card-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); margin-bottom:28px;">
+    <div class="card" style="text-align:center; border-color:#7c3aed;">
+      <div style="font-size:40px; margin-bottom:8px;">👔</div>
+      <div class="card-title" style="color:#a78bfa;">CISO / Giám đốc ATTT</div>
+      <div style="font-size:11px; color:var(--text2); margin-top:6px;">Quan tâm: tuân thủ pháp lý, giảm rủi ro, ROI, board reporting</div>
+      <div style="margin-top:8px; font-size:10px; background:rgba(124,58,237,0.1); color:#a78bfa; padding:4px 8px; border-radius:4px;">Strategic buyer</div>
+    </div>
+    <div class="card" style="text-align:center; border-color:#f97316;">
+      <div style="font-size:40px; margin-bottom:8px;">🖥️</div>
+      <div class="card-title" style="color:#fb923c;">SOC Manager / IT Manager</div>
+      <div style="font-size:11px; color:var(--text2); margin-top:6px;">Quan tâm: ease of use, tích hợp, alert quality, team workload</div>
+      <div style="margin-top:8px; font-size:10px; background:rgba(249,115,22,0.1); color:#fb923c; padding:4px 8px; border-radius:4px;">Technical evaluator</div>
+    </div>
+    <div class="card" style="text-align:center; border-color:#10b981;">
+      <div style="font-size:40px; margin-bottom:8px;">💼</div>
+      <div class="card-title" style="color:#34d399;">CFO / Ban Lãnh Đạo</div>
+      <div style="font-size:11px; color:var(--text2); margin-top:6px;">Quan tâm: ngân sách, TCO, compliance obligation, peer benchmark</div>
+      <div style="margin-top:8px; font-size:10px; background:rgba(16,185,129,0.1); color:#34d399; padding:4px 8px; border-radius:4px;">Economic buyer</div>
+    </div>
+  </div>
+
+  <h3>Q&A Thường Gặp</h3>
+  <div id="qa-list" style="display:flex; flex-direction:column; gap:6px;">
+
+    <div class="qa-item" onclick="toggleQA(this)">
+      <div class="qa-q">❓ "Stellar Cyber là hãng nhỏ, có tin tưởng được không?"</div>
+      <div class="qa-a">
+        <strong>Trả lời:</strong> Stellar Cyber có hơn 16.000 tổ chức tại 50+ quốc gia, 80+ trong Top 250 MSSP toàn cầu tin dùng. Được Gartner công nhận 3 lần (NDR Challenger 2025, XDR Representative Vendor 2023 & 2024). Hãy hỏi lại: "Bạn muốn tin tưởng một brand lớn đang chuyển đổi nền tảng (IBM QRadar đã bán cho Palo Alto), hay một nền tảng AI-native đang tăng trưởng với 80+ MSSP hàng đầu thế giới chứng nhận?"
+      </div>
+    </div>
+
+    <div class="qa-item" onclick="toggleQA(this)">
+      <div class="qa-q">❓ "Tại sao không dùng Splunk — phổ biến hơn và team đã biết?"</div>
+      <div class="qa-a">
+        <strong>Trả lời:</strong> Splunk mạnh về log management, nhưng để có tính năng tương đương Stellar Cyber (SIEM + NDR + UEBA + SOAR + TIP), khách hàng cần mua ít nhất 4–5 module/sản phẩm riêng lẻ, chi phí gấp 3–4 lần. Thời gian deployment 3–6 tháng so với 2–8 tuần. Nếu team đã biết Splunk, họ sẽ học Stellar Cyber dễ hơn vì giao diện trực quan hơn — chứng minh bằng live demo.
+      </div>
+    </div>
+
+    <div class="qa-item" onclick="toggleQA(this)">
+      <div class="qa-q">❓ "Không có perpetual license, về lâu dài sẽ tốn hơn?"</div>
+      <div class="qa-a">
+        <strong>Trả lời:</strong> So sánh TCO 3 năm chứ không so theo năm đầu. Splunk perpetual thường cộng thêm maintenance 20-25%/năm, cộng thêm phí từng module, cộng thêm chi phí PS triển khai và tuning. Stellar Cyber subscription all-inclusive thường thấp hơn 40–60% TCO 3 năm. Chúng tôi có thể làm TCO calculator chi tiết cho môi trường cụ thể của bạn.
+      </div>
+    </div>
+
+    <div class="qa-item" onclick="toggleQA(this)">
+      <div class="qa-q">❓ "AI có phát sinh false positive nhiều không?"</div>
+      <div class="qa-a">
+        <strong>Trả lời:</strong> Đây là điểm khác biệt lớn nhất. Stellar Cyber giảm false positive 40–70% nhờ GraphML correlate context từ nhiều nguồn trước khi tạo alert. Thay vì 1.000 alert/ngày như SIEM truyền thống, analyst nhận 50–100 case có chất lượng cao. AI học baseline mạng của bạn trong 7–14 ngày đầu, sau đó chính xác hơn liên tục.
+      </div>
+    </div>
+
+    <div class="qa-item" onclick="toggleQA(this)">
+      <div class="qa-q">❓ "Chúng tôi đang dùng QRadar, có migrate được không?"</div>
+      <div class="qa-a">
+        <strong>Trả lời:</strong> Đây là thời điểm tốt nhất để chuyển đổi. IBM đã bán QRadar Cloud cho Palo Alto Networks — roadmap sản phẩm không còn chắc chắn. Stellar Cyber có migration toolkit hỗ trợ chuyển đổi use cases và rules từ QRadar. Thường migration hoàn thành trong 4–8 tuần với hỗ trợ từ NTS. Có thể chạy song song trong thời gian chuyển đổi.
+      </div>
+    </div>
+
+    <div class="qa-item" onclick="toggleQA(this)">
+      <div class="qa-q">❓ "Dữ liệu log có phải ra ngoài nước không?"</div>
+      <div class="qa-a">
+        <strong>Trả lời:</strong> Không bắt buộc. Stellar Cyber hỗ trợ triển khai on-premises hoàn toàn — tất cả dữ liệu ở lại datacenter của bạn. Thậm chí có air-gapped option hoàn toàn offline cho cơ sở hạ tầng quan trọng quốc gia. Đây là yêu cầu tuân thủ Luật ANM 2018 và quy định của nhiều Bộ ngành — Stellar Cyber đáp ứng hoàn toàn.
+      </div>
+    </div>
+
+    <div class="qa-item" onclick="toggleQA(this)">
+      <div class="qa-q">❓ "Team chúng tôi nhỏ, có vận hành được không?"</div>
+      <div class="qa-a">
+        <strong>Trả lời:</strong> Đây chính là lý do nhiều tổ chức chọn Stellar Cyber. Agentic AI tự động hóa triage, điều tra và đề xuất response — đội 3–5 analyst có thể vận hành SOC enterprise. 600+ detection rules built-in từ ngày 1, không cần tuning thủ công. NTS cung cấp dịch vụ managed support để hỗ trợ thêm nếu cần.
+      </div>
+    </div>
+
+    <div class="qa-item" onclick="toggleQA(this)">
+      <div class="qa-q">❓ "Có đáp ứng yêu cầu TT12/2022 không?"</div>
+      <div class="qa-a">
+        <strong>Trả lời:</strong> Có đầy đủ. TT12/2022 yêu cầu hệ thống thông tin cấp độ 3, 4, 5 phải có SIEM tập trung, giám sát 24/7, lưu trữ log ít nhất 3 năm. Stellar Cyber: SIEM centralized ✓, AI 24/7 monitoring ✓, configurable log retention ✓, audit reports ✓, incident response ✓. Chúng tôi có compliance mapping document chi tiết cho TT12 và các quy định khác của VN.
+      </div>
+    </div>
+
+    <div class="qa-item" onclick="toggleQA(this)">
+      <div class="qa-q">❓ "Demo/PoC mất bao lâu và cần gì?"</div>
+      <div class="qa-a">
+        <strong>Trả lời:</strong> Demo online có thể thực hiện ngay trong 2 giờ — NTS chuẩn bị environment sẵn với synthetic data. PoC thực tế trên môi trường khách hàng: 2–4 tuần, cần 1–2 log source thực (firewall hoặc endpoint) và 1 network sensor. NTS support full PoC không phát sinh chi phí. Sau PoC 2 tuần, khách hàng đã thấy rõ giá trị thực tế.
+      </div>
+    </div>
+
+    <div class="qa-item" onclick="toggleQA(this)">
+      <div class="qa-q">❓ "Microsoft Sentinel đã có trong E5 license, tại sao cần mua thêm?"</div>
+      <div class="qa-a">
+        <strong>Trả lời:</strong> Microsoft Sentinel tốt cho môi trường Microsoft thuần túy nhưng có giới hạn lớn: không có NDR network detection, UEBA rất cơ bản, không có native SOAR (cần Logic Apps riêng), chi phí data ingest tăng theo GB và đắt với volume lớn. Với tổ chức có mixed environment (Linux, network devices, OT/ICS, multi-cloud), Stellar Cyber bao phủ toàn diện hơn với TCO tốt hơn từ 500GB/day trở lên.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- S16: TÀI LIỆU THAM CHIẾU -->
+<section id="s16">
+  <div class="section-label">16</div>
+  <h2>Tài Liệu Tham Chiếu</h2>
+  <p class="lead">Nguồn tài liệu đã được sử dụng để biên soạn hướng dẫn này. Truy cập trực tiếp để cập nhật thông tin mới nhất.</p>
+
+  <h3>📁 Tài Liệu Nội Bộ Stellar Cyber</h3>
+  <div style="display:grid; gap:8px; margin-bottom:24px;">
+    <div style="display:flex; gap:12px; align-items:flex-start; padding:12px; background:var(--bg2); border-radius:8px; border-left:3px solid #00c4e8;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--accent); width:32px; flex-shrink:0;">[S1]</div>
+      <div><strong style="font-size:12px;">Stellar Cyber — Sale Training Deck</strong><div style="font-size:11px; color:var(--text2); margin-top:2px;">Internal sales enablement presentation. NTS Technology internal resource.</div></div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:flex-start; padding:12px; background:var(--bg2); border-radius:8px; border-left:3px solid #00c4e8;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--accent); width:32px; flex-shrink:0;">[S2]</div>
+      <div><strong style="font-size:12px;">Stellar Cyber NG-SIEM Research Report (12 Chapters)</strong><div style="font-size:11px; color:var(--text2); margin-top:2px;">Tổng hợp nghiên cứu kỹ thuật 12 chương từ product docs và stellarcyber.ai. NTS Technology, 2025.</div></div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:flex-start; padding:12px; background:var(--bg2); border-radius:8px; border-left:3px solid #00c4e8;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--accent); width:32px; flex-shrink:0;">[S3]</div>
+      <div><strong style="font-size:12px;">Stellar Cyber Product Datasheets & Technical Briefs</strong><div style="font-size:11px; color:var(--text2); margin-top:2px;">NG-SIEM, Open XDR, MSSP Solution datasheets. Stellar Cyber, Inc.</div></div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:flex-start; padding:12px; background:var(--bg2); border-radius:8px; border-left:3px solid #00c4e8;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--accent); width:32px; flex-shrink:0;">[S4]</div>
+      <div><strong style="font-size:12px;">Stellar Cyber Multi-Layer AI™ Technical Architecture</strong><div style="font-size:11px; color:var(--text2); margin-top:2px;">Deep dive vào 6 lớp AI, GraphML Correlation Engine, Agentic AI. Stellar Cyber Engineering.</div></div>
+    </div>
+  </div>
+
+  <h3>🌐 Nguồn Web Chính Thức</h3>
+  <div style="display:grid; gap:8px; margin-bottom:24px;">
+    <div style="display:flex; gap:12px; align-items:flex-start; padding:12px; background:var(--bg2); border-radius:8px; border-left:3px solid #7c3aed;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#a78bfa; width:32px; flex-shrink:0;">[W1]</div>
+      <div><strong style="font-size:12px;">stellarcyber.ai</strong><div style="font-size:11px; color:var(--text2); margin-top:2px;">Website chính thức — product pages, case studies, datasheets. <a href="https://stellarcyber.ai" target="_blank" style="color:var(--accent);">stellarcyber.ai</a></div></div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:flex-start; padding:12px; background:var(--bg2); border-radius:8px; border-left:3px solid #7c3aed;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#a78bfa; width:32px; flex-shrink:0;">[W2]</div>
+      <div><strong style="font-size:12px;">Stellar Cyber Documentation</strong><div style="font-size:11px; color:var(--text2); margin-top:2px;">Technical docs, API references, deployment guides. <a href="https://docs.stellarcyber.ai" target="_blank" style="color:var(--accent);">docs.stellarcyber.ai</a></div></div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:flex-start; padding:12px; background:var(--bg2); border-radius:8px; border-left:3px solid #7c3aed;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#a78bfa; width:32px; flex-shrink:0;">[W3]</div>
+      <div><strong style="font-size:12px;">Gartner Magic Quadrant — Network Detection & Response 2025</strong><div style="font-size:11px; color:var(--text2); margin-top:2px;">Challenger positioning. <a href="https://www.gartner.com" target="_blank" style="color:var(--accent);">gartner.com</a></div></div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:flex-start; padding:12px; background:var(--bg2); border-radius:8px; border-left:3px solid #7c3aed;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#a78bfa; width:32px; flex-shrink:0;">[W4]</div>
+      <div><strong style="font-size:12px;">Gartner Market Guide for XDR 2023 & 2024</strong><div style="font-size:11px; color:var(--text2); margin-top:2px;">Representative Vendor — Open XDR category.</div></div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:flex-start; padding:12px; background:var(--bg2); border-radius:8px; border-left:3px solid #7c3aed;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#a78bfa; width:32px; flex-shrink:0;">[W5]</div>
+      <div><strong style="font-size:12px;">SC Awards Europe 2023 — Best SIEM</strong><div style="font-size:11px; color:var(--text2); margin-top:2px;">SC Media awards recognition.</div></div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:flex-start; padding:12px; background:var(--bg2); border-radius:8px; border-left:3px solid #7c3aed;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#a78bfa; width:32px; flex-shrink:0;">[W6]</div>
+      <div><strong style="font-size:12px;">IBM — QRadar Cloud sold to Palo Alto Networks</strong><div style="font-size:11px; color:var(--text2); margin-top:2px;">Announcement 2024. Nguồn: IBM Newsroom + Palo Alto Networks press release.</div></div>
+    </div>
+  </div>
+
+  <h3>📜 Văn Bản Pháp Lý Việt Nam</h3>
+  <div style="display:grid; gap:8px;">
+    <div style="display:flex; gap:12px; align-items:flex-start; padding:12px; background:var(--bg2); border-radius:8px; border-left:3px solid #10b981;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#34d399; width:36px; flex-shrink:0;">[VN1]</div>
+      <div><strong style="font-size:12px;">Luật An ninh mạng 2018 (Luật số 24/2018/QH14)</strong><div style="font-size:11px; color:var(--text2); margin-top:2px;">Quốc hội ban hành 12/6/2018, hiệu lực 1/1/2019. Bảo vệ an ninh quốc gia trên không gian mạng.</div></div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:flex-start; padding:12px; background:var(--bg2); border-radius:8px; border-left:3px solid #10b981;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#34d399; width:36px; flex-shrink:0;">[VN2]</div>
+      <div><strong style="font-size:12px;">TT 12/2022/TT-BTTTT — Bảo đảm ATTT mạng</strong><div style="font-size:11px; color:var(--text2); margin-top:2px;">Bộ TTTT, yêu cầu SIEM bắt buộc cho hệ thống thông tin cấp độ 3,4,5.</div></div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:flex-start; padding:12px; background:var(--bg2); border-radius:8px; border-left:3px solid #10b981;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#34d399; width:36px; flex-shrink:0;">[VN3]</div>
+      <div><strong style="font-size:12px;">TT 31/2022/TT-BTTTT — Giám sát ATTT không gian mạng</strong><div style="font-size:11px; color:var(--text2); margin-top:2px;">Bộ TTTT, quy định về giám sát, cảnh báo sớm, ứng cứu sự cố.</div></div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:flex-start; padding:12px; background:var(--bg2); border-radius:8px; border-left:3px solid #10b981;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#34d399; width:36px; flex-shrink:0;">[VN4]</div>
+      <div><strong style="font-size:12px;">NĐ 13/2023/NĐ-CP — Bảo vệ Dữ liệu Cá nhân (PDPD)</strong><div style="font-size:11px; color:var(--text2); margin-top:2px;">Chính phủ ban hành 17/4/2023. Yêu cầu bảo vệ dữ liệu cá nhân, báo cáo vi phạm trong 72 giờ.</div></div>
+    </div>
+    <div style="display:flex; gap:12px; align-items:flex-start; padding:12px; background:var(--bg2); border-radius:8px; border-left:3px solid #10b981;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; color:#34d399; width:36px; flex-shrink:0;">[VN5]</div>
+      <div><strong style="font-size:12px;">TT 09/2020/TT-NHNN — ATTT trong ngành ngân hàng</strong><div style="font-size:11px; color:var(--text2); margin-top:2px;">NHNN, yêu cầu SIEM giám sát giao dịch, lưu trữ log tối thiểu 5 năm.</div></div>
+    </div>
+  </div>
+
+  <div style="margin-top:24px; padding:16px; background:var(--bg2); border-radius:8px; text-align:center;">
+    <div style="font-size:12px; color:var(--text2);">Tài liệu này được biên soạn bởi <strong style="color:var(--text);">NTS Technology</strong> phục vụ đội ngũ sales nội bộ.</div>
+    <div style="font-size:11px; color:var(--text3); margin-top:4px;">Cập nhật lần cuối: Tháng 6/2025 | Liên hệ: presales@nts.com.vn</div>
+  </div>
+</section>
+
+</main>
+
+<script>
+// Active nav tracking
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-link');
+function updateActiveNav() {
+  let current = '';
+  sections.forEach(s => {
+    const top = s.getBoundingClientRect().top;
+    if (top <= 80) current = s.id;
+  });
+  navLinks.forEach(l => {
+    l.classList.toggle('active', l.getAttribute('href') === '#' + current);
+  });
+}
+window.addEventListener('scroll', updateActiveNav, {passive:true});
+updateActiveNav();
+
+// Mobile nav toggle
+const navToggle = document.getElementById('navToggle');
+const sidebar = document.querySelector('.sidebar');
+if (navToggle) {
+  navToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+  });
+  document.addEventListener('click', e => {
+    if (!sidebar.contains(e.target) && e.target !== navToggle) {
+      sidebar.classList.remove('open');
+    }
+  });
+}
+
+// Smooth scroll
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(link.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({behavior:'smooth', block:'start'});
+      sidebar.classList.remove('open');
+    }
+  });
+});
+
+// QA Accordion
+function toggleQA(el) {
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.qa-item.open').forEach(i => i.classList.remove('open'));
+  if (!isOpen) el.classList.add('open');
+}
+</script>
+</body>
+</html>

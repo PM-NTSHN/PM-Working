@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NETSCOUT Service Assurance – Phân Tích Chuyên Sâu Toàn Diện</title>
+<style>
+:root{--ns-green:#7dc242;--ns-dark:#1a1a2e;--ns-mid:#16213e;--ns-accent:#0f3460;--ns-warn:#ff6b35;--ns-gold:#f0c040;--text:#1e293b;--muted:#64748b;--border:#e2e8f0;--card:#ffffff;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:var(--text);line-height:1.7;font-size:15px;}
+.hero{background:linear-gradient(135deg,#0a0f1e 0%,#1a2744 40%,#0d2b1a 100%);color:white;padding:52px 40px 44px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(125,194,66,.18) 0%,transparent 70%);}
+.hero-badge{display:inline-block;background:rgba(125,194,66,.15);border:1px solid rgba(125,194,66,.4);color:var(--ns-green);font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:20px;}
+.hero h1{font-size:2.5rem;font-weight:800;line-height:1.15;margin-bottom:12px;}
+.hero h1 span{color:var(--ns-green);}
+.hero-sub{font-size:1rem;opacity:.75;max-width:680px;margin-bottom:24px;}
+.hero-stats{display:flex;gap:28px;flex-wrap:wrap;margin-top:24px;}
+.hstat{text-align:center;}
+.hstat .num{font-size:1.9rem;font-weight:800;color:var(--ns-green);display:block;}
+.hstat .lbl{font-size:11px;opacity:.6;}
+nav.toc{background:#0f3460;padding:0 40px;display:flex;gap:2px;flex-wrap:wrap;border-bottom:3px solid var(--ns-green);}
+nav.toc a{display:inline-block;color:rgba(255,255,255,.7);text-decoration:none;padding:11px 12px;font-size:12px;font-weight:600;transition:all .2s;white-space:nowrap;}
+nav.toc a:hover{color:var(--ns-green);background:rgba(125,194,66,.08);}
+.container{max-width:1400px;margin:0 auto;padding:0 28px;}
+.main{padding:32px 0 72px;}
+.section{margin-bottom:44px;background:var(--card);border-radius:14px;box-shadow:0 2px 12px rgba(0,0,0,.07);overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--ns-accent) 0%,var(--ns-mid) 100%);color:white;padding:16px 26px;display:flex;align-items:center;gap:12px;}
+.section-header .icon{font-size:1.5rem;min-width:36px;text-align:center;}
+.section-header h2{font-size:1.15rem;font-weight:700;}
+.section-header .badge{margin-left:auto;background:rgba(125,194,66,.25);color:var(--ns-green);font-size:10px;font-weight:700;padding:3px 10px;border-radius:12px;letter-spacing:1px;text-transform:uppercase;}
+.section-body{padding:26px;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;}
+@media(max-width:900px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr 1fr;}}
+@media(max-width:600px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}.container{padding:0 14px;}.hero h1{font-size:1.7rem;}}
+.card{background:#f8fafc;border:1.5px solid var(--border);border-radius:10px;padding:18px;}
+.card.green{border-left:4px solid var(--ns-green);}
+.card.warn{border-left:4px solid var(--ns-warn);}
+.card.gold{border-left:4px solid var(--ns-gold);}
+.card.blue{border-left:4px solid #3b82f6;}
+.card h3{font-size:.95rem;font-weight:700;margin-bottom:8px;color:var(--ns-accent);}
+.card h4{font-size:.88rem;font-weight:700;margin-bottom:6px;}
+.card p{font-size:.87rem;color:var(--muted);}
+.pain-item{display:flex;gap:12px;align-items:flex-start;padding:12px 14px;border-radius:8px;background:#fff5f5;border:1px solid #fecaca;margin-bottom:10px;}
+.pain-icon{font-size:1.3rem;min-width:28px;}
+.pain-item h4{font-size:.92rem;font-weight:700;color:#991b1b;margin-bottom:3px;}
+.pain-item p{font-size:.85rem;color:#7f1d1d;}
+table{width:100%;border-collapse:collapse;font-size:.86rem;}
+th{background:var(--ns-accent);color:white;padding:10px 13px;text-align:left;font-weight:600;}
+td{padding:9px 13px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:nth-child(even) td{background:#f8fafc;}
+tr:hover td{background:#f0fdf4;}
+.check{color:var(--ns-green);font-weight:700;}
+.cross{color:#ef4444;font-weight:700;}
+.partial{color:#f59e0b;font-weight:700;}
+.tag{display:inline-block;background:#dbeafe;color:#1d4ed8;font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;margin:2px;}
+.tag.green{background:#dcfce7;color:#166534;}
+.tag.orange{background:#fff7ed;color:#9a3412;}
+.tag.red{background:#fee2e2;color:#991b1b;}
+.tag.purple{background:#f3e8ff;color:#6b21a8;}
+.arch-box{border:2px solid var(--border);border-radius:10px;overflow:hidden;margin:14px 0;}
+.arch-layer{padding:12px 18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--border);}
+.arch-layer:last-child{border-bottom:none;}
+.arch-label{min-width:110px;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);}
+.arch-components{display:flex;gap:8px;flex-wrap:wrap;flex:1;}
+.arch-comp{background:white;border:2px solid var(--ns-green);border-radius:7px;padding:6px 12px;font-size:.82rem;font-weight:600;color:var(--ns-accent);}
+.arch-comp.secondary{border-color:#3b82f6;}
+.arch-comp.passive{border-color:#94a3b8;color:var(--muted);}
+.arch-layer.l1{background:linear-gradient(90deg,#0f3460 0%,#1a3a6c 100%);}
+.arch-layer.l2{background:#1e293b;}
+.arch-layer.l3{background:#0d1f3a;}
+.arch-layer.l4{background:#0a1628;}
+.arch-layer.l1 .arch-label,.arch-layer.l2 .arch-label,.arch-layer.l3 .arch-label,.arch-layer.l4 .arch-label{color:rgba(255,255,255,.5);}
+.arch-layer.l1 .arch-comp,.arch-layer.l2 .arch-comp,.arch-layer.l3 .arch-comp,.arch-layer.l4 .arch-comp{background:rgba(255,255,255,.07);color:white;border-color:rgba(125,194,66,.5);}
+.callout{background:#f0fdf4;border-left:4px solid var(--ns-green);border-radius:0 8px 8px 0;padding:12px 16px;margin:12px 0;font-size:.88rem;}
+.callout.warn{background:#fff7ed;border-color:var(--ns-warn);}
+.callout.info{background:#eff6ff;border-color:#3b82f6;}
+.divider{border:none;border-top:2px solid var(--border);margin:22px 0;}
+.badge-row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;}
+.badge-item{display:flex;align-items:center;gap:7px;background:#f8fafc;border:1.5px solid var(--border);border-radius:7px;padding:7px 12px;font-size:.82rem;font-weight:600;}
+.swot-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.swot-cell{padding:16px;border-radius:10px;}
+.swot-cell.s{background:#dcfce7;border:1.5px solid #86efac;}
+.swot-cell.w{background:#fee2e2;border:1.5px solid #fca5a5;}
+.swot-cell.o{background:#dbeafe;border:1.5px solid #93c5fd;}
+.swot-cell.t{background:#fef9c3;border:1.5px solid #fde047;}
+.swot-cell h4{font-weight:800;font-size:.95rem;margin-bottom:8px;}
+.swot-cell.s h4{color:#166534;}.swot-cell.w h4{color:#991b1b;}.swot-cell.o h4{color:#1d4ed8;}.swot-cell.t h4{color:#854d0e;}
+.swot-cell ul{list-style:none;font-size:.85rem;}
+.swot-cell ul li{padding:3px 0;padding-left:14px;position:relative;}
+.swot-cell ul li::before{content:'▸';position:absolute;left:0;}
+.swot-cell.s ul li::before{color:#16a34a;}.swot-cell.w ul li::before{color:#dc2626;}.swot-cell.o ul li::before{color:#2563eb;}.swot-cell.t ul li::before{color:#ca8a04;}
+.faq-item{border:1.5px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden;}
+.faq-q{background:#f1f5f9;padding:13px 18px;font-weight:700;font-size:.92rem;color:var(--ns-accent);display:flex;gap:9px;align-items:center;}
+.faq-q .qicon{color:var(--ns-green);font-size:1rem;}
+.faq-a{padding:13px 18px;font-size:.87rem;color:var(--muted);border-top:1px solid var(--border);background:white;}
+.faq-a ul{list-style:disc;padding-left:18px;margin-top:6px;}
+.faq-a li{margin-bottom:4px;}
+.hl-box{background:linear-gradient(135deg,#0f3460,#1a4a80);color:white;border-radius:12px;padding:20px 24px;margin:14px 0;}
+.hl-box h4{color:var(--ns-green);font-size:.95rem;font-weight:700;margin-bottom:10px;}
+.hl-box ul{list-style:none;}
+.hl-box li{padding:3px 0;font-size:.88rem;opacity:.9;}
+.hl-box li::before{content:'✦ ';color:var(--ns-green);}
+.keylock{display:inline-flex;align-items:center;gap:4px;background:#fef3c7;border:1.5px solid #fbbf24;color:#92400e;font-size:.75rem;font-weight:700;padding:2px 9px;border-radius:12px;margin-left:6px;}
+.persona{background:white;border:1.5px solid var(--border);border-radius:12px;padding:18px;}
+.persona-role{display:inline-block;background:var(--ns-accent);color:white;font-size:.72rem;font-weight:700;padding:3px 10px;border-radius:12px;margin-bottom:8px;letter-spacing:.5px;text-transform:uppercase;}
+.persona h4{font-size:1rem;font-weight:700;margin-bottom:8px;color:var(--ns-accent);}
+.persona .hooks{font-size:.84rem;list-style:none;}
+.persona .hooks li{margin-bottom:5px;padding-left:14px;position:relative;}
+.persona .hooks li::before{content:'→';position:absolute;left:0;color:var(--ns-green);}
+footer{background:var(--ns-dark);color:rgba(255,255,255,.5);text-align:center;padding:22px;font-size:.8rem;}
+footer strong{color:var(--ns-green);}
+.anchor{scroll-margin-top:60px;}
+pre{font-family:'Courier New',monospace;white-space:pre;overflow-x:auto;}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-badge">Presales Intelligence Report · 2026</div>
+  <h1>NETSCOUT <span>Service Assurance</span><br>Phân Tích Chuyên Sâu Toàn Diện</h1>
+  <p class="hero-sub">Tài liệu nghiên cứu chuyên sâu dành cho Presales & Solution Consultant — Đủ tự tin tư vấn cho Bank, Fintech, Securities, Enterprise tại Việt Nam</p>
+  <div class="hero-stats">
+    <div class="hstat"><span class="num">30+</span><span class="lbl">Năm R&D</span></div>
+    <div class="hstat"><span class="num">5,000+</span><span class="lbl">Khách hàng / 120 QG</span></div>
+    <div class="hstat"><span class="num">~$900M</span><span class="lbl">Doanh thu FY2025</span></div>
+    <div class="hstat"><span class="num">&gt;50%</span><span class="lbl">Internet visibility</span></div>
+    <div class="hstat"><span class="num">90%</span><span class="lbl">Giảm MTTK với ASI</span></div>
+  </div>
+</div>
+
+<nav class="toc">
+  <a href="#s1">🔥 Pain Points</a>
+  <a href="#s2">🌐 Thị Trường NPMD</a>
+  <a href="#s3">🏢 Về NETSCOUT</a>
+  <a href="#s4">⚙️ Tính Năng SA</a>
+  <a href="#s5">🧠 Công Nghệ ASI</a>
+  <a href="#s6">🏗️ Kiến Trúc & Triển Khai</a>
+  <a href="#s7">☁️ vSTREAM & KlearSight</a>
+  <a href="#s8">💰 License & Sizing</a>
+  <a href="#s9">⚔️ Đối Thủ</a>
+  <a href="#s10">📊 SWOT</a>
+  <a href="#s11">🇻🇳 KH Việt Nam</a>
+  <a href="#s12">🎯 Sales Playbook</a>
+  <a href="#s13">📋 Tech Spec</a>
+  <a href="#s14">💬 FAQ</a>
+  <a href="#s15">📚 Tài Liệu</a>
+</nav>
+
+<div class="container main">
+
+<!-- S1: PAIN POINTS -->
+<div class="section anchor" id="s1">
+  <div class="section-header"><span class="icon">🔥</span><h2>Pain Points Thực Tế — Vì Sao Phải Cần Service Assurance?</h2><span class="badge">Business Driver</span></div>
+  <div class="section-body">
+    <div class="callout"><strong>Thực tế:</strong> 90% thời gian xử lý sự cố dành để tìm nguyên nhân (MTTK), chỉ 10% để fix lỗi — Yankee Group & Forrester. $19,162/giờ brownout, $29,162/giờ downtime (Forrester 2015). Đây là pain point cốt lõi mà NETSCOUT giải quyết.</div>
+
+    <h3 style="margin-bottom:14px;color:var(--ns-accent);">🏦 Khối Ngân Hàng, Fintech & Chứng Khoán</h3>
+    <div class="pain-item"><span class="pain-icon">💸</span><div><h4>Downtime = Mất Tiền Thật & Uy Tín</h4><p>Core banking, internet banking, ATM, payment gateway offline dù 5 phút là mất giao dịch, mất uy tín, bị phạt SLA. Với ngân hàng Việt Nam top-tier, thiệt hại mỗi giờ có thể lên đến hàng tỷ đồng. Thiếu NHNN visibility → rủi ro tuân thủ cao.</p></div></div>
+    <div class="pain-item"><span class="pain-icon">🧩</span><div><h4>"Ai Gây Ra Lỗi?" — The War Room Không Có Đáp Án</h4><p>Khi có sự cố: WAN team nói link OK, Network team nói network OK, Server team nói CPU thấp, DB team nói DB bình thường, App team nói Apps OK... nhưng <strong>user vẫn complain chậm</strong>. Không ai có dữ liệu chung để xác định root cause. Meeting war room kéo dài nhiều giờ vô ích.</p></div></div>
+    <div class="pain-item"><span class="pain-icon">🏗️</span><div><h4>Môi Trường Lai Phức Tạp — Mù Tầm Nhìn</h4><p>Ngân hàng vận hành đồng thời: Main DC, DR site, Co-location, Cloud (AWS/Azure/GCP), SaaS (M365, Webex), mạng WAN/MPLS/SD-WAN. Các tool NPM/APM truyền thống chỉ nhìn được từng mảnh, không có single-pane-of-glass E2E.</p></div></div>
+    <div class="pain-item"><span class="pain-icon">⚡</span><div><h4>Chứng Khoán: Latency ms = Thua Lỗ Lớn</h4><p>Hệ thống trading (FIX protocol, order matching engine) cực kỳ nhạy cảm. Chênh lệch vài ms giữa broker và sàn HoSE/HNX ảnh hưởng hàng ngàn lệnh. Cần monitor latency thực tế theo từng phiên, không phải average 5 phút.</p></div></div>
+    <div class="pain-item"><span class="pain-icon">🌿</span><div><h4>Kubernetes & Microservices — Blind Spot Mới</h4><p>Chuyển sang container/K8s nhưng traffic east-west giữa pod/service hoàn toàn vô hình với TAP vật lý. Sự cố trong microservices không trace được đến đúng service gây lỗi.</p></div></div>
+    <div class="pain-item"><span class="pain-icon">🔒</span><div><h4>Audit & Forensics — Không Đủ Bằng Chứng</h4><p>NHNN yêu cầu giám sát liên tục, forensics khi sự cố bảo mật. Thiếu packet-level visibility → không điều tra được root cause tấn công, không đủ evidence khi bị kiểm tra audit.</p></div></div>
+
+    <div class="callout info" style="margin-top:16px;"><strong>5 Nhu cầu cốt lõi dẫn đến quyết định mua Service Assurance:</strong><br>① End-to-end visibility đa môi trường (physical, virtual, cloud, WFH) · ② Giảm MTTR bằng single source of truth · ③ Giám sát proactive trước khi user phàn nàn · ④ Packet forensics cho audit/security · ⑤ Tự động hóa service triage thay war room thủ công</div>
+  </div>
+</div>
+
+<!-- S2: THỊ TRƯỜNG -->
+<div class="section anchor" id="s2">
+  <div class="section-header"><span class="icon">🌐</span><h2>Thị Trường NPMD — Bức Tranh Cạnh Tranh</h2><span class="badge">Market</span></div>
+  <div class="section-body">
+    <div class="callout"><strong>NPMD</strong> (Network Performance Monitoring & Diagnostics): NETSCOUT dẫn đầu mảng Enterprise NPM và Service Provider Service Assurance. Được analyst firms xếp hạng cao nhất phân khúc packet-based NPM.</div>
+    <h3 style="margin-bottom:12px;">Phân Loại Giải Pháp Trong Thị Trường</h3>
+    <table>
+      <tr><th>Loại Giải Pháp</th><th>Đặc Điểm</th><th>Hãng Đại Diện</th><th>Hạn Chế Chính</th></tr>
+      <tr><td><strong>Packet-Based NPM</strong> <span class="tag green">Highest Fidelity</span></td><td>DPI, lưu trữ packet, phân tích session-level</td><td>NETSCOUT, Riverbed Alluvio, Keysight Ixia, Gigamon</td><td>Chi phí cao, yêu cầu TAP/SPAN</td></tr>
+      <tr><td><strong>Flow-Based NPM</strong></td><td>NetFlow/sFlow/IPFIX, không có payload</td><td>SolarWinds NTA, Kentik, ManageEngine, PRTG</td><td>Không có packet detail, blind với encrypted traffic</td></tr>
+      <tr><td><strong>APM (Agent-Based)</strong></td><td>Agent trên server, trace application code</td><td>Dynatrace, Datadog, New Relic, AppDynamics, Elastic</td><td>Phụ thuộc agent, không thấy network layer</td></tr>
+      <tr><td><strong>Synthetic Monitoring</strong></td><td>Gửi synthetic traffic để đo performance</td><td>NETSCOUT nGeniusPULSE, ThousandEyes (Cisco), Catchpoint</td><td>Không phản ánh traffic thực tế của user</td></tr>
+      <tr><td><strong>Infra Monitoring</strong></td><td>SNMP/API poll CPU, RAM, link utilization</td><td>Zabbix, Nagios, PRTG, SolarWinds NPM, Cisco DNA</td><td>Chỉ nhìn device health, không thấy application</td></tr>
+      <tr><td><strong>Cloud-Native Observability</strong></td><td>Cloud provider metrics, logs, traces</td><td>AWS CloudWatch, Azure Monitor, GCP Operations</td><td>Vendor lock-in, không thấy on-prem</td></tr>
+    </table>
+    <hr class="divider">
+    <h3 style="margin-bottom:12px;">Các Đối Thủ Cạnh Tranh Trực Tiếp</h3>
+    <div class="grid-3">
+      <div class="card blue"><h3>Riverbed Alluvio</h3><p>Packet-based NPM mạnh, có APM tích hợp. Riverbed đang tái cơ cấu sau M&A, độ ổn định roadmap bị nghi ngờ. Mạnh về WAN visibility.</p><div class="badge-row"><span class="tag orange">WAN Focus</span><span class="tag">APM Integrated</span></div></div>
+      <div class="card blue"><h3>Gigamon</h3><p>Chuyên về visibility fabric/packet broker. Không phải NPM management platform — thiếu analytics. Dùng kết hợp với SIEM/NDR.</p><div class="badge-row"><span class="tag">Packet Broker</span><span class="tag orange">No Analytics</span></div></div>
+      <div class="card blue"><h3>Cisco ThousandEyes</h3><p>Mạnh về Internet/SaaS/cloud path visibility qua synthetic. Không có packet-level DPI, không lưu packet, không phân tích session thực tế.</p><div class="badge-row"><span class="tag">SaaS Monitoring</span><span class="tag orange">Synthetic Only</span></div></div>
+      <div class="card blue"><h3>SolarWinds NPM/NTA</h3><p>Flow-based, phổ biến SMB, chi phí thấp. Không có deep packet analysis, không có service triage workflow.</p><div class="badge-row"><span class="tag">Low Cost</span><span class="tag orange">No DPI</span><span class="tag red">Security Risk</span></div></div>
+      <div class="card blue"><h3>Dynatrace / Datadog</h3><p>APM xuất sắc cho cloud-native. Phụ thuộc agent, yếu về network packet analysis, không có wire-data forensics.</p><div class="badge-row"><span class="tag green">APM Leader</span><span class="tag orange">Agent Dependent</span></div></div>
+      <div class="card blue"><h3>Keysight (Ixia)</h3><p>Mạnh về testing và packet visibility infrastructure. Không phải service assurance platform — thiếu analytics layer.</p><div class="badge-row"><span class="tag">Packet Capture</span><span class="tag orange">Testing Focus</span></div></div>
+    </div>
+    <div class="callout" style="margin-top:14px;"><strong>Định vị độc nhất của NETSCOUT:</strong> Là hãng <em>duy nhất</em> kết hợp Packet-Based DPI (wire data) + Service Analytics + DDoS Protection + vSTREAM virtualization + KlearSight Kubernetes trong một platform thống nhất với single source of truth.</div>
+  </div>
+</div>
+
+<!-- S3: GIỚI THIỆU NETSCOUT -->
+<div class="section anchor" id="s3">
+  <div class="section-header"><span class="icon">🏢</span><h2>Giới Thiệu Hãng NETSCOUT Systems</h2><span class="badge">Company</span></div>
+  <div class="section-body">
+    <div class="grid-2">
+      <div>
+        <h3 style="margin-bottom:10px;">Thông Tin Công Ty</h3>
+        <table>
+          <tr><td><strong>Tên đầy đủ</strong></td><td>NETSCOUT Systems, Inc.</td></tr>
+          <tr><td><strong>Sàn giao dịch</strong></td><td>NASDAQ: NTCT</td></tr>
+          <tr><td><strong>Trụ sở</strong></td><td>Westford, Massachusetts, USA</td></tr>
+          <tr><td><strong>Số nhân viên</strong></td><td>~2,000 tại hơn 50 văn phòng toàn cầu</td></tr>
+          <tr><td><strong>Khách hàng</strong></td><td>&gt;5,000 tại hơn 120 quốc gia</td></tr>
+          <tr><td><strong>Doanh thu FY2025</strong></td><td>~$900 triệu USD</td></tr>
+          <tr><td><strong>Cơ cấu doanh thu</strong></td><td>60% Americas, 40% Rest of World<br>50% Enterprise, 50% Service Provider</td></tr>
+          <tr><td><strong>Tagline</strong></td><td>"Guardians of the Connected World"</td></tr>
+          <tr><td><strong>Distributor tại VN</strong></td><td>NTS Hanoi</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3 style="margin-bottom:10px;">Danh Mục Sản Phẩm Chính</h3>
+        <div class="card green" style="margin-bottom:10px;"><h4>🟢 Service Assurance (nGeniusONE)</h4><p>Platform giám sát service E2E — phân tích network/application/server performance, service triage với ASI technology. <strong>Sản phẩm chính đang tư vấn.</strong></p></div>
+        <div class="card blue" style="margin-bottom:10px;"><h4>🛡️ DDoS Protection (Arbor AED / ATLAS)</h4><p>Giải pháp phát hiện và ngăn chặn DDoS #1 thế giới. Bảo vệ hơn 50% lưu lượng Internet toàn cầu qua ATLAS Intelligence Feed.</p></div>
+        <div class="card warn" style="margin-bottom:10px;"><h4>🔍 Omnis Cyber Intelligence (oCI)</h4><p>Network Detection & Response (NDR) — cùng dữ liệu ASI để phát hiện mối đe dọa bảo mật nâng cao.</p></div>
+        <div class="callout" style="font-size:.84rem;"><strong>Note Presales:</strong> NETSCOUT có 3 portfolio chính. Khi gặp khách hàng, hỏi về nhu cầu bảo mật để upsell Arbor AED hoặc oCI.</div>
+      </div>
+    </div>
+    <hr class="divider">
+    <h3 style="margin-bottom:12px;">Khách Hàng Điển Hình (APAC)</h3>
+    <div class="badge-row">
+      <span class="badge-item">🏦 Standard Chartered</span><span class="badge-item">🏦 VietinBank</span><span class="badge-item">🏦 Public Bank VN</span><span class="badge-item">🏦 MB Bank</span><span class="badge-item">🏦 CIMB SG/MY/ID</span><span class="badge-item">🏦 Maybank</span><span class="badge-item">🏦 Bank of America</span><span class="badge-item">🏦 Wells Fargo</span><span class="badge-item">📈 SSI Securities</span><span class="badge-item">📈 Yuanta Securities</span><span class="badge-item">📈 Taipei Exchange</span><span class="badge-item">🏛️ Bank Mandiri</span><span class="badge-item">🏛️ Bank Indonesia</span><span class="badge-item">🎰 PAGCOR Philippines</span><span class="badge-item">✈️ Taiwan Taoyuan Airport</span>
+    </div>
+    <div class="callout info" style="margin-top:10px;"><strong>Điểm bán hàng:</strong> NETSCOUT có customer references rất mạnh tại APAC, đặc biệt khối ngân hàng Đông Nam Á. <strong>VietinBank là reference tại Việt Nam</strong> — rất giá trị khi pitching cho ngân hàng Việt khác.</div>
+  </div>
+</div>
+
+<!-- S4: TÍNH NĂNG -->
+<div class="section anchor" id="s4">
+  <div class="section-header"><span class="icon">⚙️</span><h2>Tính Năng Chi Tiết — nGeniusONE Service Assurance</h2><span class="badge">Features</span></div>
+  <div class="section-body">
+    <h3 style="margin-bottom:12px;color:var(--ns-accent);">1. Service Triage Workflow — Luồng 4 Cấp Độ</h3>
+    <div class="arch-box">
+      <div class="arch-layer" style="background:#f0fdf4;">
+        <div class="arch-label" style="color:#166534;">TRIAGE FLOW</div>
+        <div class="arch-components">
+          <div class="arch-comp" style="background:#dcfce7;color:#166534;">① Service Dashboard &amp; Alerts</div>
+          <div style="color:var(--muted);font-size:1.2rem;align-self:center;">→</div>
+          <div class="arch-comp" style="background:#dcfce7;color:#166534;">② Service Monitor (L7)</div>
+          <div style="color:var(--muted);font-size:1.2rem;align-self:center;">→</div>
+          <div class="arch-comp" style="background:#dcfce7;color:#166534;">③ Session Analysis</div>
+          <div style="color:var(--muted);font-size:1.2rem;align-self:center;">→</div>
+          <div class="arch-comp" style="background:#dcfce7;color:#166534;">④ Packet Analysis</div>
+        </div>
+      </div>
+    </div>
+    <div class="grid-4" style="margin-top:14px;">
+      <div class="card green"><h4>① Dashboard &amp; Alerts</h4><p>Immediate visibility: cloud, colo, DC, WFH, office. Phân cấp health theo service→site→component. Alert intelligent theo baseline tự học.</p></div>
+      <div class="card green"><h4>② Service Monitor (L7)</h4><p>App layer: HTTP/DNS/Oracle/LDAP/SIP. Đo Server RT, Throughput, Error Rate, MOS Score. SaaS: O365, Webex, UCaaS.</p></div>
+      <div class="card green"><h4>③ Session Analysis</h4><p>ASI metadata target nguyên nhân. TCP RTT, Retransmission, Connect Time. Drill-down từ aggregate đến individual session.</p></div>
+      <div class="card green"><h4>④ Packet Analysis</h4><p>Raw packet forensics. Decode payload đến app level. Tái tạo session, xem SQL, HTTP header, TLS. Evidence cho audit/security.</p></div>
+    </div>
+
+    <hr class="divider">
+    <h3 style="margin-bottom:12px;color:var(--ns-accent);">2. Protocol Support — Bao Phủ Rộng Nhất Trong Ngành</h3>
+    <div class="grid-3">
+      <div class="card"><h4>🏦 Enterprise &amp; Finance Apps</h4><div class="badge-row"><span class="tag">HTTP/HTTPS</span><span class="tag">DNS/DHCP</span><span class="tag">SMTP/POP3</span><span class="tag green">Oracle/MySQL</span><span class="tag green">IBM MQ</span><span class="tag green">LDAP/Kerberos</span><span class="tag">SMB/NFS</span><span class="tag orange">FIX Protocol</span><span class="tag orange">DICOM/HL7</span><span class="tag green">Citrix XenApp</span><span class="tag">EPIC/EGCP</span><span class="tag">GDMP</span></div></div>
+      <div class="card"><h4>📞 Voice &amp; Video / UC</h4><div class="badge-row"><span class="tag">SIP</span><span class="tag">RTP/RTCP</span><span class="tag">H225/H245/H248</span><span class="tag green">AVAYA/MGCP</span><span class="tag">SCCP</span><span class="tag purple">MOS Scoring</span><span class="tag purple">Jitter Analysis</span></div></div>
+      <div class="card"><h4>💳 Card Processing</h4><div class="badge-row"><span class="tag orange">VISA</span><span class="tag orange">MasterCard</span><span class="tag orange">AMEX</span><span class="tag orange">UnionPay</span><span class="tag orange">Discover</span><span class="keylock">★ Unique</span></div></div>
+      <div class="card"><h4>📱 Mobile &amp; Carrier</h4><div class="badge-row"><span class="tag">GTP v0/v1/v2</span><span class="tag">S1AP/SCTP</span><span class="tag">Diameter/Radius</span><span class="tag">SGsAP/X2AP</span><span class="tag">PMIPv6/NSIP</span></div></div>
+      <div class="card"><h4>🔀 Encapsulation &amp; Tunnel</h4><div class="badge-row"><span class="tag">VLAN/Stacked</span><span class="tag">MPLS</span><span class="tag">GRE/GTP</span><span class="tag">VXLAN/VNTag</span><span class="tag">PPPoE/PBB-TE</span><span class="tag">L2TP/LWAPP</span><span class="tag green">IPv4-in-IPv6</span><span class="tag">ERSPAN</span></div></div>
+      <div class="card"><h4>🔐 Security &amp; Custom</h4><div class="badge-row"><span class="tag green">SSL Certificate</span><span class="tag green">STAMP RFC8762</span><span class="tag">MSRP/ActiveSync</span><span class="tag purple">DNS Anomaly</span><span class="tag purple">HTTPS Anomaly</span><span class="tag">VSAN/OUCH</span></div></div>
+    </div>
+
+    <hr class="divider">
+    <h3 style="margin-bottom:12px;color:var(--ns-accent);">3. Additional Capabilities</h3>
+    <div class="grid-3">
+      <div class="card gold"><h4>🗺️ Auto Service Dependency Map</h4><p>Tự động vẽ dependency map giữa service components. Khi 1 component lỗi, hiển thị ngay upstream/downstream bị ảnh hưởng. Không cần cấu hình CMDB thủ công.</p></div>
+      <div class="card gold"><h4>🔎 Traffic Discovery</h4><p>Tự động khám phá toàn bộ ứng dụng trên mạng không cần cấu hình trước. Phân loại theo protocol signature — hữu ích giai đoạn onboarding.</p></div>
+      <div class="card gold"><h4>🔍 Advanced Search</h4><p>Tìm packet/session theo IP, port, username, transaction ID, error code, SQL query. Truy xuất lịch sử tối đa theo storage capacity của ISNG.</p></div>
+      <div class="card gold"><h4>📈 Capacity Planning</h4><p>Trending theo giờ/ngày/tuần/tháng. Dự báo khi nào link/server bão hòa. Top-N application/server theo utilization — hỗ trợ quyết định nâng cấp.</p></div>
+      <div class="card gold"><h4>🏢 Multi-Site / Global View</h4><p>Single dashboard cho DC, DR, chi nhánh, remote site và cloud. Mỗi site có ISNG/vSTREAM, tất cả report về nGeniusONE trung tâm (Global Manager).</p></div>
+      <div class="card gold"><h4>📱 nGeniusPULSE (Add-on)</h4><p>nPoint device tạo synthetic traffic đo performance chủ động. Phát hiện vấn đề trước khi user complain. Isolate: network, app, server hay client?</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- S5: ASI TECHNOLOGY -->
+<div class="section anchor" id="s5">
+  <div class="section-header"><span class="icon">🧠</span><h2>Công Nghệ ASI — "Bí Mật" Độc Quyền Của NETSCOUT</h2><span class="badge">Unique Tech</span></div>
+  <div class="section-body">
+    <div class="hl-box">
+      <h4>Adaptive Service Intelligence® (ASI) — Patented Technology</h4>
+      <ul>
+        <li>DPI engine thế hệ mới được cấp patent độc quyền của NETSCOUT</li>
+        <li>Chạy tại điểm thu thập (InfiniStreamNG/vSTREAM) — không xử lý tại management server</li>
+        <li>Tạo "Smart Data" từ raw packet: metadata giàu thông tin, có ngữ cảnh, scalable</li>
+        <li>Smart Data: transaction metrics, error codes, server RT, MOS score, TCP indicators, app signatures</li>
+        <li>Common Dataset cho cả nGeniusONE (SA) lẫn Omnis Cyber Intelligence (Security) — dùng chung 1 nguồn</li>
+        <li>Giảm MTTK lên đến 90% so với phương pháp bottom-up triage truyền thống</li>
+        <li>Visibility vào over 50% of the global Internet + large enterprise &amp; mobile traffic</li>
+      </ul>
+    </div>
+    <div class="grid-2" style="margin-top:18px;">
+      <div>
+        <h3 style="margin-bottom:10px;">ASI: Raw Data → Smart Data → Knowledge</h3>
+        <div class="arch-box">
+          <div class="arch-layer l4"><div class="arch-label">Raw Data</div><div class="arch-components"><div class="arch-comp">2,500 Packets/page load</div><div class="arch-comp">15 DNS lookups</div><div class="arch-comp">10 TLS handshakes</div></div></div>
+          <div class="arch-layer l3" style="justify-content:center;padding:8px;font-size:1.1rem;color:var(--ns-green);">▼ ASI DPI Engine (Patented) ▼</div>
+          <div class="arch-layer l2"><div class="arch-label">Smart Data</div><div class="arch-components"><div class="arch-comp">DNS Response Time</div><div class="arch-comp">URL Failure Rate</div><div class="arch-comp">Error Codes</div><div class="arch-comp">App Server RT</div></div></div>
+          <div class="arch-layer l1"><div class="arch-label">Knowledge</div><div class="arch-components"><div class="arch-comp">Service: Degraded</div><div class="arch-comp">Root Cause: DB Tier</div><div class="arch-comp">850 sessions affected</div></div></div>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:10px;">Điểm Độc Quyền vs. Đối Thủ</h3>
+        <table>
+          <tr><th>Capability</th><th>NETSCOUT</th><th>Đối Thủ</th></tr>
+          <tr><td>Packet DPI tại source</td><td><span class="check">✓ ASI</span></td><td><span class="cross">✗ Flow only</span></td></tr>
+          <tr><td>Không cần agent</td><td><span class="check">✓</span></td><td><span class="cross">✗ APM agent</span></td></tr>
+          <tr><td>Wire-data forensics</td><td><span class="check">✓ Packet replay</span></td><td><span class="partial">≈ Partial</span></td></tr>
+          <tr><td>K8s eBPF visibility</td><td><span class="check">✓ KlearSight</span></td><td><span class="cross">✗ / Limited</span></td></tr>
+          <tr><td>Common dataset SA+Sec</td><td><span class="check">✓</span></td><td><span class="cross">✗ Siloed</span></td></tr>
+          <tr><td>Card protocol decode</td><td><span class="check">✓ VISA/MC/AMEX</span></td><td><span class="cross">✗</span></td></tr>
+          <tr><td>MOS score thực tế</td><td><span class="check">✓ Wire-based</span></td><td><span class="partial">≈ Synthetic</span></td></tr>
+          <tr><td>DDoS + SA platform</td><td><span class="check">✓ Arbor AED</span></td><td><span class="cross">✗</span></td></tr>
+          <tr><td>Single DC+DR dashboard</td><td><span class="check">✓ Global Mgr</span></td><td><span class="partial">≈ Partial</span></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S6: KIẾN TRÚC TRIỂN KHAI -->
+<div class="section anchor" id="s6">
+  <div class="section-header"><span class="icon">🏗️</span><h2>Kiến Trúc Giải Pháp &amp; Mô Hình Triển Khai</h2><span class="badge">Architecture</span></div>
+  <div class="section-body">
+    <h3 style="margin-bottom:12px;">Các Thành Phần Hệ Thống</h3>
+    <div class="arch-box">
+      <div class="arch-layer l1"><div class="arch-label">📊 Management</div><div class="arch-components"><div class="arch-comp">nGeniusONE Server<br><small style="opacity:.7;font-size:.72rem;">Web UI · Analytics · Alerting · Reporting</small></div><div class="arch-comp secondary">Global Manager<br><small style="opacity:.7;font-size:.72rem;">Multi-site federation</small></div><div class="arch-comp secondary">nGeniusPULSE<br><small style="opacity:.7;font-size:.72rem;">Synthetic add-on</small></div></div></div>
+      <div class="arch-layer l2"><div class="arch-label">🔬 Instrumentation</div><div class="arch-components"><div class="arch-comp">InfiniStreamNG (ISNG)<br><small style="opacity:.7;font-size:.72rem;">Physical appliance 1G/10G/40G/100G</small></div><div class="arch-comp">vSTREAM<br><small style="opacity:.7;font-size:.72rem;">Virtual appliance VMware/KVM/Hyper-V</small></div><div class="arch-comp">Omnis KlearSight<br><small style="opacity:.7;font-size:.72rem;">Kubernetes eBPF sensor</small></div><div class="arch-comp secondary">nPoint<br><small style="opacity:.7;font-size:.72rem;">Synthetic agent</small></div></div></div>
+      <div class="arch-layer l3"><div class="arch-label">🔀 Packet Fabric</div><div class="arch-components"><div class="arch-comp">nGenius 7000 PFS<br><small style="opacity:.7;font-size:.72rem;">Packet Flow Switch / Broker</small></div><div class="arch-comp secondary">HD TAPs<br><small style="opacity:.7;font-size:.72rem;">Optical/copper hardware TAP</small></div><div class="arch-comp passive">SPAN Ports<br><small style="opacity:.7;font-size:.72rem;">From switches/routers</small></div></div></div>
+      <div class="arch-layer l4"><div class="arch-label">🌐 Network</div><div class="arch-components"><div class="arch-comp">Physical DC Network</div><div class="arch-comp">Virtual/Cloud Network</div><div class="arch-comp">WAN/SD-WAN/MPLS</div><div class="arch-comp">Internet/SaaS</div><div class="arch-comp">Kubernetes Cluster</div></div></div>
+    </div>
+
+    <hr class="divider">
+    <h3 style="margin-bottom:12px;">📐 Mô Hình DC + DR — Single Dashboard (ASCII Diagram)</h3>
+    <div style="background:#0a1628;border-radius:10px;padding:20px;overflow-x:auto;">
+<pre style="color:#7dc242;font-size:.78rem;line-height:1.8;">
+┌──────────────────────────────────────────────────────────────────────────┐
+│              nGeniusONE Global Manager (Single Pane of Glass)             │
+│                   Dashboard: DC + DR + Branches + Cloud                   │
+└────────────────┬──────────────────────────────┬────────────────────────────┘
+                 │                              │
+    ┌────────────▼────────────┐    ┌────────────▼────────────┐
+    │    MAIN DATA CENTER      │    │   DR / HOT STANDBY SITE  │
+    │                          │    │                          │
+    │  nGeniusONE Primary      │    │  nGeniusONE Standby      │
+    │  ISNG 9700/9800 (100G)   │    │  ISNG Hardware (same)    │
+    │  vSTREAM (VMware ESXi)   │    │  vSTREAM (VMware ESXi)   │
+    │  KlearSight (K8s cluster) │    │                          │
+    │  HD TAP + PFS 7000       │    │  HD TAP + PFS 7000       │
+    │                          │    │                          │
+    │  [Core Switch]           │    │  [Core Switch]           │
+    │  [Server Farm / VMs]     │    │  [Server Farm / VMs]     │
+    │  [Firewall / LB]         │    │  [Firewall / LB]         │
+    └────────────┬─────────────┘    └──────────────────────────┘
+                 │
+    ┌────────────▼──────────────────────────────────────────────┐
+    │     BRANCH OFFICES / REMOTE SITES / CLOUD                  │
+    │                                                            │
+    │  Branch A:  ISNG 1400/2400 Series (1G tap)                │
+    │  Branch B:  vSTREAM virtual probe (cost-effective)         │
+    │  Branch C:  nPoint only (synthetic monitoring)             │
+    │  AWS/Azure: vSTREAM cloud VNF (marketplace image)         │
+    └────────────────────────────────────────────────────────────┘</pre>
+    </div>
+    <div class="callout info" style="margin-top:12px;"><strong>DC + DR Single Dashboard?</strong> ✅ Có! NETSCOUT hỗ trợ Global Manager — nGeniusONE Primary tại DC làm quản lý trung tâm, nGeniusONE Standby tại DR (license Standby — giảm chi phí). Tất cả ISNG/vSTREAM mọi site report về 1 dashboard. Khi failover, nGeniusONE Standby tự động tiếp quản.</div>
+
+    <hr class="divider">
+    <h3 style="margin-bottom:12px;">📡 Nguyên Tắc Đặt TAP/SPAN — Không Cần Mỗi Hop</h3>
+    <div class="callout warn"><strong>Câu hỏi thường gặp:</strong> "Có phải mỗi hop mạng đều cần TAP không? Số lượng sẽ rất lớn?"<br><strong>Trả lời:</strong> Không. TAP/SPAN chỉ cần đặt tại các <strong>điểm chiến lược</strong> — đủ để thấy traffic đi qua giữa các tier.</div>
+    <div class="grid-3">
+      <div class="card green"><h4>Trong Data Center</h4><ul style="list-style:disc;padding-left:18px;font-size:.85rem;color:var(--muted);"><li>Core/aggregation switch: capture inter-tier traffic</li><li>Internet edge (FW outside/inside): N-S traffic</li><li>Load balancer entry/exit: client + server side</li><li>Database access switch: xem SQL queries</li></ul></div>
+      <div class="card gold"><h4>WAN &amp; Branch</h4><ul style="list-style:disc;padding-left:18px;font-size:.85rem;color:var(--muted);"><li>WAN router tại HQ: aggregate tất cả branch traffic</li><li>Branch WAN router: visibility tại từng site</li><li>SD-WAN CPE: nếu dùng SD-WAN</li><li>nPoint tại branch: synthetic thay physical TAP</li></ul></div>
+      <div class="card blue"><h4>Virtual &amp; Cloud</h4><ul style="list-style:disc;padding-left:18px;font-size:.85rem;color:var(--muted);"><li>vSTREAM: deploy như VM, capture VM-to-VM east-west</li><li>KlearSight DaemonSet: mỗi K8s worker node</li><li>Cloud VPC: traffic mirroring (AWS VPC/Azure vNet)</li><li>NSX-T/ACI: tích hợp via SPAN hoặc NetFlow</li></ul></div>
+    </div>
+    <div class="callout" style="margin-top:12px;"><strong>Tip Sizing:</strong> Dùng nGenius 7000 PFS như Packet Broker để aggregate nhiều TAP về 1-2 ISNG. Ví dụ: 20 TAP điểm → PFS 7000 (filter+aggregate) → 1x ISNG 40G. Giảm đáng kể số lượng ISNG cần thiết, tối ưu chi phí.</div>
+
+    <hr class="divider">
+    <h3 style="margin-bottom:12px;">🔧 ISNG Hardware Models Overview</h3>
+    <table>
+      <tr><th>Model Series</th><th>Capture Speed</th><th>Storage</th><th>Form Factor</th><th>Use Case</th></tr>
+      <tr><td>1400/2400 Series</td><td>4-Port 1GbE SFP</td><td>8–16 TB (RAID 5)</td><td>1U</td><td>Branch, Remote site, Small DC</td></tr>
+      <tr><td>2600 Series</td><td>4-Port 1/10G SFP/SFP+</td><td>16 TB (RAID 5)</td><td>1U</td><td>Medium enterprise DC</td></tr>
+      <tr><td>4700 Series</td><td>4-Port 1/10G SFP/SFP+</td><td>32 TB → 96 TB (ext.)</td><td>1U</td><td>Large enterprise DC core</td></tr>
+      <tr><td>4800 Series</td><td>4-Port 1/10G SFP/SFP+</td><td>32 TB → 160 TB (ESU)</td><td>1U</td><td>Large enterprise DC + long retention</td></tr>
+      <tr><td>6600 Series</td><td>4-Port 1/10G SFP/SFP+</td><td>48 TB (RAID 6)</td><td>3U</td><td>High-volume environments</td></tr>
+      <tr><td>9700 Series</td><td>4-Port 1/10G + 64 TB ext.</td><td>64–192 TB (RAID 6)</td><td>3U</td><td>SP Core / Large Enterprise</td></tr>
+      <tr><td><strong>9800 Series</strong> <span class="tag green">Flagship</span></td><td><strong>4×10G + 2×40G + 2×100G QSFP28</strong></td><td>128–384 TB (RAID 6)</td><td>3U</td><td>100G SP / Very Large Enterprise</td></tr>
+    </table>
+    <div class="callout" style="margin-top:10px;"><strong>ISNG Software Appliance:</strong> Cho KH đã chuẩn hóa Dell/HPE server. NETSCOUT cung cấp ISNG SW + ASI Accelerator NIC (QSFP28 100G, QSFP+ 40G, SFP+ 10G). Hỗ trợ server Dell R740/HPE DL380 Gen10.</div>
+  </div>
+</div>
+
+<!-- S7: vSTREAM & KlearSight -->
+<div class="section anchor" id="s7">
+  <div class="section-header"><span class="icon">☁️</span><h2>vSTREAM &amp; Omnis KlearSight — Visibility Môi Trường Ảo Hóa</h2><span class="badge">Virtualization</span></div>
+  <div class="section-body">
+    <div class="callout info"><strong>Vấn đề cốt lõi:</strong> Trong ảo hóa, traffic giữa VM/Container trên cùng host <strong>không đi qua physical switch</strong> → TAP vật lý hoàn toàn mù. NETSCOUT giải quyết bằng 2 công nghệ: <strong>vSTREAM</strong> (VM/cloud) và <strong>KlearSight</strong> (Kubernetes).</div>
+    <div class="grid-2" style="margin-top:14px;">
+      <div class="card green">
+        <h3>vSTREAM — Virtual Instrumentation</h3>
+        <p style="margin-bottom:8px;font-size:.88rem;color:var(--muted);">Deploy như VM thông thường trên hypervisor. Kết nối với virtual switch để capture east-west VM-to-VM traffic. Chạy ASI tại chỗ và gửi Smart Data về ISNG/nGeniusONE.</p>
+        <h4 style="font-size:.88rem;margin-bottom:6px;">Môi Trường Hỗ Trợ:</h4>
+        <div class="badge-row"><span class="tag green">VMware vSphere</span><span class="tag green">VMware NSX-V/NSX-T</span><span class="tag green">KVM/OpenStack</span><span class="tag green">Hyper-V</span><span class="tag">AWS</span><span class="tag">Microsoft Azure</span><span class="tag">Google GCP</span><span class="tag">Oracle Cloud</span></div>
+        <h4 style="font-size:.88rem;margin-top:10px;margin-bottom:6px;">Deployment Models:</h4>
+        <ul style="font-size:.84rem;color:var(--muted);list-style:disc;padding-left:18px;">
+          <li><strong>Stand-alone VNF:</strong> VM riêng trên hypervisor (VMware/KVM/Hyper-V)</li>
+          <li><strong>Embedded:</strong> Nhúng vào OS/kernel của server</li>
+          <li><strong>Container:</strong> Deploy như container trong Docker (không phải K8s)</li>
+        </ul>
+        <div class="callout" style="margin-top:10px;font-size:.82rem;">Tối thiểu <strong>1 vCPU</strong>. Thêm resource để tăng throughput. Full ASI Smart Data available.</div>
+      </div>
+      <div class="card blue">
+        <h3>Omnis KlearSight — Kubernetes eBPF Sensor</h3>
+        <p style="margin-bottom:8px;font-size:.88rem;color:var(--muted);">Dành riêng cho Kubernetes. Dùng <strong>eBPF</strong> (extended Berkeley Packet Filter) — capture tại Linux kernel, không cần sidecar container. Tự động thích ứng khi K8s topology thay đổi.</p>
+        <h4 style="font-size:.88rem;margin-bottom:6px;">4 Thành Phần:</h4>
+        <ul style="font-size:.84rem;color:var(--muted);list-style:disc;padding-left:18px;">
+          <li><strong>KlearSight Manager:</strong> 1 per cluster. Monitor topology K8s, quản lý Sensors, xác định pod cần capture</li>
+          <li><strong>KlearSight Sensor:</strong> DaemonSet → auto-deploy trên MỌI worker node. Capture traffic từ designated pods</li>
+          <li><strong>ASI Instrumentation:</strong> ISNG hoặc vSTREAM external nhận traffic, convert sang Smart Data</li>
+          <li><strong>nGeniusONE:</strong> Dashboard phân tích cuối cùng</li>
+        </ul>
+        <h4 style="font-size:.88rem;margin-top:10px;margin-bottom:6px;">K8s Platforms Hỗ Trợ:</h4>
+        <div class="badge-row"><span class="tag green">AWS EKS</span><span class="tag green">Azure AKS</span><span class="tag green">Google GKE</span><span class="tag orange">RedHat OpenShift</span><span class="tag orange">OKD</span><span class="tag">OSS Kubernetes</span></div>
+      </div>
+    </div>
+
+    <hr class="divider">
+    <h3 style="margin-bottom:12px;">📊 Bảng Quyết Định: Khi Nào Dùng Công Nghệ Nào?</h3>
+    <table>
+      <tr><th>Môi Trường</th><th>Công Nghệ Thu Thập</th><th>Dependency</th><th>License</th></tr>
+      <tr><td><strong>Physical server (bare metal)</strong></td><td>TAP/SPAN → ISNG Hardware</td><td>HD TAP hoặc SPAN port</td><td>ISNG HW + nGeniusONE</td></tr>
+      <tr><td><strong>VMware vSphere (East-West)</strong></td><td>vSTREAM VM trên ESXi</td><td>Promiscuous Mode hoặc NSX SPAN</td><td>vSTREAM SW license</td></tr>
+      <tr><td><strong>OpenStack / KVM</strong></td><td>vSTREAM embedded</td><td>OvS port mirroring</td><td>vSTREAM SW license</td></tr>
+      <tr><td><strong>Docker Container (không K8s)</strong></td><td>vSTREAM container mode</td><td>Docker host network access</td><td>vSTREAM SW license</td></tr>
+      <tr><td><strong>Kubernetes (on-prem)</strong></td><td><strong>Omnis KlearSight DaemonSet</strong></td><td>ISNG/vSTREAM external cluster</td><td><strong>KlearSight license</strong></td></tr>
+      <tr><td><strong>AWS EKS / Azure AKS / GKE</strong></td><td><strong>Omnis KlearSight DaemonSet</strong></td><td>vSTREAM trong cloud VPC/VNet</td><td><strong>KlearSight license</strong></td></tr>
+      <tr><td><strong>RedHat OpenShift</strong></td><td><strong>Omnis KlearSight</strong></td><td>OCP-compatible ISNG/vSTREAM</td><td><strong>KlearSight license</strong></td></tr>
+      <tr><td><strong>Public Cloud VM (non-K8s)</strong></td><td>vSTREAM cloud VNF</td><td>VPC traffic mirroring</td><td>vSTREAM SW license</td></tr>
+    </table>
+    <div class="callout warn" style="margin-top:10px;"><strong>⚠️ KlearSight cần license riêng khi KH có Kubernetes</strong> — dù on-prem hay cloud-managed (EKS/AKS/GKE/OpenShift). vSTREAM thông thường KHÔNG capture được traffic trong K8s pod vì networking model khác hoàn toàn.</div>
+
+    <hr class="divider">
+    <h3 style="margin-bottom:12px;">🔍 KlearSight Architecture (ASCII Diagram)</h3>
+    <div style="background:#0a1628;border-radius:10px;padding:20px;overflow-x:auto;">
+<pre style="color:#7dc242;font-size:.76rem;line-height:1.8;">
+┌──────────────────────────────────────────────────────────────────────┐
+│                        KUBERNETES CLUSTER                             │
+│                                                                      │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐            │
+│  │  Node 1  │  │  Node 2  │  │  Node 3  │  │  Node N  │            │
+│  │ [pod][pod│  │ [pod][pod│  │ [pod][pod│  │ [pod][pod│            │
+│  │[KlearSight  │ [KlearSight  │ [KlearSight  │ [KlearSight│ ← DaemonSet│
+│  │ Sensor]  │  │ Sensor]  │  │ Sensor]  │  │ Sensor]  │            │
+│  └────┬─────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘            │
+│       └─────────────┴─────────────┴─────────────┘                   │
+│                              ↑ Data Path                              │
+│  ┌───────────────────────────────────────┐                           │
+│  │  Omnis KlearSight Manager             │ ← Control (K8s API)       │
+│  │  (1 instance per cluster)             │                           │
+│  └───────────────────────────────────────┘                           │
+└──────────────────────────────────────────────────────────────────────┘
+                              │ Traffic (packets/SSL)
+                              ▼
+┌──────────────────────────────────────────┐
+│  ASI Instrumentation (OUTSIDE cluster)   │
+│  InfiniStreamNG hoặc vSTREAM             │
+│  → Convert traffic to ASI Smart Data     │
+└──────────────────────────────────────────┘
+                              │
+                              ▼
+┌──────────────────────────────────────────┐
+│  nGeniusONE Management Platform          │
+│  Service Dashboard · Session · Packet    │
+└──────────────────────────────────────────┘</pre>
+    </div>
+
+    <hr class="divider">
+    <h3 style="margin-bottom:12px;">⚠️ Lưu Ý — Kubernetes Khi Rất Nhiều Node &amp; Container</h3>
+    <div class="grid-2">
+      <div class="card warn">
+        <h4>🔴 Thách Thức K8s Đặc Thù</h4>
+        <ul style="list-style:disc;padding-left:18px;font-size:.86rem;color:var(--muted);">
+          <li>Pods liên tục spin up/down/reschedule → topology thay đổi liên tục</li>
+          <li>East-west traffic giữa pods cùng node không qua physical NIC</li>
+          <li>Overlay network (VXLAN, Calico, Cilium, Flannel) ẩn traffic thực tế</li>
+          <li>Service mesh (Istio, Linkerd) tạo thêm layer mTLS encryption</li>
+          <li>Multi-tenant cluster: cần phân biệt traffic theo namespace</li>
+          <li>Scale đến hàng trăm/nghìn node → cần solution tự động</li>
+        </ul>
+      </div>
+      <div class="card green">
+        <h4>✅ KlearSight Giải Quyết Như Thế Nào</h4>
+        <ul style="list-style:disc;padding-left:18px;font-size:.86rem;color:var(--muted);">
+          <li><strong>DaemonSet:</strong> Tự động deploy Sensor khi node mới join cluster</li>
+          <li><strong>eBPF:</strong> Capture tại kernel level — trước khi traffic bị encrypt bởi sidecar</li>
+          <li><strong>Topology-aware:</strong> Manager liên tục cập nhật từ K8s API về pod locations</li>
+          <li><strong>Selective:</strong> Filter theo namespace, label, pod name</li>
+          <li><strong>SSL decryption:</strong> Capture SSL đã được Linux kernel decrypt — không cần key</li>
+          <li><strong>Low overhead:</strong> eBPF in-kernel — không ảnh hưởng pod performance</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S8: LICENSE & SIZING -->
+<div class="section anchor" id="s8">
+  <div class="section-header"><span class="icon">💰</span><h2>Cơ Chế License &amp; Hướng Dẫn Sizing</h2><span class="badge">Commercial</span></div>
+  <div class="section-body">
+    <div class="callout"><strong>Mô hình License:</strong> <strong>Perpetual License</strong> (vĩnh viễn) + Annual Maintenance/Support (MasterCare). Không phải SaaS/Subscription. Triển khai On-Premises — phù hợp mô hình ngân sách CapEx của ngân hàng/enterprise Việt Nam.</div>
+    <div class="grid-2" style="margin-top:14px;">
+      <div>
+        <h3 style="margin-bottom:10px;">nGeniusONE License Types</h3>
+        <table>
+          <tr><th>License Type</th><th>Tier 1 Interface Count</th><th>Offering</th><th>Target</th></tr>
+          <tr><td><strong>Entry</strong></td><td>5 interfaces</td><td>Software only</td><td>SMB, lab, pilot PoC</td></tr>
+          <tr><td><strong>Workgroup</strong></td><td>10 interfaces</td><td>SW or Appliance</td><td>Medium enterprise (1 site)</td></tr>
+          <tr><td><strong>Intermediate</strong></td><td>25 interfaces</td><td>SW or Appliance</td><td>Large enterprise, multi-site</td></tr>
+          <tr><td><strong>Full</strong></td><td>50 interfaces</td><td>SW or Appliance</td><td>Enterprise tập đoàn, SP</td></tr>
+          <tr><td><strong>Standby</strong></td><td>Same as Primary</td><td>SW or Appliance</td><td>DR site / HA pair</td></tr>
+        </table>
+        <div class="callout" style="margin-top:10px;font-size:.83rem;">Note: Tất cả license types cung cấp cùng tính năng và chức năng — chỉ khác ở số lượng monitored interface. Upgrade từ Entry lên Full là possible. Virtual nGeniusONE available cho cloud deployments.</div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:10px;">Cấu Trúc Chi Phí Tổng Thể</h3>
+        <table>
+          <tr><th>Component</th><th>Model</th><th>Ghi Chú</th></tr>
+          <tr><td>nGeniusONE SW</td><td>Perpetual (theo tier)</td><td>Core platform license</td></tr>
+          <tr><td>nGeniusONE Server HW</td><td>One-time HW</td><td>Optional: dùng server KH</td></tr>
+          <tr><td>ISNG HW Appliance</td><td>One-time HW</td><td>Nhiều model 1G→100G</td></tr>
+          <tr><td>ISNG SW Appliance</td><td>SW Perpetual + HW</td><td>Dell/HPE server KH</td></tr>
+          <tr><td>vSTREAM</td><td>Perpetual SW</td><td>Per virtual appliance</td></tr>
+          <tr><td>KlearSight</td><td>Perpetual SW</td><td>K8s cluster/node based</td></tr>
+          <tr><td>nGeniusPULSE</td><td>Sub or Perpetual</td><td>Add-on synthetic</td></tr>
+          <tr><td>PFS 7000 (Broker)</td><td>One-time HW</td><td>Optional packet broker</td></tr>
+          <tr><td>Maintenance/Support</td><td>Annual % of license</td><td>MasterCare 24x7</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <hr class="divider">
+    <h3 style="margin-bottom:12px;">📋 Câu Hỏi Sizing — Dùng Khi Khảo Sát Khách Hàng</h3>
+    <div class="grid-2">
+      <div class="card"><h4>Network Topology</h4><ul style="list-style:disc;padding-left:16px;font-size:.84rem;color:var(--muted);"><li>Tốc độ link cần capture tại DC? (1G/10G/40G/100G)</li><li>Tổng số điểm cần capture (TAP/SPAN)?</li><li>Có DC + DR không? Khoảng cách?</li><li>Số lượng chi nhánh/remote site cần giám sát?</li><li>Loại WAN kết nối chi nhánh: MPLS, Internet, SD-WAN?</li><li>Tốc độ link WAN tại chi nhánh?</li></ul></div>
+      <div class="card"><h4>Môi Trường Ảo Hóa &amp; Cloud</h4><ul style="list-style:disc;padding-left:16px;font-size:.84rem;color:var(--muted);"><li>Đang dùng hypervisor nào? (VMware/KVM/Hyper-V)</li><li>Số lượng host ESXi / VM cluster?</li><li>Có dùng NSX-T/NSX-V không?</li><li>Có Kubernetes không? Số cluster/node?</li><li>K8s managed hay self-managed (EKS/AKS/GKE vs. on-prem)?</li><li>Service mesh (Istio/Linkerd)?</li></ul></div>
+      <div class="card"><h4>Application &amp; Retention</h4><ul style="list-style:disc;padding-left:16px;font-size:.84rem;color:var(--muted);"><li>Ứng dụng nghiệp vụ chính (Oracle EBS, SAP, Temenos, T24...)?</li><li>Có UC/Collaboration (Cisco/Avaya/Teams) không?</li><li>Cần lưu packet bao nhiêu ngày (7/14/30 ngày)?</li><li>Yêu cầu lưu session metadata bao lâu?</li><li>Requirement forensics/compliance (NHNN, Thông tư)?</li></ul></div>
+      <div class="card"><h4>Scale &amp; Growth</h4><ul style="list-style:disc;padding-left:16px;font-size:.84rem;color:var(--muted);"><li>Số lượng concurrent session hiện tại?</li><li>Kế hoạch mở rộng 3 năm tới?</li><li>Kế hoạch cloud migration?</li><li>Có SOC/SIEM hiện tại? Tích hợp cần thiết không?</li><li>Ai sẽ dùng: NetOps/ServiceOps/CloudOps/SecOps?</li></ul></div>
+    </div>
+
+    <div class="hl-box" style="margin-top:16px;">
+      <h4>💡 Gợi Ý Chào Giải Pháp Theo Phân Khúc</h4>
+      <ul>
+        <li><strong>Bank nhỏ / Fintech / PoC:</strong> nGeniusONE Entry/Workgroup + 1× ISNG 2600 (10G) → PoC trước khi commit</li>
+        <li><strong>Bank tầm trung (DC + DR):</strong> nGeniusONE Intermediate + 2× ISNG 4700 (DC+DR) + vSTREAM VMware + KlearSight nếu có K8s</li>
+        <li><strong>Big 4 Bank / Tập đoàn lớn:</strong> nGeniusONE Full + Global Manager + 4-6× ISNG 9700/9800 + vSTREAM + KlearSight + PFS 7000 + nGeniusPULSE branch</li>
+        <li><strong>Công ty chứng khoán:</strong> Focus latency/FIX protocol, ISNG 4700/4800 tại DC + DR, Session Analysis, Advanced Search</li>
+        <li><strong>Enterprise/Viễn thông:</strong> Multi-site Global Manager, vSTREAM VMware, UC monitoring (SIP/RTP MOS), nGeniusPULSE cho WFH</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- S9: ĐỐI THỦ -->
+<div class="section anchor" id="s9">
+  <div class="section-header"><span class="icon">⚔️</span><h2>Phân Tích Cạnh Tranh — NETSCOUT vs. Đối Thủ</h2><span class="badge">Competitive</span></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Tiêu Chí</th><th>NETSCOUT nGeniusONE</th><th>Riverbed Alluvio</th><th>Dynatrace/Datadog</th><th>SolarWinds</th><th>Cisco ThousandEyes</th></tr>
+      <tr><td>Phương pháp thu thập</td><td><span class="check">✓ Packet DPI (wire)</span></td><td><span class="check">✓ Packet DPI</span></td><td><span class="cross">✗ Agent-based</span></td><td><span class="cross">✗ Flow/SNMP</span></td><td><span class="cross">✗ Synthetic</span></td></tr>
+      <tr><td>Agentless (không cài agent)</td><td><span class="check">✓</span></td><td><span class="check">✓</span></td><td><span class="cross">✗ Agent required</span></td><td><span class="partial">≈ SNMP only</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Kubernetes eBPF visibility</td><td><span class="check">✓ KlearSight</span></td><td><span class="partial">≈ Limited</span></td><td><span class="check">✓ Agent</span></td><td><span class="cross">✗</span></td><td><span class="partial">≈ External path</span></td></tr>
+      <tr><td>DDoS Protection tích hợp</td><td><span class="check">✓ Arbor AED</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+      <tr><td>Card processing protocols</td><td><span class="check">✓ VISA/MC/AMEX</span></td><td><span class="partial">≈ Limited</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+      <tr><td>Packet forensics / replay</td><td><span class="check">✓ Full packet store</span></td><td><span class="check">✓</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+      <tr><td>NDR Security tích hợp</td><td><span class="check">✓ Omnis oCI</span></td><td><span class="partial">≈ Via partner</span></td><td><span class="partial">≈ SIEM only</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td></tr>
+      <tr><td>Service Provider use case</td><td><span class="check">✓ Strong</span></td><td><span class="partial">≈ Limited</span></td><td><span class="cross">✗</span></td><td><span class="cross">✗</span></td><td><span class="partial">≈ Internet path</span></td></tr>
+      <tr><td>Multi-site single dashboard</td><td><span class="check">✓ Global Manager</span></td><td><span class="partial">≈ Partial</span></td><td><span class="check">✓</span></td><td><span class="partial">≈ Partial</span></td><td><span class="check">✓</span></td></tr>
+      <tr><td>Hệ sinh thái APAC Banking</td><td><span class="check">✓ Mạnh (Bank refs)</span></td><td><span class="partial">≈ Trung bình</span></td><td><span class="partial">≈ Cloud-native</span></td><td><span class="partial">≈ Volume SMB</span></td><td><span class="partial">≈ Cisco network</span></td></tr>
+      <tr><td>Mô hình License</td><td><span class="tag green">Perpetual+Maint</span></td><td><span class="tag">Perp/Sub</span></td><td><span class="tag orange">SaaS Sub</span></td><td><span class="tag">Perp/Sub</span></td><td><span class="tag orange">SaaS Sub</span></td></tr>
+    </table>
+    <div class="callout" style="margin-top:14px;"><strong>Key Message khi nói với khách hàng:</strong> "NETSCOUT là giải pháp <em>duy nhất</em> dựa trên wire-data (packet) cung cấp visibility đồng thời cho Service Assurance <em>và</em> Cyber Security từ <em>cùng một nguồn dữ liệu</em> — không cần agent, không bỏ lỡ east-west trong virtualization, không phụ thuộc cloud provider log."</div>
+    <hr class="divider">
+    <h3 style="margin-bottom:12px;">🗡️ Battlecard — Khi KH So Sánh Với Đối Thủ</h3>
+    <div class="grid-2">
+      <div class="card warn"><h4>Nếu KH nói "Chúng tôi đang xem Dynatrace/Datadog"</h4><p style="font-size:.86rem;color:var(--muted);margin-top:6px;">APM tool xuất sắc cho application code-level insight. Nhưng: ① Cần agent trên TỪNG server, ② Không thấy được network behavior thực tế, ③ Không có packet forensics, ④ Không hỗ trợ protocol tài chính (FIX/VISA/Oracle). <strong>NETSCOUT bổ sung cho APM, không thay thế — 2 tool nhìn từ 2 góc độ khác nhau.</strong></p></div>
+      <div class="card warn"><h4>Nếu KH nói "Chúng tôi đã có SolarWinds/Zabbix rồi"</h4><p style="font-size:.86rem;color:var(--muted);margin-top:6px;">Những tool này nhìn device health (CPU/RAM/link) qua SNMP/Flow — không biết ứng dụng đang làm gì, user experience ra sao, transaction bị lỗi ở đâu. <strong>NETSCOUT nhìn từ góc service/user — hoàn toàn khác biệt, không trùng lặp chức năng.</strong></p></div>
+    </div>
+  </div>
+</div>
+
+<!-- S10: SWOT -->
+<div class="section anchor" id="s10">
+  <div class="section-header"><span class="icon">📊</span><h2>Phân Tích SWOT — Theo Khối Khách Hàng Việt Nam</h2><span class="badge">SWOT</span></div>
+  <div class="section-body">
+    <h3 style="margin-bottom:14px;">🏦 Khối Bank / Tài Chính / Chứng Khoán</h3>
+    <div class="swot-grid">
+      <div class="swot-cell s"><h4>💪 Strengths</h4><ul><li>Reference mạnh: VietinBank, Public Bank VN, CIMB, Maybank, SSI</li><li>Hỗ trợ đầy đủ protocol ngân hàng (VISA/MC/Oracle/SWIFT/FIX)</li><li>Perpetual license phù hợp ngân sách CapEx ngân hàng</li><li>Packet forensics đáp ứng yêu cầu audit NHNN</li><li>ASI reduce MTTK 90%: ROI rõ ràng, dễ justify</li><li>Agentless: không rủi ro cài software trên server critical</li><li>Single dashboard DC+DR: giảm complexity vận hành</li></ul></div>
+      <div class="swot-cell w"><h4>⚠️ Weaknesses</h4><ul><li>Chi phí ban đầu cao hơn flow-based tools</li><li>Yêu cầu TAP/SPAN infrastructure bổ sung</li><li>Learning curve: cần training chuyên sâu</li><li>Nhận biết thương hiệu tại VN chưa bằng Cisco/HP</li><li>Professional services limited tại VN (qua NTS Hanoi)</li><li>Complex để present và justify với non-technical buyer</li></ul></div>
+      <div class="swot-cell o"><h4>🎯 Opportunities</h4><ul><li>Digital banking boom: mobile app, Open Banking API</li><li>Yêu cầu NHNN về giám sát IT ngày càng nghiêm</li><li>Cloud migration: ngân hàng VN chuyển lên cloud</li><li>Nhu cầu SOC/NDR tích hợp với network data</li><li>DDoS vào ngân hàng tăng → upsell Arbor AED</li><li>Thị trường chứng khoán phát triển, HoSE/HNX nâng cấp</li></ul></div>
+      <div class="swot-cell t"><h4>⚡ Threats</h4><ul><li>Cisco/HP có quan hệ sâu tại big banks, bundle deal</li><li>Dynatrace/Datadog push mạnh cloud APM segment</li><li>KH ưu tiên vendor đã có trước (SolarWinds/PRTG)</li><li>Ngân sách IT cạnh tranh với cloud/ERP migration</li><li>Procurement cycle ngân hàng dài 12-24 tháng</li></ul></div>
+    </div>
+
+    <h3 style="margin-bottom:14px;margin-top:22px;">🏢 Khối Enterprise (Tập Đoàn, Viễn Thông, Chính Phủ)</h3>
+    <div class="swot-grid">
+      <div class="swot-cell s"><h4>💪 Strengths</h4><ul><li>Multi-site: visibility từ HQ đến chi nhánh</li><li>UC monitoring (Teams/Cisco/Avaya): nhu cầu cao post-COVID</li><li>vSTREAM: DC 100% ảo hóa vẫn monitor được</li><li>Hybrid cloud: on-prem + AWS/Azure đồng thời</li><li>Vendor-agnostic: bất kỳ switch/router/firewall nào</li><li>WFH visibility qua nGeniusPULSE synthetic</li></ul></div>
+      <div class="swot-cell w"><h4>⚠️ Weaknesses</h4><ul><li>Complexity triển khai cho tổ chức phân tán nhiều site</li><li>Cần đội ngũ NetOps có kinh nghiệm vận hành</li><li>Chi phí enterprise cao, approval cycle dài</li><li>Ít case study enterprise VN cụ thể để reference</li></ul></div>
+      <div class="swot-cell o"><h4>🎯 Opportunities</h4><ul><li>SD-WAN rollout cần visibility layer bổ sung</li><li>K8s adoption trong enterprise tăng nhanh 2025-2026</li><li>Chuyển đổi số: nhiều ứng dụng mới cần monitoring</li><li>SOC/SIEM mới thành lập: nhu cầu network intelligence</li><li>Viễn thông 5G: Service Assurance SP segment</li></ul></div>
+      <div class="swot-cell t"><h4>⚡ Threats</h4><ul><li>Cisco DNA + ThousandEyes bundle trong full Cisco shop</li><li>Cloud-native monitoring từ AWS/Azure baked-in</li><li>Ngân sách IT bị cạnh tranh với cloud/ERP/AI projects</li><li>Open-source alternatives (Grafana, Prometheus stack)</li></ul></div>
+    </div>
+  </div>
+</div>
+
+<!-- S11: KH VIỆT NAM -->
+<div class="section anchor" id="s11">
+  <div class="section-header"><span class="icon">🇻🇳</span><h2>Nhóm Khách Hàng Mục Tiêu Tại Việt Nam</h2><span class="badge">VN Market</span></div>
+  <div class="section-body">
+    <div class="grid-3">
+      <div class="card green"><h3>🏦 Ngân Hàng Thương Mại <span class="tag green">Priority 1</span></h3><div class="badge-row"><span class="tag green">Techcombank</span><span class="tag green">VPBank</span><span class="tag green">MB Bank</span><span class="tag green">ACB</span><span class="tag green">HDBank</span><span class="tag green">MSB</span><span class="tag">Vietcombank</span><span class="tag">BIDV</span><span class="tag">Agribank</span><span class="tag">Sacombank</span><span class="tag">TPBank</span><span class="tag">OCB</span><span class="tag">SHB</span><span class="tag">SeABank</span></div><p style="font-size:.82rem;color:var(--muted);margin-top:8px;"><strong>Trigger:</strong> Core banking modernization, internet banking SLA, NHNN compliance, DDoS incident. Reference: VietinBank đang dùng.</p></div>
+      <div class="card blue"><h3>📈 Chứng Khoán &amp; Fintech <span class="tag green">Priority 1</span></h3><div class="badge-row"><span class="tag">SSI Securities</span><span class="tag">VNDirect</span><span class="tag">VPS Securities</span><span class="tag">HSC</span><span class="tag">TCBS</span><span class="tag">MBS</span><span class="tag green">MoMo</span><span class="tag green">ZaloPay</span><span class="tag green">VNPay</span><span class="tag green">Timo Bank</span><span class="tag green">KienlongBank Fintech</span></div><p style="font-size:.82rem;color:var(--muted);margin-top:8px;"><strong>Trigger:</strong> Trading latency ms, peak session load, regulatory reporting, transaction performance.</p></div>
+      <div class="card gold"><h3>🏢 Tập Đoàn &amp; Viễn Thông <span class="tag">Priority 2</span></h3><div class="badge-row"><span class="tag">VNPT</span><span class="tag">Viettel</span><span class="tag">MobiFone</span><span class="tag">FPT Corp</span><span class="tag">Vingroup IT</span><span class="tag">PVN</span><span class="tag">Vietnam Airlines</span><span class="tag">EVN</span><span class="tag">VMS-MobiFone</span></div><p style="font-size:.82rem;color:var(--muted);margin-top:8px;"><strong>Trigger:</strong> UC performance, multi-site management, cloud migration visibility, digital transformation.</p></div>
+      <div class="card"><h3>🏛️ Bảo Hiểm</h3><div class="badge-row"><span class="tag">Bảo Việt</span><span class="tag">PVI</span><span class="tag">BIDV Insurance</span><span class="tag">Manulife VN</span><span class="tag">Prudential VN</span></div><p style="font-size:.82rem;color:var(--muted);margin-top:8px;"><strong>Trigger:</strong> Core insurance system performance, agent portal SLA, digital claims processing.</p></div>
+      <div class="card"><h3>🏥 Y Tế &amp; Healthcare</h3><div class="badge-row"><span class="tag">Vinmec</span><span class="tag">Tâm Anh</span><span class="tag">BV Đại học Y Dược</span></div><p style="font-size:.82rem;color:var(--muted);margin-top:8px;"><strong>Trigger:</strong> HIS/EMR system performance, DICOM imaging network latency, HL7 protocol monitoring.</p></div>
+      <div class="card"><h3>🎮 Gaming &amp; Digital</h3><div class="badge-row"><span class="tag">VNG Corp</span><span class="tag">Garena VN</span><span class="tag">VTC Online</span></div><p style="font-size:.82rem;color:var(--muted);margin-top:8px;"><strong>Trigger:</strong> Real-time gaming latency, heavy DDoS attacks, player session experience monitoring.</p></div>
+    </div>
+    <div class="callout info" style="margin-top:16px;"><strong>Lead Generation Strategy:</strong> ① LinkedIn → Network Engineer/IT Director tại banks có post về digital transformation ② Tin tức incident → offer PoC sau downtime/DDoS ③ Events: Vietnam Security Summit, Vietnam Banking Technology Forum ④ Referral từ VietinBank existing customer ⑤ NTS Hanoi partner network leverage ⑥ Free 2-week PoC tại 1 use case để có chân vào cửa</div>
+  </div>
+</div>
+
+<!-- S12: SALES PLAYBOOK -->
+<div class="section anchor" id="s12">
+  <div class="section-header"><span class="icon">🎯</span><h2>Sales Playbook — Tiếp Cận Từng Cấp Khách Hàng</h2><span class="badge">Playbook</span></div>
+  <div class="section-body">
+    <div class="grid-3" style="margin-bottom:20px;">
+      <div class="persona">
+        <span class="persona-role">C-Level / CIO / CTO</span>
+        <h4>Họ quan tâm đến gì?</h4>
+        <p style="font-size:.84rem;color:var(--muted);margin-bottom:10px;">Business continuity, digital reputation, ROI, regulatory compliance — không phải technical detail.</p>
+        <ul class="hooks">
+          <li><strong>Opening:</strong> "Ngân hàng mất trung bình $29,162/giờ khi downtime — và 90% thời gian lại dành để TÌM nguyên nhân. NETSCOUT giải quyết đúng bài toán đó."</li>
+          <li>"VietinBank, CIMB, Standard Chartered đã tin tưởng — 5,000+ tổ chức tại 120 quốc gia."</li>
+          <li>"Khi có sự cố, team kỹ thuật biết root cause trong vài phút thay vì vài giờ war room."</li>
+          <li>ROI: "Giảm MTTR 70-80% = cứu hàng tỷ đồng/năm + tránh phạt SLA NHNN."</li>
+          <li>Risk: "Thiếu visibility = không biết hệ thống đang chuẩn bị lỗi — rủi ro tuân thủ cao."</li>
+        </ul>
+      </div>
+      <div class="persona">
+        <span class="persona-role">IT Director / VP IT / Head of Infrastructure</span>
+        <h4>Họ quan tâm đến gì?</h4>
+        <p style="font-size:.84rem;color:var(--muted);margin-bottom:10px;">Budget justification, team efficiency, vendor risk, integration với existing tools.</p>
+        <ul class="hooks">
+          <li><strong>Opening:</strong> "Hiện team đang dùng bao nhiêu công cụ monitor riêng lẻ? NETSCOUT thay thế 3-4 tools bằng 1 single-pane-of-glass."</li>
+          <li>"Deploy passive (TAP/SPAN) — không cài agent, không ảnh hưởng production."</li>
+          <li>"Tích hợp với SIEM/SOC hiện có: data feed vào Splunk/QRadar." </li>
+          <li>"Perpetual license: CapEx 1 lần, TCO thấp hơn SaaS subscription 5 năm."</li>
+          <li>"Upgrade path rõ ràng: Entry → Workgroup → Full khi tổ chức mở rộng."</li>
+        </ul>
+      </div>
+      <div class="persona">
+        <span class="persona-role">Network Manager / IT Operations / NOC Lead</span>
+        <h4>Họ quan tâm đến gì?</h4>
+        <p style="font-size:.84rem;color:var(--muted);margin-bottom:10px;">Technical depth, ease of daily ops, troubleshooting power, giảm stress khi có incident.</p>
+        <ul class="hooks">
+          <li><strong>Opening:</strong> "Khi user phàn nàn chậm, team mất bao lâu để biết vấn đề ở network, app hay server? Với NETSCOUT: 2 phút."</li>
+          <li>Demo Service Triage: Dashboard → Monitor → Session → Packet — 4 click đến root cause</li>
+          <li>"200+ protocol decode sẵn: Oracle, FIX, Citrix, SIP — không cần cấu hình thêm."</li>
+          <li>"vSTREAM thấy được east-west traffic trong VMware — thứ TAP vật lý không thể thấy."</li>
+          <li>"Advanced Search: tìm theo SQL query, username, error code — forensics trong 30 giây."</li>
+          <li>Đề xuất PoC 2-4 tuần: tự trải nghiệm, sau đó thuyết phục management.</li>
+        </ul>
+      </div>
+    </div>
+
+    <hr class="divider">
+    <h3 style="margin-bottom:12px;">🛡️ Xử Lý Objection Phổ Biến</h3>
+    <div class="faq-item">
+      <div class="faq-q"><span class="qicon">❓</span>"Chúng tôi đã có nhiều tool rồi: Infra monitor, APM, NPM. NETSCOUT không cần thiết."</div>
+      <div class="faq-a"><strong>Trả lời:</strong> "Tôi hiểu — đây là trường hợp rất phổ biến. Hãy thử scenario: khi user complain ứng dụng chậm, team mở bao nhiêu tab tool, mất bao lâu kết luận root cause? Với NETSCOUT: ① Dashboard chỉ ngay component đỏ → ② Service Monitor chỉ server nào slow → ③ Session Analysis chỉ giao dịch nào fail → ④ Packet giải thích tại sao. Tất cả trong 1 platform, 1 workflow.<br><br>Các tool hiện có tốt cho domain của nó. NETSCOUT <em>bổ sung</em> thêm layer correlation E2E mà không tool nào làm được. Sau PoC 2 tuần, khách hàng thường nhận ra NETSCOUT fill đúng gap họ không biết mình đang thiếu."
+        <ul style="margin-top:8px;"><li>Offer free PoC cho 1 service cụ thể (ví dụ: core banking HTTP monitoring)</li><li>Đo số liệu cụ thể: MTTR trước/sau NETSCOUT</li></ul>
+      </div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span class="qicon">❓</span>"Giá quá cao so với SolarWinds/Zabbix chúng tôi đang dùng."</div>
+      <div class="faq-a"><strong>Trả lời:</strong> "SolarWinds/Zabbix là SNMP/Flow tool tốt cho device health — nhưng đây là táo và cam, khác hoàn toàn chức năng.<br><br>Hãy tính TCO thực tế: mỗi sự cố mà team mất 4 tiếng giải quyết — salary IT engineer, cost opportunity business, penalty SLA, thiệt hại uy tín — là bao nhiêu tiền? NETSCOUT giảm 70-80% thời gian triage. Với ngân hàng top-tier, tránh 2-3 sự cố lớn/năm là đã hoàn vốn.<br><br>Ngoài ra: perpetual license, không phải subscription — so sánh TCO 5 năm thì NETSCOUT cạnh tranh hơn nhiều với SaaS tools."</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q"><span class="qicon">❓</span>"Chúng tôi đang triển khai cloud / Kubernetes — có monitor được không?"</div>
+      <div class="faq-a"><strong>Trả lời (đây là OPPORTUNITY!):</strong> "Đây là chính xác lý do tại sao NETSCOUT quan trọng hơn bao giờ hết trong môi trường cloud/K8s. Các tool cũ sẽ mù hoàn toàn với east-west traffic trong container. NETSCOUT có:<br>
+        <ul><li><strong>vSTREAM:</strong> Deploy như VM trên VMware/KVM, capture toàn bộ east-west traffic trong data center ảo</li><li><strong>KlearSight:</strong> eBPF sensor tự động deploy trên mọi K8s worker node — hỗ trợ EKS/AKS/GKE/OpenShift</li><li><strong>Cloud VNF:</strong> Deploy trên AWS/Azure/GCP để monitor cloud-native workloads</li></ul>
+        Bạn đang làm cloud migration là timing HOÀN HẢO để bắt đầu deploy NETSCOUT."</div>
+    </div>
+  </div>
+</div>
+
+<!-- S13: TECH SPEC -->
+<div class="section anchor" id="s13">
+  <div class="section-header"><span class="icon">📋</span><h2>Technical Specification — Dành Cho HSMT / RFP</h2><span class="badge">Tech Spec</span></div>
+  <div class="section-body">
+    <div class="callout info"><strong>Mục đích:</strong> Sử dụng bảng spec này để đưa vào Hồ Sơ Mời Thầu (HSMT/RFP) hoặc tham chiếu khi KH yêu cầu compliance matrix. Các tiêu chí <span class="keylock">★ Key Lock</span> là tính năng độc quyền của NETSCOUT — giúp "khóa" spec.</div>
+    <table style="margin-top:12px;">
+      <tr><th colspan="3" style="background:#0d1f3a;text-align:center;font-size:.95rem;">A. NỀN TẢNG PHÂN TÍCH (nGeniusONE Management Server)</th></tr>
+      <tr><th style="width:35%;">Tiêu Chí Kỹ Thuật</th><th style="width:45%;">Mô Tả Yêu Cầu</th><th style="width:20%;">Ghi Chú</th></tr>
+      <tr><td>Kiến trúc thu thập dữ liệu</td><td>Passive, non-intrusive collection dựa trên Deep Packet Inspection (DPI) — không cần agent trên server/application</td><td><span class="keylock">★ Agentless</span></td></tr>
+      <tr><td>Công nghệ phân tích</td><td>Hệ thống phải sử dụng patented technology tạo Smart Data từ packet tại điểm thu thập, không phụ thuộc xử lý tại management server</td><td><span class="keylock">★ ASI Patent</span></td></tr>
+      <tr><td>Service Triage Workflow</td><td>Hỗ trợ top-down triage 4 cấp: Service Dashboard → Service Monitor → Session Analysis → Packet Analysis trong 1 nền tảng duy nhất</td><td>Bắt buộc</td></tr>
+      <tr><td>Deployment model</td><td>Hỗ trợ On-Premises, Virtual (VMware/KVM/Hyper-V), Cloud (AWS/Azure/GCP), Hybrid đồng thời trong 1 dashboard</td><td>Bắt buộc</td></tr>
+      <tr><td>Multi-site management</td><td>Single pane of glass cho nhiều data center, DR site và remote branch qua Global Manager</td><td>Bắt buộc</td></tr>
+      <tr><td>DR/HA</td><td>Hỗ trợ Standby instance tại DR site với tự động failover, Standby license (cùng feature với Primary)</td><td>Bắt buộc</td></tr>
+      <tr><td>Real-time streaming analytics</td><td>Xử lý và hiển thị dữ liệu thời gian thực liên tục, không có polling interval delay đáng kể</td><td>Bắt buộc</td></tr>
+      <tr><td>Historical retention</td><td>Lưu trữ session metadata tối thiểu 30 ngày; packet data tùy theo storage ISNG (thường 7-30+ ngày)</td><td>Tùy HW</td></tr>
+
+      <tr><th colspan="3" style="background:#0d1f3a;text-align:center;font-size:.95rem;">B. THU THẬP TRAFFIC (INSTRUMENTATION LAYER)</th></tr>
+      <tr><td>Physical network</td><td>Hỗ trợ optical TAP (1G/10G/40G/100G) và SPAN/RSPAN/ERSPAN port từ switch các hãng bất kỳ</td><td>Bắt buộc</td></tr>
+      <tr><td>Virtual environment</td><td>Thu thập east-west traffic trong VMware vSphere/NSX-V/NSX-T, OpenStack/KVM, Hyper-V không cần agent</td><td>Bắt buộc</td></tr>
+      <tr><td>Kubernetes/Container</td><td>Thu thập traffic trong Kubernetes cluster (on-prem và cloud EKS/AKS/GKE) sử dụng eBPF technology, tự động qua DaemonSet</td><td><span class="keylock">★ eBPF K8s</span></td></tr>
+      <tr><td>Public Cloud</td><td>Deploy virtual probe trên AWS, Azure, GCP, OCI để monitor cloud-native workloads</td><td>Bắt buộc</td></tr>
+      <tr><td>Scalability</td><td>Nhiều probe song song (physical + virtual + K8s) tất cả quản lý tập trung bởi 1 management server</td><td>Bắt buộc</td></tr>
+      <tr><td>Packet broker</td><td>Hỗ trợ tích hợp với packet flow switch để aggregation, filtering, load-balancing từ nhiều TAP</td><td>Optional</td></tr>
+
+      <tr><th colspan="3" style="background:#0d1f3a;text-align:center;font-size:.95rem;">C. PROTOCOL &amp; APPLICATION SUPPORT</th></tr>
+      <tr><td>Web &amp; Enterprise apps</td><td>HTTP/HTTPS, DNS, DHCP, SMTP, FTP, SMB, NFS, SNMP — URL, response code, server response time</td><td>Bắt buộc</td></tr>
+      <tr><td>Database protocols</td><td>Oracle, MySQL, MS SQL Server, IBM DB2 — query-level decode, error codes, response time</td><td><span class="keylock">★ Query Level</span></td></tr>
+      <tr><td>Financial protocols</td><td>FIX Protocol, card processing VISA/MasterCard/AMEX/UnionPay</td><td><span class="keylock">★ Finance Only</span></td></tr>
+      <tr><td>Authentication</td><td>LDAP, Kerberos, RADIUS, Active Directory — authentication latency &amp; failure rate</td><td>Bắt buộc</td></tr>
+      <tr><td>Unified Communications</td><td>SIP, RTP/RTCP, H.225, H.245, H.248 — MOS score, jitter, packet loss measurement từ wire data</td><td><span class="keylock">★ Wire MOS</span></td></tr>
+      <tr><td>Enterprise apps</td><td>Citrix XenApp/XenDesktop, IBM MQ, EPIC, HL7, DICOM</td><td>Bắt buộc</td></tr>
+      <tr><td>Encapsulation</td><td>VLAN, Stacked VLAN, MPLS, GRE, VXLAN, VNTag, PPPoE, GTP, ERSPAN, L2TP, Cisco FabricPath</td><td>Bắt buộc</td></tr>
+
+      <tr><th colspan="3" style="background:#0d1f3a;text-align:center;font-size:.95rem;">D. ANALYTICS, ALERTING &amp; REPORTING</th></tr>
+      <tr><td>Auto Service Dependency Map</td><td>Tự động vẽ và cập nhật dependency map giữa application components — không cần cấu hình CMDB thủ công</td><td><span class="keylock">★ Auto Discovery</span></td></tr>
+      <tr><td>Intelligent alerting</td><td>Dynamic baseline tự học; cảnh báo qua email, SNMP trap, syslog, webhook REST API</td><td>Bắt buộc</td></tr>
+      <tr><td>Packet deep-dive &amp; forensics</td><td>Lưu trữ raw packet, drill-down đến application payload level, decode, export PCAP</td><td>Bắt buộc</td></tr>
+      <tr><td>Advanced search</td><td>Tìm kiếm packet/session theo IP, port, username, transaction ID, error code, SQL keyword</td><td><span class="keylock">★ Deep Search</span></td></tr>
+      <tr><td>Capacity planning</td><td>Trending và forecasting băng thông, transaction volume, Top-N by utilization</td><td>Bắt buộc</td></tr>
+      <tr><td>Reporting</td><td>Scheduled reports, custom dashboard, export PDF/CSV/Excel</td><td>Bắt buộc</td></tr>
+      <tr><td>Traffic discovery</td><td>Tự động phân loại ứng dụng đang chạy trên mạng theo protocol signature</td><td>Bắt buộc</td></tr>
+
+      <tr><th colspan="3" style="background:#0d1f3a;text-align:center;font-size:.95rem;">E. TÍCH HỢP &amp; BẢO MẬT HỆ THỐNG</th></tr>
+      <tr><td>SIEM integration</td><td>Export syslog, REST API, SNMP trap tích hợp với Splunk, IBM QRadar, ArcSight</td><td>Bắt buộc</td></tr>
+      <tr><td>NDR/Security integration</td><td>Common dataset với Network Detection &amp; Response platform từ cùng nhà cung cấp</td><td><span class="keylock">★ ASI Shared</span></td></tr>
+      <tr><td>Role-based access (RBAC)</td><td>Phân quyền theo role: ServiceOps, NetOps, CloudOps, SecOps</td><td>Bắt buộc</td></tr>
+      <tr><td>Authentication</td><td>Tích hợp LDAP/Active Directory, hỗ trợ MFA</td><td>Bắt buộc</td></tr>
+      <tr><td>Audit log</td><td>Ghi nhận đầy đủ hoạt động user và hệ thống cho compliance audit</td><td>Bắt buộc</td></tr>
+      <tr><td>SSL/TLS monitoring</td><td>SSL certificate expiry monitoring, TLS handshake monitoring, SSL decryption visibility</td><td>Bắt buộc</td></tr>
+    </table>
+
+    <div class="callout" style="margin-top:14px;font-size:.84rem;">
+      <strong>★ Tổng Hợp Các Key Lock Tính Năng Độc Quyền NETSCOUT cho HSMT:</strong> ① Patented ASI technology (Smart Data tại nguồn) · ② Agentless DPI capture · ③ eBPF Kubernetes capture — KlearSight · ④ Card protocol decode (VISA/MC/AMEX) · ⑤ Database query-level decode · ⑥ Wire-based MOS score (không synthetic) · ⑦ Auto service dependency mapping · ⑧ Common ASI dataset cho SA + NDR Security · ⑨ Advanced packet search · ⑩ SA + DDoS + NDR single vendor
+    </div>
+  </div>
+</div>
+
+<!-- S14: FAQ -->
+<div class="section anchor" id="s14">
+  <div class="section-header"><span class="icon">💬</span><h2>FAQ — Câu Hỏi Thường Gặp Khi Tư Vấn</h2><span class="badge">FAQ</span></div>
+  <div class="section-body">
+
+    <div class="faq-item">
+      <div class="faq-q"><span class="qicon">Q</span>License của giải pháp là loại gì? Perpetual hay Subscription?</div>
+      <div class="faq-a"><strong>Perpetual License</strong> (mua 1 lần, dùng vĩnh viễn) + Annual Maintenance/Support fee (MasterCare). Không phải SaaS subscription. nGeniusONE HW server và ISNG appliance mua đứt. Phù hợp mô hình CapEx của ngân hàng/enterprise. nGeniusPULSE synthetic có thể có option subscription — xác nhận với NTS.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q"><span class="qicon">Q</span>Giải pháp triển khai On-prem hay Cloud? Có SaaS model không?</div>
+      <div class="faq-a">Chủ yếu <strong>On-Premises</strong>. Tuy nhiên linh hoạt: vSTREAM deploy trên Cloud VM (AWS/Azure/GCP); KlearSight hỗ trợ cloud-managed K8s; nGeniusONE Management có virtual option. Không có SaaS model thuần túy cho nGeniusONE core platform. nGeniusPULSE có thể có cloud-hosted — xác nhận với NETSCOUT trực tiếp.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q"><span class="qicon">Q</span>Cần cài agent trên server không? Có ảnh hưởng production không?</div>
+      <div class="faq-a"><strong>Không cần agent.</strong> NETSCOUT passive capture từ copy của traffic qua TAP/SPAN — hoàn toàn non-intrusive. vSTREAM là VM riêng biệt, không cài vào VM application. KlearSight dùng eBPF tại kernel level — overhead cực nhỏ, không ảnh hưởng pod performance. Đây là lợi thế rất lớn cho môi trường production-critical của ngân hàng.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q"><span class="qicon">Q</span>Ngoài Service Assurance, NETSCOUT có sản phẩm nào khác không?</div>
+      <div class="faq-a"><ul><li><strong>Arbor Edge Defense (AED) / Arbor Sightline:</strong> DDoS detection &amp; mitigation — #1 thế giới, bảo vệ 50%+ Internet traffic qua ATLAS intelligence</li><li><strong>Omnis Cyber Intelligence (oCI):</strong> Network Detection &amp; Response (NDR) — phát hiện mối đe dọa từ packet data (cùng nguồn ASI với SA)</li><li><strong>nGeniusPULSE:</strong> Synthetic monitoring với nPoint device — đo performance chủ động từ end-user perspective</li><li><strong>ATLAS Intelligence Feed (AIF):</strong> Threat intelligence service cho cả SA và Security portfolio</li></ul></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q"><span class="qicon">Q</span>NETSCOUT được đánh giá thế nào trên thị trường? Xếp hạng ra sao?</div>
+      <div class="faq-a"><ul><li><strong>Service Assurance / Enterprise NPM:</strong> NETSCOUT được xếp là Market Leader trong phân khúc packet-based NPM và Service Assurance</li><li><strong>DDoS (Arbor):</strong> IDC xếp #1 market share DDoS Prevention; ATLAS nhìn thấy &gt;50% global Internet traffic — intelligence feed độc quyền không đối thủ nào có</li><li><strong>Gartner:</strong> Được đề cập trong nghiên cứu về Enterprise NPM và Network Visibility</li><li><strong>EMA Research:</strong> Được ghi nhận trong nghiên cứu hybrid cloud observability 2025</li><li><em>Note: Verify current analyst rankings với NETSCOUT/NTS để có thông tin mới nhất.</em></li></ul></div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q"><span class="qicon">Q</span>License KlearSight tính như thế nào? Sizing khi có K8s?</div>
+      <div class="faq-a">KlearSight license riêng biệt với nGeniusONE và ISNG/vSTREAM. Sizing thường dựa trên: per cluster hoặc per node. Vẫn cần 1 ISNG hoặc vSTREAM external cluster để xử lý ASI Smart Data. KlearSight Manager: 1 per cluster (không tính license riêng). Sensor tự deploy qua DaemonSet. <strong>Khi sizing: hỏi KH số cluster, số node/cluster trung bình, loại K8s platform.</strong> Xác nhận exact pricing model với NTS Hanoi.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q"><span class="qicon">Q</span>Có support tiếng Việt không? Team support như thế nào?</div>
+      <div class="faq-a">NETSCOUT cung cấp MasterCare support 24x7 toàn cầu (tiếng Anh). Tại Việt Nam, NTS Hanoi (distributor) cung cấp first-level support tiếng Việt, escalate lên NETSCOUT APAC cho complex issues. Khuyến nghị: trong proposal nên có Professional Services package từ NTS để đảm bảo implementation quality và training team KH.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q"><span class="qicon">Q</span>PoC process như thế nào? Mất bao lâu để thấy giá trị?</div>
+      <div class="faq-a">PoC thường 2-4 tuần, tập trung vào 1-2 use case cụ thể của KH. Quy trình: ① Xác định 1 service quan trọng (core banking, internet banking) ② Deploy ISNG/vSTREAM tại 2-3 điểm chiến lược ③ Cấu hình service monitor cho application đó ④ Đợi có incident (hoặc simulate) để demo triage workflow ⑤ So sánh MTTR với và không có NETSCOUT. Thường chỉ cần 1 real incident để convert — giá trị rõ ràng ngay khi dùng.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q"><span class="qicon">Q</span>Làm sao tích hợp với SIEM/SOC hiện tại của KH (Splunk, QRadar, ArcSight)?</div>
+      <div class="faq-a">NETSCOUT hỗ trợ nhiều phương thức tích hợp: ① <strong>Syslog:</strong> export event/alert sang SIEM theo format chuẩn ② <strong>REST API:</strong> SIEM pull data từ nGeniusONE API ③ <strong>SNMP Trap:</strong> alert notifications ④ <strong>Common ASI Data:</strong> nếu KH cũng dùng Omnis oCI (NDR), cả 2 product chia sẻ cùng Smart Data source với SIEM. Workflow thường: nGeniusONE detect performance anomaly → alert → SIEM correlate với security events từ oCI → SOC analyst điều tra.</div>
+    </div>
+  </div>
+</div>
+
+<!-- S15: TÀI LIỆU -->
+<div class="section anchor" id="s15">
+  <div class="section-header"><span class="icon">📚</span><h2>Tài Liệu Tham Chiếu &amp; Nguồn Thông Tin</h2><span class="badge">References</span></div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Tên Tài Liệu</th><th>Loại</th><th>Nội Dung Khai Thác</th></tr>
+      <tr><td>1</td><td><strong>Service Assurance For Dummies</strong> — NETSCOUT Special Edition (53 trang)</td><td>Educational Book</td><td>Pain points, ASI technology concept, service triage workflow, 10 benefits nGeniusONE, UC monitoring, brownout/downtime cost</td></tr>
+      <tr><td>2</td><td><strong>NETSCOUT Enterprise Service Assurance Feb 2026</strong> (20 slides) — NTS Hanoi</td><td>Sales Presentation</td><td>NETSCOUT Today facts, APAC customer logos, vSTREAM deployment, solution architecture, triage screenshots, hybrid environment</td></tr>
+      <tr><td>3</td><td><strong>Omnis KlearSight Sensor for Kubernetes</strong> Data Sheet (2 trang)</td><td>Data Sheet</td><td>KlearSight architecture, eBPF technology, K8s platforms supported, 4 component overview, deployment specs</td></tr>
+      <tr><td>4</td><td><strong>InfiniStreamNG Hardware Appliance</strong> Data Sheet (4 trang)</td><td>Data Sheet</td><td>ISNG models 1400→9800, hardware specifications table, port/transceiver options, storage/RAID, power specs</td></tr>
+      <tr><td>5</td><td><strong>NETSCOUT Qualified InfiniStreamNG Software Appliance</strong> Data Sheet (3 trang)</td><td>Data Sheet</td><td>SW appliance options for Dell/HPE, ASI Accelerator NIC, 10G/40G/100G configurations, part numbers</td></tr>
+      <tr><td>6</td><td><strong>nGenius 7000 Series Packet Flow Switches</strong> Data Sheet (8 trang)</td><td>Data Sheet</td><td>PFS 7000 specs (1G–400G), packet broker features (filter/aggregate/load-balance/replicate), pfsMesh architecture</td></tr>
+      <tr><td>7</td><td><strong>nGeniusONE Server</strong> Data Sheet (3 trang)</td><td>Data Sheet</td><td>nGeniusONE Server HW specs: Standard (10-Core/64GB/8TB), Enhanced (16-Core/128GB/10TB), Enhanced Plus (14-Core/256GB/32TB)</td></tr>
+      <tr><td>8</td><td><strong>nGeniusONE Scalability Meets Modern Enterprise</strong> Quick Look (2 trang)</td><td>Quick Look</td><td>License types (Entry/Workgroup/Intermediate/Full/Standby), scalability diagram, interface counts, upgrade path</td></tr>
+      <tr><td>9</td><td><strong>The Need for Observability in Hybrid, Multi-Cloud Environments</strong> Solution Brief (6 trang)</td><td>Solution Brief</td><td>K8s observability challenges, eBPF approach, private/public cloud use cases, EMA research 2025, KlearSight as solution</td></tr>
+      <tr><td>10</td><td><strong>Forrester Consulting Study</strong> (cited in SA for Dummies)</td><td>Research</td><td>$19,162/hr brownout; $29,162/hr downtime; 50% respondents: 90% of issues take &gt;24h to resolve</td></tr>
+      <tr><td>11</td><td><strong>EMA Research — Enterprise Strategies for Hybrid Multi-Cloud Networks</strong> (2025)</td><td>Research</td><td>49% IT pros view flow data critical; 29% fully satisfied with current tools; 92%/93% expect packet data more important</td></tr>
+      <tr><td>12</td><td><strong>www.netscout.com</strong> — Official Website</td><td>Web</td><td>Corporate facts, product portfolio, customer references, ATLAS network stats, support information</td></tr>
+    </table>
+    <div class="callout warn" style="margin-top:14px;font-size:.84rem;"><strong>Disclaimer:</strong> Một số số liệu (doanh thu, employee count) lấy từ tài liệu NETSCOUT 2026. License pricing/tier details cần xác nhận chính xác với NTS Hanoi / NETSCOUT trước khi đưa vào proposal chính thức. Thông tin kỹ thuật cần verify theo software version hiện tại. Tài liệu này dùng cho mục đích nội bộ presales.</div>
+  </div>
+</div>
+
+</div><!-- end .container.main -->
+
+<footer>
+  <strong>NETSCOUT Service Assurance — Presales Intelligence Report</strong><br>
+  Tổng hợp từ 9 tài liệu chính thức NETSCOUT Systems, Inc. · Distributor VN: NTS Hanoi · Phiên bản: June 2026<br>
+  <em>Tài liệu nội bộ dành cho Presales/Solution Consultant · Không phát tán ra ngoài tổ chức</em>
+</footer>
+
+</body>
+</html>

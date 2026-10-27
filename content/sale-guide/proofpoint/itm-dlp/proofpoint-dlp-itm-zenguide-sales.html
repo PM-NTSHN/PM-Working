@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proofpoint — Sales Brief: DLP · ITM · ZenGuide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --pp-orange: #FF6A00;
+    --pp-dark:   #0D0F14;
+    --pp-mid:    #1A1D25;
+    --pp-card:   #22262F;
+    --pp-border: #2E3340;
+    --pp-text:   #E2E6EF;
+    --pp-muted:  #7A839A;
+    --pp-blue:   #4A90E2;
+    --pp-green:  #27AE60;
+    --pp-yellow: #F5A623;
+    --pp-red:    #E74C3C;
+    --dlp-accent:#FF6A00;
+    --itm-accent:#C0392B;
+    --zen-accent:#2980B9;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--pp-dark);
+    color: var(--pp-text);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 14px;
+    line-height: 1.65;
+  }
+
+  /* ── HEADER ── */
+  .site-header {
+    background: linear-gradient(135deg, #0D0F14 0%, #1a1020 50%, #0D0F14 100%);
+    border-bottom: 1px solid var(--pp-border);
+    padding: 28px 40px 24px;
+    position: sticky; top: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 20px;
+  }
+  .header-brand { display: flex; align-items: center; gap: 14px; }
+  .pp-logo {
+    width: 44px; height: 44px; border-radius: 10px;
+    background: var(--pp-orange);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 18px; color: #fff; letter-spacing: -1px;
+    flex-shrink: 0;
+  }
+  .header-title h1 { font-size: 18px; font-weight: 700; color: #fff; }
+  .header-title p  { font-size: 12px; color: var(--pp-muted); margin-top: 2px; }
+  .header-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+  .badge {
+    padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600;
+    letter-spacing: .4px; text-transform: uppercase;
+  }
+  .badge-dlp { background: rgba(255,106,0,.18); color: var(--dlp-accent); border:1px solid rgba(255,106,0,.3); }
+  .badge-itm { background: rgba(192,57,43,.18); color: #E74C3C; border:1px solid rgba(192,57,43,.3); }
+  .badge-zen { background: rgba(41,128,185,.18); color: #5BA4CF; border:1px solid rgba(41,128,185,.3); }
+
+  /* ── NAV TABS ── */
+  .tab-nav {
+    background: var(--pp-mid);
+    border-bottom: 1px solid var(--pp-border);
+    display: flex; gap: 0; overflow-x: auto; padding: 0 40px;
+  }
+  .tab-btn {
+    padding: 14px 24px; font-size: 13px; font-weight: 600; cursor: pointer;
+    border: none; background: none; color: var(--pp-muted);
+    border-bottom: 3px solid transparent; white-space: nowrap;
+    transition: all .2s; letter-spacing: .3px;
+  }
+  .tab-btn:hover { color: var(--pp-text); }
+  .tab-btn.active-dlp { color: var(--dlp-accent); border-bottom-color: var(--dlp-accent); }
+  .tab-btn.active-itm { color: #E74C3C; border-bottom-color: #E74C3C; }
+  .tab-btn.active-zen { color: #5BA4CF; border-bottom-color: #5BA4CF; }
+
+  /* ── LAYOUT ── */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .container { max-width: 1140px; margin: 0 auto; padding: 36px 40px 60px; }
+
+  /* ── SECTION HERO ── */
+  .solution-hero {
+    border-radius: 14px; padding: 32px 36px; margin-bottom: 32px;
+    position: relative; overflow: hidden;
+  }
+  .hero-dlp { background: linear-gradient(135deg, rgba(255,106,0,.12) 0%, rgba(13,15,20,0) 70%); border: 1px solid rgba(255,106,0,.25); }
+  .hero-itm { background: linear-gradient(135deg, rgba(192,57,43,.12) 0%, rgba(13,15,20,0) 70%); border: 1px solid rgba(192,57,43,.25); }
+  .hero-zen { background: linear-gradient(135deg, rgba(41,128,185,.12) 0%, rgba(13,15,20,0) 70%); border: 1px solid rgba(41,128,185,.25); }
+  .hero-tag { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
+  .tag-dlp { color: var(--dlp-accent); }
+  .tag-itm { color: #E74C3C; }
+  .tag-zen { color: #5BA4CF; }
+  .hero-title { font-size: 26px; font-weight: 700; color: #fff; margin-bottom: 12px; line-height: 1.25; }
+  .hero-subtitle { font-size: 14px; color: var(--pp-muted); max-width: 680px; line-height: 1.7; }
+
+  /* ── GRID ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 20px; }
+  @media(max-width:820px) { .grid-2,.grid-3 { grid-template-columns:1fr; } }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--pp-card); border: 1px solid var(--pp-border);
+    border-radius: 12px; padding: 22px 24px;
+  }
+  .card-title {
+    font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase;
+    margin-bottom: 14px; display: flex; align-items: center; gap: 8px;
+  }
+  .ct-dlp { color: var(--dlp-accent); }
+  .ct-itm { color: #E74C3C; }
+  .ct-zen { color: #5BA4CF; }
+
+  /* ── LISTS ── */
+  ul.pp-list { list-style: none; }
+  ul.pp-list li {
+    padding: 7px 0; border-bottom: 1px solid rgba(255,255,255,.05);
+    font-size: 13px; color: var(--pp-text); display: flex; gap: 10px;
+  }
+  ul.pp-list li:last-child { border-bottom: none; }
+  ul.pp-list li::before { content: '›'; color: var(--pp-muted); flex-shrink: 0; font-weight: 600; }
+
+  /* ── PROBLEM / SOLUTION TABLE ── */
+  .ps-table { width: 100%; border-collapse: collapse; border-radius: 10px; overflow: hidden; }
+  .ps-table th {
+    background: rgba(255,255,255,.06); padding: 10px 14px;
+    text-align: left; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .8px; color: var(--pp-muted);
+  }
+  .ps-table td { padding: 11px 14px; font-size: 13px; vertical-align: top; border-bottom: 1px solid var(--pp-border); }
+  .ps-table tr:last-child td { border-bottom: none; }
+  .ps-table tr:hover td { background: rgba(255,255,255,.02); }
+  .prob-cell { color: #F39C12; }
+  .sol-cell  { color: #2ECC71; }
+
+  /* ── KEY SELLING POINTS ── */
+  .ksp-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(200px,1fr)); gap: 14px; margin-bottom: 20px; }
+  .ksp-item {
+    background: var(--pp-card); border: 1px solid var(--pp-border);
+    border-radius: 10px; padding: 16px 18px;
+  }
+  .ksp-icon { font-size: 22px; margin-bottom: 8px; }
+  .ksp-label { font-size: 12px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .ksp-desc  { font-size: 12px; color: var(--pp-muted); line-height: 1.5; }
+
+  /* ── SIZING QUESTIONS ── */
+  .q-list { list-style: none; counter-reset: q; }
+  .q-list li {
+    counter-increment: q;
+    display: flex; gap: 14px; padding: 11px 0;
+    border-bottom: 1px solid rgba(255,255,255,.05); font-size: 13px;
+  }
+  .q-list li:last-child { border-bottom: none; }
+  .q-list li::before {
+    content: counter(q, decimal-leading-zero);
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    font-weight: 600; color: var(--pp-orange); flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  /* ── COMPETITORS ── */
+  .comp-row {
+    display: flex; align-items: flex-start; gap: 16px;
+    padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,.05);
+    font-size: 13px;
+  }
+  .comp-row:last-child { border-bottom: none; }
+  .comp-name { font-weight: 700; color: #fff; min-width: 180px; }
+  .comp-note { color: var(--pp-muted); }
+
+  /* ── REFERENCE CUSTOMERS ── */
+  .ref-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .ref-card {
+    background: var(--pp-card); border: 1px solid var(--pp-border);
+    border-radius: 10px; padding: 16px 18px;
+  }
+  .ref-region { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; color: var(--pp-muted); }
+  .ref-names { font-size: 13px; color: var(--pp-text); }
+
+  /* ── TARGET CUSTOMERS ── */
+  .seg-pill {
+    display: inline-block; padding: 5px 14px; border-radius: 20px;
+    font-size: 12px; font-weight: 600; margin: 4px;
+    background: rgba(255,255,255,.08); color: var(--pp-text);
+    border: 1px solid var(--pp-border);
+  }
+
+  /* ── FAQ ── */
+  .faq-item { border-bottom: 1px solid var(--pp-border); }
+  .faq-q {
+    padding: 14px 0; cursor: pointer; display: flex; justify-content: space-between;
+    align-items: center; font-size: 13px; font-weight: 600; color: var(--pp-text);
+  }
+  .faq-q:hover { color: #fff; }
+  .faq-toggle { font-size: 18px; color: var(--pp-muted); transition: transform .2s; }
+  .faq-item.open .faq-toggle { transform: rotate(45deg); color: var(--pp-orange); }
+  .faq-a {
+    display: none; font-size: 13px; color: var(--pp-muted);
+    padding: 0 0 16px; line-height: 1.7;
+  }
+  .faq-item.open .faq-a { display: block; }
+
+  /* ── LICENSE BOX ── */
+  .lic-box {
+    background: rgba(255,255,255,.03); border: 1px solid var(--pp-border);
+    border-radius: 10px; padding: 18px 22px; font-size: 13px;
+  }
+  .lic-row { display: flex; gap: 12px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.05); }
+  .lic-row:last-child { border-bottom: none; }
+  .lic-key { min-width: 170px; font-weight: 600; color: var(--pp-text); flex-shrink: 0; }
+  .lic-val { color: var(--pp-muted); }
+
+  /* ── COMPONENT TAGS ── */
+  .comp-tag {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,.06); border: 1px solid var(--pp-border);
+    border-radius: 8px; padding: 6px 12px; font-size: 12px; margin: 4px;
+    color: var(--pp-text);
+  }
+  .comp-tag-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── SECTION HEADING ── */
+  .sec-heading {
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px;
+    margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--pp-border);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .sec-heading span { flex: 1; }
+
+  .mb-20 { margin-bottom: 20px; }
+  .mb-32 { margin-bottom: 32px; }
+  .note {
+    font-size: 11px; color: var(--pp-muted); background: rgba(255,255,255,.03);
+    border-left: 3px solid var(--pp-orange); padding: 8px 14px; border-radius: 0 6px 6px 0;
+    margin-top: 12px;
+  }
+
+  /* ── FOOTER ── */
+  .site-footer {
+    background: var(--pp-mid); border-top: 1px solid var(--pp-border);
+    text-align: center; padding: 18px 40px;
+    font-size: 11px; color: var(--pp-muted);
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════ HEADER ═══ -->
+<header class="site-header">
+  <div class="header-brand">
+    <div class="pp-logo">PP</div>
+    <div class="header-title">
+      <h1>Proofpoint — Sales Brief</h1>
+      <p>Tài liệu tham khảo nhanh dành cho Sales · Phiên bản 2025</p>
+    </div>
+  </div>
+  <div class="header-badges">
+    <span class="badge badge-dlp">DLP</span>
+    <span class="badge badge-itm">ITM</span>
+    <span class="badge badge-zen">ZenGuide</span>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════ TAB NAV ═══ -->
+<nav class="tab-nav" id="tabNav">
+  <button class="tab-btn active-dlp" onclick="switchTab('dlp',this,'active-dlp')">🔴 &nbsp;DLP — Chống thất thoát dữ liệu</button>
+  <button class="tab-btn" onclick="switchTab('itm',this,'active-itm')">🟠 &nbsp;ITM — Quản trị rủi ro nội bộ</button>
+  <button class="tab-btn" onclick="switchTab('zen',this,'active-zen')">🔵 &nbsp;ZenGuide — Nâng cao nhận thức</button>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     TAB 1 · DLP
+═══════════════════════════════════════════════════════════════════════ -->
+<div class="tab-panel active" id="panel-dlp">
+<div class="container">
+
+  <!-- HERO -->
+  <div class="solution-hero hero-dlp">
+    <div class="hero-tag tag-dlp">Proofpoint Information Protection · DLP</div>
+    <div class="hero-title">Data Loss Prevention — Bảo vệ dữ liệu nhạy cảm<br>trên mọi kênh: Email · Cloud · Endpoint · Web · GenAI</div>
+    <div class="hero-subtitle">Giải pháp DLP thế hệ mới tích hợp phân tích hành vi người dùng, phân loại dữ liệu thông minh và kiểm soát đa kênh trong một nền tảng SaaS duy nhất. 50% Fortune 100 đang dùng Proofpoint DLP.</div>
+  </div>
+
+  <!-- WHAT IS IT -->
+  <div class="card mb-32">
+    <div class="card-title ct-dlp">📌 Giải pháp là gì?</div>
+    <p style="font-size:13px;color:var(--pp-muted);line-height:1.8">
+      Proofpoint DLP (nay được tích hợp vào nền tảng <strong style="color:var(--pp-text)">Information Protection / DLP Transform</strong>) là giải pháp SaaS chống thất thoát dữ liệu toàn kênh. Không giống DLP truyền thống chỉ kiểm soát nội dung (content-only), Proofpoint kết hợp <em>content + context + behavior</em> — biết dữ liệu đang đi đâu, ai đang gửi, mục đích là gì — để ngăn chặn rò rỉ cố ý, vô ý và qua GenAI tools (ChatGPT, Copilot, Gemini).
+    </p>
+    <p style="font-size:13px;color:var(--pp-muted);line-height:1.8;margin-top:10px">
+      Proofpoint DLP là một phần của bộ giải pháp <strong style="color:var(--pp-text)">Proofpoint Data Security</strong>, bao gồm: Unified DLP, DSPM (Data Security Posture Management), Adaptive Email DLP, Endpoint DLP, Cloud DLP, và Web DLP — tất cả quản trị tập trung qua một console duy nhất.
+    </p>
+  </div>
+
+  <!-- PROBLEM / SOLUTION -->
+  <div class="sec-heading"><span class="ct-dlp">⚡ Vấn đề khách hàng & cách Proofpoint DLP giải quyết</span></div>
+  <div class="card mb-32">
+    <table class="ps-table">
+      <thead><tr><th>Vấn đề khách hàng</th><th>Proofpoint DLP giải quyết như thế nào</th></tr></thead>
+      <tbody>
+        <tr><td class="prob-cell">Dữ liệu nhạy cảm (PII, PCI, bí mật kinh doanh) bị gửi nhầm qua email hoặc upload lên cloud cá nhân</td><td class="sol-cell">Email DLP + Adaptive Email DLP tự động phát hiện, cảnh báo hoặc chặn trước khi email rời hệ thống; AI phân tích hành vi để nhận biết ý định</td></tr>
+        <tr><td class="prob-cell">Nhân viên sao chép dữ liệu ra USB, upload lên Google Drive, Dropbox cá nhân từ laptop</td><td class="sol-cell">Endpoint DLP (agent nhẹ) giám sát hành động copy, print, upload trên endpoint và có thể chặn theo policy</td></tr>
+        <tr><td class="prob-cell">Dữ liệu rò rỉ qua ứng dụng SaaS và Cloud (M365, Salesforce, Box...)</td><td class="sol-cell">Cloud DLP tích hợp API kiểm soát luồng dữ liệu trong SaaS; DSPM quét & phân loại dữ liệu lưu trữ trên cloud</td></tr>
+        <tr><td class="prob-cell">Nhân viên nhập dữ liệu nhạy cảm vào ChatGPT, Copilot, Gemini — không kiểm soát được</td><td class="sol-cell">Web DLP + Browser Extension ngăn chặn nội dung nhạy cảm gõ vào GenAI tools theo thời gian thực</td></tr>
+        <tr><td class="prob-cell">DLP cũ (Symantec, Forcepoint) quá phức tạp, nhiều false positive, khó vận hành</td><td class="sol-cell">SaaS native, triển khai nhanh, policy wizard, auto-classify, dashboard tích hợp giảm thời gian điều tra sự cố</td></tr>
+        <tr><td class="prob-cell">Yêu cầu tuân thủ: GDPR, PCI DSS, ISO 27001, Thông tư 09/2023 NHNN...</td><td class="sol-cell">Thư viện policy tuân thủ có sẵn (PCI, HIPAA, GDPR), audit log đầy đủ, report tự động theo kỳ</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- COMPONENTS -->
+  <div class="sec-heading"><span class="ct-dlp">🧩 Thành phần triển khai</span></div>
+  <div class="card mb-20">
+    <div style="margin-bottom:10px">
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#FF6A00"></span>Email DLP / Adaptive Email DLP</span>
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#E67E22"></span>Endpoint DLP Agent</span>
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#D35400"></span>Cloud DLP (CASB/API)</span>
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#C0392B"></span>Web DLP + Browser Extension</span>
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#A93226"></span>DSPM — Data Discovery & Classification</span>
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#922B21"></span>Unified DLP Console</span>
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#7B241C"></span>Proofpoint Nexus (AI/ML engine)</span>
+    </div>
+    <ul class="pp-list">
+      <li><strong>Email DLP:</strong> Tích hợp vào Proofpoint Email Gateway (SEG) hoặc API-mode cho M365. Kiểm tra inbound/outbound, attachment, metadata.</li>
+      <li><strong>Adaptive Email DLP:</strong> Dùng AI phân tích hành vi và ý định, giảm false positive; cảnh báo real-time trước khi người dùng nhấn Send.</li>
+      <li><strong>Endpoint DLP Agent:</strong> Agent nhẹ cài trên Windows/macOS. Giám sát copy, paste, print, USB, upload. IDM (Index Document Matching) bảo vệ file IP như source code, roadmap.</li>
+      <li><strong>Cloud DLP:</strong> Kết nối API với M365, Google Workspace, Salesforce, Box, Dropbox. Scan dữ liệu at-rest và in-motion.</li>
+      <li><strong>Web DLP / Browser Extension:</strong> Kiểm soát dữ liệu upload lên web, gõ vào GenAI tools. Hỗ trợ Chrome.</li>
+      <li><strong>DSPM:</strong> Khám phá, phân loại dữ liệu nhạy cảm trên cloud storage; phát hiện over-permission và misconfiguration.</li>
+      <li><strong>Unified DLP Console:</strong> Dashboard tập trung điều tra sự cố, tạo policy, xem báo cáo. Tích hợp SIEM (Splunk, Microsoft Sentinel) qua webhook.</li>
+    </ul>
+  </div>
+
+  <!-- LICENSE -->
+  <div class="sec-heading"><span class="ct-dlp">💳 Cơ chế License</span></div>
+  <div class="lic-box mb-32">
+    <div class="lic-row"><div class="lic-key">Mô hình</div><div class="lic-val">SaaS Subscription — thuê bao hàng năm, per-user hoặc per-seat</div></div>
+    <div class="lic-row"><div class="lic-key">Đơn vị tính</div><div class="lic-val">Số lượng user được bảo vệ (Protected User); với Endpoint DLP có thể tính theo số endpoint agent</div></div>
+    <div class="lic-row"><div class="lic-key">Module mua riêng</div><div class="lic-val">Email DLP, Endpoint DLP, Cloud DLP, Web DLP, DSPM mua độc lập hoặc gói bundle Information Protection</div></div>
+    <div class="lic-row"><div class="lic-key">Gói tham khảo</div><div class="lic-val">Information Protection (IP) ~ $35–$60/user/năm tuỳ module và quy mô; ITM add-on ~ $30–$50/user/năm</div></div>
+    <div class="lic-row"><div class="lic-key">Contract term</div><div class="lic-val">Thường 1 năm hoặc 3 năm (discount tốt hơn với 3 năm)</div></div>
+    <div class="lic-row"><div class="lic-key">Lưu ý</div><div class="lic-val">Giá thực tế do Proofpoint quote theo volume; list price chỉ mang tính tham khảo. Cần xác nhận với Proofpoint/distributor khi BOM.</div></div>
+  </div>
+
+  <!-- SIZING QUESTIONS -->
+  <div class="sec-heading"><span class="ct-dlp">❓ Câu hỏi Sizing & Chào BOM</span></div>
+  <div class="card mb-32">
+    <ol class="q-list">
+      <li>Tổng số user/nhân viên cần bảo vệ là bao nhiêu? (Bảo vệ toàn bộ hay một nhóm cụ thể?)</li>
+      <li>Kênh nào cần kiểm soát: Email, Endpoint, Cloud SaaS, Web, hay tất cả?</li>
+      <li>Môi trường email hiện tại là gì? (M365, Google Workspace, Exchange On-Prem, hay hybrid?)</li>
+      <li>Có dùng Proofpoint Email Security (TAP/SEG) chưa? (Nếu có, Email DLP tích hợp sẵn, cost thấp hơn)</li>
+      <li>Số lượng endpoint (laptop/desktop) cần cài agent là bao nhiêu? OS: Windows/macOS?</li>
+      <li>Ứng dụng cloud nào đang dùng cần bảo vệ? (Salesforce, Box, Dropbox, SharePoint Online...)</li>
+      <li>Yêu cầu tuân thủ cụ thể: PCI DSS, GDPR, ISO 27001, PDPA, Thông tư NHNN...?</li>
+      <li>Đã có giải pháp DLP nào chưa? (Kế thừa hay thay thế hoàn toàn?)</li>
+      <li>Có yêu cầu lưu trữ log/evidence bao lâu? (Ảnh chụp màn hình, file evidence...)</li>
+      <li>Có muốn giám sát GenAI tools (ChatGPT, Copilot...) không?</li>
+      <li>Timeline dự kiến triển khai và ngân sách dự tính?</li>
+    </ol>
+  </div>
+
+  <!-- KSP -->
+  <div class="sec-heading"><span class="ct-dlp">🏆 Key Selling Points</span></div>
+  <div class="ksp-grid mb-32">
+    <div class="ksp-item"><div class="ksp-icon">🔗</div><div class="ksp-label">Unified Multi-Channel</div><div class="ksp-desc">1 console duy nhất kiểm soát Email, Endpoint, Cloud, Web, GenAI — không cần nhiều công cụ rời rạc</div></div>
+    <div class="ksp-item"><div class="ksp-icon">🧠</div><div class="ksp-label">AI/ML + Intent Detection</div><div class="ksp-desc">Adaptive Email DLP dùng AI phát hiện ý định rò rỉ, giảm mạnh false positive so với DLP truyền thống</div></div>
+    <div class="ksp-item"><div class="ksp-icon">🤖</div><div class="ksp-label">GenAI Protection</div><div class="ksp-desc">Vendor duy nhất kiểm soát dữ liệu gõ vào ChatGPT, Copilot, Gemini theo thời gian thực</div></div>
+    <div class="ksp-item"><div class="ksp-icon">⚡</div><div class="ksp-label">Fast Time-to-Value</div><div class="ksp-desc">SaaS native, deploy nhanh hơn Symantec/Forcepoint on-prem; có policy template sẵn</div></div>
+    <div class="ksp-item"><div class="ksp-icon">👁️</div><div class="ksp-label">DLP + ITM trên 1 agent</div><div class="ksp-desc">Endpoint agent chạy cả DLP lẫn ITM — tiết kiệm chi phí và giảm tải endpoint</div></div>
+    <div class="ksp-item"><div class="ksp-icon">📊</div><div class="ksp-label">Gartner Customers' Choice</div><div class="ksp-desc">2024 & 2025 Gartner Peer Insights Customers' Choice for DLP; top Forrester Wave, Radicati</div></div>
+    <div class="ksp-item"><div class="ksp-icon">🏦</div><div class="ksp-label">50% Fortune 100</div><div class="ksp-desc">Nửa số công ty lớn nhất thế giới tin dùng Proofpoint DLP — uy tín thương hiệu rất cao</div></div>
+    <div class="ksp-item"><div class="ksp-icon">🔄</div><div class="ksp-label">SIEM/SOAR Integration</div><div class="ksp-desc">Webhook tới Splunk, Microsoft Sentinel, ServiceNow, PagerDuty — tích hợp SOC dễ dàng</div></div>
+  </div>
+
+  <!-- COMPETITORS -->
+  <div class="sec-heading"><span class="ct-dlp">⚔️ Đối thủ cạnh tranh</span></div>
+  <div class="card mb-32">
+    <div class="comp-row"><div class="comp-name">Microsoft Purview DLP</div><div class="comp-note">Đối thủ số 1, tích hợp sẵn M365 E5. Ưu điểm: giá thấp nếu có E5. Điểm yếu: phức tạp, cần team kỹ thuật cao, DLP rời rạc không unified, hỗ trợ kém. Đây là đối thủ chính cần chuẩn bị battlecard kỹ.</div></div>
+    <div class="comp-row"><div class="comp-name">Broadcom Symantec DLP</div><div class="comp-note">DLP on-prem lâu đời, mạnh về network DLP. Điểm yếu: kiến trúc cũ, phức tạp, chi phí vận hành cao, hỗ trợ sau M&A với Broadcom suy giảm.</div></div>
+    <div class="comp-row"><div class="comp-name">Forcepoint DLP (Fortra)</div><div class="comp-note">Mạnh về UEBA và endpoint, có Risk-Adaptive Protection. Điểm yếu: footprint nặng trên endpoint, ít market share tại Việt Nam.</div></div>
+    <div class="comp-row"><div class="comp-name">Digital Guardian (Fortra)</div><div class="comp-note">Endpoint-first, mạnh với IP protection. Phức tạp khi triển khai, ít biết đến tại Đông Nam Á.</div></div>
+    <div class="comp-row"><div class="comp-name">Trellix (McAfee + FireEye DLP)</div><div class="comp-note">Portfolio rộng nhưng DLP không phải sản phẩm cốt lõi. Đang trong giai đoạn tái cấu trúc.</div></div>
+    <div class="comp-row"><div class="comp-name">Nightfall AI / Strac.io</div><div class="comp-note">DLP thế hệ mới cho cloud-native, SaaS-only. Nhắm SMB/mid-market. Ít gặp tại enterprise Việt Nam.</div></div>
+  </div>
+
+  <!-- REFERENCES -->
+  <div class="sec-heading"><span class="ct-dlp">🌏 Khách hàng tham chiếu</span></div>
+  <div class="ref-grid mb-32">
+    <div class="ref-card">
+      <div class="ref-region">🌍 Thế giới (tiêu biểu)</div>
+      <div class="ref-names">JPMorgan Chase, Goldman Sachs, Bank of America, Pfizer, Boeing, Johnson &amp; Johnson, Verizon, AT&amp;T, United Health Group — đa số thuộc Fortune 100 trong lĩnh vực Tài chính, Dược phẩm, Viễn thông, Năng lượng.</div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-region">🇻🇳 Việt Nam &amp; khu vực</div>
+      <div class="ref-names">Tham chiếu cụ thể tại Việt Nam cần xác nhận với Proofpoint/distributor. Thị trường mục tiêu đang phát triển tại các ngân hàng (BIDV, Vietcombank, MB...), bảo hiểm, fintech và tập đoàn đa quốc gia hiện diện tại VN.</div>
+    </div>
+  </div>
+
+  <!-- TARGET SEGMENT -->
+  <div class="sec-heading"><span class="ct-dlp">🎯 Nhóm khách hàng phù hợp tại Việt Nam</span></div>
+  <div class="card mb-32">
+    <div style="margin-bottom:10px">
+      <span class="seg-pill">🏦 Ngân hàng thương mại (PCI DSS, TT09)</span>
+      <span class="seg-pill">🏢 Bảo hiểm (dữ liệu PII khách hàng)</span>
+      <span class="seg-pill">💊 Dược phẩm / Y tế</span>
+      <span class="seg-pill">🏭 Tập đoàn đa quốc gia (MNC)</span>
+      <span class="seg-pill">⚡ Năng lượng / Dầu khí (IP protection)</span>
+      <span class="seg-pill">🛒 Bán lẻ lớn (dữ liệu thẻ PCI)</span>
+      <span class="seg-pill">🏛️ Cơ quan Chính phủ có yêu cầu bảo mật cao</span>
+      <span class="seg-pill">💻 Công ty công nghệ (bảo vệ source code, IP)</span>
+    </div>
+    <div class="note">Tập trung: Doanh nghiệp có từ 500+ user, đã triển khai M365/Google Workspace, chịu yêu cầu tuân thủ cao (PCI DSS, ISO 27001, PDPA, Thông tư NHNN), đang muốn thay thế DLP cũ hoặc bổ sung kiểm soát cloud/endpoint.</div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="sec-heading"><span class="ct-dlp">💬 Câu hỏi thường gặp khi tư vấn</span></div>
+  <div class="card">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>Proofpoint DLP khác gì so với Microsoft Purview DLP tôi đang có trong E5?</span><span class="faq-toggle">+</span></div>
+      <div class="faq-a">Microsoft Purview DLP chủ yếu tập trung trong hệ sinh thái M365, phức tạp để triển khai và cần team kỹ thuật cao. Proofpoint là SaaS thực sự, unified đa kênh (Email, Endpoint, Cloud ngoài M365, Web, GenAI), có AI phát hiện ý định rò rỉ, triển khai nhanh hơn, time-to-value tốt hơn. Rất nhiều khách hàng có Purview nhưng vẫn chọn Proofpoint vì Purview không đủ bao phủ hoặc deployment bị stall.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>DLP agent có ảnh hưởng đến hiệu năng máy người dùng không?</span><span class="faq-toggle">+</span></div>
+      <div class="faq-a">Agent Proofpoint được thiết kế nhẹ (user-mode, không kernel), invisible với người dùng. Chạy chung agent cho cả DLP và ITM nên không cần cài 2 agent riêng. Thực tế triển khai tại large enterprise cho thấy tác động hiệu năng rất nhỏ.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>Có hỗ trợ on-premise không hay phải lên cloud hoàn toàn?</span><span class="faq-toggle">+</span></div>
+      <div class="faq-a">Proofpoint DLP hiện là SaaS-first. Console và engine xử lý trên cloud Proofpoint (có thể chọn data center region). Endpoint agent cài on-device nhưng reporting về cloud. Một số component có thể deploy hybrid. Với yêu cầu đặc thù on-prem hoàn toàn, cần thảo luận thêm với Proofpoint technical team.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>Mất bao lâu để triển khai và đưa vào vận hành?</span><span class="faq-toggle">+</span></div>
+      <div class="faq-a">Email DLP (API-mode M365): có thể active trong vài ngày. Endpoint DLP: 2–6 tuần tùy số lượng endpoint và quy trình deploy. Toàn bộ DLP program (policy tuning, training): 3–6 tháng để đạt "mature". Proofpoint có Information Protection Framework (NIST-based) hỗ trợ roadmap triển khai.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>Dữ liệu của chúng tôi có an toàn khi Proofpoint xử lý trên cloud không?</span><span class="faq-toggle">+</span></div>
+      <div class="faq-a">Proofpoint có data center tại nhiều region (Mỹ, EU, APAC). Không lưu nội dung email/file gốc — chỉ metadata và evidence được lưu theo policy. Tuân thủ SOC2 Type II, ISO 27001. Có thể cấu hình data residency theo yêu cầu địa phương.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>Proofpoint DLP có kiểm soát được file chia sẻ qua Teams, Slack không?</span><span class="faq-toggle">+</span></div>
+      <div class="faq-a">Có, qua Cloud DLP với API integration. Với Microsoft Teams, Proofpoint tích hợp qua M365 API để kiểm soát file share, message. Slack và các collaboration tool khác qua CASB integration (cần xác nhận scope theo phiên bản).</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     TAB 2 · ITM
+═══════════════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="panel-itm">
+<div class="container">
+
+  <div class="solution-hero hero-itm">
+    <div class="hero-tag tag-itm">Proofpoint Information Protection · ITM</div>
+    <div class="hero-title">Insider Threat Management — Phát hiện & ứng phó<br>rủi ro từ người dùng nội bộ: cố ý · vô ý · bị xâm phạm</div>
+    <div class="hero-subtitle">ITM là giải pháp SaaS giám sát hành vi người dùng toàn diện (activity timeline, screenshot, file transfer, app usage) để phát hiện insider threat trước khi dữ liệu bị mất. Dùng chung agent với DLP, giảm chi phí và độ phức tạp.</div>
+  </div>
+
+  <div class="card mb-32">
+    <div class="card-title ct-itm">📌 Giải pháp là gì?</div>
+    <p style="font-size:13px;color:var(--pp-muted);line-height:1.8">
+      <strong style="color:var(--pp-text)">Proofpoint ITM (Insider Threat Management)</strong> là giải pháp SaaS trong nhóm Information Protection, tập trung vào việc giám sát, phân tích và điều tra hành vi của người dùng nội bộ — nhân viên hiện tại, nhân viên sắp nghỉ, người dùng đặc quyền (admin), và tài khoản bị xâm phạm.
+    </p>
+    <p style="font-size:13px;color:var(--pp-muted);line-height:1.8;margin-top:10px">
+      Khác với DLP (focus vào nội dung dữ liệu), ITM focus vào <em>hành vi con người</em>: ai đang làm gì, khi nào, trên thiết bị nào. Kết hợp DLP + ITM trên 1 agent và 1 console, tổ chức có thể phát hiện cả "dữ liệu đang rò rỉ" lẫn "người đang có ý định gây hại".
+    </p>
+  </div>
+
+  <div class="sec-heading"><span class="ct-itm">⚡ Vấn đề khách hàng & cách ITM giải quyết</span></div>
+  <div class="card mb-32">
+    <table class="ps-table">
+      <thead><tr><th>Vấn đề khách hàng</th><th>Proofpoint ITM giải quyết như thế nào</th></tr></thead>
+      <tbody>
+        <tr><td class="prob-cell">Nhân viên sắp nghỉ việc đang copy toàn bộ dữ liệu khách hàng ra ngoài — không phát hiện được kịp thời</td><td class="sol-cell">Alert "Departing Employee" tự động kích hoạt khi có thay đổi trạng thái HR; giám sát tăng cường và ghi lại toàn bộ activity trong giai đoạn nhạy cảm</td></tr>
+        <tr><td class="prob-cell">Không biết admin/privileged user đang làm gì với quyền cao — không có audit trail đủ chi tiết</td><td class="sol-cell">Privileged User Monitoring ghi lại mọi hành động: command, file access, screenshot, app launch — có timeline đầy đủ cho điều tra</td></tr>
+        <tr><td class="prob-cell">Tài khoản nội bộ bị hacker xâm phạm (compromised account), hành động bất thường nhưng không phát hiện được</td><td class="sol-cell">Behavior analytics phát hiện anomaly: đăng nhập bất thường, truy cập file ngoài giờ, upload lớn đột ngột — trigger alert để SOC điều tra</td></tr>
+        <tr><td class="prob-cell">Khi có incident, team điều tra mất hàng tuần để reconstruct timeline hành vi người dùng</td><td class="sol-cell">Activity Timeline tích hợp: xem lại mọi hành động user trong khoảng thời gian cụ thể, bao gồm screenshot, keystroke summary, file movement</td></tr>
+        <tr><td class="prob-cell">Không có bằng chứng pháp lý (evidence) khi cần xử lý nhân viên vi phạm hoặc báo cáo cơ quan</td><td class="sol-cell">Visual evidence (screenshot, file snippet) được lưu trong cloud storage; có thể export cho HR, Legal, hoặc cơ quan điều tra</td></tr>
+        <tr><td class="prob-cell">Triển khai nhiều agent khác nhau (DLP agent + UAM agent) gây phức tạp và tốn tài nguyên</td><td class="sol-cell">1 agent duy nhất cho cả DLP + ITM; deploy nhanh, invisible với người dùng</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec-heading"><span class="ct-itm">🧩 Thành phần triển khai</span></div>
+  <div class="card mb-20">
+    <div style="margin-bottom:10px">
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#E74C3C"></span>ITM Endpoint Agent (Windows/macOS)</span>
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#C0392B"></span>Unified ITM Console (SaaS)</span>
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#A93226"></span>Alert Library (predefined scenarios)</span>
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#922B21"></span>Activity Timeline & Forensics</span>
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#7B241C"></span>Visual Evidence Storage (Cloud)</span>
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#641E16"></span>People Risk Explorer</span>
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#512E5F"></span>SIEM/SOAR Integration (Webhook)</span>
+    </div>
+    <ul class="pp-list">
+      <li><strong>ITM Endpoint Agent:</strong> Chạy chung với DLP agent — user-mode, lightweight, invisible. Monitor: file activity, USB, application launch, browser activity, screenshot, clipboard.</li>
+      <li><strong>Unified Console:</strong> Dashboard tập trung xem user risk score, alert, case management, investigation. Tích hợp với DLP console cùng nền tảng.</li>
+      <li><strong>Alert Library:</strong> Thư viện 100+ kịch bản insider threat có sẵn (departing employee, data hoarding, unauthorized access...). Customizable theo policy nội bộ.</li>
+      <li><strong>Activity Timeline:</strong> Xem lại từng hành động người dùng theo thứ tự thời gian. Kết hợp file events, app events, network events và screenshot.</li>
+      <li><strong>Visual Evidence:</strong> Screenshot và file snippet tự động lưu vào cloud storage (AWS S3 hoặc storage của khách hàng). Masked bằng privacy control khi chưa cần.</li>
+      <li><strong>People Risk Explorer:</strong> Dashboard xếp hạng người dùng theo mức độ rủi ro, kết hợp dữ liệu từ Email Security, DLP, ITM và HR signals.</li>
+      <li><strong>SIEM Integration:</strong> Webhook gửi alert vào Splunk, Microsoft Sentinel, ServiceNow, PagerDuty. API export dữ liệu sang AWS S3.</li>
+    </ul>
+  </div>
+
+  <div class="sec-heading"><span class="ct-itm">💳 Cơ chế License</span></div>
+  <div class="lic-box mb-32">
+    <div class="lic-row"><div class="lic-key">Mô hình</div><div class="lic-val">SaaS Subscription — thuê bao hàng năm</div></div>
+    <div class="lic-row"><div class="lic-key">Đơn vị tính</div><div class="lic-val">Per endpoint (agent cài trên máy) kết hợp với infrastructure fee cố định</div></div>
+    <div class="lic-row"><div class="lic-key">Cơ chế bundle</div><div class="lic-val">ITM thường mua chung với DLP (1 agent, 1 quote). Có thể mua ITM standalone.</div></div>
+    <div class="lic-row"><div class="lic-key">Tham khảo giá</div><div class="lic-val">~$30–$50/user/năm cho ITM add-on (khi đã có DLP); standalone cao hơn</div></div>
+    <div class="lic-row"><div class="lic-key">Cloud/On-Prem</div><div class="lic-val">Có thể tailored cho cloud hoặc on-prem deployment tùy yêu cầu; SaaS là mặc định</div></div>
+    <div class="lic-row"><div class="lic-key">Storage evidence</div><div class="lic-val">Lưu trữ visual evidence trên Proofpoint cloud; option mang về AWS S3 của khách hàng</div></div>
+    <div class="lic-row"><div class="lic-key">Lưu ý</div><div class="lic-val">License phân tách theo VM có thể phức tạp — cần xác nhận với Proofpoint nếu môi trường virtualized nhiều</div></div>
+  </div>
+
+  <div class="sec-heading"><span class="ct-itm">❓ Câu hỏi Sizing & Chào BOM</span></div>
+  <div class="card mb-32">
+    <ol class="q-list">
+      <li>Tổng số endpoint (laptop, desktop, server) cần giám sát là bao nhiêu? OS: Windows/macOS?</li>
+      <li>Có môi trường VDI (virtual desktop) không? Bao nhiêu session đồng thời?</li>
+      <li>Đã có Proofpoint DLP chưa? (Nếu có, chỉ cần add ITM module, dùng chung agent)</li>
+      <li>Nhóm người dùng nào cần giám sát ưu tiên? (Toàn bộ hay chỉ privileged user, user sắp nghỉ?)</li>
+      <li>Tích hợp HR system không? (Để tự động trigger "departing employee" mode)</li>
+      <li>Yêu cầu lưu trữ evidence (screenshot, file) bao lâu? (30 ngày, 90 ngày, 1 năm?)</li>
+      <li>Có SIEM/SOAR hiện tại không? (Splunk, Sentinel, QRadar — để tích hợp alert)</li>
+      <li>Yêu cầu privacy/masking cho evidence (ẩn danh user khi chưa có phê duyệt điều tra)?</li>
+      <li>Có yêu cầu data residency (dữ liệu phải lưu trong nước hoặc region cụ thể)?</li>
+      <li>Đã có công cụ UEBA hay PAM nào chưa? (Để đánh giá overlap/complement)</li>
+    </ol>
+  </div>
+
+  <div class="sec-heading"><span class="ct-itm">🏆 Key Selling Points</span></div>
+  <div class="ksp-grid mb-32">
+    <div class="ksp-item"><div class="ksp-icon">👤</div><div class="ksp-label">People-Centric Security</div><div class="ksp-desc">Hiểu rõ từng người: ai có rủi ro cao, hành vi gì, bối cảnh ra sao — không chỉ chặn file mà hiểu nguyên nhân</div></div>
+    <div class="ksp-item"><div class="ksp-icon">🔄</div><div class="ksp-label">DLP + ITM = 1 Agent</div><div class="ksp-desc">Tiết kiệm chi phí, giảm phức tạp vận hành. Duy nhất trên thị trường có cả hai trong 1 agent</div></div>
+    <div class="ksp-item"><div class="ksp-icon">🎬</div><div class="ksp-label">Visual Evidence / Timeline</div><div class="ksp-desc">Screenshot và activity timeline giúp điều tra trong giờ thay vì tuần. Bằng chứng pháp lý đủ mạnh</div></div>
+    <div class="ksp-item"><div class="ksp-icon">🚨</div><div class="ksp-label">Pre-built Alert Library</div><div class="ksp-desc">100+ kịch bản insider threat có sẵn, setup nhanh, không cần tự viết rule từ đầu</div></div>
+    <div class="ksp-item"><div class="ksp-icon">🔐</div><div class="ksp-label">Privacy Controls</div><div class="ksp-desc">Identity masking, data masking — chỉ reveal khi có phê duyệt điều tra. Phù hợp luật lao động và GDPR</div></div>
+    <div class="ksp-item"><div class="ksp-icon">📈</div><div class="ksp-label">Gartner IRM Market Guide</div><div class="ksp-desc">Được công nhận trong Gartner Market Guide for Insider Risk Management Solutions</div></div>
+  </div>
+
+  <div class="sec-heading"><span class="ct-itm">⚔️ Đối thủ cạnh tranh</span></div>
+  <div class="card mb-32">
+    <div class="comp-row"><div class="comp-name">Teramind</div><div class="comp-note">Đối thủ trực tiếp mạnh nhất trong ITM/UAM. Mạnh về SMB/mid-market, giá rẻ hơn, UBA tốt. Proofpoint vượt trội ở enterprise, tích hợp DLP, email security và threat intelligence.</div></div>
+    <div class="comp-row"><div class="comp-name">Microsoft Purview Insider Risk Mgmt</div><div class="comp-note">Tích hợp M365, không cần agent. Nhưng chỉ hoạt động trong ecosystem M365, thiếu visual evidence và forensics chi tiết so với Proofpoint ITM.</div></div>
+    <div class="comp-row"><div class="comp-name">Varonis Data Security Platform</div><div class="comp-note">Mạnh về data discovery và permission analysis. Focus trên data-at-rest, ít hơn về behavior monitoring real-time.</div></div>
+    <div class="comp-row"><div class="comp-name">Forcepoint Insider Risk (UEBA)</div><div class="comp-note">Có Risk-Adaptive Protection thú vị nhưng ít phổ biến tại Đông Nam Á; footprint nặng hơn.</div></div>
+    <div class="comp-row"><div class="comp-name">Ekran System</div><div class="comp-note">Giải pháp insider threat monitoring tập trung vào session recording và privileged access. Phổ biến ở APAC/Eastern Europe. Cạnh tranh về giá.</div></div>
+    <div class="comp-row"><div class="comp-name">CyberArk PAM + Privilege Threat Analytics</div><div class="comp-note">Không phải ITM thuần, nhưng giám sát privileged session. Thường complement chứ không thay thế ITM.</div></div>
+  </div>
+
+  <div class="sec-heading"><span class="ct-itm">🌏 Khách hàng tham chiếu</span></div>
+  <div class="ref-grid mb-32">
+    <div class="ref-card">
+      <div class="ref-region">🌍 Thế giới</div>
+      <div class="ref-names">Các tổ chức tài chính lớn (ngân hàng, hedge fund), cơ quan liên bang Mỹ (U.S. Federal Agencies), tập đoàn công nghệ, dược phẩm. Chiếm đáng kể trong Fortune 500, đặc biệt ngành Healthcare (10%), IT Services (10%), Manufacturing (6%).</div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-region">🇻🇳 Việt Nam &amp; APAC</div>
+      <div class="ref-names">Reference cụ thể VN cần xác nhận với distributor. Phù hợp nhất với: ngân hàng lớn có yêu cầu kiểm soát privileged user, tập đoàn MNC cần bảo vệ IP, cơ quan nhà nước nhạy cảm. Thị trường VN đang tăng trưởng, chưa bão hòa.</div>
+    </div>
+  </div>
+
+  <div class="sec-heading"><span class="ct-itm">🎯 Nhóm khách hàng phù hợp tại Việt Nam</span></div>
+  <div class="card mb-32">
+    <div style="margin-bottom:10px">
+      <span class="seg-pill">🏦 Ngân hàng (kiểm soát privileged user, admin IT)</span>
+      <span class="seg-pill">🏭 Tập đoàn MNC (bảo vệ IP, trade secret)</span>
+      <span class="seg-pill">💊 Dược / Y tế (dữ liệu nghiên cứu nhạy cảm)</span>
+      <span class="seg-pill">⚡ Năng lượng / Dầu khí</span>
+      <span class="seg-pill">🏛️ Cơ quan nhà nước tối mật</span>
+      <span class="seg-pill">💻 Công ty fintech / payments</span>
+    </div>
+    <div class="note">Khách hàng lý tưởng: Tổ chức có 200+ nhân viên, chịu rủi ro cao từ insider (nhân viên nghỉ nhiều, có dữ liệu giá trị cao), đã hoặc từng xảy ra sự cố nội bộ, cần audit trail để đáp ứng compliance.</div>
+  </div>
+
+  <div class="sec-heading"><span class="ct-itm">💬 Câu hỏi thường gặp khi tư vấn</span></div>
+  <div class="card">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>ITM có vi phạm quyền riêng tư của nhân viên không? Luật lao động Việt Nam có cho phép không?</span><span class="faq-toggle">+</span></div>
+      <div class="faq-a">Proofpoint ITM có privacy controls mạnh: identity masking (ẩn danh user cho đến khi có phê duyệt), data masking, access control theo role (chỉ investigator được xem detail). Về pháp lý VN, cần tham vấn legal counsel, nhưng thông thường IT monitoring trên thiết bị công ty (corporate device) với chính sách rõ ràng trong hợp đồng lao động là được phép. Đây là câu hỏi quan trọng cần đưa vào checklist với khách hàng trước ký hợp đồng.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>ITM khác gì so với UEBA hay PAM? Chúng tôi đã có CyberArk rồi.</span><span class="faq-toggle">+</span></div>
+      <div class="faq-a">CyberArk PAM tập trung vào kiểm soát truy cập và password vaulting cho privileged account. ITM tập trung vào giám sát hành vi sau khi đã đăng nhập — user đang làm gì với quyền đó, file nào bị copy, anomaly nào xuất hiện. Hai giải pháp complement nhau: PAM kiểm soát "ai được vào", ITM giám sát "họ làm gì khi vào". Kết hợp là best practice.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>Nếu đã mua DLP thì ITM có thêm gì đáng giá không?</span><span class="faq-toggle">+</span></div>
+      <div class="faq-a">DLP chặn/phát hiện dữ liệu rò rỉ theo nội dung. ITM cho biết ý định và bối cảnh — ai đang cố tình tích trữ dữ liệu, thao tác bất thường nào xảy ra TRƯỚC khi rò rỉ. ITM là lớp phát hiện sớm (early warning). Dùng DLP + ITM là bộ đôi hoàn chỉnh: DLP chặn rò rỉ, ITM phát hiện người có ý định rò rỉ.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>Screenshot và video recording có lưu hết không? Tốn storage bao nhiêu?</span><span class="faq-toggle">+</span></div>
+      <div class="faq-a">ITM không record video liên tục — chỉ capture screenshot khi triggered bởi suspicious activity hoặc theo policy cụ thể. Điều này giúp giảm đáng kể storage so với session recording tool truyền thống. Evidence lưu trên Proofpoint cloud hoặc AWS S3 của khách hàng, với retention policy tùy cấu hình.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>Làm thế nào để phát hiện nhân viên sắp nghỉ đang copy dữ liệu?</span><span class="faq-toggle">+</span></div>
+      <div class="faq-a">Proofpoint ITM tích hợp với HR system (qua API hoặc CSV import). Khi trạng thái nhân viên thay đổi (resignation submitted, termination scheduled), hệ thống tự động đưa user đó vào "Departing Employee" watchlist với mức giám sát tăng cường. Alert sẽ kích hoạt với ngưỡng thấp hơn so với user thông thường — bất kỳ bulk file copy, USB activity hay upload lớn nào đều được flag ngay.</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     TAB 3 · ZENGUIDE
+═══════════════════════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="panel-zen">
+<div class="container">
+
+  <div class="solution-hero hero-zen">
+    <div class="hero-tag tag-zen">Proofpoint ZenGuide™</div>
+    <div class="hero-title">Security Awareness & Behavior Change — Xây dựng<br>lớp "tường lửa con người" dựa trên rủi ro thực tế</div>
+    <div class="hero-subtitle">ZenGuide là nền tảng đào tạo nhận thức bảo mật thế hệ mới, tự động hóa lộ trình học tập cá nhân hóa dựa trên risk profile từng nhân viên — vượt qua mô hình training "một cỡ cho tất cả" truyền thống. Tích hợp threat intelligence thực tế từ Proofpoint Nexus.</div>
+  </div>
+
+  <div class="card mb-32">
+    <div class="card-title ct-zen">📌 Giải pháp là gì?</div>
+    <p style="font-size:13px;color:var(--pp-muted);line-height:1.8">
+      <strong style="color:var(--pp-text)">Proofpoint ZenGuide™</strong> (tiền thân: Proofpoint Security Awareness Training / Wombat Security) là nền tảng SaaS giúp tổ chức giảm thiểu rủi ro bảo mật đến từ con người (human risk). ZenGuide sử dụng AI và threat intelligence từ hệ sinh thái Proofpoint để xác định nhân viên nào có nguy cơ cao nhất, từ đó tự động gán lộ trình đào tạo phù hợp, thực hiện phishing simulation thực tế, và đo lường hiệu quả thay đổi hành vi theo thời gian.
+    </p>
+    <p style="font-size:13px;color:var(--pp-muted);line-height:1.8;margin-top:10px">
+      Framework học tập của ZenGuide là <strong style="color:var(--pp-text)">DICE</strong>: <em>Discover</em> rủi ro từng user → <em>Intervene</em> với training đúng lúc, đúng người → <em>Change</em> hành vi bền vững → <em>Evaluate</em> hiệu quả và so sánh với ngành. Đây là bước tiến so với ACE framework truyền thống.
+    </p>
+  </div>
+
+  <div class="sec-heading"><span class="ct-zen">⚡ Vấn đề khách hàng & cách ZenGuide giải quyết</span></div>
+  <div class="card mb-32">
+    <table class="ps-table">
+      <thead><tr><th>Vấn đề khách hàng</th><th>ZenGuide giải quyết như thế nào</th></tr></thead>
+      <tbody>
+        <tr><td class="prob-cell">Đã training nhân viên nhưng vẫn bị click phishing — 68% nhân viên vẫn hành động rủi ro dù đã học</td><td class="sol-cell">Personalized learning dựa trên hành vi thực tế và threat exposure của từng người; không training đại trà — chỉ train đúng người, đúng nội dung, đúng lúc</td></tr>
+        <tr><td class="prob-cell">Team Security quá nhỏ, không có người quản lý chương trình awareness toàn diện</td><td class="sol-cell">Tự động hóa hoàn toàn: tự phân nhóm user theo risk, tự gán training, tự gửi phishing simulation, tự báo cáo — lean team vẫn vận hành hiệu quả</td></tr>
+        <tr><td class="prob-cell">Không biết nhân viên nào đang có nguy cơ cao nhất để tập trung nguồn lực</td><td class="sol-cell">People Risk Explorer (kết hợp ZenGuide) xếp hạng rủi ro từng user dựa trên: email threats received, phishing simulation results, training completion, DLP events</td></tr>
+        <tr><td class="prob-cell">Nội dung training nhàm chán, nhân viên không chú ý — compliance checkbox training</td><td class="sol-cell">Gamified learning, micro/nano-learning modules ngắn (2–5 phút), Learner Dashboard để user tự theo dõi tiến độ — tăng engagement và retention</td></tr>
+        <tr><td class="prob-cell">Phishing simulation không sát với mối đe dọa thực tế, nhân viên "quen" mẫu cũ</td><td class="sol-cell">ThreatFlip — tự động biến email tấn công thực tế (từ Proofpoint threat intelligence) thành phishing simulation; Satori AI agent tạo simulation siêu thực</td></tr>
+        <tr><td class="prob-cell">Không có cách đo ROI của chương trình awareness — không thuyết phục được management</td><td class="sol-cell">Dashboard đo Risk Reduction Score, click rate trends, benchmark so với industry peers — data-driven để báo cáo lên C-level và Board</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sec-heading"><span class="ct-zen">🧩 Thành phần triển khai</span></div>
+  <div class="card mb-20">
+    <div style="margin-bottom:10px">
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#2980B9"></span>ZenGuide SaaS Platform</span>
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#2471A3"></span>People Risk Explorer</span>
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#1F618D"></span>Phishing Simulation Engine</span>
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#1A5276"></span>Satori Phishing Simulation Agent (AI)</span>
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#154360"></span>ThreatFlip (Live Attack → Simulation)</span>
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#0E2F44"></span>Training Content Library</span>
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#1ABC9C"></span>Learner Dashboard</span>
+      <span class="comp-tag"><span class="comp-tag-dot" style="background:#148F77"></span>Report Suspicious Button</span>
+    </div>
+    <ul class="pp-list">
+      <li><strong>ZenGuide Platform:</strong> SaaS, không cần cài agent riêng. Tích hợp với M365/Google Workspace qua Azure AD hoặc SCIM để sync user. Có thể SSO.</li>
+      <li><strong>People Risk Explorer:</strong> Aggregate risk score từ nhiều nguồn (email threats, phishing performance, DLP events, ITM alerts). Tự động phân nhóm: Very Attacked, Click-Prone, High Privilege...</li>
+      <li><strong>Phishing Simulation Engine:</strong> Template phong phú (1000+), hỗ trợ tiếng Việt (kiểm tra với distributor), real-world attack templates. Lên lịch tự động, adaptive difficulty.</li>
+      <li><strong>Satori AI Agent:</strong> AI agent tự động tạo phishing simulation cá nhân hóa dựa trên thông tin công khai và hành vi user — advanced scenario.</li>
+      <li><strong>ThreatFlip:</strong> Tự động chuyển đổi email tấn công thực tế (phát hiện bởi Proofpoint TAP) thành phishing simulation ngay lập tức. Đây là tính năng độc đáo không đối thủ nào có.</li>
+      <li><strong>Content Library:</strong> Hàng trăm module training: video ngắn, interactive, quiz, compliance content (GDPR, PCI, HIPAA...). Có nội dung đa ngôn ngữ.</li>
+      <li><strong>Report Suspicious Button:</strong> Plugin Outlook/Gmail cho phép user báo cáo email đáng ngờ 1 click. Kết quả được phân tích tự động, nếu là real threat → alert SOC.</li>
+    </ul>
+  </div>
+
+  <div class="sec-heading"><span class="ct-zen">💳 Cơ chế License</span></div>
+  <div class="lic-box mb-32">
+    <div class="lic-row"><div class="lic-key">Mô hình</div><div class="lic-val">SaaS Subscription — tiered pricing theo tính năng và quy mô</div></div>
+    <div class="lic-row"><div class="lic-key">Đơn vị tính</div><div class="lic-val">Per user per year (người dùng cần đào tạo)</div></div>
+    <div class="lic-row"><div class="lic-key">Tier</div><div class="lic-val">Các tier khác nhau về tính năng (phishing simulation only, full awareness training, advanced với People Risk Explorer). Giá tham khảo: $15–$30/user/năm tùy tier</div></div>
+    <div class="lic-row"><div class="lic-key">Bundle với Email Security</div><div class="lic-val">Thường mua kèm Proofpoint Email Security (TAP/TRAP) để tối đa hóa threat intelligence → training. Bundle giá tốt hơn mua riêng lẻ.</div></div>
+    <div class="lic-row"><div class="lic-key">Content</div><div class="lic-val">Content library được include trong license; có thể bổ sung custom content của khách hàng (policy, SOP nội bộ)</div></div>
+    <div class="lic-row"><div class="lic-key">Lưu ý</div><div class="lic-val">Xác nhận hỗ trợ tiếng Việt trong template phishing và training content với distributor. Một số nội dung có thể cần bổ sung/custom cho thị trường VN.</div></div>
+  </div>
+
+  <div class="sec-heading"><span class="ct-zen">❓ Câu hỏi Sizing & Chào BOM</span></div>
+  <div class="card mb-32">
+    <ol class="q-list">
+      <li>Tổng số nhân viên cần đào tạo là bao nhiêu? Cần train toàn bộ hay theo bộ phận?</li>
+      <li>Đã có chương trình security awareness training nào chưa? (KnowBe4, Proofpoint SAT cũ, tự xây dựng?)</li>
+      <li>Email security hiện tại là gì? (Nếu đang dùng Proofpoint TAP → tích hợp sâu hơn với ThreatFlip)</li>
+      <li>Có yêu cầu nội dung training tiếng Việt không? (Cần kiểm tra với Proofpoint về ngôn ngữ VN)</li>
+      <li>Tần suất muốn thực hiện phishing simulation? (Monthly, quarterly?)</li>
+      <li>Có yêu cầu tracking theo compliance cụ thể không? (GDPR, PCI, ISO 27001, NIST...)</li>
+      <li>Muốn tích hợp với HRIS/Active Directory/Azure AD để sync user không?</li>
+      <li>Yêu cầu reporting: báo cáo cho ai? (CISO, Board, Audit Committee?)</li>
+      <li>Có yêu cầu custom content (video nội bộ, policy của công ty) không?</li>
+      <li>Budget dự tính per user per year?</li>
+    </ol>
+  </div>
+
+  <div class="sec-heading"><span class="ct-zen">🏆 Key Selling Points</span></div>
+  <div class="ksp-grid mb-32">
+    <div class="ksp-item"><div class="ksp-icon">🎯</div><div class="ksp-label">Risk-Based Personalization</div><div class="ksp-desc">Training đúng người, đúng thời điểm — không phải "train tất cả như nhau". Dùng risk score thực từ threat intelligence</div></div>
+    <div class="ksp-item"><div class="ksp-icon">🔁</div><div class="ksp-label">ThreatFlip — Độc quyền</div><div class="ksp-desc">Biến email tấn công thực tế ĐANG nhắm vào công ty thành phishing simulation — không đối thủ nào có tính năng này</div></div>
+    <div class="ksp-item"><div class="ksp-icon">🤖</div><div class="ksp-label">Fully Automated</div><div class="ksp-desc">Tự động phân nhóm, gán training, gửi simulation, báo cáo. Lean team 1–2 người vẫn quản trị cho 10,000+ user</div></div>
+    <div class="ksp-item"><div class="ksp-icon">🎮</div><div class="ksp-label">Gamified + Micro-Learning</div><div class="ksp-desc">Module 2–5 phút, gamified, Learner Dashboard. Tăng completion rate và knowledge retention đáng kể</div></div>
+    <div class="ksp-item"><div class="ksp-icon">📊</div><div class="ksp-label">Measurable Risk Reduction</div><div class="ksp-desc">Dashboard đo Risk Score, click rate, phishing report rate. Benchmark ngành. Data để thuyết phục Board/CXO</div></div>
+    <div class="ksp-item"><div class="ksp-icon">🔗</div><div class="ksp-label">Ecosystem Integration</div><div class="ksp-desc">Tích hợp sâu với Proofpoint Email Security (TAP), DLP, ITM — threat intelligence flow thông suốt từ detection đến training</div></div>
+  </div>
+
+  <div class="sec-heading"><span class="ct-zen">⚔️ Đối thủ cạnh tranh</span></div>
+  <div class="card mb-32">
+    <div class="comp-row"><div class="comp-name">KnowBe4</div><div class="comp-note">Đối thủ số 1, market leader SAT toàn cầu. Nội dung phong phú, phishing template nhiều, giá cạnh tranh. Điểm yếu: standalone platform, không tích hợp threat intelligence thực từ email gateway như Proofpoint. Phổ biến tại VN.</div></div>
+    <div class="comp-row"><div class="comp-name">Cofense</div><div class="comp-note">Mạnh về phishing simulation và incident response (PhishMe). Ít tính năng learning path hơn ZenGuide.</div></div>
+    <div class="comp-row"><div class="comp-name">Mimecast Awareness Training</div><div class="comp-note">Tích hợp với Mimecast email security. Nội dung tốt nhưng ecosystem nhỏ hơn Proofpoint.</div></div>
+    <div class="comp-row"><div class="comp-name">Microsoft Defender Training (Attack Simulator)</div><div class="comp-note">Có sẵn trong M365 E5, không cần mua thêm. Nhưng tính năng cơ bản, thiếu AI personalization và risk-based learning của ZenGuide.</div></div>
+    <div class="comp-row"><div class="comp-name">Ninjio / Hoxhunt / Terranova</div><div class="comp-note">Các nền tảng awareness mới nổi, thường mạnh về UX/gamification. Ít biết đến tại Việt Nam, ít tích hợp với security stack enterprise.</div></div>
+  </div>
+
+  <div class="sec-heading"><span class="ct-zen">🌏 Khách hàng tham chiếu</span></div>
+  <div class="ref-grid mb-32">
+    <div class="ref-card">
+      <div class="ref-region">🌍 Thế giới</div>
+      <div class="ref-names">Tập đoàn tài chính, ngân hàng lớn toàn cầu, tập đoàn dược phẩm, công ty bảo hiểm. Proofpoint Security Awareness Training (tiền thân ZenGuide từ Wombat Security 2018) được dùng bởi hàng nghìn tổ chức tại 150+ quốc gia.</div>
+    </div>
+    <div class="ref-card">
+      <div class="ref-region">🇻🇳 Việt Nam &amp; APAC</div>
+      <div class="ref-names">Thị trường SAT tại VN đang được dẫn dắt bởi KnowBe4. ZenGuide là cơ hội thay thế/bổ sung cho khách hàng đã dùng Proofpoint Email Security. Cần xác nhận reference cụ thể với Proofpoint APAC team.</div>
+    </div>
+  </div>
+
+  <div class="sec-heading"><span class="ct-zen">🎯 Nhóm khách hàng phù hợp tại Việt Nam</span></div>
+  <div class="card mb-32">
+    <div style="margin-bottom:10px">
+      <span class="seg-pill">🏦 Ngân hàng / Bảo hiểm (yêu cầu compliance training)</span>
+      <span class="seg-pill">🏢 Doanh nghiệp 500+ nhân viên</span>
+      <span class="seg-pill">🏭 Tập đoàn MNC có chi nhánh VN</span>
+      <span class="seg-pill">🏛️ Cơ quan nhà nước có chương trình ATTT</span>
+      <span class="seg-pill">💻 Công ty công nghệ / fintech</span>
+      <span class="seg-pill">🎓 Đại học / Tổ chức giáo dục lớn</span>
+    </div>
+    <div class="note">ZenGuide phù hợp nhất khi: Khách hàng đã dùng Proofpoint Email Security (TAP) → upsell dễ, threat intelligence dùng chung. Hoặc tổ chức đang dùng KnowBe4 nhưng muốn giải pháp tích hợp sâu hơn với email security stack.</div>
+  </div>
+
+  <div class="sec-heading"><span class="ct-zen">💬 Câu hỏi thường gặp khi tư vấn</span></div>
+  <div class="card">
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>Chúng tôi đã dùng KnowBe4 rồi, ZenGuide có gì khác biệt?</span><span class="faq-toggle">+</span></div>
+      <div class="faq-a">KnowBe4 là standalone SAT platform — phishing sim và training rất tốt, nhưng không biết email thực nào đang tấn công bạn hôm nay. ZenGuide tích hợp trực tiếp với Proofpoint Email Security (TAP) — ThreatFlip tự động dùng email tấn công thực tế đang nhắm vào công ty bạn để tạo simulation. Ngoài ra, risk score của từng user được xây dựng từ dữ liệu thực (threat exposure, DLP event, ITM alert) — không chỉ từ kết quả click phishing. Đây là sự khác biệt cốt lõi.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>ZenGuide có hỗ trợ nội dung tiếng Việt không?</span><span class="faq-toggle">+</span></div>
+      <div class="faq-a">Proofpoint có content đa ngôn ngữ, tuy nhiên cần xác nhận mức độ hỗ trợ tiếng Việt cụ thể (phishing template, training module) với Proofpoint APAC hoặc distributor tại VN. Khách hàng cũng có thể upload custom content bằng tiếng Việt (video, PDF policy nội bộ) vào nền tảng.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>Cần bao nhiêu thời gian để setup và ra kết quả?</span><span class="faq-toggle">+</span></div>
+      <div class="faq-a">Setup ban đầu (sync user từ AD/Azure AD, cấu hình phishing domain, tạo campaign đầu tiên): khoảng 1–2 tuần. Kết quả ban đầu (click rate baseline): sau lần phishing simulation đầu tiên. Thay đổi hành vi đo được (risk score giảm, click rate giảm): thường sau 3–6 tháng chạy liên tục. ROI thường báo cáo được sau 6–12 tháng.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>Phishing simulation có làm phiền nhân viên và ảnh hưởng đến văn hóa công ty không?</span><span class="faq-toggle">+</span></div>
+      <div class="faq-a">Đây là lo ngại phổ biến. Best practice là: bắt đầu với simulation dễ để nhân viên build confidence, tăng dần độ khó; luôn kết hợp training feedback tức thì sau khi click (không phải phạt, mà học); có nội dung giải thích "tại sao bạn nhận email này"; giữ tần suất vừa phải (monthly). Proofpoint ZenGuide có tính năng adaptive difficulty và positive reinforcement để giữ trải nghiệm constructive.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>Làm thế nào để chứng minh ROI với Ban lãnh đạo?</span><span class="faq-toggle">+</span></div>
+      <div class="faq-a">ZenGuide cung cấp: (1) Phishing click rate trend — giảm % user bị click theo thời gian; (2) Risk Score reduction — giảm số lượng "Very Attacked Users" và "Click-Prone Users"; (3) Phishing Report Rate tăng (user nhận ra và báo cáo email xấu); (4) Benchmark so sánh với industry peers. Kết hợp với chi phí trung bình 1 data breach ($4.4M năm 2025), dễ tính ROI. Có sẵn executive report template để trình Board.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)"><span>ZenGuide tích hợp với M365 / Azure AD như thế nào?</span><span class="faq-toggle">+</span></div>
+      <div class="faq-a">Tích hợp qua Azure AD (SCIM/LDAP) để tự động sync user list, group, department — giúp phân nhóm training theo phòng ban tự động. Tích hợp với Exchange Online hoặc Microsoft 365 mailbox để deliver phishing simulation và Report Suspicious button (plugin Outlook). SSO qua Azure AD SAML cũng được hỗ trợ.</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ FOOTER -->
+<footer class="site-footer">
+  Proofpoint Sales Brief · DLP · ITM · ZenGuide &nbsp;|&nbsp; Dành cho nội bộ Sales & Presales &nbsp;|&nbsp; Phiên bản 2025 &nbsp;|&nbsp; Thông tin giá mang tính tham khảo, cần quote chính thức từ Proofpoint/Distributor trước khi BOM
+</footer>
+
+<script>
+  // Tab switching
+  function switchTab(tabId, btn, activeClass) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => {
+      b.classList.remove('active-dlp','active-itm','active-zen');
+    });
+    document.getElementById('panel-' + tabId).classList.add('active');
+    btn.classList.add(activeClass);
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  }
+
+  // FAQ accordion
+  function toggleFaq(el) {
+    const item = el.closest('.faq-item');
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  }
+</script>
+</body>
+</html>

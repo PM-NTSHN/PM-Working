@@ -1,0 +1,1863 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cẩm Nang Tư Vấn — SecPod SanerNow CVEM</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Serif:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #fafaf8;
+  --bg2: #f3f2ee;
+  --bg3: #e8e6e0;
+  --card: #ffffff;
+  --accent: #e11d48;
+  --accent2: #be123c;
+  --accent3: #1e40af;
+  --accent4: #047857;
+  --accent5: #b45309;
+  --text: #1a1917;
+  --text2: #44403c;
+  --text3: #78716c;
+  --border: #e7e5e4;
+  --border2: #fda4af;
+  --tenable: #0369a1;
+  --rapid7: #c2410c;
+  --secpod: #e11d48;
+  --warn: #92400e;
+  --warn-bg: #fffbeb;
+  --tip-bg: #f0fdf4;
+  --tip-border: #86efac;
+  --caution-bg: #fff1f2;
+  --caution-border: #fda4af;
+  --info-bg: #eff6ff;
+  --info-border: #93c5fd;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'IBM Plex Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+/* ── COVER ── */
+.cover {
+  background: var(--accent);
+  color: #fff;
+  padding: 64px 72px 52px;
+  position: relative;
+  overflow: hidden;
+}
+
+.cover::before {
+  content: '';
+  position: absolute;
+  top: -80px; right: -80px;
+  width: 400px; height: 400px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.06);
+}
+
+.cover::after {
+  content: '';
+  position: absolute;
+  bottom: -60px; left: 200px;
+  width: 300px; height: 300px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.04);
+}
+
+.cover-badge {
+  display: inline-block;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 3px;
+  padding: 4px 12px;
+  font-size: 11px;
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.08em;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+
+.cover h1 {
+  font-family: 'IBM Plex Serif', serif;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.1;
+  max-width: 600px;
+  position: relative;
+  z-index: 1;
+}
+
+.cover-sub {
+  margin-top: 16px;
+  font-size: 16px;
+  opacity: 0.85;
+  max-width: 520px;
+  position: relative;
+  z-index: 1;
+  line-height: 1.6;
+}
+
+.cover-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 32px;
+  position: relative;
+  z-index: 1;
+}
+
+.cover-chip {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 4px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* ── NAV ── */
+.toc-bar {
+  background: #1a1917;
+  color: #a8a29e;
+  padding: 0 72px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  overflow-x: auto;
+  display: flex;
+  align-items: stretch;
+}
+
+.toc-bar a {
+  display: inline-block;
+  padding: 14px 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #a8a29e;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all 0.15s;
+  letter-spacing: 0.02em;
+}
+
+.toc-bar a:hover { color: #fff; border-color: var(--accent); }
+
+/* ── LAYOUT ── */
+.wrap { max-width: 960px; margin: 0 auto; padding: 0 72px; }
+
+.section {
+  padding: 56px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.section:last-child { border-bottom: none; }
+
+.sec-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+.sec-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--accent);
+  background: var(--caution-bg);
+  border: 1px solid var(--caution-border);
+  border-radius: 3px;
+  padding: 4px 9px;
+  margin-top: 5px;
+  white-space: nowrap;
+}
+
+.sec-title {
+  font-family: 'IBM Plex Serif', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.25;
+}
+
+.sec-title span { color: var(--accent); }
+
+/* ── PROSE ── */
+p { font-size: 14px; color: var(--text2); line-height: 1.8; margin-bottom: 14px; }
+strong { color: var(--text); font-weight: 600; }
+
+/* ── CALLOUT BOXES ── */
+.tip {
+  background: var(--tip-bg);
+  border-left: 3px solid var(--accent4);
+  border-radius: 0 6px 6px 0;
+  padding: 14px 18px;
+  margin: 18px 0;
+  font-size: 13px;
+  color: var(--text2);
+}
+
+.tip strong { color: var(--accent4); }
+
+.warn {
+  background: var(--warn-bg);
+  border-left: 3px solid #f59e0b;
+  border-radius: 0 6px 6px 0;
+  padding: 14px 18px;
+  margin: 18px 0;
+  font-size: 13px;
+  color: var(--text2);
+}
+
+.warn strong { color: var(--warn); }
+
+.caution {
+  background: var(--caution-bg);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 6px 6px 0;
+  padding: 14px 18px;
+  margin: 18px 0;
+  font-size: 13px;
+  color: var(--text2);
+}
+
+.caution strong { color: var(--accent2); }
+
+.info {
+  background: var(--info-bg);
+  border-left: 3px solid var(--accent3);
+  border-radius: 0 6px 6px 0;
+  padding: 14px 18px;
+  margin: 18px 0;
+  font-size: 13px;
+  color: var(--text2);
+}
+
+.info strong { color: var(--accent3); }
+
+/* ── FAQ ── */
+.faq-item {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.faq-item:hover { border-color: var(--border2); }
+
+.faq-q {
+  padding: 16px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  cursor: pointer;
+  background: var(--card);
+  user-select: none;
+}
+
+.faq-q-badge {
+  flex-shrink: 0;
+  width: 26px; height: 26px;
+  border-radius: 50%;
+  background: var(--caution-bg);
+  border: 1px solid var(--caution-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.faq-q-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  flex: 1;
+  line-height: 1.5;
+}
+
+.faq-q-tag {
+  flex-shrink: 0;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  align-self: flex-start;
+  margin-top: 3px;
+}
+
+.tag-tech { background: #dbeafe; color: #1d4ed8; }
+.tag-biz { background: #fef3c7; color: #92400e; }
+.tag-lic { background: #fce7f3; color: #9d174d; }
+.tag-vs { background: #d1fae5; color: #065f46; }
+.tag-deploy { background: #e0e7ff; color: #3730a3; }
+
+.faq-a {
+  padding: 0 20px 18px 60px;
+  background: var(--card);
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.75;
+  border-top: 1px solid var(--border);
+  display: none;
+}
+
+.faq-a.open { display: block; }
+
+.faq-a ul {
+  list-style: none;
+  margin: 10px 0;
+}
+
+.faq-a ul li {
+  padding: 4px 0 4px 16px;
+  position: relative;
+  font-size: 13px;
+  color: var(--text2);
+}
+
+.faq-a ul li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-size: 16px;
+  line-height: 1.3;
+}
+
+.faq-a p { font-size: 13px; margin-bottom: 8px; }
+.faq-a strong { color: var(--text); }
+
+.faq-toggle {
+  margin-left: auto;
+  font-size: 18px;
+  color: var(--text3);
+  flex-shrink: 0;
+  transition: transform 0.2s;
+  align-self: flex-start;
+  margin-top: 2px;
+}
+
+.faq-item.open .faq-toggle { transform: rotate(45deg); }
+
+/* ── COMPARE TABLE ── */
+.compare-wrap { overflow-x: auto; border-radius: 8px; border: 1px solid var(--border); margin: 20px 0; }
+
+.compare-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.compare-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  letter-spacing: 0.03em;
+}
+
+.compare-table th:nth-child(1) { background: var(--bg2); color: var(--text2); }
+.compare-table th:nth-child(2) { background: #fff1f2; color: var(--secpod); }
+.compare-table th:nth-child(3) { background: #eff6ff; color: var(--tenable); }
+.compare-table th:nth-child(4) { background: #fff7ed; color: var(--rapid7); }
+
+.compare-table td {
+  padding: 11px 16px;
+  border-bottom: 1px solid #f5f5f4;
+  vertical-align: top;
+  color: var(--text2);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.compare-table tr:last-child td { border-bottom: none; }
+.compare-table tr:hover td { background: #fafaf8; }
+.compare-table td:first-child { font-weight: 600; color: var(--text); font-size: 13px; }
+
+.compare-table td.cat-row {
+  background: var(--bg2);
+  color: var(--text2);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+}
+
+.win { color: #065f46; font-weight: 600; }
+.ok { color: #1d4ed8; }
+.weak { color: #b45309; }
+.no { color: #9ca3af; }
+.check-icon { color: #059669; font-size: 15px; }
+.x-icon { color: #d1d5db; font-size: 15px; }
+.partial-icon { color: #f59e0b; font-size: 15px; }
+
+/* ── SPEC CARDS ── */
+.spec-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 20px 0; }
+.spec-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px 16px;
+}
+.spec-card-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text3);
+  margin-bottom: 6px;
+}
+.spec-card-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--accent);
+  font-family: 'IBM Plex Mono', monospace;
+  line-height: 1.3;
+}
+.spec-card-sub {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
+/* ── MODULE CARDS ── */
+.module-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 20px 0; }
+.module-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 18px;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+.module-num {
+  width: 32px; height: 32px;
+  border-radius: 6px;
+  background: var(--caution-bg);
+  border: 1px solid var(--caution-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.module-name { font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+.module-desc { font-size: 12px; color: var(--text2); line-height: 1.6; }
+.module-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 8px; }
+.module-tag {
+  font-size: 10px;
+  padding: 2px 7px;
+  border-radius: 3px;
+  background: var(--bg2);
+  color: var(--text3);
+  font-weight: 500;
+}
+
+/* ── BATTLE CARD ── */
+.battle-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 20px 0;
+}
+.battle-header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 16px 20px;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+}
+.battle-vendor { font-size: 15px; font-weight: 700; }
+.battle-vs {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text3);
+  padding: 4px 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+
+.battle-body { padding: 20px; }
+
+.battle-row {
+  display: grid;
+  grid-template-columns: 1fr 80px 1fr;
+  gap: 8px;
+  margin-bottom: 10px;
+  align-items: start;
+  font-size: 13px;
+}
+
+.battle-row:last-child { margin-bottom: 0; }
+
+.battle-cell {
+  padding: 8px 12px;
+  border-radius: 6px;
+  line-height: 1.5;
+}
+
+.battle-cell.win { background: #f0fdf4; border: 1px solid #86efac; color: #14532d; }
+.battle-cell.lose { background: #fafaf8; border: 1px solid var(--border); color: var(--text3); }
+.battle-cell.tie { background: #fffbeb; border: 1px solid #fde68a; color: #78350f; }
+
+.battle-label {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding-top: 10px;
+}
+
+/* ── KEY POINTS ── */
+.key-points {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px 22px;
+  margin: 18px 0;
+}
+
+.key-points-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.key-points-title::before {
+  content: '';
+  display: inline-block;
+  width: 3px; height: 14px;
+  background: var(--accent);
+  border-radius: 2px;
+}
+
+.kp-item {
+  display: flex;
+  gap: 10px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.55;
+  align-items: flex-start;
+}
+
+.kp-item:last-child { border-bottom: none; }
+
+.kp-icon {
+  flex-shrink: 0;
+  font-size: 14px;
+  margin-top: 1px;
+}
+
+/* ── OBJECTION ── */
+.objection {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+
+.obj-q {
+  padding: 14px 18px;
+  background: #fef2f2;
+  border-bottom: 1px solid #fecaca;
+  font-size: 14px;
+  font-weight: 600;
+  color: #991b1b;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.obj-q::before { content: '🚧'; font-size: 16px; flex-shrink: 0; }
+
+.obj-a {
+  padding: 14px 18px;
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+.obj-a strong { color: var(--text); }
+
+/* ── CHEAT SHEET ── */
+.cheatsheet {
+  background: #1a1917;
+  color: #e7e5e4;
+  border-radius: 10px;
+  padding: 24px 26px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  margin: 20px 0;
+  line-height: 1.8;
+}
+
+.cheatsheet-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  border-bottom: 1px solid #44403c;
+  padding-bottom: 10px;
+}
+
+.cs-item { display: flex; gap: 14px; padding: 4px 0; }
+.cs-key { color: #fda4af; min-width: 180px; flex-shrink: 0; }
+.cs-val { color: #d6d3d1; }
+
+/* ── GRID 2 ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* ── LICENSE OVERVIEW ── */
+.lic-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px 20px;
+}
+.lic-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.lic-title::before {
+  content: '';
+  width: 3px; height: 16px;
+  background: var(--accent);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.lic-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 13px;
+  gap: 12px;
+}
+.lic-row:last-child { border-bottom: none; }
+.lic-row .k { color: var(--text2); flex-shrink: 0; }
+.lic-row .v { color: var(--text); font-weight: 500; text-align: right; }
+
+/* ── SCENARIO ── */
+.scenario {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 18px 20px;
+  margin-bottom: 12px;
+}
+.scenario-title {
+  font-size: 14px; font-weight: 700; color: var(--text);
+  margin-bottom: 10px; display: flex; gap: 10px; align-items: center;
+}
+.scenario-badge {
+  font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 3px;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.badge-yes { background: #d1fae5; color: #065f46; }
+.badge-no { background: #fee2e2; color: #991b1b; }
+.badge-maybe { background: #fef3c7; color: #92400e; }
+
+/* ── FOOTER ── */
+footer {
+  background: #1a1917;
+  color: #78716c;
+  padding: 24px 72px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+footer span { color: #a8a29e; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 800px) {
+  .cover, .wrap, .toc-bar, footer { padding-left: 24px; padding-right: 24px; }
+  .cover h1 { font-size: 30px; }
+  .spec-grid { grid-template-columns: 1fr 1fr; }
+  .module-grid, .grid-2 { grid-template-columns: 1fr; }
+  .battle-row { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-badge">📋 Sales Handbook · Internal Use</div>
+  <h1>Cẩm Nang Tư Vấn<br>SecPod SanerNow CVEM</h1>
+  <p class="cover-sub">Dò quét & Quản lý lỗ hổng bảo mật mạng — Tài liệu dành cho Sales & Pre-sales, bao gồm FAQ, objection handling và so sánh với Tenable & Rapid7</p>
+  <div class="cover-chips">
+    <span class="cover-chip">Version 2025</span>
+    <span class="cover-chip">Q&A · FAQ · Objection Handling</span>
+    <span class="cover-chip">vs Tenable · vs Rapid7</span>
+    <span class="cover-chip">License Guide</span>
+    <span class="cover-chip">Deployment Scenarios</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="toc-bar">
+  <a href="#s1">01 · Tổng quan SP</a>
+  <a href="#s2">02 · 7 Modules</a>
+  <a href="#s3">03 · Kiến trúc</a>
+  <a href="#s4">04 · FAQ Kỹ thuật</a>
+  <a href="#s5">05 · FAQ Business</a>
+  <a href="#s6">06 · License FAQ</a>
+  <a href="#s7">07 · vs Tenable</a>
+  <a href="#s8">08 · vs Rapid7</a>
+  <a href="#s9">09 · Objections</a>
+  <a href="#s10">10 · Scenarios</a>
+  <a href="#s11">11 · Cheat Sheet</a>
+  <a href="#s12">12 · Tài liệu</a>
+</nav>
+
+<div class="wrap">
+
+<!-- ════ S1: TỔNG QUAN ════ -->
+<section class="section" id="s1">
+  <div class="sec-head">
+    <span class="sec-num">01</span>
+    <h2 class="sec-title">Tổng Quan Sản Phẩm<br><span>SecPod SanerNow CVEM</span></h2>
+  </div>
+
+  <p>SecPod (Security Podium) được thành lập năm 2009 tại Bangalore, Ấn Độ với sứ mệnh ngăn chặn cyberattack thông qua cyber hygiene tự động. SanerNow CVEM (Continuous Vulnerability and Exposure Management) là platform all-in-one tích hợp toàn bộ vòng đời quản lý lỗ hổng — từ phát hiện, đánh giá, ưu tiên hóa đến vá lỗi — trong một console duy nhất.</p>
+
+  <div class="spec-grid">
+    <div class="spec-card">
+      <div class="spec-card-label">Tốc độ scan</div>
+      <div class="spec-card-value">&lt; 5 phút</div>
+      <div class="spec-card-sub">Nhanh nhất thị trường, real-time continuous scanning</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-card-label">SCAP Checks</div>
+      <div class="spec-card-value">190,000+</div>
+      <div class="spec-card-sub">Kho checks tự xây dựng, OVAL contributor, cập nhật hàng ngày</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-card-label">3rd Party Patching</div>
+      <div class="spec-card-value">550+</div>
+      <div class="spec-card-sub">Ứng dụng, OS Windows/Linux/macOS/AIX, patch rollback</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-card-label">Platform modules</div>
+      <div class="spec-card-value">7 in 1</div>
+      <div class="spec-card-sub">VM · Patch · Asset · Compliance · CPAM · EM · SDM</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-card-label">Deployment</div>
+      <div class="spec-card-value">Cloud + OnPrem</div>
+      <div class="spec-card-sub">SaaS cloud hoặc on-premise, agent HTTPS port 443</div>
+    </div>
+    <div class="spec-card">
+      <div class="spec-card-label">Analyst Rating</div>
+      <div class="spec-card-value">GigaOm Leader</div>
+      <div class="spec-card-sub">Patch Management 2025 — Leader & Outperformer</div>
+    </div>
+  </div>
+
+  <div class="info">
+    <strong>📌 Định vị thị trường:</strong> SecPod không cạnh tranh trực tiếp với Tenable về <em>network scanner đơn thuần</em>. SecPod định vị là <strong>all-in-one CVEM platform</strong> — thay thế cùng lúc cho VM scanner + Patch Management + Compliance Tool, giảm TCO so với mua riêng lẻ từng điểm giải pháp.
+  </div>
+
+  <div class="key-points">
+    <div class="key-points-title">5 điểm bán hàng cốt lõi (USP) cần nhớ</div>
+    <div class="kp-item"><span class="kp-icon">⚡</span><span><strong>Nhanh nhất:</strong> Scan hoàn thành trong dưới 5 phút — nhanh gấp nhiều lần so với Tenable (thường 30–60 phút) và Rapid7. Đây là win mạnh nhất khi demo.</span></div>
+    <div class="kp-item"><span class="kp-icon">🔧</span><span><strong>All-in-One:</strong> VM + Patch Management tích hợp trong 1 console — không cần mua thêm tool riêng để vá lỗi như Tenable hay Rapid7. Tiết kiệm đáng kể chi phí và công sức vận hành.</span></div>
+    <div class="kp-item"><span class="kp-icon">📊</span><span><strong>SCAP/OVAL Native:</strong> SecPod là OVAL contributor — kho check tự xây dựng 190,000+. Đây là chuẩn mở quốc tế được chính phủ/quân đội tin dùng, không phụ thuộc plugin của bên thứ ba.</span></div>
+    <div class="kp-item"><span class="kp-icon">💰</span><span><strong>TCO thấp hơn:</strong> 1 license SecPod = VM + Patch + Compliance + Asset. So sánh: Tenable SC + Patch Management + Compliance add-on = 3 license riêng. Tiết kiệm 40–60% chi phí.</span></div>
+    <div class="kp-item"><span class="kp-icon">🤝</span><span><strong>Support xuất sắc:</strong> Đội kỹ thuật SecPod phản hồi nhanh, hỗ trợ remote session. Nhiều đánh giá Gartner 5 sao về customer support — lợi thế cạnh tranh tại thị trường Việt Nam.</span></div>
+  </div>
+</section>
+
+<!-- ════ S2: 7 MODULES ════ -->
+<section class="section" id="s2">
+  <div class="sec-head">
+    <span class="sec-num">02</span>
+    <h2 class="sec-title">7 Module<br><span>SanerNow CVEM Platform</span></h2>
+  </div>
+
+  <p>Đây là điểm khác biệt lớn nhất của SecPod — 7 module hoạt động trên cùng một agent, một console, một database. Không cần tích hợp hay mua riêng:</p>
+
+  <div class="module-grid">
+    <div class="module-card">
+      <div class="module-num">01</div>
+      <div>
+        <div class="module-name">Vulnerability Management (VM)</div>
+        <div class="module-desc">Phát hiện CVE, missing patch, misconfiguration. Scan dưới 5 phút với 190,000+ SCAP checks. Prioritization theo risk score, severity, exploitability. Tích hợp OWASP Top 10, SANS Top 25.</div>
+        <div class="module-tags">
+          <span class="module-tag">Real-time scan</span>
+          <span class="module-tag">Risk scoring</span>
+          <span class="module-tag">190K+ checks</span>
+          <span class="module-tag">Agentless option</span>
+        </div>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">02</div>
+      <div>
+        <div class="module-name">Patch Management (PM)</div>
+        <div class="module-desc">Vá lỗi tự động Windows/macOS/Linux/AIX và 550+ 3rd party apps. Patch rollback 1-click. Test group trước khi deploy production. Patch available trong 24h sau release. Zero-touch automation.</div>
+        <div class="module-tags">
+          <span class="module-tag">550+ apps</span>
+          <span class="module-tag">Rollback</span>
+          <span class="module-tag">Test groups</span>
+          <span class="module-tag">24h patch feed</span>
+        </div>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">03</div>
+      <div>
+        <div class="module-name">IT Asset Exposure (AE)</div>
+        <div class="module-desc">Inventory hardware/software, quản lý license phần mềm, phát hiện shadow IT, ứng dụng hiếm dùng/lỗi thời, blacklist/whitelist apps. Audit-ready reports.</div>
+        <div class="module-tags">
+          <span class="module-tag">HW/SW inventory</span>
+          <span class="module-tag">Shadow IT</span>
+          <span class="module-tag">License mgmt</span>
+        </div>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">04</div>
+      <div>
+        <div class="module-name">Compliance Management (CM)</div>
+        <div class="module-desc">Phát hiện misconfiguration và hardening theo CIS Benchmark, PCI DSS, HIPAA, ISO 27001, NIST. Tự động fix hoặc tạo remediation task. Audit-ready compliance reports.</div>
+        <div class="module-tags">
+          <span class="module-tag">CIS Benchmark</span>
+          <span class="module-tag">PCI DSS</span>
+          <span class="module-tag">NIST</span>
+          <span class="module-tag">Auto-fix</span>
+        </div>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">05</div>
+      <div>
+        <div class="module-name">Continuous Posture Anomaly Management (CPAM)</div>
+        <div class="module-desc">Đây là module độc đáo: liên tục đánh giá 70+ loại anomaly trên 2,000+ data points — phát hiện deviation từ security baseline, process lạ, network anomaly, user behavior bất thường.</div>
+        <div class="module-tags">
+          <span class="module-tag">70+ anomaly types</span>
+          <span class="module-tag">2000+ data points</span>
+          <span class="module-tag">Baseline deviation</span>
+        </div>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">06</div>
+      <div>
+        <div class="module-name">Endpoint Management (EM)</div>
+        <div class="module-desc">Giám sát endpoint health theo 100+ metrics, remote scripting (Windows/Linux/macOS/AIX), application/device control, system hardening, performance monitoring, EDR-lite capabilities.</div>
+        <div class="module-tags">
+          <span class="module-tag">100+ metrics</span>
+          <span class="module-tag">Remote scripting</span>
+          <span class="module-tag">App control</span>
+          <span class="module-tag">v6.5 feature</span>
+        </div>
+      </div>
+    </div>
+    <div class="module-card">
+      <div class="module-num">07</div>
+      <div>
+        <div class="module-name">Software Deployment Management (SDM)</div>
+        <div class="module-desc">Triển khai phần mềm tập trung đến endpoint không cần VPN. Remote software push, uninstall, custom scripts. Hữu ích cho tổ chức có nhiều remote worker.</div>
+        <div class="module-tags">
+          <span class="module-tag">No VPN needed</span>
+          <span class="module-tag">Remote deploy</span>
+          <span class="module-tag">Cloud-based</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip">
+    <strong>💡 Tip khi demo:</strong> Nhấn mạnh rằng <strong>1 agent duy nhất</strong> thực hiện TẤT CẢ 7 tác vụ trên. Khách hàng hiện tại thường dùng 3–4 tool riêng lẻ (VM scanner + Patch tool + Asset tool + Compliance checker) với nhiều agent khác nhau — tốn tài nguyên, khó quản lý, chi phí cao hơn.
+  </div>
+</section>
+
+<!-- ════ S3: KIẾN TRÚC ════ -->
+<section class="section" id="s3">
+  <div class="sec-head">
+    <span class="sec-num">03</span>
+    <h2 class="sec-title">Kiến Trúc &<br><span>Cách Hoạt Động</span></h2>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div class="key-points">
+        <div class="key-points-title">Các thành phần hệ thống</div>
+        <div class="kp-item"><span class="kp-icon">☁️</span><span><strong>Saner Cloud Platform (SaaS):</strong> Management console hosted bởi SecPod. Xử lý scan data, correlation, analytics, reporting. Browser-based, không cài gì trên phía khách hàng.</span></div>
+        <div class="kp-item"><span class="kp-icon">🖥️</span><span><strong>Saner Web Console:</strong> Giao diện quản trị trên browser — dashboard, policies, scan schedule, reporting, remediation workflow.</span></div>
+        <div class="kp-item"><span class="kp-icon">📦</span><span><strong>Saner Agent:</strong> Agent nhẹ cài trên endpoint (Windows/Linux/macOS/AIX). Kết nối <strong>HTTPS outbound port 443</strong> về SaaS Platform — không cần mở inbound port. Thực hiện scan, thu thập data, apply patch.</span></div>
+        <div class="kp-item"><span class="kp-icon">🌐</span><span><strong>Network Scanner:</strong> Có thể chỉ định 1 agent làm network scanner để quét các thiết bị không có agent (router, switch, printer, IoT) trong cùng subnet — agentless scan qua agent proxy.</span></div>
+      </div>
+    </div>
+    <div>
+      <div class="key-points">
+        <div class="key-points-title">Luồng hoạt động cơ bản</div>
+        <div class="kp-item"><span class="kp-icon">1️⃣</span><span>Agent khởi động, kết nối Saner Platform qua HTTPS port 443</span></div>
+        <div class="kp-item"><span class="kp-icon">2️⃣</span><span>Agent nhận policy scan từ Console, thực thi scan local trong dưới 5 phút</span></div>
+        <div class="kp-item"><span class="kp-icon">3️⃣</span><span>Kết quả scan được gửi về Platform, engine phân tích và so sánh với SCAP feed</span></div>
+        <div class="kp-item"><span class="kp-icon">4️⃣</span><span>Vulnerability được ưu tiên theo risk score, hiển thị trên console dashboard</span></div>
+        <div class="kp-item"><span class="kp-icon">5️⃣</span><span>Tự động tạo remediation job (patch), hoặc tạo ticket qua ServiceNow/Freshservice</span></div>
+        <div class="kp-item"><span class="kp-icon">6️⃣</span><span>Patch được deploy, agent xác nhận kết quả, cập nhật vulnerability status</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="warn">
+    <strong>⚠️ Điểm cần lưu ý khi tư vấn:</strong> SanerNow mặc định là <strong>cloud SaaS</strong> — console và data lưu trên server của SecPod. Với khách hàng nhà nước/quân đội tại Việt Nam có yêu cầu data sovereignty, cần hỏi SecPod về <strong>on-premise deployment option</strong> và xác nhận khả năng lưu trữ dữ liệu trong nước. Đây là điểm mà Tenable Nessus Pro có lợi thế hơn (fully offline, không gửi data ra ngoài).
+  </div>
+
+  <div class="info">
+    <strong>🔌 Network requirements:</strong> Agent chỉ cần kết nối <strong>outbound HTTPS port 443</strong> đến Saner Cloud Platform. Không cần mở inbound port — phù hợp với môi trường có firewall nghiêm ngặt. Với on-premise, tất cả traffic trong mạng nội bộ.
+  </div>
+</section>
+
+<!-- ════ S4: FAQ KỸ THUẬT ════ -->
+<section class="section" id="s4">
+  <div class="sec-head">
+    <span class="sec-num">04</span>
+    <h2 class="sec-title">FAQ Kỹ Thuật<br><span>Thường Gặp Khi Demo/PoC</span></h2>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">
+      <div class="faq-q-badge">Q</div>
+      <div class="faq-q-text">SanerNow có thể scan được thiết bị mạng (router, switch, firewall) không, hay chỉ quét endpoint có agent?</div>
+      <span class="faq-q-tag tag-tech">Kỹ thuật</span>
+      <span class="faq-toggle">+</span>
+    </div>
+    <div class="faq-a">
+      <p><strong>Có.</strong> SanerNow hỗ trợ cả hai chế độ:</p>
+      <ul>
+        <li><strong>Agent-based:</strong> Endpoint có cài Saner Agent — Windows, Linux, macOS, AIX. Chính xác nhất.</li>
+        <li><strong>Network scan (agentless):</strong> Chỉ định một endpoint đã có agent làm "Network Scanner". Agent này sẽ thực hiện authenticated hoặc unauthenticated scan các thiết bị khác trong subnet — bao gồm router, switch, printer, IoT device. Kỹ thuật tương tự Nessus nhưng qua agent proxy.</li>
+      </ul>
+      <p>Để thực hiện network agentless scan: vào Console → Device Management → chọn agent → "Designate as Network Scanner" → cấu hình IP range cần quét.</p>
+      <div class="tip"><strong>Lưu ý:</strong> Agentless network scan của SanerNow không đồng nghĩa với "không cần agent nào trong mạng đó" — vẫn cần ít nhất 1 agent làm gateway scanner. Tenable Nessus Pro hoàn toàn agentless không cần điều kiện đó.</div>
+    </div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">
+      <div class="faq-q-badge">Q</div>
+      <div class="faq-q-text">Saner Agent nặng bao nhiêu? Có ảnh hưởng hiệu năng endpoint không?</div>
+      <span class="faq-q-tag tag-tech">Kỹ thuật</span>
+      <span class="faq-toggle">+</span>
+    </div>
+    <div class="faq-a">
+      <p>Agent SecPod được thiết kế <strong>nhẹ và đa năng</strong>. Đặc điểm:</p>
+      <ul>
+        <li>Kích thước agent nhỏ, chiếm RAM thấp khi idle</li>
+        <li>Scan xảy ra cực nhanh (&lt;5 phút) nên spike CPU chỉ trong thời gian ngắn</li>
+        <li>Agent thực hiện scan local — không tốn bandwidth mạng trong quá trình scan</li>
+        <li>Chỉ gửi kết quả (dạng structured data nhỏ) lên cloud sau khi scan xong</li>
+        <li>Có thể cấu hình scan windows (giờ thấp điểm) để tránh ảnh hưởng giờ làm việc</li>
+      </ul>
+      <p>Nhiều khách hàng trong review Gartner và AWS Marketplace ghi nhận agent "lightweight" và không gây vấn đề hiệu năng đáng kể.</p>
+    </div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">
+      <div class="faq-q-badge">Q</div>
+      <div class="faq-q-text">SanerNow hỗ trợ những hệ điều hành nào?</div>
+      <span class="faq-q-tag tag-tech">Kỹ thuật</span>
+      <span class="faq-toggle">+</span>
+    </div>
+    <div class="faq-a">
+      <ul>
+        <li><strong>Windows:</strong> Windows 10/11, Windows Server 2012/2016/2019/2022</li>
+        <li><strong>Linux:</strong> Ubuntu, RHEL/CentOS/AlmaLinux/RockyLinux, Debian, SUSE, Amazon Linux</li>
+        <li><strong>macOS:</strong> macOS 11 (Big Sur) trở lên</li>
+        <li><strong>IBM AIX:</strong> AIX 7.1, 7.2, 7.3 (ít phổ biến nhưng có — lợi thế với khách hàng ngân hàng/tài chính)</li>
+        <li><strong>Network devices (agentless):</strong> Network devices hỗ trợ SNMP/SSH scan qua Network Scanner</li>
+      </ul>
+      <p>Kiểm tra danh sách đầy đủ tại: <a href="https://docs.secpod.com/docs/operating-systems-and-platforms-supported/" target="_blank" style="color:var(--accent3);">docs.secpod.com → Operating Systems Supported</a></p>
+    </div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">
+      <div class="faq-q-badge">Q</div>
+      <div class="faq-q-text">Patch Management hỗ trợ những ứng dụng nào? Có vá được phần mềm của Việt Nam không?</div>
+      <span class="faq-q-tag tag-tech">Kỹ thuật</span>
+      <span class="faq-toggle">+</span>
+    </div>
+    <div class="faq-a">
+      <p>SanerNow hỗ trợ vá lỗi cho <strong>550+ third-party applications</strong> bao gồm:</p>
+      <ul>
+        <li>Microsoft Office, Chrome, Firefox, Java, Adobe Reader/Acrobat, VLC</li>
+        <li>Zoom, Teams, Slack, Webex, 7-Zip, WinRAR, Notepad++</li>
+        <li>Python, Node.js, Git, VS Code, IntelliJ</li>
+        <li>Toàn bộ Windows Update (security + non-security)</li>
+        <li>macOS system updates, Linux package manager (apt/yum/dnf)</li>
+      </ul>
+      <p>Danh sách đầy đủ: <a href="https://docs.secpod.com/docs/supported-third-party-applications-for-patching/" target="_blank" style="color:var(--accent3);">docs.secpod.com → Supported Third-party Applications</a></p>
+      <div class="warn"><strong>⚠️ Phần mềm Việt Nam:</strong> Các phần mềm nội địa (BKIS AV, VnPT, MISA, SAP bản địa hóa...) không có sẵn trong patch library của SecPod. Cần thông báo rõ với khách hàng — SecPod vá được Windows/Linux OS và các ứng dụng thương mại quốc tế phổ biến, không phải phần mềm custom hay nội địa.</div>
+    </div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">
+      <div class="faq-q-badge">Q</div>
+      <div class="faq-q-text">Làm sao deploy agent hàng loạt? Có thể dùng GPO / SCCM / Ansible không?</div>
+      <span class="faq-q-tag tag-tech">Kỹ thuật</span>
+      <span class="faq-toggle">+</span>
+    </div>
+    <div class="faq-a">
+      <p>SecPod hỗ trợ nhiều phương thức deploy agent:</p>
+      <ul>
+        <li><strong>Email invite:</strong> Gửi link download agent qua email đến user</li>
+        <li><strong>Command line:</strong> Silent install qua command line — phù hợp với script deployment</li>
+        <li><strong>Saner Offline Deployer Tool:</strong> Tool của SecPod để deploy/uninstall agent hàng loạt</li>
+        <li><strong>GPO (Group Policy):</strong> Deploy qua Windows GPO trong AD domain</li>
+        <li><strong>SCCM/Intune:</strong> Có thể package agent installer cho deployment qua SCCM/Intune</li>
+        <li><strong>Ansible/Chef/Puppet:</strong> Có thể tích hợp thông qua script installation</li>
+      </ul>
+      <div class="caution"><strong>Điểm cần cải thiện:</strong> Auto agent deployment qua AD discovery (tự động phát hiện machine trong AD và push agent) chưa được tích hợp native — đây là feedback phổ biến từ khách hàng Gartner. Cần check version mới nhất (6.5+) xem đã cải thiện chưa.</div>
+    </div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">
+      <div class="faq-q-badge">Q</div>
+      <div class="faq-q-text">SanerNow có tích hợp với SIEM và ticketing system không?</div>
+      <span class="faq-q-tag tag-tech">Kỹ thuật</span>
+      <span class="faq-toggle">+</span>
+    </div>
+    <div class="faq-a">
+      <ul>
+        <li><strong>ServiceNow:</strong> Tích hợp native — tự động tạo incident/change ticket khi phát hiện vulnerability nghiêm trọng</li>
+        <li><strong>Freshservice:</strong> Tích hợp native (ra mắt trong release 6.5)</li>
+        <li><strong>REST API:</strong> Đầy đủ REST API để tích hợp với bất kỳ SIEM/ITSM nào</li>
+        <li><strong>Email alerts:</strong> Cấu hình gửi email khi phát hiện CVE critical mới</li>
+        <li><strong>Syslog:</strong> Forward events qua syslog đến SIEM (Splunk, IBM QRadar, ArcSight...)</li>
+      </ul>
+      <div class="info"><strong>So với Rapid7:</strong> Rapid7 InsightVM có 500+ native integrations — vượt trội. SecPod có ít pre-built integrations hơn nhưng REST API đầy đủ bù đắp được. Nhấn mạnh điều này khi khách hàng hỏi.</div>
+    </div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">
+      <div class="faq-q-badge">Q</div>
+      <div class="faq-q-text">Scan có thể thực hiện không có internet không? Có hỗ trợ air-gap environment không?</div>
+      <span class="faq-q-tag tag-tech">Kỹ thuật</span>
+      <span class="faq-toggle">+</span>
+    </div>
+    <div class="faq-a">
+      <p>Đây là câu hỏi quan trọng, đặc biệt với khách hàng chính phủ/quân đội:</p>
+      <ul>
+        <li><strong>Cloud SaaS (mặc định):</strong> Agent cần kết nối internet để giao tiếp với Saner Platform. <strong>Không phù hợp air-gap.</strong></li>
+        <li><strong>On-Premise deployment:</strong> SecPod có thể cung cấp on-premise server. Cần liên hệ SecPod để xác nhận tính năng và điều kiện. Trong trường hợp này, dữ liệu và communication đều nội bộ.</li>
+      </ul>
+      <div class="caution"><strong>⚠️ Khi khách hàng yêu cầu air-gap:</strong> Cần xác nhận rõ với SecPod về on-premise option trước khi cam kết. <strong>Tenable Nessus Pro là lựa chọn tốt hơn cho air-gap hoàn toàn</strong> — cài trên laptop, offline plugin update, zero cloud dependency.</div>
+    </div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">
+      <div class="faq-q-badge">Q</div>
+      <div class="faq-q-text">SanerNow cập nhật signature/vulnerability database bao lâu một lần?</div>
+      <span class="faq-q-tag tag-tech">Kỹ thuật</span>
+      <span class="faq-toggle">+</span>
+    </div>
+    <div class="faq-a">
+      <ul>
+        <li><strong>SCAP feed cập nhật hàng ngày</strong> với các CVE mới từ NVD, MITRE, và SecPod Labs</li>
+        <li>Patch repository cập nhật trong <strong>vòng 24 giờ</strong> sau khi vendor release patch mới</li>
+        <li>SecPod Labs theo dõi và broadcast <strong>email alerts</strong> khi có critical CVE mới — không cần chờ scan định kỳ</li>
+        <li>Agent tự động nhận feed mới khi kết nối về Platform — không cần can thiệp thủ công</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">
+      <div class="faq-q-badge">Q</div>
+      <div class="faq-q-text">Có thể xem báo cáo dạng PDF/Excel không? Báo cáo có tùy chỉnh được không?</div>
+      <span class="faq-q-tag tag-tech">Kỹ thuật</span>
+      <span class="faq-toggle">+</span>
+    </div>
+    <div class="faq-a">
+      <ul>
+        <li>Export <strong>PDF</strong> — dành cho báo cáo nộp lãnh đạo, kiểm toán</li>
+        <li>Export <strong>CSV/Excel</strong> — dữ liệu chi tiết vulnerability, asset, patch status</li>
+        <li><strong>Custom reports:</strong> Có thể tạo template báo cáo tùy chỉnh</li>
+        <li><strong>Scheduled reports:</strong> Tự động gửi email report theo lịch (tuần/tháng)</li>
+        <li><strong>Dashboard:</strong> Dashboard trực quan, role-based — CISO thấy summary, admin thấy chi tiết</li>
+      </ul>
+      <div class="warn"><strong>Điểm yếu cần thừa nhận:</strong> Nhiều user phản hồi rằng report của SanerNow "đủ dùng nhưng không đẹp" — không fancy như Rapid7 LiveDashboard. Nếu khách hàng cần executive reporting ấn tượng thì đây là điểm kém hơn.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ S5: FAQ BUSINESS ════ -->
+<section class="section" id="s5">
+  <div class="sec-head">
+    <span class="sec-num">05</span>
+    <h2 class="sec-title">FAQ Business<br><span>Vấn Đề Khách Hàng Hay Quan Tâm</span></h2>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">
+      <div class="faq-q-badge">Q</div>
+      <div class="faq-q-text">Tại sao nên chọn SecPod thay vì Tenable hay Qualys mà nhiều người biết hơn?</div>
+      <span class="faq-q-tag tag-biz">Business</span>
+      <span class="faq-toggle">+</span>
+    </div>
+    <div class="faq-a">
+      <p>Câu trả lời tốt nhất tập trung vào <strong>3 lý do thực tế</strong>:</p>
+      <ul>
+        <li><strong>1. All-in-one TCO thấp hơn:</strong> Tenable Nessus Pro chỉ là vulnerability scanner — muốn patch management phải mua thêm Tenable Patch Management (add-on riêng). Qualys tương tự — patch license riêng. SecPod bao gồm VM + Patch + Compliance + Asset trong một license duy nhất. Tiết kiệm 40–60% so với mua rời.</li>
+        <li><strong>2. Nhanh hơn đáng kể:</strong> Scan dưới 5 phút vs Tenable 30–60 phút và Qualys còn chậm hơn. Với continuous monitoring, tốc độ là yếu tố quan trọng.</li>
+        <li><strong>3. End-to-end automation:</strong> Phát hiện vulnerability → tự động patch trong cùng một console — không cần chuyển tool, không cần correlation thủ công.</li>
+      </ul>
+      <p>Tenable và Qualys phù hợp hơn nếu khách hàng cần: air-gap hoàn toàn, OT/SCADA coverage, hoặc đã đầu tư lớn vào ecosystem của họ.</p>
+    </div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">
+      <div class="faq-q-badge">Q</div>
+      <div class="faq-q-text">SecPod là công ty Ấn Độ, có đáng tin cậy không? Hỗ trợ tại Việt Nam như thế nào?</div>
+      <span class="faq-q-tag tag-biz">Business</span>
+      <span class="faq-toggle">+</span>
+    </div>
+    <div class="faq-a">
+      <p>Đây là câu hỏi rất phổ biến tại Việt Nam. Các điểm cần làm rõ:</p>
+      <ul>
+        <li><strong>Thành lập 2009</strong> — hơn 15 năm hoạt động, có track record rõ ràng</li>
+        <li><strong>Khách hàng toàn cầu</strong> — tài chính, healthcare, manufacturing, government tại 50+ quốc gia</li>
+        <li><strong>GigaOm Radar Leader</strong> cho Patch Management — nhận xét từ analyst độc lập</li>
+        <li><strong>112+ verified reviews trên Gartner Peer Insights</strong> — phần lớn 4–5 sao</li>
+        <li><strong>Sử dụng trong managed security services</strong> — nhiều MSSP dùng để cung cấp dịch vụ cho khách hàng của họ</li>
+        <li><strong>Support:</strong> Đội kỹ thuật SecPod hỗ trợ qua email, live chat, remote session — múi giờ Ấn Độ (IST) gần với VN (+1.5h) nên support khá thuận tiện</li>
+      </ul>
+      <div class="info"><strong>Về local support tại VN:</strong> Hiện SecPod chưa có partner chính thức tại Việt Nam. Đây là cơ hội trở thành authorized partner — nhấn mạnh với SecPod về thị trường VN khi đàm phán.</div>
+    </div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">
+      <div class="faq-q-badge">Q</div>
+      <div class="faq-q-text">Dữ liệu quét lỗ hổng của chúng tôi có được lưu tại Việt Nam không? Vấn đề data sovereignty?</div>
+      <span class="faq-q-tag tag-biz">Business</span>
+      <span class="faq-toggle">+</span>
+    </div>
+    <div class="faq-a">
+      <p>Đây là câu hỏi quan trọng nhất với khách hàng nhà nước, ngân hàng, và tổ chức nhạy cảm tại VN:</p>
+      <ul>
+        <li>SanerNow SaaS mặc định: dữ liệu lưu trên server của SecPod (datacenter tại Mỹ/Ấn Độ)</li>
+        <li>Dữ liệu bao gồm: danh sách CVE, tên hostname/IP, software versions, misconfiguration details — khá nhạy cảm với hạ tầng quan trọng</li>
+        <li><strong>On-Premise option:</strong> SecPod có thể triển khai on-premise server trong môi trường khách hàng — tất cả data lưu local. Cần xác nhận chi tiết với SecPod.</li>
+      </ul>
+      <div class="caution"><strong>⚠️ Theo Nghị định 13/2023/NĐ-CP và các quy định ATTT:</strong> Dữ liệu về tình trạng bảo mật của hệ thống thông tin quan trọng quốc gia KHÔNG nên lưu trên cloud nước ngoài. Với khách hàng này, <strong>chỉ đề xuất on-premise deployment</strong> hoặc chuyển sang Tenable Nessus Pro (fully offline).</div>
+    </div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">
+      <div class="faq-q-badge">Q</div>
+      <div class="faq-q-text">Có thể dùng thử trước khi mua không? Quá trình POC như thế nào?</div>
+      <span class="faq-q-tag tag-biz">Business</span>
+      <span class="faq-toggle">+</span>
+    </div>
+    <div class="faq-a">
+      <ul>
+        <li><strong>Free Trial 30 ngày</strong> — đăng ký tại secpod.com/schedule-a-demo</li>
+        <li>Trial đầy đủ tính năng, có thể scan thực tế trên môi trường của khách hàng</li>
+        <li>SecPod hỗ trợ kỹ thuật trong quá trình trial — có thể yêu cầu dedicated engineer</li>
+        <li><strong>POC checklist gợi ý:</strong> Deploy agent trên 20–30 máy đại diện → chạy scan → so sánh kết quả với tool hiện tại → test patch deployment cho 1 critical CVE → test compliance report</li>
+        <li>Thời gian POC hợp lý: <strong>2–3 tuần</strong></li>
+      </ul>
+      <div class="tip"><strong>Tip POC:</strong> Đề nghị SecPod cử engineer demo live. Điểm ấn tượng nhất là <strong>demo tốc độ scan</strong> — chạy scan rồi đếm giờ đến khi có kết quả. So sánh trực tiếp với tool hiện tại của khách hàng là cách thuyết phục hiệu quả nhất.</div>
+    </div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">
+      <div class="faq-q-badge">Q</div>
+      <div class="faq-q-text">SanerNow phù hợp với doanh nghiệp bao nhiêu endpoint? Có scale được không?</div>
+      <span class="faq-q-tag tag-biz">Business</span>
+      <span class="faq-toggle">+</span>
+    </div>
+    <div class="faq-a">
+      <ul>
+        <li>SanerNow phù hợp từ <strong>50 endpoints đến 50,000+ endpoints</strong></li>
+        <li>Đã có khách hàng deploy trên <strong>300+ endpoints</strong> cho audit compliance (theo AWS Marketplace review)</li>
+        <li>Kiến trúc cloud SaaS giúp scale dễ dàng — không cần nâng cấp server on-prem khi tăng endpoint</li>
+        <li>MSSP/reseller có thể dùng <strong>multi-tenant</strong> để quản lý nhiều khách hàng từ một console</li>
+      </ul>
+      <div class="info"><strong>Sweet spot:</strong> Doanh nghiệp 100–5,000 endpoints là phân khúc SecPod phù hợp nhất về tính năng và giá. Enterprise 20,000+ endpoint thường chọn Tenable SC hoặc Qualys VMDR vì ecosystem và chứng nhận lớn hơn.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ════ S6: LICENSE FAQ ════ -->
+<section class="section" id="s6">
+  <div class="sec-head">
+    <span class="sec-num">06</span>
+    <h2 class="sec-title">FAQ License &<br><span>Pricing</span></h2>
+  </div>
+
+  <div class="grid-2" style="margin-bottom: 20px;">
+    <div class="lic-card">
+      <div class="lic-title">Mô hình license cơ bản</div>
+      <div class="lic-row"><span class="k">Đơn vị tính</span><span class="v">Per endpoint (thiết bị quản lý)</span></div>
+      <div class="lic-row"><span class="k">Chu kỳ</span><span class="v">Annual subscription (1 năm)</span></div>
+      <div class="lic-row"><span class="k">Cách mua</span><span class="v">Modular — chọn module cần dùng</span></div>
+      <div class="lic-row"><span class="k">Agent per endpoint</span><span class="v">1 agent = tất cả module</span></div>
+      <div class="lic-row"><span class="k">Free trial</span><span class="v">30 ngày, đầy đủ tính năng</span></div>
+      <div class="lic-row"><span class="k">Giá public</span><span class="v">Custom quote — liên hệ SecPod</span></div>
+    </div>
+    <div class="lic-card">
+      <div class="lic-title">So sánh TCO (ví dụ 500 endpoints)</div>
+      <div class="lic-row"><span class="k">SecPod (VM+PM+CM)</span><span class="v" style="color:var(--accent4);">~$X/endpoint/năm</span></div>
+      <div class="lic-row"><span class="k">Tenable SC + PM</span><span class="v" style="color:var(--warn);">~$X + add-on PM</span></div>
+      <div class="lic-row"><span class="k">Qualys VMDR + PM</span><span class="v" style="color:var(--warn);">~$200–250/asset + PM riêng</span></div>
+      <div class="lic-row"><span class="k">Rapid7 InsightVM</span><span class="v" style="color:var(--warn);">~$2.19/asset/month (~$26/năm)</span></div>
+      <div class="lic-row"><span class="k">Kết luận</span><span class="v" style="color:var(--accent4);">SecPod TCO thấp hơn khi tính cả patch tool</span></div>
+    </div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">
+      <div class="faq-q-badge">Q</div>
+      <div class="faq-q-text">1 license bao gồm những gì? Có phải mua riêng từng module không?</div>
+      <span class="faq-q-tag tag-lic">License</span>
+      <span class="faq-toggle">+</span>
+    </div>
+    <div class="faq-a">
+      <p>SecPod có mô hình licensing linh hoạt theo module:</p>
+      <ul>
+        <li><strong>Toàn bộ platform (tất cả 7 modules):</strong> Mua một gói — VM + Patch + Asset + Compliance + CPAM + EM + SDM</li>
+        <li><strong>Chọn module riêng lẻ:</strong> Ví dụ chỉ mua VM + PM (phổ biến nhất) — giá thấp hơn gói đầy đủ</li>
+        <li><strong>1 agent cho tất cả:</strong> Dù mua module nào, chỉ cài 1 Saner Agent per endpoint. Khi nâng cấp/thêm module, chỉ cần activate trên console, không cài lại agent.</li>
+      </ul>
+      <div class="tip"><strong>Gợi ý cho khách hàng mới:</strong> Bắt đầu với VM + PM — đây là combo thường gặp nhất, giải quyết 80% nhu cầu. Sau 6–12 tháng mở rộng thêm Compliance hoặc CPAM khi tổ chức đã quen.</div>
+    </div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">
+      <div class="faq-q-badge">Q</div>
+      <div class="faq-q-text">"Endpoint" được định nghĩa như thế nào khi tính license?</div>
+      <span class="faq-q-tag tag-lic">License</span>
+      <span class="faq-toggle">+</span>
+    </div>
+    <div class="faq-a">
+      <ul>
+        <li>Mỗi <strong>thiết bị cài Saner Agent</strong> = 1 endpoint license</li>
+        <li>Bao gồm: laptop, desktop, server vật lý, virtual machine, cloud instance</li>
+        <li>Thiết bị được quét qua Network Scanner (không có agent) thường <strong>không tính</strong> vào endpoint count — cần xác nhận với SecPod</li>
+        <li>Nếu endpoint không online trong thời gian dài, license đó vẫn bị tính — cần review định kỳ để tránh trả tiền cho máy đã bỏ</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">
+      <div class="faq-q-badge">Q</div>
+      <div class="faq-q-text">Nếu số endpoint tăng giữa kỳ hạn, phải làm gì?</div>
+      <span class="faq-q-tag tag-lic">License</span>
+      <span class="faq-toggle">+</span>
+    </div>
+    <div class="faq-a">
+      <ul>
+        <li>Có thể <strong>tăng subscription count</strong> bất kỳ lúc nào trong kỳ hạn</li>
+        <li>Quy trình: Console → Admin → Subscription → Increase count → Confirm</li>
+        <li>Chi phí bổ sung được tính theo <strong>pro-rata</strong> cho phần còn lại của kỳ hạn</li>
+        <li>Tài liệu hướng dẫn: <a href="https://docs.secpod.com/docs/how-to-increase-the-subscription-count-for-an-account-in-sanernow/" target="_blank" style="color:var(--accent3);">How to increase subscription count</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">
+      <div class="faq-q-badge">Q</div>
+      <div class="faq-q-text">SecPod có chương trình partner/reseller không? Điều kiện như thế nào?</div>
+      <span class="faq-q-tag tag-lic">License</span>
+      <span class="faq-toggle">+</span>
+    </div>
+    <div class="faq-a">
+      <ul>
+        <li>SecPod có chương trình partner — liên hệ <strong>info@secpod.com</strong> để đăng ký</li>
+        <li>Có co-branding option: reseller có thể đặt logo riêng trên console cho khách hàng của mình</li>
+        <li>Base fee tối thiểu cho partner: <strong>~$200/tháng</strong> (theo phản hồi từ reseller trên Sourceforge) — cần xác nhận lại với SecPod do có thể đã thay đổi</li>
+        <li>SecPod đang tập trung vào enterprise accounts lớn — cần thảo luận về partnership structure phù hợp với SME reseller</li>
+      </ul>
+      <div class="warn"><strong>Lưu ý:</strong> Một số reseller phản ánh mô hình partner của SecPod chưa tối ưu cho smaller partners. Nên đàm phán rõ về discount structure và support commitment trước khi ký.</div>
+    </div>
+  </div>
+
+  <div class="faq-item" onclick="toggleFaq(this)">
+    <div class="faq-q">
+      <div class="faq-q-badge">Q</div>
+      <div class="faq-q-text">Có discount cho giáo dục, chính phủ, hoặc mua multi-year không?</div>
+      <span class="faq-q-tag tag-lic">License</span>
+      <span class="faq-toggle">+</span>
+    </div>
+    <div class="faq-a">
+      <ul>
+        <li>SecPod có <strong>volume discount</strong> theo số lượng endpoint — càng nhiều endpoint, giá/endpoint càng thấp</li>
+        <li><strong>Multi-year contract:</strong> Có thể thương lượng discount khi ký 2–3 năm</li>
+        <li>Educational/government pricing: cần liên hệ SecPod trực tiếp — không có public pricing cho segment này</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ════ S7: VS TENABLE ════ -->
+<section class="section" id="s7">
+  <div class="sec-head">
+    <span class="sec-num">07</span>
+    <h2 class="sec-title">SecPod<br><span>vs Tenable Nessus</span></h2>
+  </div>
+
+  <div class="battle-card">
+    <div class="battle-header">
+      <div class="battle-vendor" style="color: var(--secpod);">SecPod SanerNow</div>
+      <div class="battle-vs">VS</div>
+      <div class="battle-vendor" style="color: var(--tenable); text-align:right;">Tenable Nessus Pro</div>
+    </div>
+    <div class="battle-body">
+      <div style="display:grid; grid-template-columns: 1fr 90px 1fr; gap:8px; margin-bottom:10px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--text3);">
+        <span style="color:var(--secpod);">SanerNow WINS</span>
+        <span style="text-align:center;">Tiêu chí</span>
+        <span style="color:var(--tenable); text-align:right;">Tenable WINS</span>
+      </div>
+      <div class="battle-row">
+        <div class="battle-cell win">Scan &lt;5 phút — nhanh nhất thị trường</div>
+        <div class="battle-label">Tốc độ scan</div>
+        <div class="battle-cell lose">30–60 phút (điển hình)</div>
+      </div>
+      <div class="battle-row">
+        <div class="battle-cell win">VM + Patch + Compliance + Asset trong 1 license</div>
+        <div class="battle-label">All-in-one</div>
+        <div class="battle-cell lose">Chỉ scanner — Patch là add-on riêng</div>
+      </div>
+      <div class="battle-row">
+        <div class="battle-cell win">TCO thấp hơn khi tính tổng (VM+PM+CM)</div>
+        <div class="battle-label">Tổng chi phí</div>
+        <div class="battle-cell lose">Cao hơn khi tính đủ patch + compliance</div>
+      </div>
+      <div class="battle-row">
+        <div class="battle-cell win">End-to-end automation: scan → patch 1 console</div>
+        <div class="battle-label">Workflow</div>
+        <div class="battle-cell lose">Cần tool riêng để patch sau khi scan</div>
+      </div>
+      <div class="battle-row">
+        <div class="battle-cell lose">On-prem option cần xác nhận</div>
+        <div class="battle-label">Offline/Air-gap</div>
+        <div class="battle-cell win">Hoàn toàn offline — plugin update qua file</div>
+      </div>
+      <div class="battle-row">
+        <div class="battle-cell lose">190,000+ SCAP checks</div>
+        <div class="battle-label">Vulnerability DB</div>
+        <div class="battle-cell win">227,000+ plugins — lớn nhất thị trường</div>
+      </div>
+      <div class="battle-row">
+        <div class="battle-cell lose">Chưa có chứng nhận quân sự/DoD</div>
+        <div class="battle-label">Govt/Military cert</div>
+        <div class="battle-cell win">FedRAMP, DoD STIG, dùng trong quân đội Mỹ</div>
+      </div>
+      <div class="battle-row">
+        <div class="battle-cell lose">Không có OT/ICS</div>
+        <div class="battle-label">OT/SCADA</div>
+        <div class="battle-cell win">Tenable OT Security — tốt nhất thị trường</div>
+      </div>
+      <div class="battle-row">
+        <div class="battle-cell lose">Không portable scan (cần agent trong mạng đó)</div>
+        <div class="battle-label">Portable scanner</div>
+        <div class="battle-cell win">Cài laptop, scan mạng bất kỳ không cần agent</div>
+      </div>
+      <div class="battle-row">
+        <div class="battle-cell win">Support trực tiếp, phản hồi nhanh</div>
+        <div class="battle-label">Support</div>
+        <div class="battle-cell tie">Standard support OK — Advanced phí thêm ~$400</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="scenario">
+      <div class="scenario-title">
+        <span class="scenario-badge badge-yes">✓ CHỌN SECPOD</span>
+        khi khách hàng cần
+      </div>
+      <ul style="list-style:none; font-size:13px;">
+        <li style="padding:4px 0; padding-left:16px; position:relative; color:var(--text2);"><span style="position:absolute;left:0;color:var(--accent4);">✓</span> VM + Patch Management tích hợp, tiết kiệm chi phí</li>
+        <li style="padding:4px 0; padding-left:16px; position:relative; color:var(--text2);"><span style="position:absolute;left:0;color:var(--accent4);">✓</span> Scan liên tục, nhanh, real-time monitoring</li>
+        <li style="padding:4px 0; padding-left:16px; position:relative; color:var(--text2);"><span style="position:absolute;left:0;color:var(--accent4);">✓</span> Doanh nghiệp 100–5,000 endpoints</li>
+        <li style="padding:4px 0; padding-left:16px; position:relative; color:var(--text2);"><span style="position:absolute;left:0;color:var(--accent4);">✓</span> Muốn automation end-to-end (detect → patch)</li>
+        <li style="padding:4px 0; padding-left:16px; position:relative; color:var(--text2);"><span style="position:absolute;left:0;color:var(--accent4);">✓</span> MSSP cần multi-tenant management</li>
+        <li style="padding:4px 0; padding-left:16px; position:relative; color:var(--text2);"><span style="position:absolute;left:0;color:var(--accent4);">✓</span> Compliance reporting kết hợp với VM</li>
+      </ul>
+    </div>
+    <div class="scenario">
+      <div class="scenario-title">
+        <span class="scenario-badge badge-no">✗ CHỌN TENABLE</span>
+        khi khách hàng cần
+      </div>
+      <ul style="list-style:none; font-size:13px;">
+        <li style="padding:4px 0; padding-left:16px; position:relative; color:var(--text2);"><span style="position:absolute;left:0;color:var(--accent5);">✗</span> Air-gap / offline hoàn toàn (quân đội, nhà nước)</li>
+        <li style="padding:4px 0; padding-left:16px; position:relative; color:var(--text2);"><span style="position:absolute;left:0;color:var(--accent5);">✗</span> Scan cơ động nhiều mạng khác nhau (laptop scanner)</li>
+        <li style="padding:4px 0; padding-left:16px; position:relative; color:var(--text2);"><span style="position:absolute;left:0;color:var(--accent5);">✗</span> OT/SCADA/ICS environments</li>
+        <li style="padding:4px 0; padding-left:16px; position:relative; color:var(--text2);"><span style="position:absolute;left:0;color:var(--accent5);">✗</span> Yêu cầu FedRAMP/DoD certification</li>
+        <li style="padding:4px 0; padding-left:16px; position:relative; color:var(--text2);"><span style="position:absolute;left:0;color:var(--accent5);">✗</span> Plugin library rộng nhất (227K+)</li>
+        <li style="padding:4px 0; padding-left:16px; position:relative; color:var(--text2);"><span style="position:absolute;left:0;color:var(--accent5);">✗</span> Chi phí per-scanner dễ kiểm soát (31 scanner = 31 license)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ════ S8: VS RAPID7 ════ -->
+<section class="section" id="s8">
+  <div class="sec-head">
+    <span class="sec-num">08</span>
+    <h2 class="sec-title">SecPod<br><span>vs Rapid7 InsightVM</span></h2>
+  </div>
+
+  <div class="battle-card">
+    <div class="battle-header">
+      <div class="battle-vendor" style="color: var(--secpod);">SecPod SanerNow</div>
+      <div class="battle-vs">VS</div>
+      <div class="battle-vendor" style="color: var(--rapid7); text-align:right;">Rapid7 InsightVM</div>
+    </div>
+    <div class="battle-body">
+      <div style="display:grid; grid-template-columns: 1fr 90px 1fr; gap:8px; margin-bottom:10px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--text3);">
+        <span style="color:var(--secpod);">SanerNow WINS</span>
+        <span style="text-align:center;">Tiêu chí</span>
+        <span style="color:var(--rapid7); text-align:right;">Rapid7 WINS</span>
+      </div>
+      <div class="battle-row">
+        <div class="battle-cell win">Scan &lt;5 phút — nhanh hơn đáng kể</div>
+        <div class="battle-label">Tốc độ scan</div>
+        <div class="battle-cell lose">Chậm hơn SanerNow</div>
+      </div>
+      <div class="battle-row">
+        <div class="battle-cell win">Patch Management built-in, 550+ apps, rollback 1-click</div>
+        <div class="battle-label">Patch Management</div>
+        <div class="battle-cell lose">Không có patch mgmt native — cần tool riêng</div>
+      </div>
+      <div class="battle-row">
+        <div class="battle-cell win">TCO thấp hơn (VM+PM trong 1 license)</div>
+        <div class="battle-label">Chi phí tổng</div>
+        <div class="battle-cell lose">Per-asset/month — khó kiểm soát khi scale</div>
+      </div>
+      <div class="battle-row">
+        <div class="battle-cell win">Setup đơn giản hơn, time-to-value nhanh hơn</div>
+        <div class="battle-label">Ease of deployment</div>
+        <div class="battle-cell lose">Security Console phức tạp hơn, cần server</div>
+      </div>
+      <div class="battle-row">
+        <div class="battle-cell win">SCAP/OVAL native (contributor) — chuẩn mở</div>
+        <div class="battle-label">SCAP Compliance</div>
+        <div class="battle-cell lose">SCAP support một phần</div>
+      </div>
+      <div class="battle-row">
+        <div class="battle-cell lose">Ít native integrations hơn</div>
+        <div class="battle-label">Integrations</div>
+        <div class="battle-cell win">500+ native integrations (Jira, ServiceNow, SIEM...)</div>
+      </div>
+      <div class="battle-row">
+        <div class="battle-cell lose">Dashboard tốt nhưng không bằng Rapid7</div>
+        <div class="battle-label">Dashboard/UX</div>
+        <div class="battle-cell win">Live Dashboard xuất sắc — dễ dùng, visual tốt</div>
+      </div>
+      <div class="battle-row">
+        <div class="battle-cell lose">Không có Metasploit validation</div>
+        <div class="battle-label">Exploit validation</div>
+        <div class="battle-cell win">Tích hợp Metasploit — validate exploit thực tế</div>
+      </div>
+      <div class="battle-row">
+        <div class="battle-cell lose">Limited cloud/container</div>
+        <div class="battle-label">Cloud/Container</div>
+        <div class="battle-cell win">InsightVM + InsightCloudSec — mạnh về cloud</div>
+      </div>
+      <div class="battle-row">
+        <div class="battle-cell win">Phản hồi tốt hơn từ user reviews</div>
+        <div class="battle-label">Support quality</div>
+        <div class="battle-cell lose">Một số review phàn nàn support chậm</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tip">
+    <strong>💡 Key message khi bán vs Rapid7:</strong> "SecPod cho phép tổ chức của bạn phát hiện vulnerability VÀ vá lỗi ngay lập tức trong cùng một công cụ, với chi phí thấp hơn và thời gian setup ngắn hơn. Rapid7 InsightVM xuất sắc về risk prioritization và integrations, nhưng bạn vẫn cần mua thêm patch tool. SecPod giải quyết toàn bộ vòng đời trong 1 platform."
+  </div>
+</section>
+
+<!-- ════ S9: OBJECTIONS ════ -->
+<section class="section" id="s9">
+  <div class="sec-head">
+    <span class="sec-num">09</span>
+    <h2 class="sec-title">Xử Lý Phản Đối<br><span>Objection Handling</span></h2>
+  </div>
+
+  <div class="objection">
+    <div class="obj-q">"Chúng tôi đã nghe đến Tenable/Qualys nhiều hơn. SecPod là hãng nhỏ, ít biết đến."</div>
+    <div class="obj-a">
+      <p>Đây là nhận xét đúng về brand awareness, nhưng không phản ánh năng lực sản phẩm. Phản hồi:</p>
+      <ul>
+        <li>SecPod thành lập 2009, <strong>15+ năm</strong> trong ngành bảo mật — không phải startup mới</li>
+        <li>Khách hàng tại 50+ quốc gia, bao gồm tài chính, healthcare và government</li>
+        <li><strong>GigaOm Radar Leader</strong> cho Patch Management 2025 — đánh giá từ analyst độc lập, không phải self-claim</li>
+        <li><strong>112+ verified reviews Gartner</strong>, phần lớn 4–5 sao — feedback từ người dùng thực tế</li>
+        <li>SecPod là <strong>OVAL contributor</strong> — cộng tác với chuẩn bảo mật quốc tế mà Tenable cũng sử dụng</li>
+        <li>Gợi ý: <em>"Thay vì brand, hãy để sản phẩm tự chứng minh trong 30 ngày trial miễn phí."</em></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="objection">
+    <div class="obj-q">"Dữ liệu của chúng tôi không thể lưu trên cloud nước ngoài. SanerNow cloud thì không được."</div>
+    <div class="obj-a">
+      <p>Phản hồi cần phân tầng theo loại khách hàng:</p>
+      <ul>
+        <li><strong>Nếu khách hàng là doanh nghiệp tư nhân:</strong> Clarify rằng dữ liệu scan (CVE list, IP, hostname) không phải "dữ liệu cá nhân" theo NĐ 13/2023. Tuy nhiên đối với hạ tầng quan trọng, cần thận trọng.</li>
+        <li><strong>Nếu là nhà nước/quân đội:</strong> Đề xuất on-premise deployment option của SecPod. Xác nhận với SecPod về khả năng deploy server tại datacenter khách hàng.</li>
+        <li><strong>Nếu on-prem không khả thi:</strong> Thành thật giới thiệu Tenable Nessus Pro như lựa chọn offline hoàn toàn — đây là đúng đắn hơn về mặt tư vấn, giúp xây dựng uy tín.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="objection">
+    <div class="obj-q">"SecPod cần agent trên mỗi máy. Chúng tôi không muốn cài thêm gì trên endpoint."</div>
+    <div class="obj-a">
+      <ul>
+        <li><strong>1 agent thay 3–4 tools khác:</strong> Nếu hiện tại khách hàng đang chạy AV agent + Patch agent + Asset agent riêng lẻ, thì cài 1 Saner agent thực ra <em>giảm</em> số lượng agent trên endpoint</li>
+        <li><strong>Network scan option:</strong> Thiết bị không thể cài agent (router, switch, printer, legacy server) có thể được scan qua Network Scanner mode — agentless từ góc độ thiết bị đó</li>
+        <li><strong>Nếu agentless tuyệt đối là yêu cầu:</strong> Tenable Nessus Pro là lựa chọn phù hợp hơn</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="objection">
+    <div class="obj-q">"190,000 checks của SanerNow ít hơn 227,000 plugins của Tenable."</div>
+    <div class="obj-a">
+      <ul>
+        <li>Đây là so sánh về <strong>số lượng</strong> — không phản ánh đầy đủ chất lượng và relevance</li>
+        <li>SecPod là <strong>OVAL contributor</strong> — OVAL là chuẩn mở quốc tế mà Tenable cũng xây dựng plugins dựa trên đó. Chất lượng check của SanerNow có nền tảng kỹ thuật vững</li>
+        <li>Cả hai đều phủ hầu hết CVE quan trọng — trong thực tế, chênh lệch 37,000 checks chủ yếu là các CVE ít phổ biến hoặc legacy</li>
+        <li>Đề xuất: <em>"Trong POC, so sánh kết quả scan cùng một môi trường giữa hai tool — số lượng CVE quan trọng phát hiện được quan trọng hơn tổng số checks"</em></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="objection">
+    <div class="obj-q">"Patch Management của SecPod có thực sự an toàn? Lỡ patch sai thì sao?"</div>
+    <div class="obj-a">
+      <ul>
+        <li><strong>Test Groups:</strong> Tạo nhóm test (5–10 máy) để kiểm tra patch trước khi roll out toàn bộ</li>
+        <li><strong>Patch Rollback 1-click:</strong> Nếu patch gây vấn đề, rollback về version ổn định trước đó ngay lập tức — zero downtime</li>
+        <li><strong>Patch verification:</strong> SecPod test và verify tất cả patch trước khi đưa vào repository — patch available sau 24h kể từ khi vendor release và đã qua kiểm tra</li>
+        <li><strong>Scheduled maintenance window:</strong> Cấu hình patch chỉ deploy trong giờ thấp điểm (ví dụ 2–4am)</li>
+        <li><strong>Incremental rollout:</strong> Có thể cấu hình % endpoint nhận patch mỗi đợt</li>
+      </ul>
+      <div class="tip"><strong>Câu trả lời ngắn gọn:</strong> "Test group + patch rollback 1-click là safety net. Không có gì là 100% rủi ro bằng không, nhưng SanerNow cho bạn công cụ để rollback trong vài giây nếu có vấn đề."</div>
+    </div>
+  </div>
+
+  <div class="objection">
+    <div class="obj-q">"Chúng tôi đang dùng Tenable rồi, không muốn thay đổi."</div>
+    <div class="obj-a">
+      <ul>
+        <li>Không nhất thiết phải thay thế — đề xuất <strong>bổ sung module Patch Management</strong>: "SecPod có thể hoạt động song song với Tenable trong giai đoạn chuyển tiếp"</li>
+        <li>Tập trung vào <strong>gap hiện tại</strong>: "Sau khi Tenable tìm ra vulnerability, bạn vá lỗi như thế nào hiện nay? Có tool tích hợp chưa?" → Nếu chưa có → đây là pain point SecPod giải quyết</li>
+        <li>ROI argument: "Thêm SecPod PM thay vì mua Tenable Patch Management add-on riêng — so sánh giá hai option này"</li>
+        <li>Nếu khách hàng quyết tâm giữ Tenable, chấp nhận và duy trì quan hệ — tương lai họ có thể review lại</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ════ S10: SCENARIOS ════ -->
+<section class="section" id="s10">
+  <div class="sec-head">
+    <span class="sec-num">10</span>
+    <h2 class="sec-title">Kịch Bản Khách Hàng<br><span>Nên Chọn Giải Pháp Nào</span></h2>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-title">
+      <span class="scenario-badge badge-yes">✓ SECPOD</span>
+      Doanh nghiệp sản xuất — 800 endpoints, cần VM + Patch, có internet
+    </div>
+    <p style="font-size:13px; color:var(--text2); margin-bottom:0;">Phù hợp nhất: SecPod SanerNow VM + PM. Tự động scan liên tục, phát hiện CVE trong 5 phút, tự động deploy patch cho 550+ ứng dụng công nghiệp. TCO thấp hơn mua VM scanner + patch tool riêng. Không cần infrastructure nặng nề.</p>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-title">
+      <span class="scenario-badge badge-yes">✓ SECPOD</span>
+      MSSP cần managed vulnerability service cho 20 khách hàng SME
+    </div>
+    <p style="font-size:13px; color:var(--text2); margin-bottom:0;">Multi-tenant console, co-branding, modular pricing theo endpoint. Automated monthly report cho từng khách hàng. SecPod SanerNow là fit tốt cho MSSP model — một platform phục vụ nhiều tenant.</p>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-title">
+      <span class="scenario-badge badge-yes">✓ SECPOD</span>
+      Ngân hàng tư nhân — 2,000 endpoints, cần VM + Compliance (PCI DSS) + Patch
+    </div>
+    <p style="font-size:13px; color:var(--text2); margin-bottom:0;">SecPod Compliance Management với PCI DSS template built-in, kết hợp VM và PM trong cùng platform. Audit-ready reports giảm công chuẩn bị kiểm toán. <strong>Lưu ý:</strong> Nếu ngân hàng có yêu cầu data lưu trong nước → cần on-prem deployment của SecPod.</p>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-title">
+      <span class="scenario-badge badge-no">✗ KHÔNG phải SecPod</span>
+      Bộ tư lệnh quân đội — 31 đội cơ động, scan các mạng không có internet
+    </div>
+    <p style="font-size:13px; color:var(--text2); margin-bottom:0;">Không phù hợp: cần agentless scan từ laptop, air-gap hoàn toàn. → <strong>Tenable Nessus Professional × 31</strong> là lựa chọn đúng đắn. Offline hoàn toàn, plugin update qua file, cài trên laptop.</p>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-title">
+      <span class="scenario-badge badge-maybe">~ XEM XÉT</span>
+      Tập đoàn lớn — 15,000 endpoints, môi trường phức tạp, cần cloud + OT + compliance
+    </div>
+    <p style="font-size:13px; color:var(--text2); margin-bottom:0;">SecPod phù hợp phần endpoint VM+PM nhưng thiếu OT coverage. Có thể đề xuất SecPod cho IT infrastructure + Tenable OT riêng cho OT segment, hoặc Qualys VMDR nếu cloud-native là ưu tiên.</p>
+  </div>
+
+  <div class="scenario">
+    <div class="scenario-title">
+      <span class="scenario-badge badge-no">✗ KHÔNG phải SecPod</span>
+      Startup công nghệ — heavy cloud, Kubernetes, CI/CD pipeline, 200 endpoints
+    </div>
+    <p style="font-size:13px; color:var(--text2); margin-bottom:0;">Cloud-native, container scanning, CI/CD integration là ưu tiên. → <strong>Rapid7 InsightVM + InsightCloudSec</strong> hoặc <strong>Wiz</strong> phù hợp hơn. SecPod chưa mạnh về cloud-native workloads.</p>
+  </div>
+</section>
+
+<!-- ════ S11: CHEAT SHEET ════ -->
+<section class="section" id="s11">
+  <div class="sec-head">
+    <span class="sec-num">11</span>
+    <h2 class="sec-title">Quick Reference<br><span>Cheat Sheet</span></h2>
+  </div>
+
+  <div class="cheatsheet">
+    <div class="cheatsheet-title">SECPOD SANERNOW — QUICK FACTS</div>
+    <div class="cs-item"><span class="cs-key">Tên đầy đủ</span><span class="cs-val">SanerNow CVEM — Continuous Vulnerability & Exposure Management</span></div>
+    <div class="cs-item"><span class="cs-key">Nhà sản xuất</span><span class="cs-val">SecPod Technologies — Bangalore, India — Founded 2009</span></div>
+    <div class="cs-item"><span class="cs-key">Tốc độ scan</span><span class="cs-val">&lt; 5 phút — nhanh nhất thị trường</span></div>
+    <div class="cs-item"><span class="cs-key">SCAP checks</span><span class="cs-val">190,000+ (OVAL contributor, daily update)</span></div>
+    <div class="cs-item"><span class="cs-key">3rd party patching</span><span class="cs-val">550+ applications — 24h after vendor release</span></div>
+    <div class="cs-item"><span class="cs-key">Platform modules</span><span class="cs-val">7: VM · PM · AE · CM · CPAM · EM · SDM</span></div>
+    <div class="cs-item"><span class="cs-key">OS support (agent)</span><span class="cs-val">Windows · Linux (RHEL/Ubuntu/Debian/SUSE) · macOS · IBM AIX</span></div>
+    <div class="cs-item"><span class="cs-key">Network scan</span><span class="cs-val">Agentless qua Network Scanner agent (proxy)</span></div>
+    <div class="cs-item"><span class="cs-key">Deployment</span><span class="cs-val">Cloud SaaS (default) | On-Premise option</span></div>
+    <div class="cs-item"><span class="cs-key">Agent communication</span><span class="cs-val">Outbound HTTPS port 443 only</span></div>
+    <div class="cs-item"><span class="cs-key">Integration</span><span class="cs-val">ServiceNow · Freshservice · REST API · Syslog · Email alerts</span></div>
+    <div class="cs-item"><span class="cs-key">Compliance templates</span><span class="cs-val">CIS Benchmark · PCI DSS · HIPAA · NIST · ISO 27001</span></div>
+    <div class="cs-item"><span class="cs-key">License model</span><span class="cs-val">Per endpoint/year · Annual subscription · Modular</span></div>
+    <div class="cs-item"><span class="cs-key">Free trial</span><span class="cs-val">30 ngày — secpod.com/schedule-a-demo</span></div>
+    <div class="cs-item"><span class="cs-key">Analyst rating</span><span class="cs-val">GigaOm Leader (Patch Mgmt 2025) · Gartner 4.5/5</span></div>
+    <div class="cs-item"><span class="cs-key">USP vs Tenable</span><span class="cs-val">All-in-one (VM+PM) · Nhanh hơn · TCO thấp hơn</span></div>
+    <div class="cs-item"><span class="cs-key">USP vs Rapid7</span><span class="cs-val">Patch built-in · Nhanh hơn · Setup đơn giản hơn · SCAP native</span></div>
+    <div class="cs-item"><span class="cs-key">Không phù hợp</span><span class="cs-val">Air-gap hoàn toàn · OT/SCADA · Agentless tuyệt đối · Heavy cloud-native</span></div>
+    <div class="cs-item"><span class="cs-key">Contact</span><span class="cs-val">info@secpod.com · secpod.com · docs.secpod.com</span></div>
+  </div>
+
+  <div class="compare-wrap">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Tiêu chí quyết định</th>
+          <th>SecPod SanerNow</th>
+          <th>Tenable Nessus Pro</th>
+          <th>Rapid7 InsightVM</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="cat-row" colspan="4">SCANNING & DETECTION</td></tr>
+        <tr>
+          <td>Tốc độ scan</td>
+          <td class="win">🏆 &lt;5 phút</td>
+          <td class="ok">~30–60 phút</td>
+          <td class="ok">~15–30 phút</td>
+        </tr>
+        <tr>
+          <td>Vulnerability database</td>
+          <td>190,000+ SCAP</td>
+          <td class="win">🏆 227,000+ plugins</td>
+          <td>Metasploit DB</td>
+        </tr>
+        <tr>
+          <td>False positive rate</td>
+          <td>Thấp</td>
+          <td class="win">🏆 Six sigma (0.32/M)</td>
+          <td>Thấp</td>
+        </tr>
+        <tr><td class="cat-row" colspan="4">DEPLOYMENT</td></tr>
+        <tr>
+          <td>Agentless scan</td>
+          <td>Qua agent proxy</td>
+          <td class="win">🏆 Hoàn toàn agentless</td>
+          <td>Agent + agentless</td>
+        </tr>
+        <tr>
+          <td>Offline/Air-gap</td>
+          <td class="weak">On-prem option (xác nhận)</td>
+          <td class="win">🏆 Hoàn toàn offline</td>
+          <td class="no">Không — cần cloud</td>
+        </tr>
+        <tr>
+          <td>Portable (laptop scan)</td>
+          <td class="no">Cần agent trong mạng đó</td>
+          <td class="win">🏆 Cài laptop, scan mọi nơi</td>
+          <td class="weak">Cần Security Console</td>
+        </tr>
+        <tr><td class="cat-row" colspan="4">REMEDIATION</td></tr>
+        <tr>
+          <td>Patch Management built-in</td>
+          <td class="win">🏆 550+ apps, rollback, test group</td>
+          <td class="weak">Add-on riêng (Tenable PM)</td>
+          <td class="no">Không — cần tool riêng</td>
+        </tr>
+        <tr>
+          <td>End-to-end automation</td>
+          <td class="win">🏆 Scan → patch 1 console</td>
+          <td class="weak">Cần tool khác để patch</td>
+          <td class="weak">Cần tích hợp patch tool</td>
+        </tr>
+        <tr>
+          <td>Remediation workflow</td>
+          <td>Tốt</td>
+          <td>Cơ bản</td>
+          <td class="win">🏆 Remediation Hub xuất sắc</td>
+        </tr>
+        <tr><td class="cat-row" colspan="4">BUSINESS</td></tr>
+        <tr>
+          <td>TCO (VM+PM+Compliance)</td>
+          <td class="win">🏆 Thấp nhất</td>
+          <td class="weak">Cao hơn khi tính add-on</td>
+          <td class="weak">Cao — per asset + patch tool</td>
+        </tr>
+        <tr>
+          <td>License model dễ tính</td>
+          <td>Per endpoint</td>
+          <td class="win">🏆 Per scanner — cố định nhất</td>
+          <td class="weak">Per asset/month — biến động</td>
+        </tr>
+        <tr>
+          <td>Support quality</td>
+          <td class="win">🏆 Phản hồi nhanh, tốt</td>
+          <td>Standard OK</td>
+          <td class="weak">Một số review phàn nàn chậm</td>
+        </tr>
+        <tr>
+          <td>OT/SCADA</td>
+          <td class="no">Không</td>
+          <td class="win">🏆 Tenable OT tốt nhất</td>
+          <td class="weak">Hạn chế</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ════ S12: REFERENCES ════ -->
+<section class="section" id="s12">
+  <div class="sec-head">
+    <span class="sec-num">12</span>
+    <h2 class="sec-title">Tài Liệu<br><span>Tham Khảo & Links</span></h2>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <div class="key-points">
+        <div class="key-points-title">SecPod Official Resources</div>
+        <div class="kp-item"><span class="kp-icon">🌐</span><span><a href="https://www.secpod.com/saner-cvem/" target="_blank" style="color:var(--accent3);">secpod.com/saner-cvem</a> — Platform overview</span></div>
+        <div class="kp-item"><span class="kp-icon">📚</span><span><a href="https://docs.secpod.com" target="_blank" style="color:var(--accent3);">docs.secpod.com</a> — Full documentation</span></div>
+        <div class="kp-item"><span class="kp-icon">❓</span><span><a href="https://docs.secpod.com/docs/technical-faqs/" target="_blank" style="color:var(--accent3);">docs.secpod.com/docs/technical-faqs</a> — Official FAQ</span></div>
+        <div class="kp-item"><span class="kp-icon">🏗️</span><span><a href="https://docs.secpod.com/docs/pre-requisites-for-sanernow-deployment/" target="_blank" style="color:var(--accent3);">docs.secpod.com — Deployment Prerequisites</a></span></div>
+        <div class="kp-item"><span class="kp-icon">🗒️</span><span><a href="https://docs.secpod.com/docs/operating-systems-and-platforms-supported/" target="_blank" style="color:var(--accent3);">Supported OS & Platforms list</a></span></div>
+        <div class="kp-item"><span class="kp-icon">🔧</span><span><a href="https://docs.secpod.com/docs/supported-third-party-applications-for-patching/" target="_blank" style="color:var(--accent3);">Supported 3rd Party Apps for Patching</a></span></div>
+        <div class="kp-item"><span class="kp-icon">🚀</span><span><a href="https://docs.secpod.com/docs/release-notes-sanernow-6-5/" target="_blank" style="color:var(--accent3);">Release Notes 6.5 (Remote Scripting, Freshservice)</a></span></div>
+        <div class="kp-item"><span class="kp-icon">💬</span><span><a href="https://www.secpod.com/schedule-a-demo/" target="_blank" style="color:var(--accent3);">Schedule a Demo / Free Trial</a></span></div>
+      </div>
+    </div>
+    <div>
+      <div class="key-points">
+        <div class="key-points-title">Analyst & Review Sources</div>
+        <div class="kp-item"><span class="kp-icon">⭐</span><span><a href="https://www.gartner.com/reviews/market/vulnerability-assessment/vendor/secpod/product/saner-cvem" target="_blank" style="color:var(--accent3);">Gartner Peer Insights — SecPod CVEM Reviews</a></span></div>
+        <div class="kp-item"><span class="kp-icon">🛒</span><span><a href="https://aws.amazon.com/marketplace/pp/prodview-ephqfjxudsp7a" target="_blank" style="color:var(--accent3);">AWS Marketplace — SanerNow Reviews</a></span></div>
+        <div class="kp-item"><span class="kp-icon">📊</span><span><a href="https://www.capterra.com/p/152523/SecPod/" target="_blank" style="color:var(--accent3);">Capterra — SecPod Reviews</a></span></div>
+        <div class="kp-item"><span class="kp-icon">🔍</span><span><a href="https://www.comparitech.com/net-admin/sanernow-vulnerability-management-review/" target="_blank" style="color:var(--accent3);">Comparitech — SanerNow Detailed Review 2025</a></span></div>
+        <div class="kp-item"><span class="kp-icon">📰</span><span><a href="https://www.cyberdefensemagazine.com/innovator-spotlight-secpod/" target="_blank" style="color:var(--accent3);">Cyber Defense Magazine — SecPod Spotlight</a></span></div>
+        <div class="kp-item"><span class="kp-icon">🆚</span><span><a href="https://www.tenable.com/why-tenable/tenable-vs-rapid7" target="_blank" style="color:var(--accent3);">Tenable vs Rapid7 — Tenable's comparison page</a></span></div>
+        <div class="kp-item"><span class="kp-icon">🆚</span><span><a href="https://www.wiz.io/academy/cloud-security/rapid7-vs-tenable" target="_blank" style="color:var(--accent3);">Rapid7 vs Tenable — Wiz independent analysis</a></span></div>
+        <div class="kp-item"><span class="kp-icon">📧</span><span>Liên hệ SecPod: <strong>info@secpod.com</strong></span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="info" style="margin-top: 20px;">
+    <strong>📅 Lưu ý cập nhật:</strong> Tài liệu này được soạn thảo tháng 5/2026 dựa trên thông tin công khai từ SecPod, Gartner, và các nguồn độc lập. Giá cả, tính năng và licensing có thể thay đổi. <strong>Luôn xác nhận với SecPod trực tiếp</strong> trước khi đưa ra cam kết với khách hàng — đặc biệt là on-premise deployment option, pricing, và data residency.
+  </div>
+</section>
+
+</div><!-- /wrap -->
+
+<footer>
+  <span>CẨM NANG TƯ VẤN · SECPOD SANERNOW CVEM · 2025–2026</span>
+  <span>Internal Sales & Pre-sales Reference · Tổng hợp bởi Claude Sonnet</span>
+</footer>
+
+<script>
+function toggleFaq(el) {
+  el.classList.toggle('open');
+  const ans = el.querySelector('.faq-a');
+  if (ans) ans.classList.toggle('open');
+}
+</script>
+
+</body>
+</html>

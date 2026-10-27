@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fortify AppSec — Bài Kiểm Tra Kỹ Thuật</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #0a0e1a;
+    --bg2: #0f1525;
+    --surface: #141929;
+    --surface2: #1c2438;
+    --border: #252e45;
+    --accent: #00c8ff;
+    --accent2: #ff6b35;
+    --accent3: #7c3aed;
+    --sast: #00c8ff;
+    --dast: #ff6b35;
+    --sca: #10b981;
+    --ssm: #a855f7;
+    --correct: #10b981;
+    --wrong: #ef4444;
+    --text: #e2e8f0;
+    --text-dim: #8896b3;
+    --text-faint: #4a5568;
+    --glow: rgba(0,200,255,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: 60px 40px 50px;
+    background: linear-gradient(135deg, #0a0e1a 0%, #0f1a2e 50%, #0a0e1a 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero::before {
+    content:'';
+    position:absolute;
+    top:-80px; right:-80px;
+    width:400px; height:400px;
+    background: radial-gradient(circle, rgba(0,200,255,0.12) 0%, transparent 70%);
+    pointer-events:none;
+  }
+  .hero::after {
+    content:'';
+    position:absolute;
+    bottom:-60px; left:-60px;
+    width:300px; height:300px;
+    background: radial-gradient(circle, rgba(255,107,53,0.1) 0%, transparent 70%);
+    pointer-events:none;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(0,200,255,0.1);
+    border: 1px solid rgba(0,200,255,0.3);
+    border-radius: 20px;
+    padding: 5px 16px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+  }
+  .hero-badge span { width:6px; height:6px; background:var(--accent); border-radius:50%; animation: pulse 2s infinite; }
+
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+  }
+  .hero h1 em { font-style:normal; color: var(--accent); }
+
+  .hero-sub {
+    font-size: 14px;
+    color: var(--text-dim);
+    max-width: 600px;
+    margin-bottom: 32px;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 32px;
+  }
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .meta-item .dot { width:8px; height:8px; border-radius:50%; }
+
+  /* category pills */
+  .cat-pills { display:flex; flex-wrap:wrap; gap:10px; }
+  .cat-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-family:'JetBrains Mono',monospace;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+  }
+  .cat-pill:hover { transform:translateY(-1px); }
+  .cat-pill.sast { background:rgba(0,200,255,0.12); border-color:rgba(0,200,255,0.35); color:var(--sast); }
+  .cat-pill.dast { background:rgba(255,107,53,0.12); border-color:rgba(255,107,53,0.35); color:var(--dast); }
+  .cat-pill.sca  { background:rgba(16,185,129,0.12); border-color:rgba(16,185,129,0.35); color:var(--sca); }
+  .cat-pill.ssm  { background:rgba(168,85,247,0.12); border-color:rgba(168,85,247,0.35); color:var(--ssm); }
+  .cat-pill.active { filter:brightness(1.3); box-shadow:0 0 10px currentColor; }
+
+  /* ── CONTROLS ── */
+  .controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 20px 40px;
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .progress-wrap { flex: 1; min-width: 200px; }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-family:'JetBrains Mono',monospace;
+    color: var(--text-dim);
+    margin-bottom: 6px;
+  }
+  .progress-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent3));
+    border-radius: 2px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+
+  .score-display {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .score-display span { color: var(--accent); }
+
+  .btn {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 10px 22px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+  .btn-primary { background: var(--accent); color: #000; }
+  .btn-primary:hover { background: #33d4ff; transform:translateY(-1px); }
+  .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-danger { background: var(--wrong); color: #fff; }
+  .btn-danger:hover { opacity:0.85; }
+
+  /* ── QUIZ BODY ── */
+  .quiz-container { max-width: 900px; margin: 0 auto; padding: 40px 24px; }
+
+  /* Section header */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 28px 0 20px;
+    margin-bottom: 8px;
+  }
+  .section-line { flex:1; height:1px; background: var(--border); }
+  .section-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+  }
+  .section-badge.sast { background:rgba(0,200,255,0.1); color:var(--sast); border:1px solid rgba(0,200,255,0.25); }
+  .section-badge.dast { background:rgba(255,107,53,0.1); color:var(--dast); border:1px solid rgba(255,107,53,0.25); }
+  .section-badge.sca  { background:rgba(16,185,129,0.1); color:var(--sca);  border:1px solid rgba(16,185,129,0.25); }
+  .section-badge.ssm  { background:rgba(168,85,247,0.1); color:var(--ssm);  border:1px solid rgba(168,85,247,0.25); }
+
+  /* Question Card */
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .q-card:hover { border-color: #2d3a55; }
+  .q-card.answered { border-color: var(--border); }
+
+  .q-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 22px 24px 0;
+  }
+  .q-number {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    margin-top: 2px;
+  }
+  .q-number.sast { background:rgba(0,200,255,0.15); color:var(--sast); }
+  .q-number.dast { background:rgba(255,107,53,0.15); color:var(--dast); }
+  .q-number.sca  { background:rgba(16,185,129,0.15); color:var(--sca);  }
+  .q-number.ssm  { background:rgba(168,85,247,0.15); color:var(--ssm);  }
+
+  .q-meta { display:flex; flex-direction:column; flex:1; }
+  .q-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text-faint);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 6px;
+  }
+  .q-text {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.55;
+  }
+
+  .q-options { padding: 16px 24px 20px 72px; display:flex; flex-direction:column; gap:8px; }
+
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: all 0.18s;
+    background: var(--bg);
+  }
+  .opt:hover:not(.disabled) { border-color: var(--accent); background: rgba(0,200,255,0.05); }
+  .opt.selected:not(.correct):not(.wrong) { border-color: var(--accent); background: rgba(0,200,255,0.08); }
+  .opt.correct { border-color: var(--correct); background: rgba(16,185,129,0.1); }
+  .opt.wrong   { border-color: var(--wrong);   background: rgba(239,68,68,0.1); }
+  .opt.disabled { cursor: default; }
+  .opt.show-correct { border-color: var(--correct); background: rgba(16,185,129,0.06); }
+
+  .opt-key {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 5px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 1px;
+    transition: all 0.18s;
+    flex-shrink: 0;
+  }
+  .opt.selected .opt-key { background:var(--accent); border-color:var(--accent); color:#000; }
+  .opt.correct .opt-key  { background:var(--correct); border-color:var(--correct); color:#fff; }
+  .opt.wrong   .opt-key  { background:var(--wrong);   border-color:var(--wrong);   color:#fff; }
+  .opt.show-correct .opt-key { background:rgba(16,185,129,0.3); border-color:var(--correct); color:var(--correct); }
+
+  .opt-text { font-size: 13.5px; color: var(--text); line-height: 1.5; }
+
+  .q-explain {
+    display: none;
+    margin: 0 24px 20px 72px;
+    padding: 14px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text-dim);
+    border-left: 3px solid;
+  }
+  .q-explain.correct-exp { background:rgba(16,185,129,0.08); border-color:var(--correct); }
+  .q-explain.wrong-exp   { background:rgba(239,68,68,0.08);   border-color:var(--wrong); }
+  .q-explain.show { display:block; }
+  .q-explain strong { color: var(--text); }
+
+  /* ── RESULT PANEL ── */
+  #result-panel {
+    display: none;
+    text-align: center;
+    padding: 60px 40px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    margin: 40px 0;
+  }
+  .result-score {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(4rem, 12vw, 7rem);
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--accent), var(--accent3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .result-label { font-size:16px; color:var(--text-dim); margin-bottom:24px; }
+  .result-verdict {
+    display: inline-block;
+    padding: 10px 28px;
+    border-radius: 50px;
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 32px;
+  }
+  .result-verdict.pass { background: rgba(16,185,129,0.15); color:var(--correct); border:1px solid rgba(16,185,129,0.4); }
+  .result-verdict.fail { background: rgba(239,68,68,0.15);  color:var(--wrong);   border:1px solid rgba(239,68,68,0.4);  }
+
+  .result-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin-bottom: 36px;
+  }
+  .result-stat { display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .result-stat-val { font-family:'Syne',sans-serif; font-size:24px; font-weight:700; }
+  .result-stat-key { font-size:12px; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.5px; }
+
+  /* ── CAT BREAKDOWN ── */
+  .cat-breakdown {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-top: 24px;
+    text-align: left;
+  }
+  .cat-box {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .cat-box-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 8px;
+  }
+  .cat-box-score { font-family:'Syne',sans-serif; font-size:22px; font-weight:700; margin-bottom:4px; }
+  .cat-box-bar { height:3px; background:var(--border); border-radius:2px; overflow:hidden; }
+  .cat-box-fill { height:100%; border-radius:2px; }
+
+  /* floating nav */
+  .float-nav {
+    position: fixed;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 200;
+  }
+  .fnav-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--border);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .fnav-dot:hover { background:var(--text-dim); transform:scale(1.3); }
+  .fnav-dot.answered { background:var(--correct); }
+  .fnav-dot.wrong-ans { background:var(--wrong); }
+
+  /* Responsive */
+  @media(max-width:640px) {
+    .hero { padding:40px 20px 32px; }
+    .controls { padding:16px 20px; }
+    .quiz-container { padding:24px 16px; }
+    .q-options { padding-left:20px; }
+    .q-explain { margin-left:20px; }
+    .float-nav { display:none; }
+  }
+
+  /* Utility */
+  .hidden { display:none !important; }
+  .text-correct { color:var(--correct); }
+  .text-wrong   { color:var(--wrong); }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-badge"><span></span> OpenText Fortify · AppSec Technical Assessment · v24.4</div>
+  <h1>Fortify <em>AppSec</em><br>Technical Quiz</h1>
+  <p class="hero-sub">Bài kiểm tra kỹ thuật chuyên sâu dành cho nhân viên kỹ thuật và tư vấn giải pháp bảo mật ứng dụng Fortify. Ngưỡng đạt: <strong>80%</strong>.</p>
+  <div class="meta-row">
+    <div class="meta-item"><div class="dot" style="background:var(--sast)"></div> 30 câu SAST</div>
+    <div class="meta-item"><div class="dot" style="background:var(--dast)"></div> 30 câu DAST</div>
+    <div class="meta-item"><div class="dot" style="background:var(--sca)"></div> SCA</div>
+    <div class="meta-item"><div class="dot" style="background:var(--ssm)"></div> SSC / Central</div>
+  </div>
+  <div class="cat-pills" id="filterPills">
+    <div class="cat-pill sast active" onclick="filterSection('all')">☰ Tất cả</div>
+    <div class="cat-pill sast" onclick="filterSection('sast')">◈ SAST</div>
+    <div class="cat-pill dast" onclick="filterSection('dast')">◈ DAST</div>
+    <div class="cat-pill sca"  onclick="filterSection('sca')">◈ SCA</div>
+    <div class="cat-pill ssm"  onclick="filterSection('ssm')">◈ SSC</div>
+  </div>
+</header>
+
+<!-- CONTROLS -->
+<div class="controls">
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span id="progressTxt">0 / 60 câu</span>
+      <span id="progressPct">0%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+  <div class="score-display">Điểm: <span id="liveScore">0</span></div>
+  <div style="display:flex;gap:10px;">
+    <button class="btn btn-outline" onclick="showResult()">Xem Kết Quả</button>
+    <button class="btn btn-danger" onclick="resetQuiz()">Reset</button>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="quiz-container" id="quizContainer">
+  <!-- Sections injected by JS -->
+</div>
+
+<!-- Result -->
+<div class="quiz-container">
+  <div id="result-panel">
+    <div class="result-score" id="resultScore">--</div>
+    <div class="result-label">Tỷ lệ đúng</div>
+    <div class="result-verdict" id="resultVerdict"></div>
+    <div class="result-stats">
+      <div class="result-stat"><div class="result-stat-val" id="rCorrect">--</div><div class="result-stat-key">Câu đúng</div></div>
+      <div class="result-stat"><div class="result-stat-val" id="rWrong">--</div><div class="result-stat-key">Câu sai</div></div>
+      <div class="result-stat"><div class="result-stat-val" id="rSkip">--</div><div class="result-stat-key">Bỏ qua</div></div>
+      <div class="result-stat"><div class="result-stat-val" id="rTotal">60</div><div class="result-stat-key">Tổng câu</div></div>
+    </div>
+    <div class="cat-breakdown" id="catBreakdown"></div>
+    <div style="margin-top:36px;display:flex;gap:12px;justify-content:center;">
+      <button class="btn btn-primary" onclick="resetQuiz()">Làm Lại</button>
+      <button class="btn btn-outline" onclick="window.scrollTo({top:0,behavior:'smooth'})">Về Đầu Trang</button>
+    </div>
+  </div>
+</div>
+
+<div class="float-nav" id="floatNav"></div>
+
+<script>
+/* ══════════════════════════════════════════════
+   QUESTION DATA
+══════════════════════════════════════════════ */
+const QUESTIONS = [
+
+/* ─────────────── PHẦN 1: SAST (30 câu) ─────────────── */
+{
+  id:1, cat:'sast', tag:'Tổng quan SAST / CI-CD',
+  q:'Trong quy trình CI/CD, Fortify SAST (Static Code Analyzer) phù hợp nhất để tích hợp vào phase nào?',
+  opts:['A. Giai đoạn Deploy (Production deployment)','B. Giai đoạn Build/Commit — phân tích mã nguồn trước khi merge','C. Giai đoạn Production monitoring sau khi go-live','D. Giai đoạn User Acceptance Testing (UAT)'],
+  ans:1,
+  exp:'Fortify SAST hoạt động trên mã nguồn tĩnh, tích hợp lý tưởng vào giai đoạn Build/Commit. Phát hiện lỗi sớm giúp chi phí fix thấp hơn gấp 30 lần so với sửa sau production.'
+},{
+  id:2, cat:'sast', tag:'Kiến trúc / Thành phần',
+  q:'ScanCentral SAST bao gồm những thành phần cốt lõi nào? (Chọn cấu hình tối thiểu cần thiết để triển khai)',
+  opts:['A. Chỉ cần Fortify SCA cài trên máy developer là đủ','B. Controller + ít nhất 1 Sensor + Client (SCA cài trên build machine)','C. Software Security Center + WebInspect + LIM','D. Controller + SSC + DAST Scanner Pool'],
+  ans:1,
+  exp:'Theo tài liệu chính thức: tối thiểu cần 3 máy — ScanCentral SAST Controller, 1 Sensor, và 1 Client. SSC là optional nhưng highly recommended.'
+},{
+  id:3, cat:'sast', tag:'Tính năng kỹ thuật',
+  q:'Fortify Static Code Analyzer (SCA) sử dụng phương pháp phân tích nào để phát hiện lỗ hổng?',
+  opts:['A. Chỉ dùng pattern matching đơn giản như grep/regex trên source code','B. Phân tích taint-tracking đa thuật toán — theo dõi mọi đường thực thi và luồng dữ liệu có thể xảy ra (dataflow analysis)','C. Chạy ứng dụng trong môi trường sandbox và quan sát hành vi runtime','D. So sánh hash của code với cơ sở dữ liệu lỗ hổng đã biết'],
+  ans:1,
+  exp:'SCA dùng multiple algorithms bao gồm semantic analysis, control flow, dataflow, taint analysis và structural analysis. Nó phân tích "every feasible path that execution and data can follow" — không chỉ là pattern matching.'
+},{
+  id:4, cat:'sast', tag:'Ngôn ngữ hỗ trợ',
+  q:'Khách hàng muốn quét ứng dụng viết bằng Dart/Flutter và Solidity (blockchain smart contract). Fortify SCA có hỗ trợ không?',
+  opts:['A. Không, Fortify chỉ hỗ trợ Java, C#, Python và JavaScript','B. Có, cả Dart/Flutter và Solidity đều nằm trong danh sách ngôn ngữ hỗ trợ của Fortify SCA','C. Chỉ hỗ trợ Dart/Flutter, Solidity phải dùng công cụ khác','D. Chỉ hỗ trợ Solidity, Dart/Flutter chưa được hỗ trợ'],
+  ans:1,
+  exp:'Fortify SCA hỗ trợ rất đa dạng ngôn ngữ bao gồm Dart/Flutter, Solidity, Java, Kotlin, C#, Python, TypeScript, C/C++, COBOL, Swift, PHP, Go, SAP ABAP, Ruby, HTML, JSON, YAML, HCL...'
+},{
+  id:5, cat:'sast', tag:'Tích hợp IDE / DevOps',
+  q:'Developer muốn nhận feedback bảo mật ngay khi code trong IntelliJ IDEA. Giải pháp nào của Fortify đáp ứng điều này?',
+  opts:['A. Chạy ScanCentral SAST scan thủ công và gửi email báo cáo cho developer','B. Fortify Security Assistant / IDE Plugin for JetBrains — cung cấp feedback realtime ngay trong IDE','C. Developer phải truy cập SSC dashboard để xem kết quả','D. Chỉ có thể dùng Audit Workbench standalone, không hỗ trợ IDE plugin'],
+  ans:1,
+  exp:'Fortify cung cấp IDE Plugins cho Eclipse, Visual Studio, JetBrains (bao gồm IntelliJ IDEA) và Fortify Security Assistant, giúp developer nhận phản hồi bảo mật ngay khi viết code.'
+},{
+  id:6, cat:'sast', tag:'Mô hình triển khai Standalone',
+  q:'Khi triển khai Fortify SCA ở chế độ standalone (không có ScanCentral), quy trình scan cơ bản gồm mấy bước chính?',
+  opts:['A. 1 bước: sourceanalyzer -scan','B. 2 bước: Translation (build) → Scan (analysis), output ra file FPR','C. 3 bước: Install → Configure → Deploy, không cần build','D. 4 bước: Crawl → Audit → Report → Upload'],
+  ans:1,
+  exp:'Fortify SCA gồm 2 phase cốt lõi: (1) Translation — đọc source code và convert sang intermediate format (giống compiler); (2) Scan — phân tích intermediate format với security rules, output FPR file.'
+},{
+  id:7, cat:'sast', tag:'Remote Translation / Scan',
+  q:'ScanCentral SAST hỗ trợ 2 chế độ offload. Điều kiện nào phân biệt "Remote Translation & Scan" vs "Local Translation & Remote Scan"?',
+  opts:['A. Remote Translation & Scan chỉ dùng cho Java, Local Translation dùng cho ngôn ngữ khác','B. Remote Translation & Scan yêu cầu ngôn ngữ phải được hỗ trợ "remote translation" — nếu không, phải dùng Local Translation và chỉ offload phase Scan','C. Không có sự khác biệt, cả 2 chế độ đều cho kết quả giống nhau','D. Local Translation & Remote Scan nhanh hơn và luôn được khuyến nghị'],
+  ans:1,
+  exp:'Theo tài liệu: nếu ngôn ngữ được hỗ trợ "remote translation" → offload cả 2 phase. Nếu không → phải làm translation local (ít tốn CPU hơn scan phase) rồi upload MBS file cho sensor scan.'
+},{
+  id:8, cat:'sast', tag:'Audit Workbench / Triage',
+  q:'Sau khi scan xong và có file FPR, AppSec engineer muốn review và phân loại (triage) kết quả mà không cần SSC. Công cụ nào phù hợp?',
+  opts:['A. Mở FPR bằng Notepad/Text Editor để đọc XML','B. Fortify Audit Workbench — giao diện độc lập để xem, audit và annotate FPR file','C. WebInspect Enterprise Dashboard','D. ScanCentral DAST Console'],
+  ans:1,
+  exp:'Fortify Audit Workbench là công cụ desktop standalone dùng để mở và review FPR files. Smart View giúp hiểu data flow giữa các issue liên quan nhau.'
+},{
+  id:9, cat:'sast', tag:'Lỗ hổng phổ biến phát hiện bởi SAST',
+  q:'Loại lỗ hổng nào SAST phát hiện hiệu quả nhất mà DAST khó phát hiện được?',
+  opts:['A. Lỗi cấu hình SSL/TLS certificate sai trên web server','B. SQL Injection trong code path không có URL endpoint công khai, hardcoded credentials, insecure crypto algorithm trong source','C. Lỗ hổng trong third-party JavaScript library phía client','D. Lỗi HTTP Response Splitting trên load balancer'],
+  ans:1,
+  exp:'SAST có thể phát hiện các lỗi trong code path không thể truy cập từ bên ngoài (dead code paths, internal APIs), hardcoded secrets, insecure crypto usage — những thứ DAST không thể thấy vì DAST cần ứng dụng đang chạy và có entry point.'
+},{
+  id:10, cat:'sast', tag:'Tư vấn Sizing',
+  q:'Khách hàng có 50 developer đang active commit code, codebase gồm 30 project khác nhau. Mô hình license SCA nào phù hợp nhất?',
+  opts:['A. Mua 1 license Static dùng cho tất cả, không giới hạn project','B. Flexible Deployment Plan — license theo số Named Contributing Developer (50 devs) thay vì đếm số project/machine','C. Mua 30 Project License riêng lẻ cho từng codebase','D. Concurrent Scanning Model — mua số lượng scan machine bằng số developer'],
+  ans:1,
+  exp:'Flexible Deployment Plan được cấp phép dựa trên số Named Contributing Developer (ai đã commit code trong 90 ngày qua), bao gồm unlimited use của SSC, SCA, Audit Workbench và IDE plugins — rất phù hợp cho môi trường nhiều developer và project.'
+},{
+  id:11, cat:'sast', tag:'Tư vấn Sizing / License',
+  q:'Trong mô hình "Concurrent Scanning License Model", quy tắc counting license như thế nào?',
+  opts:['A. Tính theo số máy đã cài Fortify SCA, dù máy có đang scan hay không','B. Tính theo số scan đang active đồng thời — không giới hạn máy cài, chỉ giới hạn số scan chạy cùng lúc','C. Tính theo số developer đăng nhập vào SSC trong ngày','D. Tính theo tổng số FPR file được tạo ra trong tháng'],
+  ans:1,
+  exp:'Concurrent model: SCA và WebInspect có thể cài unlimited machines. Một "Scan Machine license" được tiêu thụ cho MỖI scan đang chạy (kể cả translation phase). Máy không chạy scan → không tốn license.'
+},{
+  id:12, cat:'sast', tag:'Sensor Pool / HA',
+  q:'Để đảm bảo high availability cho ScanCentral SAST sensor pool, cấu hình nào được khuyến nghị?',
+  opts:['A. Chạy tất cả scan trên 1 sensor duy nhất, đặt ở máy mạnh','B. Nhiều sensor trong cùng một pool — Controller phân phối job đến sensor available; nếu 1 sensor fail, các sensor khác tiếp tục xử lý','C. Cần deploy 2 Controller (active-active) để đảm bảo HA','D. Dùng Windows Clustering cho sensor, không cần nhiều instance'],
+  ans:1,
+  exp:'ScanCentral SAST hỗ trợ HA thông qua sensor pool: nhiều sensor trong pool, Controller tự routing job. Sensor fail → job được route sang sensor khác. Controller standalone có thể dùng Kubernetes/Docker để đảm bảo availability.'
+},{
+  id:13, cat:'sast', tag:'Tích hợp CI/CD',
+  q:'Khi tích hợp Fortify SAST với Jenkins pipeline, lệnh nào sau đây ĐÚNG với flow ScanCentral SAST?',
+  opts:['A. Chạy sourceanalyzer -scan trực tiếp trên Jenkins agent, kết quả lưu local','B. Dùng scancentral package → scancentral start (submit job đến Controller) → poll kết quả từ Controller/SSC','C. Jenkins gọi WebInspect REST API để trigger SAST scan','D. Developer phải chạy Audit Workbench thủ công sau khi Jenkins build xong'],
+  ans:1,
+  exp:'Flow ScanCentral SAST với Jenkins: (1) package code dùng `scancentral package`, (2) submit job `scancentral start`, (3) Jenkins poll Controller để biết khi scan hoàn thành, (4) FPR upload lên SSC tự động.'
+},{
+  id:14, cat:'sast', tag:'Tình huống thực tế',
+  q:'Khách hàng phàn nàn rằng scan SAST mất quá nhiều thời gian (8-10 giờ), ảnh hưởng CI pipeline. Giải pháp kỹ thuật nào bạn sẽ tư vấn?',
+  opts:['A. Nâng cấp máy scan lên CPU cao hơn và tăng RAM — đây là cách duy nhất','B. Sử dụng ScanCentral SAST với multiple sensors + incremental scan (chỉ scan changed files) + điều chỉnh scan profile phù hợp với risk tolerance','C. Giảm số lượng security rules để scan nhanh hơn, chấp nhận giảm coverage','D. Chuyển sang DAST thay vì SAST cho các module lớn'],
+  ans:1,
+  exp:'Giải pháp toàn diện: (1) ScanCentral SAST offload scan sang sensor pool, parallel execution; (2) Incremental scan — chỉ phân tích code thay đổi; (3) Điều chỉnh scan rules/profile phù hợp; (4) Tăng sensor để scale horizontally.'
+},{
+  id:15, cat:'sast', tag:'FPR & Reporting',
+  q:'File FPR (Fortify Project Report) trong Fortify SCA chứa những gì?',
+  opts:['A. Chỉ chứa danh sách IP và port của máy chủ bị lỗ hổng','B. Kết quả phân tích bảo mật — danh sách issues với severity, category, dataflow trace, source/sink information và metadata của scan','C. Binary executable của ứng dụng đã được compile','D. Log file của quá trình CI/CD pipeline'],
+  ans:1,
+  exp:'FPR file là định dạng đặc thù của Fortify, chứa toàn bộ kết quả scan: danh sách vulnerabilities (với category, severity, likelihood, impact), dataflow traces từ source đến sink, code snippets, và metadata. SSC và Audit Workbench đọc FPR để triage.'
+},{
+  id:16, cat:'sast', tag:'Tính năng đặc biệt / Unique',
+  q:'Tính năng "Audit Assistant" của Fortify SSC giúp gì cho quá trình triage kết quả SAST?',
+  opts:['A. Tự động vá lỗi (auto-fix) source code dựa trên kết quả scan','B. Dùng AI/ML để tự động phân loại và predict disposition (True Positive/False Positive/Not an Issue) cho các findings, giảm effort triage thủ công','C. Tự động generate test cases để reproduce vulnerability','D. Gửi ticket Jira cho mỗi vulnerability tìm thấy'],
+  ans:1,
+  exp:'Fortify Audit Assistant dùng machine learning được train trên hàng triệu audit decisions để tự động predict/classify issues. Đây là tính năng unique của Fortify giúp giảm đáng kể thời gian triage, đặc biệt với codebase lớn có hàng nghìn findings.'
+},{
+  id:17, cat:'sast', tag:'Tư vấn triển khai',
+  q:'Khách hàng yêu cầu triển khai Fortify SAST trong môi trường air-gapped (không có internet). Cần chuẩn bị những gì?',
+  opts:['A. Không thể triển khai Fortify SAST trong air-gapped environment, cần internet để lấy rule updates','B. Tải offline installer, Rulepacks, license file từ SLD portal → copy vào internal network → deploy và configure update mechanism nội bộ','C. Cần dedicated internet line chỉ để download Rulepacks định kỳ','D. Air-gapped deployment không cần Rulepack update, cài một lần là dùng mãi'],
+  ans:1,
+  exp:'Fortify hoàn toàn hỗ trợ air-gapped deployment: tải offline installer + Rulepack bundle từ SLD portal (microfocus.com/support), deploy nội bộ. Rulepack updates được bundle định kỳ (quarterly) và có thể cập nhật offline.'
+},{
+  id:18, cat:'sast', tag:'Lỗ hổng / OWASP',
+  q:'Fortify SCA phân loại các vulnerability theo framework/taxonomy nào?',
+  opts:['A. Chỉ theo OWASP Top 10 — không có classification framework nào khác','B. Hỗ trợ nhiều taxonomy: Seven Pernicious Kingdoms (7PK), OWASP, CWE/SANS, PCI DSS, FISMA, DISA STIG, CERT — có thể tùy chọn trong scan profile','C. Theo CVE database (Common Vulnerabilities and Exposures)','D. Chỉ theo CVSS score, không có category classification'],
+  ans:1,
+  exp:'Fortify SCA hỗ trợ mapping sang nhiều security taxonomy và compliance framework: Seven Pernicious Kingdoms (7PK là framework gốc của Fortify), OWASP Top 10, CWE, SANS Top 25, PCI DSS, FISMA, DISA STIG, và nhiều frameworks khác theo nhu cầu compliance của khách hàng.'
+},{
+  id:19, cat:'sast', tag:'Quản lý tập trung SSC',
+  q:'Fortify Software Security Center (SSC) đóng vai trò gì trong hệ sinh thái Fortify?',
+  opts:['A. SSC là scan engine chính, thực hiện việc phân tích code thay cho SCA','B. SSC là centralized management repository — tập hợp kết quả từ SAST/DAST/SCA, cung cấp dashboard, collaboration, remediation tracking và compliance reporting','C. SSC chỉ là công cụ report generation, không có chức năng quản lý','D. SSC thay thế hoàn toàn Audit Workbench, không cần dùng cả 2'],
+  ans:1,
+  exp:'SSC là "centralized management repository" — aggregate results từ nhiều nguồn (SCA, DAST, SCA-SCA), tracking remediation theo thời gian, collaboration giữa AppSec và developer, dashboard, compliance reports và tích hợp với defect trackers (Jira, ALM, Azure DevOps).'
+},{
+  id:20, cat:'sast', tag:'Database Requirements SSC',
+  q:'SSC hỗ trợ những loại database nào và yêu cầu đặc biệt gì về collation?',
+  opts:['A. Chỉ hỗ trợ MySQL, không yêu cầu gì đặc biệt về collation','B. Hỗ trợ Microsoft SQL Server, MySQL và Oracle. Yêu cầu tất cả database schema collations phải case-sensitive','C. Hỗ trợ PostgreSQL và SQLite, không có yêu cầu collation đặc biệt','D. Chỉ hỗ trợ Oracle Enterprise Edition, cần RAC cho HA'],
+  ans:1,
+  exp:'SSC hỗ trợ Microsoft SQL Server, MySQL và Oracle. Yêu cầu bắt buộc: "all database schema collations be case-sensitive". JDBC drivers đã được bundle sẵn với SSC.'
+},{
+  id:21, cat:'sast', tag:'Tích hợp DevSecOps',
+  q:'Fortify SCA hỗ trợ tích hợp với những CI/CD tools nào?',
+  opts:['A. Chỉ Jenkins và TeamCity','B. Jenkins, Bamboo, Visual Studio/Azure DevOps, GitHub Actions, GitLab CI, Maven, Gradle, MSBuild và nhiều công cụ khác qua Fortify Plugins','C. Chỉ Azure DevOps và GitHub Actions','D. Không hỗ trợ tích hợp CI/CD, chỉ chạy manual'],
+  ans:1,
+  exp:'Fortify SCA hỗ trợ tích hợp rộng rãi: Jenkins, Bamboo, Visual Studio, Azure DevOps, GitHub, GitLab, Maven, Gradle, Make, MSBuild. Ngoài ra có Swaggerized REST API để custom integration với bất kỳ CI/CD tool nào.'
+},{
+  id:22, cat:'sast', tag:'Tình huống tư vấn',
+  q:'Khách hàng là ngân hàng muốn đảm bảo compliance với PCI DSS. Fortify SCA hỗ trợ như thế nào?',
+  opts:['A. Không có tính năng PCI DSS, khách hàng phải tự map kết quả với PCI requirements','B. SSC có PCI DSS seed bundle và mapping, có thể generate compliance reports trực tiếp đối chiếu với PCI DSS requirements','C. Fortify chỉ hỗ trợ OWASP, không có PCI DSS mapping','D. PCI DSS compliance phải dùng riêng WebInspect, không liên quan SAST'],
+  ans:1,
+  exp:'Fortify SSC có PCI DSS seed bundle (PCI_Basic_Seed_Bundle) và hỗ trợ assessment theo PCI DSS framework. Kết quả SAST/DAST được map vào PCI requirements. Lưu ý: PCI DSS 4.0 policy đã được cập nhật trong phiên bản mới.'
+},{
+  id:23, cat:'sast', tag:'Hybrid Scan / IaC',
+  q:'Infrastructure as Code (IaC) có thể được quét bằng Fortify SAST không? Nếu có, hỗ trợ format nào?',
+  opts:['A. Không, Fortify SAST chỉ quét application code, không hỗ trợ IaC','B. Có, Fortify SCA hỗ trợ quét IaC (Terraform HCL, JSON, YAML, CloudFormation) để phát hiện misconfiguration bảo mật trong infrastructure templates','C. IaC chỉ được quét bởi DAST, không phải SAST','D. Chỉ hỗ trợ Terraform, không hỗ trợ CloudFormation hoặc Kubernetes YAML'],
+  ans:1,
+  exp:'Fortify SCA hỗ trợ IaC scanning — bao gồm Terraform (HCL), JSON, YAML, XML. ScanCentral DAST Datasheet đề cập "Infrastructure as Code on SAST on DevSecOps". Rất quan trọng cho DevSecOps pipeline hiện đại.'
+},{
+  id:24, cat:'sast', tag:'Lỗ hổng chi tiết',
+  q:'Trong Fortify, "taint analysis" (taint tracking) phân tích gì?',
+  opts:['A. Phân tích xem code có tuân theo coding convention không (indentation, naming)','B. Theo dõi luồng dữ liệu không tin cậy (untrusted data/tainted data) từ nguồn vào (source) qua code cho đến điểm nguy hiểm (sink) — phát hiện injection flaws','C. Kiểm tra memory allocation và garbage collection trong ứng dụng','D. Xác định performance bottleneck trong code'],
+  ans:1,
+  exp:'Taint analysis là core kỹ thuật của Fortify SCA. "Tainted" = dữ liệu từ nguồn không tin cậy (user input, HTTP params, DB, files). Fortify theo dõi tainted data qua tất cả code path cho đến sink nguy hiểm (SQL query, system call, output) — phát hiện SQL Injection, XSS, Command Injection, Path Traversal...'
+},{
+  id:25, cat:'sast', tag:'Tính năng mới / Unique',
+  q:'Fortify Security Assistant trong IDE có tính năng gì đặc biệt so với việc chạy full SCA scan?',
+  opts:['A. Security Assistant chạy full analysis giống hệt SCA, chỉ khác là chạy trong IDE','B. Security Assistant cung cấp real-time, lightweight analysis ngay khi gõ code — nhẹ hơn full scan, focus vào file đang edit, không yêu cầu full build','C. Security Assistant chỉ check coding convention, không phát hiện security issues','D. Security Assistant yêu cầu kết nối liên tục với ScanCentral Controller'],
+  ans:1,
+  exp:'Fortify Security Assistant là lightweight tool chạy within IDE (Eclipse, IntelliJ, VS Code), phân tích real-time khi developer code. Đây là "shift-left" approach — feedback ngay lập tức, không cần đợi full CI/CD pipeline scan.'
+},{
+  id:26, cat:'sast', tag:'Deployment Model',
+  q:'Khách hàng muốn deploy Fortify SSC trên Kubernetes. Điều kiện bắt buộc nào phải đảm bảo?',
+  opts:['A. Kubernetes không được hỗ trợ, phải dùng bare metal hoặc VMware','B. Cần HTTPS/TLS (SSC on K8s chỉ chạy qua HTTPS), Persistent Volume, Kubernetes Secret chứa keystore/license, và JDBC database connection','C. SSC trên K8s không cần database ngoài vì dùng embedded H2','D. Chỉ cần tải Docker image, không cần cấu hình gì thêm'],
+  ans:1,
+  exp:'SSC Kubernetes deployment yêu cầu: (1) Helm chart, (2) Persistent Volume hỗ trợ fsGroup, (3) Kubernetes Secret với keystore/certificate, (4) license file, (5) External database (SQL Server/MySQL/Oracle). Lưu ý quan trọng: SSC trên K8s CHỈ chạy qua HTTPS.'
+},{
+  id:27, cat:'sast', tag:'Tư vấn thực tế',
+  q:'Một doanh nghiệp lớn có 5 team phát triển với codebase độc lập. Họ muốn SSC trung tâm nhưng mỗi team quản lý riêng project của mình. Cấu hình SSC nào phù hợp?',
+  opts:['A. Cần 5 instance SSC riêng biệt cho 5 team','B. 1 SSC instance — tạo Applications/Versions riêng cho từng team, phân quyền theo Role (Team Lead = Application Security Tester, Developer = View-only)','C. SSC không hỗ trợ multi-team, phải dùng Fortify on Demand','D. Dùng LDAP group để chia SSC thành multiple namespaces'],
+  ans:1,
+  exp:'SSC hỗ trợ multi-tenant architecture: 1 instance với nhiều Applications/Versions. Role-based access control (RBAC) trong SSC cho phép phân quyền chi tiết. Application owner quản lý version của mình, Admin quản lý toàn bộ hệ thống.'
+},{
+  id:28, cat:'sast', tag:'Defect Tracking Integration',
+  q:'Fortify SSC hỗ trợ tích hợp push vulnerabilities sang defect tracking system nào?',
+  opts:['A. Chỉ Jira, không hỗ trợ công cụ khác','B. Jira, ALM (HP ALM/Micro Focus ALM), Azure DevOps Server, Bugzilla, và có thể customize bằng bug tracker plugin API','C. Chỉ Azure DevOps và GitHub Issues','D. SSC không hỗ trợ tích hợp defect tracking, phải export báo cáo thủ công'],
+  ans:1,
+  exp:'SSC hỗ trợ tích hợp với nhiều defect tracking: Jira, OpenText ALM Octane, Azure DevOps Server, Bugzilla. Ngoài ra có Bug Tracker Plugin API để develop custom integration với bất kỳ bug tracking system nào.'
+},{
+  id:29, cat:'sast', tag:'Lỗ hổng OWASP phát hiện bởi SAST',
+  q:'Loại lỗ hổng nào trong OWASP Top 10 (2021) mà Fortify SAST đặc biệt hiệu quả khi phát hiện?',
+  opts:['A. A07:2021 – Identification and Authentication Failures (lỗi trên web server config)','B. A03:2021 – Injection, A02:2021 – Cryptographic Failures, A04:2021 – Insecure Design — những lỗi nằm trong code logic và không yêu cầu ứng dụng đang chạy để phát hiện','C. A09:2021 – Security Logging and Monitoring Failures (chỉ phát hiện được runtime)','D. A05:2021 – Security Misconfiguration trên infrastructure layer'],
+  ans:1,
+  exp:'SAST đặc biệt hiệu quả với: A03 Injection (SQL/Command/LDAP injection trong code), A02 Cryptographic Failures (hardcoded key, weak algorithm), A04 Insecure Design (business logic flaws), A06 Vulnerable Components (SCA), A08 Software & Data Integrity. Những lỗi này nằm trong code — không cần app running.'
+},{
+  id:30, cat:'sast', tag:'Kiểm tra tổng hợp SAST',
+  q:'So sánh chi phí fix lỗi bảo mật ở giai đoạn phát triển sớm vs. giai đoạn production. Đây là lợi thế tư vấn quan trọng khi giới thiệu Fortify SAST. Số liệu nào đúng?',
+  opts:['A. Chi phí fix ở production cao hơn 2-3 lần so với giai đoạn development','B. Chi phí fix ở giai đoạn sau (production/deployment) cao hơn tới 30 lần so với fix ở giai đoạn sớm (development/design)','C. Chi phí tương đương nhau giữa các giai đoạn, không có sự khác biệt đáng kể','D. Chi phí fix ở development cao hơn vì cần rewrite nhiều code hơn'],
+  ans:1,
+  exp:'Theo nghiên cứu IBM Systems Sciences Institute và được Fortify/industry trích dẫn rộng rãi: chi phí fix lỗi bảo mật tăng theo cấp số nhân qua các giai đoạn SDLC. Fortify tài liệu chính thức trích dẫn "cao hơn gấp 30 lần" — đây là key ROI argument khi tư vấn SAST cho khách hàng.'
+},
+
+/* ─────────────── PHẦN 2: DAST (30 câu) ─────────────── */
+{
+  id:31, cat:'dast', tag:'Tổng quan DAST / CI-CD',
+  q:'Fortify DAST (WebInspect / ScanCentral DAST) phù hợp nhất để tích hợp vào phase nào trong CI/CD pipeline?',
+  opts:['A. Giai đoạn Code Review — phân tích source code khi developer commit','B. Giai đoạn Staging/Pre-Production — khi ứng dụng đã được deploy và đang chạy, trước khi go-live production','C. Giai đoạn Planning — phân tích requirements bảo mật','D. Giai đoạn Unit Testing — chạy cùng với automated unit tests'],
+  ans:1,
+  exp:'DAST là Dynamic Testing — cần ứng dụng đang chạy (running application). Phase phù hợp nhất là Staging/Pre-Production: môi trường giống production nhất, ứng dụng fully deployed, nhưng chưa expose cho end user. ScanCentral DAST hỗ trợ "early and often DAST" qua ad-hoc, scheduled, hoặc CI/CD triggered scans.'
+},{
+  id:32, cat:'dast', tag:'Kiến trúc ScanCentral DAST',
+  q:'ScanCentral DAST architecture gồm những thành phần Docker container chính nào?',
+  opts:['A. Chỉ cần WebInspect standalone installer, không dùng Docker','B. Global Service, Utility Service, LIM API (licensing), WebInspect Sensor (scanner) — tất cả được deploy dưới dạng Docker containers, kết nối với SSC','C. Chỉ cần SSC và WebInspect Desktop, không cần thêm service nào','D. Apache Kafka, Zookeeper, Elasticsearch và WebInspect Agent'],
+  ans:1,
+  exp:'ScanCentral DAST architecture: Docker containers gồm Global Service, Utility Service, LIM (License & Infrastructure Manager) API, và WebInspect Sensor. Tất cả communicate với Fortify SSC qua REST API. Database riêng cho DAST (ScanCentral DAST DB) tách biệt với SSC DB.'
+},{
+  id:33, cat:'dast', tag:'Phát hiện lỗ hổng DAST',
+  q:'Fortify DAST có thể phát hiện loại lỗ hổng nào mà SAST KHÔNG thể phát hiện?',
+  opts:['A. Hardcoded passwords trong source code','B. Lỗ hổng runtime như authentication bypass, session management issues, business logic flaws, server misconfigurations chỉ thấy khi ứng dụng đang chạy','C. SQL Injection trong stored procedure trong database','D. Insecure crypto algorithm trong thư viện được import'],
+  ans:1,
+  exp:'DAST phát hiện lỗi runtime: authentication/session issues, server misconfigurations, SSL/TLS settings, runtime injection (server xử lý input thực sự), response-based vulnerabilities. Đây là lỗi "chỉ thấy khi app running và có HTTP traffic thực sự" — SAST không thể phát hiện.'
+},{
+  id:34, cat:'dast', tag:'WebInspect Crawl/Audit',
+  q:'WebInspect thực hiện scan theo 2 phase chính. Mô tả ĐÚNG về 2 phase này là gì?',
+  opts:['A. Phase 1: Install, Phase 2: Configure rồi chạy','B. Phase 1 Crawl: tự động khám phá cấu trúc ứng dụng (sitemap, endpoints, forms); Phase 2 Audit: kiểm tra từng endpoint/parameter đã tìm thấy để phát hiện vulnerabilities','C. Phase 1 là SAST scan, Phase 2 là DAST scan — 2 công cụ khác nhau','D. Phase 1: Network scan, Phase 2: Application scan'],
+  ans:1,
+  exp:'WebInspect 2-phase approach: (1) Crawl — automated discovery giống như web spider, xây dựng sitemap đầy đủ của ứng dụng; (2) Audit — gửi crafted attack payloads đến từng endpoint/parameter tìm được trong crawl phase để test vulnerabilities. Thread count cho 2 phase có thể cấu hình độc lập.'
+},{
+  id:35, cat:'dast', tag:'API Security Testing',
+  q:'Khách hàng có REST API cần quét DAST. WebInspect/ScanCentral DAST hỗ trợ những format/standard nào cho API scanning?',
+  opts:['A. Chỉ hỗ trợ quét các API có UI/form, không hỗ trợ raw API endpoint','B. Hỗ trợ SOAP (WSDL), REST, OpenAPI/Swagger (1.0, 2.0, 3.0), GraphQL, RAML, Postman Collections, OData, và có khả năng auto-discover shadow API endpoints trong khi scan','C. Chỉ hỗ trợ SOAP và REST cơ bản, không hỗ trợ GraphQL hay Postman','D. Cần nhập thủ công từng API endpoint, không có auto-discovery'],
+  ans:1,
+  exp:'ScanCentral DAST có API coverage rất toàn diện: SOAP (WSDL), REST, Swagger 1.0/2.0, OpenAPI 3.0, GraphQL, RAML, Postman Collections, OData, WSDL schemas. Đặc biệt: có khả năng AUTO-DISCOVER shadow/unknown API endpoints TRONG KHI scan đang chạy và add chúng vào test scope.'
+},{
+  id:36, cat:'dast', tag:'Authentication',
+  q:'Ứng dụng của khách hàng dùng OAuth 2.0 và Multi-Factor Authentication (SMS/Email OTP). ScanCentral DAST xử lý việc authentication như thế nào?',
+  opts:['A. DAST không thể quét ứng dụng có MFA, phải disable MFA trước khi quét','B. ScanCentral DAST hỗ trợ OAuth 2.0 và có tính năng Automated Authentication for SMS/Email — tự động xử lý MFA flow','C. Phải tạo test account không có MFA riêng biệt cho DAST quét','D. Chỉ hỗ trợ Basic Auth và Form-based login, không có OAuth hay MFA'],
+  ans:1,
+  exp:'ScanCentral DAST Product Highlights: "Enable Automated Authentication for SMS and Email" — đây là tính năng quan trọng. Hỗ trợ OAuth 2.0, Bearer tokens, Cookies, và automated MFA handling. Đây là điểm cạnh tranh mạnh vs các tool khác.'
+},{
+  id:37, cat:'dast', tag:'Mô hình triển khai DAST',
+  q:'Khách hàng muốn deploy ScanCentral DAST theo mô hình Kubernetes với Helm chart. Có mấy Helm chart riêng biệt?',
+  opts:['A. Chỉ 1 Helm chart duy nhất deploy toàn bộ DAST stack','B. 2 Helm charts riêng biệt: helm-scancentral-dast-core (core infrastructure) và helm-scancentral-dast-scanner (scanner/sensor)','C. 3 Helm charts: database, application, monitoring','D. Không có Helm chart, phải deploy docker-compose manually'],
+  ans:1,
+  exp:'Theo tài liệu chính thức: 2 Helm charts: (1) helm-scancentral-dast-core — deploy core components; (2) helm-scancentral-dast-scanner — deploy scanner/sensor components. Tách biệt để dễ scale scanner pool độc lập với core services.'
+},{
+  id:38, cat:'dast', tag:'FAST / Functional Testing',
+  q:'Tính năng FAST (Functional Application Security Testing) trong ScanCentral DAST làm gì?',
+  opts:['A. FAST là một loại scan mới, không liên quan đến functional testing hiện tại của team','B. FAST capture HTTP traffic từ các functional test (Selenium, UFT ONE, Cucumber) và dùng traffic đó để tạo DAST scan có coverage tốt hơn — kết hợp ưu điểm của IAST và DAST','C. FAST là tên khác của SAST, không phải DAST feature','D. FAST chỉ hoạt động với ứng dụng Java, không hỗ trợ ngôn ngữ khác'],
+  ans:1,
+  exp:'FAST là CI/CD-friendly feature: capture HTTP traffic từ functional tests (UFT ONE, Selenium, Cucumber) → send to ScanCentral DAST → DAST scan dùng traffic này làm base, NHƯNG tiếp tục crawl thêm (nếu functional test miss endpoint nào, FAST/DAST sẽ tìm thêm). Kết hợp ưu điểm IAST (biết code path) + DAST (không cần agent).'
+},{
+  id:39, cat:'dast', tag:'SAST-DAST Correlation',
+  q:'Tính năng SAST+DAST Correlation trong Fortify hoạt động như thế nào và lợi ích là gì?',
+  opts:['A. Đây là tính năng chỉ có trong phiên bản Fortify on Demand, không có on-premise','B. Fortify SCA xuất thêm metadata vào FPR → WebInspect đọc SAST data để correlate SAST findings với DAST findings trong SSC — giúp tăng accuracy, giảm false positive và ưu tiên issues tốt hơn','C. Correlation chỉ có nghĩa là hai tool cùng tìm được 1 issue — không có thêm thông tin nào','D. Để dùng correlation phải cài agent trên application server'],
+  ans:1,
+  exp:'SAST+DAST Correlation: SCA xuất thêm enriched FPR → WebInspect consume SAST data → SSC correlate và visualize kết hợp. Lợi ích: (1) Giảm noise/false positive; (2) Prioritization tốt hơn; (3) Nếu cả SAST và DAST cùng tìm thấy issue → confidence cao. NO agent required!'
+},{
+  id:40, cat:'dast', tag:'Scan Policy',
+  q:'Khi tư vấn khách hàng về scan policy cho DAST, Standard Policy và API Policy khác nhau như thế nào?',
+  opts:['A. Standard Policy quét tốt hơn API Policy, không cần dùng API Policy','B. Standard Policy dùng cho traditional web applications (HTML forms, links); API Policy có 30+ API-specific checks được tối ưu cho REST/SOAP endpoints, GraphQL — không crawl như web app thông thường','C. API Policy chỉ dùng cho SOAP, Standard Policy dùng cho REST','D. Không có sự khác biệt, cùng dùng một engine scan'],
+  ans:1,
+  exp:'ScanCentral DAST có dedicated "API Policy" với 30 API-specific checks. API scanning không crawl links HTML mà test endpoints trực tiếp với payloads phù hợp cho API (JSON injection, XML injection, schema violations...). Cần chọn đúng scan type: Standard (web app) vs API scan.'
+},{
+  id:41, cat:'dast', tag:'Tình huống thực tế',
+  q:'Khách hàng có ứng dụng SPA (Single Page Application) viết bằng React, routing hoàn toàn phía client. WebInspect/ScanCentral DAST xử lý thế nào?',
+  opts:['A. DAST không thể quét SPA vì SPA không có server-side rendering truyền thống','B. ScanCentral DAST hỗ trợ SPA và modern JavaScript frameworks — crawler có thể execute JavaScript và phát hiện routes/endpoints trong SPA, hỗ trợ Selenium scripts cho navigation','C. Chỉ có thể quét phần public page của SPA, không vào được phần authenticated','D. Phải convert SPA thành SSR (Server Side Rendering) trước khi quét'],
+  ans:1,
+  exp:'ScanCentral DAST Product Highlights: "Support modern technology such as Single Page Applications (SPAs), & Selenium Scripts". Crawler có JavaScript execution capability, có thể navigate SPA. Selenium scripts giúp automate complex user flows trong SPA (login, navigation, form submission).'
+},{
+  id:42, cat:'dast', tag:'Tích hợp CI/CD DAST',
+  q:'ScanCentral DAST tích hợp với Jenkins như thế nào trong pipeline?',
+  opts:['A. Phải chạy WebInspect trên Windows desktop thủ công, không có Jenkins integration','B. Qua Fortify Jenkins Plugin hoặc REST API: trigger DAST scan từ Jenkins stage, poll kết quả, fail build nếu critical vulnerabilities vượt ngưỡng định nghĩa','C. Jenkins chỉ có thể nhận report sau scan, không thể trigger scan','D. Cần cài WebInspect agent trên Jenkins agent để scan'],
+  ans:1,
+  exp:'ScanCentral DAST có REST API endpoint đầy đủ: generate reports, export findings, trigger scans, check status. Jenkins Fortify Plugin và AzureDevOps task cho phép: trigger scan → wait for completion → evaluate results → fail/pass pipeline based on policy.'
+},{
+  id:43, cat:'dast', tag:'Sizing DAST',
+  q:'Khi sizing ScanCentral DAST sensor pool cho doanh nghiệp, yếu tố nào quan trọng nhất cần xem xét?',
+  opts:['A. Chỉ cần 1 sensor, DAST scan không tốn nhiều tài nguyên','B. Số lượng ứng dụng cần scan, tần suất scan, kích thước ứng dụng (số endpoints) và yêu cầu concurrent scans — sensor pool scale horizontally để đáp ứng','C. Chỉ cần xem xét RAM, không quan trọng số lượng CPU','D. ScanCentral DAST không thể scale, dùng 1 server cho tất cả'],
+  ans:1,
+  exp:'DAST sensor sizing: (1) Số concurrent scans cần chạy đồng thời; (2) Kích thước/complexity ứng dụng (số endpoints, depth); (3) Scan frequency; (4) Thread count per scan (Crawl: max 25 threads, Audit: max 50 threads). ScanCentral DAST "dynamically scales up or down to meet the changing demands of the CI/CD pipeline".'
+},{
+  id:44, cat:'dast', tag:'OAST / Out-of-band',
+  q:'Tính năng OAST (Out-of-Band Application Security Testing) trong ScanCentral DAST giúp phát hiện loại lỗ hổng nào?',
+  opts:['A. OAST là tên khác của SAST, không phải tính năng DAST','B. OAST phát hiện blind/delayed vulnerabilities: Blind XSS, Blind SQL Injection, Blind SSRF (Server-Side Request Forgery), Remote File Include — nơi response không trực tiếp cho thấy vulnerability','C. OAST chỉ kiểm tra DNS configuration, không liên quan application security','D. OAST phát hiện lỗi CORS và Content Security Policy'],
+  ans:1,
+  exp:'OAST dùng DNS/SMTP/HTTP callbacks để detect vulnerabilities mà response không tiết lộ trực tiếp: Blind XSS (payload được trigger sau khi admin mở report), Blind SQLi, Blind SSRF. ScanCentral DAST có Public OAST server (internet-accessible) và Private Docker Container cho air-gapped/internal networks.'
+},{
+  id:45, cat:'dast', tag:'Data Retention',
+  q:'ScanCentral DAST có tính năng Data Retention. Điều gì xảy ra khi purge scan data từ DAST database?',
+  opts:['A. Xóa cả FPR trong SSC và toàn bộ kết quả','B. Purge scan artifacts từ ScanCentral DAST database (logs, site tree, scan file) NHƯNG không xóa FPR đã upload lên Fortify Software Security Center','C. Chỉ xóa log files, giữ nguyên FPR trong DAST database','D. Không thể purge data, phải xóa toàn bộ DAST database'],
+  ans:1,
+  exp:'Theo tài liệu chính thức: "Purging the scan data from ScanCentral DAST does not delete the FPR from Fortify Software Security Center." Data retention chỉ manage DAST-side artifacts (logs, site tree, scan files) — FPR trong SSC được giữ nguyên theo SSC retention policy riêng.'
+},{
+  id:46, cat:'dast', tag:'Scan Priority',
+  q:'ScanCentral DAST có cơ chế Scan Priority. Priority được cấu hình như thế nào và range là bao nhiêu?',
+  opts:['A. Priority là Low/Medium/High/Critical — 4 cấp độ','B. Priority từ 0 đến 10 (0 = thấp nhất, 10 = cao nhất) — cấu hình per-application trong Application Settings, có thể override trong scan settings','C. Priority từ 1 đến 5, không có cấu hình per-application','D. Không có Priority, scan theo FIFO queue'],
+  ans:1,
+  exp:'ScanCentral DAST Scan Priority: thang từ 0 đến 10, 0 = lowest, 10 = highest. Được set trong Application Settings (default priority) và có thể override trong individual scan settings. Sensor pool sẽ ưu tiên scan có priority cao hơn khi có nhiều job đang queue.'
+},{
+  id:47, cat:'dast', tag:'Macro / Selenium',
+  q:'Ứng dụng web của khách hàng yêu cầu login phức tạp với CAPTCHA và custom JavaScript validation. Làm thế nào để DAST scan được ứng dụng này?',
+  opts:['A. Không thể scan ứng dụng có CAPTCHA, đây là giới hạn của mọi DAST tool','B. Dùng WebInspect Login Macro (record HTTP traffic sequence) hoặc Selenium script để automate authentication — bypass CAPTCHA bằng cách record macro với session đã authenticated','C. Phải disable CAPTCHA trong môi trường test — không có giải pháp nào khác','D. Chỉ quét được phần public không cần login'],
+  ans:1,
+  exp:'WebInspect hỗ trợ: (1) Automatic macro generation (record and replay authenticated sessions); (2) Selenium integration cho complex login flows; (3) Manual macro creation với Web Macro Recorder. Với CAPTCHA: record macro với pre-authenticated session token, hoặc configure test environment để bypass CAPTCHA. ScanCentral DAST Product: "Automatic macro generation".'
+},{
+  id:48, cat:'dast', tag:'Tình huống tư vấn DAST',
+  q:'Khách hàng có API backend microservices, mỗi service là 1 Docker container với Swagger doc. Họ muốn scan tất cả. Approach nào tối ưu?',
+  opts:['A. Scan 1 service duy nhất và assume kết quả tương tự cho service khác','B. Sử dụng OpenAPI/Swagger definition của từng service để tạo API scan riêng; ScanCentral DAST auto-discover endpoints từ Swagger, tạo scan schedule định kỳ cho từng service','C. Chỉ scan API gateway, không cần scan từng microservice','D. DAST không scan được containerized applications'],
+  ans:1,
+  exp:'Best practice cho microservices: (1) Mỗi service có Swagger/OpenAPI doc → tạo API scan sử dụng definition file; (2) ScanCentral DAST auto-enumerate endpoints từ OpenAPI spec; (3) Schedule regular scans; (4) Kết quả centralize trong SSC. ScanCentral DAST: "Identify the breadth of endpoints with OpenAPI, Swagger, OData, or WSDL schemas".'
+},{
+  id:49, cat:'dast', tag:'License DAST',
+  q:'Mô hình license WebInspect "Single Scan Target License" có đặc điểm gì?',
+  opts:['A. Cho phép scan unlimited IP addresses, unlimited machines','B. Scan unlimited times trên 1 IP address cụ thể, cài trên tối đa 5 logical systems, cho phép 2 lần đổi IP trong 12 tháng','C. Scan 1 lần duy nhất trên 1 target, sau đó license hết hạn','D. Dành cho MSP, cho phép scan nhiều khách hàng khác nhau'],
+  ans:1,
+  exp:'WebInspect Single Scan Target License: scan unlimited trên 1 IP address cố định, install trên ≤5 logical systems. Có thể request 2 IP changes per 12 months (với điều kiện là "normal IT operations"). Phù hợp cho khách hàng có 1 target quan trọng cần scan thường xuyên.'
+},{
+  id:50, cat:'dast', tag:'Lỗ hổng DAST phổ biến',
+  q:'Trong quá trình DAST scan, WebInspect phát hiện được điều gì về client-side framework của ứng dụng?',
+  opts:['A. DAST không thể nhận biết technology stack phía client','B. WebInspect có khả năng phát hiện "hacker-level insights" như client-side frameworks (React/Angular/Vue) và phiên bản thư viện — thông tin này hỗ trợ targeting specific framework vulnerabilities','C. Chỉ nhận biết server-side technology (PHP, Java, .NET), không phải client-side','D. Framework detection chỉ available ở phiên bản Enterprise, không có ở standard'],
+  ans:1,
+  exp:'ScanCentral DAST Datasheet: "Get hacker-level insights such as client-side frameworks and version numbers". WebInspect phân tích HTTP responses, JavaScript bundle contents, và HTTP headers để identify technology stack — thông tin này giúp scanner target framework-specific vulnerabilities và giúp AppSec prioritize patching.'
+},{
+  id:51, cat:'dast', tag:'Deny Interval',
+  q:'Tính năng "Deny Interval" trong ScanCentral DAST có tác dụng gì?',
+  opts:['A. Deny interval là thời gian giữa 2 lần retry khi scan fail','B. Deny interval cho phép define time windows mà scan không được phép chạy (ví dụ: business hours, maintenance window) — scan tự động pause/skip trong khoảng thời gian này','C. Deny interval giới hạn số request/second WebInspect gửi đến target','D. Deny interval là thời gian session timeout của WebInspect console'],
+  ans:1,
+  exp:'Deny Interval là scheduling feature: cho phép admin define time periods mà scan bị block (ví dụ: không scan trong giờ cao điểm business 8am-5pm, không scan ngày cuối tuần). Scan tự động pause và resume sau deny interval. Quan trọng để tránh ảnh hưởng production environment.'
+},{
+  id:52, cat:'dast', tag:'HA DAST Deployment',
+  q:'Để đảm bảo HA cho ScanCentral DAST, mô hình nào được hỗ trợ?',
+  opts:['A. HA không được hỗ trợ cho DAST, chỉ chạy single instance','B. Deploy trên Kubernetes với Helm charts — K8s tự động restart failed containers, multiple WebInspect sensor containers trong sensor pool đảm bảo scan tiếp tục nếu 1 sensor fail','C. Chỉ hỗ trợ Active-Passive Windows Cluster cho WebInspect','D. Cần mua thêm HA add-on license riêng biệt'],
+  ans:1,
+  exp:'ScanCentral DAST HA qua Kubernetes: Helm charts (helm-scancentral-dast-core và helm-scancentral-dast-scanner) deploy containers với K8s self-healing. Sensor pool với multiple WebInspect containers đảm bảo availability — nếu 1 sensor fail, scan routes sang sensor khác. "Dynamically scales up or down".'
+},{
+  id:53, cat:'dast', tag:'Incremental DAST Scan',
+  q:'Tính năng "Incremental Scan" trong ScanCentral DAST REST API giúp gì cho CI/CD pipeline?',
+  opts:['A. Incremental Scan tự động scan toàn bộ ứng dụng mỗi khi có thay đổi','B. Incremental Scan cho phép resume/extend scan từ điểm dừng trước — chỉ scan phần chưa được scan hoặc phần thay đổi, giảm thời gian scan trong CI/CD','C. Incremental Scan chỉ scan 10% ứng dụng để tiết kiệm thời gian','D. Không có tính năng Incremental Scan trong DAST'],
+  ans:1,
+  exp:'ScanCentral DAST Datasheet: "Incremental scans via REST". Incremental scan via REST API cho phép: scan lần đầu đầy đủ, các lần sau chỉ scan paths/endpoints mới hoặc thay đổi — rất quan trọng cho CI/CD pipeline cần scan nhanh mà vẫn đảm bảo coverage.'
+},{
+  id:54, cat:'dast', tag:'Compliance Reporting DAST',
+  q:'Khách hàng ngân hàng muốn generate báo cáo PCI DSS từ kết quả DAST scan. Làm thế nào?',
+  opts:['A. Export raw XML từ WebInspect và tự tay map vào PCI requirements','B. Trong ScanCentral DAST (qua SSC), chọn scan policy PCI DSS 4.0, kết quả được map tự động vào PCI controls, generate compliance report từ SSC dashboard','C. PCI DSS reporting chỉ khả dụng với SAST, không hỗ trợ DAST','D. Phải mua thêm Compliance module riêng biệt'],
+  ans:1,
+  exp:'ScanCentral DAST có PCI DSS 4.0 policy (được cập nhật trong version mới). Kết quả DAST được map vào PCI controls. SSC aggregate cả SAST và DAST results cho unified compliance reporting. Change log version 24.4 đề cập "PCI DSS 4.0 policy" mới.'
+},{
+  id:55, cat:'dast', tag:'Tình huống WebInspect Tools',
+  q:'Bạn cần test manual 1 request cụ thể trong WebInspect để xác nhận vulnerability. Công cụ nào trong WebInspect Tools suite phù hợp?',
+  opts:['A. Phải dùng Burp Suite bên ngoài vì WebInspect không có tool manual testing','B. WebInspect HTTP Editor (hoặc Request Inspector) cho phép craft, modify và send HTTP requests thủ công, xem response trực tiếp','C. Phải chạy toàn bộ scan và tìm request đó trong site tree','D. WebInspect không hỗ trợ manual testing, chỉ automated scan'],
+  ans:1,
+  exp:'WebInspect Tools Guide đề cập nhiều tools: HTTP Editor/Request Inspector cho manual HTTP testing, Web Macro Recorder cho recording login sequences, Traffic Monitor cho xem HTTP traffic. Đây là built-in tools, không cần công cụ bên ngoài.'
+},{
+  id:56, cat:'dast', tag:'Selenium Integration',
+  q:'Khi configure WebInspect để sử dụng Selenium scripts cho authentication, cần cấu hình gì trên WebDriver?',
+  opts:['A. Không cần cấu hình gì, Selenium tự detect WebInspect','B. Cần configure Selenium WebDriver để dùng WebInspect proxy (set HTTP proxy = WebInspect proxy host:port) — WebInspect capture traffic từ Selenium qua proxy','C. Cài WebInspect extension vào Chrome hoặc Firefox browser','D. Selenium chỉ hoạt động với WebInspect trên Windows, không hỗ trợ Linux'],
+  ans:1,
+  exp:'Theo WebInspect User Guide: để dùng Selenium với WebInspect, configure WebDriver với proxy pointing đến WebInspect. Ví dụ Python Chrome: set Proxy với http_proxy = os.environ.get("Fortify_WI_Proxy"). WebInspect capture toàn bộ traffic từ Selenium qua proxy.'
+},{
+  id:57, cat:'dast', tag:'Tính năng thế mạnh DAST',
+  q:'Điểm nào là thế mạnh DUYỆT NHẤT (unique) của Fortify WebInspect/ScanCentral DAST so với các DAST tool khác?',
+  opts:['A. Giá rẻ nhất trên thị trường','B. Tích hợp native SAST+DAST correlation trong cùng platform (SSC), FAST technology kết hợp functional test traffic với DAST, enterprise-grade sensor pool scaling, và OAST cho blind vulnerabilities','C. Chỉ hỗ trợ quét website thông thường, không phức tạp','D. Chỉ chạy trên Windows Desktop, không có server/cloud option'],
+  ans:1,
+  exp:'Unique strengths của Fortify DAST: (1) Native SAST+DAST correlation (không cần agent); (2) FAST — kết hợp functional test traffic + DAST coverage; (3) Enterprise sensor pool với auto-scaling; (4) OAST cho blind vulnerabilities; (5) SAST+DAST+SCA trong 1 platform (SSC); (6) Automated Authentication kể cả MFA/SMS.'
+},{
+  id:58, cat:'dast', tag:'Tư vấn khách hàng',
+  q:'Khách hàng hỏi: "DAST có thể thay thế hoàn toàn SAST không?". Câu trả lời kỹ thuật ĐÚNG là gì?',
+  opts:['A. Có, DAST mạnh hơn SAST, chỉ cần mua DAST là đủ','B. Không — SAST và DAST bổ sung cho nhau. SAST phát hiện lỗi code sớm (không cần app running, tìm được dead code paths, hardcoded secrets). DAST phát hiện runtime issues (authentication, config, business logic). Kết hợp cả hai cho coverage toàn diện','C. SAST tốt hơn DAST trong mọi trường hợp, không cần DAST','D. Chỉ cần SCA là đủ, không cần SAST hay DAST'],
+  ans:1,
+  exp:'Đây là câu hỏi tư vấn quan trọng: SAST và DAST cover các loại lỗ hổng khác nhau. SAST: code logic, data flow, không cần running app, phát hiện sớm. DAST: runtime behavior, real HTTP responses, authenticated flows. Best practice: SAST trong code review/build phase + DAST trong staging/pre-prod = comprehensive coverage. Fortify cung cấp cả 2 trong 1 platform.'
+},{
+  id:59, cat:'dast', tag:'Sensor Pool DAST',
+  q:'Khách hàng muốn chạy 10 DAST scan đồng thời. ScanCentral DAST cần cấu hình sensor pool như thế nào?',
+  opts:['A. Cần 1 server rất mạnh với 128 CPU cores cho tất cả 10 scan','B. Cần đủ WebInspect sensor instances trong pool để handle 10 concurrent scans — có thể 10 sensor containers riêng (mỗi sensor handle 1 scan) hoặc ít sensor hơn nếu mỗi sensor cấu hình multiple threads','C. ScanCentral DAST giới hạn tối đa 3 concurrent scans','D. Concurrent scans không hỗ trợ, phải queue và chạy lần lượt'],
+  ans:1,
+  exp:'ScanCentral DAST với "Scalable Dynamic Analysis Farm": sensor pool scale horizontally. Mỗi WebInspect sensor container handle scans; để 10 concurrent scans → cần đủ sensor capacity. K8s deployment cho phép auto-scale sensor containers theo demand của CI/CD pipeline.'
+},{
+  id:60, cat:'dast', tag:'Kiểm tra tổng hợp DAST',
+  q:'Một security team nhỏ cần quét 200 web application thường xuyên cho một enterprise lớn. Mô hình ScanCentral DAST nào phù hợp nhất?',
+  opts:['A. Mỗi application cần 1 WebInspect instance riêng — 200 WebInspect licenses','B. ScanCentral DAST trong SSC: small AppSec team quản lý centralized DAST farm, developer/app owner tự submit scan, sensor pool tự động scale theo demand — 1 platform cho 200 apps','C. Thuê 200 penetration tester manual cho từng app mỗi tháng','D. Chỉ scan được tối đa 50 app với ScanCentral DAST'],
+  ans:1,
+  exp:'ScanCentral DAST Datasheet: "ScanCentral DAST in SSC Allows Small Teams of AppSec to Deliver Scalable, Dynamic & Static Scanning Solutions to Large Team of Developers". Key: small AppSec team → quản lý → developer tự request scan → sensor pool xử lý → kết quả centralize trong SSC. "Be up and running in one hour".'
+}
+];
+
+/* ══════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════ */
+let answers = {}; // {qId: optionIndex}
+let currentFilter = 'all';
+
+const catMeta = {
+  sast: { label:'SAST', color:'var(--sast)', light:'rgba(0,200,255,0.15)' },
+  dast: { label:'DAST', color:'var(--dast)', light:'rgba(255,107,53,0.15)' },
+  sca:  { label:'SCA',  color:'var(--sca)',  light:'rgba(16,185,129,0.15)' },
+  ssm:  { label:'SSC',  color:'var(--ssm)',  light:'rgba(168,85,247,0.15)' },
+};
+
+/* ══════════════════════════════════════════════
+   BUILD UI
+══════════════════════════════════════════════ */
+function buildQuiz() {
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = '';
+
+  // Group by section
+  const sections = [
+    { key:'sast', title:'PHẦN 1: Fortify SAST — Static Application Security Testing', qs: QUESTIONS.filter(q=>q.cat==='sast') },
+    { key:'dast', title:'PHẦN 2: Fortify DAST — Dynamic Application Security Testing', qs: QUESTIONS.filter(q=>q.cat==='dast') },
+  ];
+
+  sections.forEach(sec => {
+    if (currentFilter !== 'all' && currentFilter !== sec.key) return;
+
+    // Section header
+    const hdr = document.createElement('div');
+    hdr.className = 'section-header';
+    hdr.innerHTML = `
+      <div class="section-line"></div>
+      <div class="section-badge ${sec.key}">◈ ${sec.title}</div>
+      <div class="section-line"></div>`;
+    container.appendChild(hdr);
+
+    sec.qs.forEach((q, i) => {
+      container.appendChild(buildCard(q, i + (sec.key==='dast'?30:0)));
+    });
+  });
+
+  buildFloatNav();
+  updateProgress();
+}
+
+function buildCard(q, globalIdx) {
+  const answered = answers[q.id] !== undefined;
+  const card = document.createElement('div');
+  card.className = `q-card${answered?' answered':''}`;
+  card.id = `q-${q.id}`;
+
+  const opts = q.opts.map((opt, i) => {
+    let cls = 'opt';
+    if (answered) {
+      cls += ' disabled';
+      if (i === answers[q.id]) {
+        cls += (i === q.ans) ? ' correct' : ' wrong';
+      } else if (i === q.ans) {
+        cls += ' show-correct';
+      }
+    }
+    return `<div class="${cls}" onclick="selectAnswer(${q.id},${i})">
+      <div class="opt-key">${String.fromCharCode(65+i)}</div>
+      <div class="opt-text">${opt.replace(/^[A-D]\.\s*/,'')}</div>
+    </div>`;
+  }).join('');
+
+  let explHtml = '';
+  if (answered) {
+    const correct = answers[q.id] === q.ans;
+    explHtml = `<div class="q-explain ${correct?'correct-exp':'wrong-exp'} show">
+      ${correct ? '✓ Chính xác!' : `✗ Đáp án đúng: <strong>${String.fromCharCode(65+q.ans)}</strong>.`}
+      &nbsp;${q.exp}
+    </div>`;
+  }
+
+  card.innerHTML = `
+    <div class="q-header">
+      <div class="q-number ${q.cat}">${q.id}</div>
+      <div class="q-meta">
+        <div class="q-tag">${catMeta[q.cat].label} · ${q.tag}</div>
+        <div class="q-text">${q.q}</div>
+      </div>
+    </div>
+    <div class="q-options">${opts}</div>
+    ${explHtml}
+  `;
+  return card;
+}
+
+function selectAnswer(qId, optIdx) {
+  if (answers[qId] !== undefined) return; // already answered
+  answers[qId] = optIdx;
+
+  // Rebuild just that card
+  const q = QUESTIONS.find(x=>x.id===qId);
+  const card = document.getElementById(`q-${qId}`);
+  const newCard = buildCard(q, 0);
+  card.replaceWith(newCard);
+
+  // Scroll explanation into view gently
+  setTimeout(()=>{
+    const el = document.getElementById(`q-${qId}`);
+    if(el) el.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }, 100);
+
+  updateProgress();
+  updateFloatNav(qId);
+}
+
+/* ══════════════════════════════════════════════
+   PROGRESS & SCORE
+══════════════════════════════════════════════ */
+function updateProgress() {
+  const total = QUESTIONS.length;
+  const done  = Object.keys(answers).length;
+  const pct   = Math.round(done/total*100);
+  const correct = Object.entries(answers).filter(([id,ans])=>QUESTIONS.find(q=>q.id==id).ans===ans).length;
+
+  document.getElementById('progressTxt').textContent = `${done} / ${total} câu`;
+  document.getElementById('progressPct').textContent = `${pct}%`;
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('liveScore').textContent = correct;
+}
+
+/* ══════════════════════════════════════════════
+   FLOAT NAV
+══════════════════════════════════════════════ */
+function buildFloatNav() {
+  const nav = document.getElementById('floatNav');
+  nav.innerHTML = '';
+  QUESTIONS.forEach(q=>{
+    const dot = document.createElement('div');
+    dot.className = 'fnav-dot';
+    dot.id = `nav-${q.id}`;
+    dot.title = `Câu ${q.id}`;
+    dot.onclick = ()=>{ document.getElementById(`q-${q.id}`)?.scrollIntoView({behavior:'smooth'}); };
+    nav.appendChild(dot);
+  });
+}
+
+function updateFloatNav(qId) {
+  const q = QUESTIONS.find(x=>x.id===qId);
+  const dot = document.getElementById(`nav-${qId}`);
+  if (!dot) return;
+  dot.className = 'fnav-dot ' + (answers[qId]===q.ans ? 'answered' : 'wrong-ans');
+}
+
+/* ══════════════════════════════════════════════
+   RESULT
+══════════════════════════════════════════════ */
+function showResult() {
+  const total = QUESTIONS.length;
+  const done  = Object.keys(answers).length;
+  const correct = Object.entries(answers).filter(([id,ans])=>QUESTIONS.find(q=>q.id==id).ans===ans).length;
+  const wrong = done - correct;
+  const skip = total - done;
+  const pct = Math.round(correct/total*100);
+
+  document.getElementById('resultScore').textContent = pct+'%';
+  document.getElementById('rCorrect').textContent = correct;
+  document.getElementById('rWrong').textContent = wrong;
+  document.getElementById('rSkip').textContent = skip;
+
+  const verdict = document.getElementById('resultVerdict');
+  if (pct >= 80) {
+    verdict.textContent = '✓ ĐẠT — Bạn đã đạt yêu cầu 80%';
+    verdict.className = 'result-verdict pass';
+  } else {
+    verdict.textContent = '✗ CHƯA ĐẠT — Cần đạt 80% để pass';
+    verdict.className = 'result-verdict fail';
+  }
+
+  // Cat breakdown
+  const breakdown = document.getElementById('catBreakdown');
+  const cats = ['sast','dast'];
+  breakdown.innerHTML = cats.map(cat=>{
+    const catQs = QUESTIONS.filter(q=>q.cat===cat);
+    const catCorrect = catQs.filter(q=>answers[q.id]===q.ans).length;
+    const catPct = Math.round(catCorrect/catQs.length*100);
+    const m = catMeta[cat];
+    return `<div class="cat-box">
+      <div class="cat-box-label" style="color:${m.color}">${m.label}</div>
+      <div class="cat-box-score" style="color:${m.color}">${catCorrect}/${catQs.length}</div>
+      <div class="cat-box-bar"><div class="cat-box-fill" style="width:${catPct}%;background:${m.color}"></div></div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('result-panel').style.display = 'block';
+  document.getElementById('result-panel').scrollIntoView({behavior:'smooth'});
+}
+
+/* ══════════════════════════════════════════════
+   RESET
+══════════════════════════════════════════════ */
+function resetQuiz() {
+  answers = {};
+  document.getElementById('result-panel').style.display = 'none';
+  buildQuiz();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ══════════════════════════════════════════════
+   FILTER
+══════════════════════════════════════════════ */
+function filterSection(cat) {
+  currentFilter = cat;
+  document.querySelectorAll('.cat-pill').forEach(p=>p.classList.remove('active'));
+  event.target.classList.add('active');
+  buildQuiz();
+}
+
+/* ══════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════ */
+buildQuiz();
+</script>
+</body>
+</html>

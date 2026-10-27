@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Netscout Arbor Sightline/TMS — Phân tích chuyên sâu cho Presales</title>
+<style>
+  :root {
+    --navy: #0a1628;
+    --deep: #0d2045;
+    --brand: #0057ff;
+    --accent: #00c8ff;
+    --gold: #f5a623;
+    --danger: #e8354a;
+    --success: #00c98a;
+    --surface: #111e35;
+    --surface2: #162440;
+    --surface3: #1d2f52;
+    --border: rgba(0,200,255,0.15);
+    --text: #d8e4f0;
+    --text-dim: #7d9cbf;
+    --white: #ffffff;
+    --font-display: 'Segoe UI', system-ui, sans-serif;
+    --font-mono: 'Courier New', monospace;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--navy);
+    color: var(--text);
+    font-family: var(--font-display);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ---- SIDEBAR NAV ---- */
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 260px; height: 100vh;
+    background: var(--deep);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    z-index: 100;
+    padding: 24px 0 40px;
+  }
+  #sidebar .logo {
+    padding: 0 20px 20px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  #sidebar .logo span {
+    display: block;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  #sidebar .logo h2 {
+    font-size: 16px;
+    color: var(--white);
+    font-weight: 700;
+  }
+  #sidebar nav a {
+    display: block;
+    padding: 8px 20px;
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 13px;
+    transition: all .2s;
+    border-left: 3px solid transparent;
+  }
+  #sidebar nav a:hover, #sidebar nav a.active {
+    color: var(--accent);
+    border-left-color: var(--accent);
+    background: rgba(0,200,255,0.05);
+  }
+  #sidebar nav .section-label {
+    padding: 16px 20px 4px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    opacity: 0.6;
+  }
+
+  /* ---- MAIN CONTENT ---- */
+  #main {
+    margin-left: 260px;
+    padding: 0 0 80px;
+  }
+
+  /* ---- HERO ---- */
+  .hero {
+    background: linear-gradient(135deg, #0a1628 0%, #0d2045 50%, #0a1f40 100%);
+    padding: 60px 60px 50px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0,87,255,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero .badge {
+    display: inline-block;
+    background: rgba(0,200,255,0.15);
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-size: 36px;
+    font-weight: 800;
+    color: var(--white);
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero p {
+    font-size: 16px;
+    color: var(--text-dim);
+    max-width: 680px;
+    margin-bottom: 32px;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .hero-stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 24px;
+    text-align: center;
+    min-width: 120px;
+  }
+  .hero-stat .val {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--accent);
+    display: block;
+  }
+  .hero-stat .lbl {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ---- SECTION CONTAINERS ---- */
+  .section {
+    padding: 50px 60px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section:last-child { border-bottom: none; }
+  .section-tag {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .section h2 {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--white);
+    margin: 28px 0 12px;
+  }
+  .section h3:first-child { margin-top: 0; }
+
+  /* ---- CARDS ---- */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    transition: border-color .2s;
+  }
+  .card:hover { border-color: var(--accent); }
+  .card .icon { font-size: 28px; margin-bottom: 12px; }
+  .card h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .card p {
+    font-size: 13px;
+    color: var(--text-dim);
+    line-height: 1.6;
+  }
+
+  /* ---- ALERT BOXES ---- */
+  .alert {
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    border-left: 4px solid;
+    font-size: 14px;
+  }
+  .alert-info { background: rgba(0,87,255,0.1); border-color: var(--brand); color: var(--text); }
+  .alert-warn { background: rgba(245,166,35,0.1); border-color: var(--gold); color: var(--text); }
+  .alert-danger { background: rgba(232,53,74,0.1); border-color: var(--danger); color: var(--text); }
+  .alert-success { background: rgba(0,201,138,0.1); border-color: var(--success); color: var(--text); }
+  .alert strong { color: var(--white); }
+
+  /* ---- TABLES ---- */
+  .table-wrap { overflow-x: auto; margin: 20px 0; border-radius: 10px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th {
+    background: var(--surface2);
+    color: var(--accent);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 12px 16px;
+    text-align: left;
+  }
+  td { padding: 11px 16px; border-top: 1px solid var(--border); vertical-align: top; }
+  tr:hover td { background: rgba(0,200,255,0.03); }
+  .badge-yes { color: var(--success); font-weight: 600; }
+  .badge-no { color: var(--danger); }
+  .badge-partial { color: var(--gold); }
+
+  /* ---- TAG PILLS ---- */
+  .pill {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    margin: 2px;
+  }
+  .pill-blue { background: rgba(0,87,255,0.2); color: #6aacff; border: 1px solid rgba(0,87,255,0.4); }
+  .pill-cyan { background: rgba(0,200,255,0.15); color: var(--accent); border: 1px solid rgba(0,200,255,0.3); }
+  .pill-gold { background: rgba(245,166,35,0.15); color: var(--gold); border: 1px solid rgba(245,166,35,0.3); }
+  .pill-green { background: rgba(0,201,138,0.15); color: var(--success); border: 1px solid rgba(0,201,138,0.3); }
+  .pill-red { background: rgba(232,53,74,0.15); color: #ff6b7a; border: 1px solid rgba(232,53,74,0.3); }
+
+  /* ---- ARCHITECTURE DIAGRAM ---- */
+  .arch-diagram {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    margin: 20px 0;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--text-dim);
+    line-height: 2;
+    white-space: pre;
+    overflow-x: auto;
+  }
+
+  /* ---- SWOT ---- */
+  .swot-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    margin: 20px 0;
+  }
+  .swot-cell {
+    padding: 24px;
+    background: var(--surface);
+  }
+  .swot-cell.strengths { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .swot-cell.weaknesses { border-bottom: 1px solid var(--border); }
+  .swot-cell.opportunities { border-right: 1px solid var(--border); }
+  .swot-cell h4 {
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .swot-cell.strengths h4 { color: var(--success); }
+  .swot-cell.weaknesses h4 { color: var(--danger); }
+  .swot-cell.opportunities h4 { color: var(--brand); }
+  .swot-cell.threats h4 { color: var(--gold); }
+  .swot-cell ul { list-style: none; padding: 0; }
+  .swot-cell ul li { font-size: 13px; color: var(--text-dim); padding: 3px 0; padding-left: 16px; position: relative; }
+  .swot-cell ul li::before { content: '›'; position: absolute; left: 0; color: var(--text-dim); }
+
+  /* ---- QA ACCORDION ---- */
+  .qa-item {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin: 8px 0;
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .qa-q {
+    padding: 16px 20px;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--white);
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    transition: background .2s;
+  }
+  .qa-q:hover { background: var(--surface2); }
+  .qa-q .arrow { color: var(--accent); font-size: 18px; transition: transform .3s; }
+  .qa-q.open .arrow { transform: rotate(180deg); }
+  .qa-a {
+    display: none;
+    padding: 0 20px 18px;
+    font-size: 13.5px;
+    color: var(--text-dim);
+    line-height: 1.75;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+  }
+  .qa-a.visible { display: block; }
+
+  /* ---- TECH SPEC TABLE ---- */
+  .spec-row-header {
+    background: var(--surface3) !important;
+    color: var(--accent) !important;
+    font-weight: 700;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ---- TIMELINE ---- */
+  .timeline { position: relative; padding-left: 28px; margin: 20px 0; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 6px; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--brand), var(--accent));
+  }
+  .tl-item { position: relative; margin-bottom: 24px; }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -24px; top: 6px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--navy);
+  }
+  .tl-item h4 { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+  .tl-item p { font-size: 13px; color: var(--text-dim); }
+
+  /* ---- REF LIST ---- */
+  .ref-list { list-style: none; padding: 0; }
+  .ref-list li {
+    padding: 10px 16px;
+    border-left: 3px solid var(--brand);
+    background: var(--surface);
+    margin: 6px 0;
+    border-radius: 0 8px 8px 0;
+    font-size: 13px;
+    color: var(--text-dim);
+  }
+  .ref-list li strong { color: var(--white); }
+
+  /* ---- KEY DIFFERENTIATOR ---- */
+  .key-diff {
+    background: linear-gradient(135deg, rgba(0,87,255,0.15), rgba(0,200,255,0.08));
+    border: 1px solid rgba(0,200,255,0.3);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 12px 0;
+    position: relative;
+  }
+  .key-diff .kd-badge {
+    position: absolute;
+    top: -10px; right: 16px;
+    background: var(--brand);
+    color: #fff;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 700;
+  }
+  .key-diff h4 { color: var(--accent); font-size: 15px; margin-bottom: 6px; }
+  .key-diff p { font-size: 13.5px; color: var(--text-dim); }
+
+  /* ---- COMPETITOR TABLE ---- */
+  .comp-winner { background: rgba(0,200,255,0.05) !important; }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 900px) {
+    #sidebar { display: none; }
+    #main { margin-left: 0; }
+    .section { padding: 32px 20px; }
+    .hero { padding: 32px 20px; }
+    .hero h1 { font-size: 24px; }
+    .swot-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside id="sidebar">
+  <div class="logo">
+    <span>Presales Research</span>
+    <h2>Netscout Sightline/TMS</h2>
+  </div>
+  <nav>
+    <div class="section-label">Bối cảnh thị trường</div>
+    <a href="#s-painpoint">Painpoints khách hàng</a>
+    <a href="#s-market">Thị trường & đối thủ</a>
+
+    <div class="section-label">Về Netscout</div>
+    <a href="#s-company">Giới thiệu Netscout</a>
+    <a href="#s-solution">Giới thiệu giải pháp</a>
+
+    <div class="section-label">Kỹ thuật chuyên sâu</div>
+    <a href="#s-features-basic">Tính năng cơ bản DDoS</a>
+    <a href="#s-features-deep">Tính năng chuyên sâu</a>
+    <a href="#s-differentiator">Điểm độc đáo</a>
+    <a href="#s-architecture">Kiến trúc & triển khai</a>
+    <a href="#s-license">License & Sizing</a>
+
+    <div class="section-label">Phân tích chiến lược</div>
+    <a href="#s-swot">SWOT Analysis</a>
+    <a href="#s-benefits">Lợi ích giải pháp</a>
+    <a href="#s-ranking">Xếp hạng thị trường</a>
+    <a href="#s-target">Khách hàng mục tiêu VN</a>
+
+    <div class="section-label">Technical Spec</div>
+    <a href="#s-techspec">Bảng Technical Spec</a>
+
+    <div class="section-label">Tình huống & Sales</div>
+    <a href="#s-qa">Câu hỏi thường gặp</a>
+    <a href="#s-references">Tài liệu tham chiếu</a>
+  </nav>
+</aside>
+
+<!-- MAIN -->
+<div id="main">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="badge">Presales Intelligence Brief · Bảo mật mạng · 2025/2026</div>
+  <h1>Netscout <span>Arbor Sightline</span> &amp; TMS<br>Phân tích chuyên sâu giải pháp phát hiện &amp; ngăn chặn DDoS</h1>
+  <p>Tài liệu nghiên cứu chiến lược dành cho Presales Engineer và Solution Consultant. Bao gồm kỹ thuật, license, sizing, cạnh tranh, tình huống bán hàng và technical spec tham chiếu.</p>
+  <div class="hero-stats">
+    <div class="hero-stat"><span class="val">800Tbps</span><span class="lbl">ATLAS giám sát</span></div>
+    <div class="hero-stat"><span class="val">50%</span><span class="lbl">Internet toàn cầu</span></div>
+    <div class="hero-stat"><span class="val">40Tbps</span><span class="lbl">Năng lực mitigation</span></div>
+    <div class="hero-stat"><span class="val">#2</span><span class="lbl">DDoS market rank</span></div>
+    <div class="hero-stat"><span class="val">25+</span><span class="lbl">Năm kinh nghiệm</span></div>
+  </div>
+</div>
+
+<!-- SECTION 1: PAINPOINTS -->
+<div class="section" id="s-painpoint">
+  <div class="section-tag">Bối cảnh nhu cầu</div>
+  <h2>1. Painpoints thực tế của khách hàng — Lý do phải trang bị DDoS Protection</h2>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="icon">🌐</div>
+      <h4>Tấn công DDoS ngày càng lớn &amp; phức tạp</h4>
+      <p>Các cuộc tấn công volumetric vượt Tbps, multi-vector (kết hợp SYN flood + UDP reflection + L7) diễn ra liên tục. ISP và doanh nghiệp không có công cụ phát hiện đủ sớm.</p>
+    </div>
+    <div class="card">
+      <div class="icon">💸</div>
+      <h4>Gián đoạn dịch vụ = thiệt hại tài chính trực tiếp</h4>
+      <p>Một giờ downtime của ISP hoặc nhà cung cấp dịch vụ fintech/banking có thể gây thiệt hại hàng tỷ đồng. DDoS là vũ khí cạnh tranh không lành mạnh phổ biến.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🔍</div>
+      <h4>Thiếu visibility toàn mạng</h4>
+      <p>Không biết traffic đang chạy ở đâu, bao nhiêu, từ nguồn nào. Không phát hiện được bất thường sớm, chỉ biết mạng bị tấn công khi dịch vụ đã ngã.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🤖</div>
+      <h4>Botnet IoT &amp; amplification attack</h4>
+      <p>Hàng triệu thiết bị IoT bị lây nhiễm, các dịch vụ NTP/DNS/Memcached/SSDP bị lạm dụng làm reflector khuếch đại gấp hàng trăm lần. Rất khó lọc bằng firewall thông thường.</p>
+    </div>
+    <div class="card">
+      <div class="icon">⚖️</div>
+      <h4>Nghĩa vụ pháp lý &amp; SLA với khách hàng</h4>
+      <p>ISP và cloud provider cam kết SLA uptime 99.9%+. Không có hệ thống phòng chống DDoS là vi phạm cam kết. Cơ quan nhà nước (Thông tư 06, NĐ13) yêu cầu bảo vệ hạ tầng mạng.</p>
+    </div>
+    <div class="card">
+      <div class="icon">📈</div>
+      <h4>Cơ hội kinh doanh dịch vụ bảo mật</h4>
+      <p>ISP có thể cung cấp DDoS Managed Service thu phí hàng tháng cho khách hàng doanh nghiệp. Không có platform như Sightline/TMS thì không thể cung cấp dịch vụ có chất lượng.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🧩</div>
+      <h4>BGP hijack &amp; routing anomaly</h4>
+      <p>Cướp prefix BGP (route leak/hijack) gây mất traffic bí mật, khó phát hiện nếu không có công cụ phân tích routing chuyên sâu theo thời gian thực.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🚫</div>
+      <h4>Firewall &amp; IPS truyền thống không đủ</h4>
+      <p>Firewall stateful bị knock out bởi các cuộc tấn công volumetric. IPS không nhìn ra mô hình toàn mạng (network-wide). Cần một lớp protection khác biệt ở tầng core/backbone.</p>
+    </div>
+  </div>
+
+  <div class="alert alert-warn">
+    <strong>Thực tế thị trường Việt Nam:</strong> Các ISP lớn (VNPT, Viettel, FPT, CMC, SCTV), Data Center, Banking/Fintech, Telco đang là mục tiêu tấn công DDoS thường xuyên. Theo thống kê VNCERT, số cuộc tấn công DDoS vào Việt Nam tăng trung bình 40-60% mỗi năm. Giai đoạn dịch COVID-19 và sau đó, hạ tầng số bùng nổ nhưng bảo mật không theo kịp.
+  </div>
+</div>
+
+<!-- SECTION 2: MARKET -->
+<div class="section" id="s-market">
+  <div class="section-tag">Bối cảnh cạnh tranh</div>
+  <h2>2. Hiện trạng thị trường giải pháp phát hiện &amp; chống DDoS</h2>
+
+  <p style="margin-bottom: 20px; color: var(--text-dim);">Thị trường DDoS Protection toàn cầu dự kiến tăng từ <strong style="color:var(--accent)">5.8 tỷ USD (2025)</strong> lên 10.4 tỷ USD vào 2030 (CAGR 12.3%). Các giải pháp cạnh tranh trực tiếp với Netscout Arbor:</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>Hãng / Giải pháp</th>
+        <th>Định vị chính</th>
+        <th>Phù hợp cho</th>
+        <th>Điểm mạnh</th>
+        <th>Hạn chế vs Netscout</th>
+      </tr></thead>
+      <tbody>
+        <tr class="comp-winner">
+          <td><strong style="color:var(--accent)">Netscout Arbor<br>Sightline + TMS</strong></td>
+          <td>On-prem / Hybrid; Chuyên sâu ISP, SP, Enterprise lớn</td>
+          <td>ISP, Telco, Data Center, MSSP, Large Enterprise</td>
+          <td>ATLAS intelligence, surgical mitigation, SP-grade, 40+ năm BGP deep visibility</td>
+          <td>— (đây là sản phẩm phân tích)</td>
+        </tr>
+        <tr>
+          <td><strong>Cloudflare Magic Transit / DDoS</strong></td>
+          <td>Cloud-based, CDN + DDoS, anycast network</td>
+          <td>Website, SaaS, mid-market, cloud-native</td>
+          <td>Dễ triển khai, giá tốt, anycast toàn cầu, CDN tích hợp</td>
+          <td>Không có on-prem, không phù hợp ISP core network, thiếu BGP/flow visibility sâu</td>
+        </tr>
+        <tr>
+          <td><strong>Radware DefensePro / Cloud DDoS</strong></td>
+          <td>On-prem behavior-based + cloud hybrid</td>
+          <td>Enterprise, Data Center, Service Provider</td>
+          <td>Behavioral detection, real-time signature, hybrid cloud</td>
+          <td>Quy mô intelligence thấp hơn ATLAS, ít khách hàng ISP-tier</td>
+        </tr>
+        <tr>
+          <td><strong>Imperva DDoS</strong></td>
+          <td>Cloud-based WAF + DDoS protection</td>
+          <td>Web application, e-commerce, enterprise</td>
+          <td>WAF tích hợp, dashboard dễ dùng, bảo vệ app layer tốt</td>
+          <td>Chỉ cloud, không có on-prem scrubbing, không phù hợp core ISP</td>
+        </tr>
+        <tr>
+          <td><strong>Akamai Prolexic</strong></td>
+          <td>Cloud scrubbing center (Managed DDoS)</td>
+          <td>Large enterprise, Finance, Government</td>
+          <td>15+ Tbps scrubbing capacity, global PoP</td>
+          <td>Không có on-prem visibility platform, GRE tunnel overhead</td>
+        </tr>
+        <tr>
+          <td><strong>F5 Distributed Cloud</strong></td>
+          <td>App-layer DDoS + WAF + Bot protection</td>
+          <td>Enterprise, Financial services</td>
+          <td>Tùy chỉnh config cao, tích hợp WAF tốt</td>
+          <td>Không có network-level visibility rộng như Sightline, không có BGP analytics</td>
+        </tr>
+        <tr>
+          <td><strong>Fortinet FortiDDoS</strong></td>
+          <td>On-prem appliance + FortiOS ecosystem</td>
+          <td>Enterprise, Data Center</td>
+          <td>Tích hợp Fortinet Security Fabric, giá cạnh tranh</td>
+          <td>Không có global threat intelligence tương đương ATLAS, ít phù hợp ISP-grade</td>
+        </tr>
+        <tr>
+          <td><strong>NSFOCUS ADS</strong></td>
+          <td>On-prem + Cloud, phổ biến Asia Pacific</td>
+          <td>ISP, Enterprise tại Trung Quốc và APAC</td>
+          <td>Giá cạnh tranh APAC, hỗ trợ tiếng địa phương</td>
+          <td>Hạn chế về global intelligence, ít được tín nhiệm ở thị trường enterprise phương Tây</td>
+        </tr>
+        <tr>
+          <td><strong>Huawei AntiDDoS</strong></td>
+          <td>Appliance + Cloud (Huawei ecosystem)</td>
+          <td>Telco, ISP tại một số thị trường APAC/Châu Phi</td>
+          <td>Tích hợp tốt với gear Huawei, giá cạnh tranh</td>
+          <td>Hạn chế về intelligence độc lập, rủi ro địa chính trị với khách hàng nhất định</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="alert alert-info">
+    <strong>Định vị rõ ràng:</strong> Netscout Arbor Sightline/TMS là giải pháp <em>on-premises tier-1</em> cho Service Provider và Large Enterprise. Đây là phân khúc mà Cloudflare, Imperva, Akamai không thể thay thế vì không cung cấp deep network visibility qua flow/BGP, không tích hợp vào core routing infrastructure của ISP.
+  </div>
+</div>
+
+<!-- SECTION 3: COMPANY -->
+<div class="section" id="s-company">
+  <div class="section-tag">Về hãng</div>
+  <h2>3. Giới thiệu về Netscout Systems &amp; Arbor Networks</h2>
+
+  <div class="card-grid">
+    <div class="card" style="grid-column: span 2;">
+      <h4>🏢 NETSCOUT Systems, Inc.</h4>
+      <p>Trụ sở: Westford, Massachusetts, USA. Thành lập 1984. Niêm yết NASDAQ: NTCT. Doanh thu ~900 triệu USD/năm. Hiện diện tại 32+ quốc gia. Arbor Networks được NETSCOUT mua lại năm 2015, hợp nhất thành bộ giải pháp bảo mật và observability hàng đầu thế giới.</p>
+    </div>
+    <div class="card">
+      <h4>🌐 Công nghệ cốt lõi: ATLAS</h4>
+      <p>Active Threat Level Analysis System — mạng lưới cảm biến toàn cầu thu thập &amp; phân tích dữ liệu từ 550+ khách hàng, đại diện ~50% traffic internet toàn cầu (800+ Tbps giám sát thực tế).</p>
+    </div>
+    <div class="card">
+      <h4>🔬 ASERT Team</h4>
+      <p>ATLAS Security Engineering &amp; Response Team — đội nghiên cứu bảo mật hàng đầu thế giới, cộng tác với CERT chính phủ toàn cầu, liên tục cập nhật threat intelligence vào sản phẩm.</p>
+    </div>
+    <div class="card">
+      <h4>📊 Vị thế thị trường</h4>
+      <p>Hơn 500 nhà mạng và ISP trên thế giới dùng Arbor. Gartner, Forrester và IDC liên tục đề cập Netscout là "market leader" trong DDoS Protection cho Service Provider và Large Enterprise.</p>
+    </div>
+  </div>
+
+  <h3>Portfolio sản phẩm Netscout (ngoài Sightline/TMS)</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Sản phẩm</th><th>Mô tả</th><th>Phân khúc</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Arbor Edge Defense (AED)</strong></td><td>Thiết bị inline, always-on DDoS protection tại perimeter. Phù hợp enterprise vừa-lớn, data center edge.</td><td>Enterprise, DC Edge</td></tr>
+        <tr><td><strong>Arbor Cloud</strong></td><td>Cloud scrubbing service, 15+ Tbps capacity tại 16 scrubbing center toàn cầu. Dùng hybrid với AED qua Cloud Signaling.</td><td>Enterprise, Hybrid Cloud</td></tr>
+        <tr><td><strong>Arbor Insight</strong></td><td>Module traffic engineering và analytics nâng cao tích hợp vào Sightline. Tối ưu routing, peering, MPLS VPN.</td><td>Service Provider, ISP</td></tr>
+        <tr><td><strong>nGeniusONE</strong></td><td>Network performance management &amp; service assurance platform. Observability từ L2-L7.</td><td>Enterprise, Telco</td></tr>
+        <tr><td><strong>Omnis CyberStream</strong></td><td>NDR (Network Detection &amp; Response) — deep packet inspection và threat hunting trên wire-speed.</td><td>Enterprise SOC</td></tr>
+        <tr><td><strong>InfiniStreamNG</strong></td><td>Full-packet capture probe. Tích hợp Smart Data vào Sightline cung cấp L7 visibility.</td><td>Service Provider, Large Enterprise</td></tr>
+        <tr><td><strong>ATLAS Intelligence Feed (AIF)</strong></td><td>Subscription threat intelligence, cung cấp cho cả Sightline và TMS theo dịch vụ hàng năm.</td><td>Add-on tất cả phân khúc</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SECTION 4: SOLUTION INTRO -->
+<div class="section" id="s-solution">
+  <div class="section-tag">Tổng quan giải pháp</div>
+  <h2>4. Giới thiệu giải pháp Arbor Sightline / TMS</h2>
+
+  <h3>4.1 Arbor Sightline — Nền tảng phát hiện &amp; visibility</h3>
+  <p style="margin-bottom:16px; color: var(--text-dim);">Arbor Sightline là <em>platform giám sát lưu lượng mạng diện rộng (network-wide traffic intelligence)</em> dành cho Service Provider và Large Enterprise. Thu thập và phân tích dữ liệu flow (NetFlow v5/v9, IPFIX, sFlow, J-Flow) cùng BGP routing từ toàn bộ cơ sở hạ tầng mạng, chuyển đổi dữ liệu thô thành operational insights.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <h4>📡 Network Traffic Visibility</h4>
+      <p>Thu thập flow từ tất cả routers, giám sát đến 200,000 interfaces, phân tích 48 triệu flow/giây (non-sampled).</p>
+    </div>
+    <div class="card">
+      <h4>🛡️ DDoS Detection</h4>
+      <p>Phát hiện tự động tấn công volumetric, protocol, application-layer theo threshold cấu hình linh hoạt theo managed object.</p>
+    </div>
+    <div class="card">
+      <h4>🗺️ BGP Routing Analysis</h4>
+      <p>Phân tích BGP routing table (25 triệu routes), phát hiện BGP hijack, route leak, định tuyến bất thường theo thời gian thực.</p>
+    </div>
+    <div class="card">
+      <h4>📊 Business Analytics</h4>
+      <p>Báo cáo traffic theo khách hàng, geographic, ASN, OTT service. Hỗ trợ capacity planning, peering decision, dịch vụ VPN.</p>
+    </div>
+  </div>
+
+  <h3>4.2 Arbor TMS — Engine xử lý &amp; chặn tấn công</h3>
+  <p style="margin-bottom:16px; color: var(--text-dim);">Arbor TMS là <em>scrubbing device</em> — nhận traffic bị redirect từ Sightline, loại bỏ chính xác traffic tấn công ("surgical mitigation"), rồi tái đưa traffic sạch trở về mạng mà không gián đoạn user hợp lệ.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <h4>⚡ Surgical Mitigation</h4>
+      <p>Chỉ loại bỏ traffic attack, không ảnh hưởng user thật. Latency &lt;80μs cho hardware appliance.</p>
+    </div>
+    <div class="card">
+      <h4>🧠 Adaptive DDoS Protection (ADP)</h4>
+      <p>Kết hợp threat intelligence + machine learning để phát hiện &amp; track attack khi nó thay đổi chiến thuật theo thời gian thực.</p>
+    </div>
+    <div class="card">
+      <h4>📦 Multi-platform</h4>
+      <p>Appliance 2U (8100, HD1000, 2600, 2800), VMware/KVM virtual, bare-metal. Từ 1 Gbps đến 500 Gbps/thiết bị.</p>
+    </div>
+    <div class="card">
+      <h4>🔗 Tích hợp Sightline</h4>
+      <p>Sightline phát hiện → tự động hoặc thủ công điều hướng traffic tới TMS → TMS scrub → re-inject traffic sạch về network.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5: BASIC FEATURES -->
+<div class="section" id="s-features-basic">
+  <div class="section-tag">Kỹ thuật cơ bản</div>
+  <h2>5. Các tính năng cơ bản của giải pháp phát hiện tấn công DDoS</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th>Tính năng</th>
+        <th>Mô tả kỹ thuật</th>
+        <th>Trong Netscout?</th>
+      </tr></thead>
+      <tbody>
+        <tr><td><strong>Flow-based traffic monitoring</strong></td><td>Thu thập NetFlow/IPFIX/sFlow từ routers, phân tích volume, top talkers, protocols, ports</td><td class="badge-yes">✓ Cốt lõi Sightline</td></tr>
+        <tr><td><strong>Threshold-based detection</strong></td><td>Cảnh báo khi traffic vượt ngưỡng định nghĩa (bps, pps, connections/s) theo managed object</td><td class="badge-yes">✓ Sightline</td></tr>
+        <tr><td><strong>Anomaly detection</strong></td><td>Phát hiện bất thường so với baseline traffic lịch sử (profiled detection)</td><td class="badge-yes">✓ Profiled detection</td></tr>
+        <tr><td><strong>Multi-vector attack detection</strong></td><td>Nhận biết đồng thời nhiều loại attack (SYN flood + UDP ampl + HTTP flood) trong một alert</td><td class="badge-yes">✓ Sightline + TMS</td></tr>
+        <tr><td><strong>BGP Blackholing (RTBH)</strong></td><td>Hướng dẫn router null-route traffic đến victim IP (toàn bộ traffic bị drop)</td><td class="badge-yes">✓ Sightline</td></tr>
+        <tr><td><strong>BGP Flowspec</strong></td><td>Thông báo rule lọc traffic chi tiết (source/dest/port/protocol) cho routers tại edge</td><td class="badge-yes">✓ Sightline + Sentinel</td></tr>
+        <tr><td><strong>Traffic diversion to scrubber</strong></td><td>Redirect traffic đến scrubbing device (TMS) qua BGP announcement, xử lý rồi re-inject</td><td class="badge-yes">✓ Sightline → TMS</td></tr>
+        <tr><td><strong>Alert &amp; notification</strong></td><td>Cảnh báo real-time qua email, SNMP, API khi phát hiện tấn công</td><td class="badge-yes">✓ Sightline</td></tr>
+        <tr><td><strong>Dashboard &amp; reporting</strong></td><td>Giao diện web hiển thị trạng thái mạng, alert, traffic analysis, lịch sử mitigation</td><td class="badge-yes">✓ Sightline UI</td></tr>
+        <tr><td><strong>Managed object (customer scoping)</strong></td><td>Định nghĩa "đối tượng được bảo vệ" theo IP prefix, ASN, customer để phân tích riêng</td><td class="badge-yes">✓ Lên đến 20,000 MO</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SECTION 6: DEEP FEATURES -->
+<div class="section" id="s-features-deep">
+  <div class="section-tag">Kỹ thuật nâng cao</div>
+  <h2>6. Tính năng chuyên sâu của Netscout Sightline/TMS</h2>
+
+  <h3>6.1 Arbor Sightline — Tính năng Detection &amp; Visibility</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tính năng</th><th>Chi tiết kỹ thuật</th><th>Ý nghĩa với khách hàng</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Profiled Host Detection</strong></td><td>Xây dựng baseline traffic cho từng host/prefix. Cảnh báo khi lệch chuẩn. Tự học traffic pattern.</td><td>Giảm false positive, phát hiện sớm attack tinh vi</td></tr>
+        <tr><td><strong>BGP routing analysis</strong></td><td>Giám sát BGP table 25M routes, phát hiện route hijack, prefix de-aggregation, origin change</td><td>Phát hiện BGP attack/leak mà IPS/FW không thể</td></tr>
+        <tr><td><strong>Flowspec orchestration (Sentinel)</strong></td><td>Tự động push Flowspec rules tới toàn bộ router trong mạng. Single pane of glass cho Flowspec reporting</td><td>Block attack tại edge mà không cần scrubbing, tiết kiệm bandwidth</td></tr>
+        <tr><td><strong>Multi-tenant customer portal</strong></td><td>Giao diện self-service cho khách hàng end-user xem traffic &amp; alert của họ. Portal API RESTful</td><td>ISP có thể bán DDoS managed service có giá trị gia tăng</td></tr>
+        <tr><td><strong>Cloud Signaling</strong></td><td>Khi on-prem TMS bị quá tải, tự động báo hiệu lên Arbor Cloud scrubbing center</td><td>Hybrid protection không bao giờ bị overwhelm</td></tr>
+        <tr><td><strong>OTT/L7 service visibility</strong></td><td>Phân loại traffic theo ứng dụng OTT (Netflix, YouTube, CDN, AWS), kết hợp ATLAS + DNS</td><td>Hỗ trợ peering decision, tối ưu transit cost</td></tr>
+        <tr><td><strong>AIF Threat Intelligence</strong></td><td>Nhận IP reputation lists, botnet C&C, DDoS reflector từ ATLAS (cập nhật liên tục)</td><td>Phát hiện infested host trong mạng, bảo vệ trước khi bị dùng làm bot</td></tr>
+        <tr><td><strong>Alert Characterization</strong></td><td>Phân tích chi tiết alert: misuse type, source geo, protocol breakdown, packet size distribution</td><td>SOC phân tích nhanh, ra quyết định mitigation chính xác</td></tr>
+        <tr><td><strong>RESTful API</strong></td><td>Full API cho automation: lấy alert, tạo mitigation, managed objects, integrate SIEM/SOAR</td><td>Tích hợp vào workflow vận hành, tự động hóa response</td></tr>
+        <tr><td><strong>Signaling inter-network</strong></td><td>Chia sẻ attack data giữa các ISP khác nhau để cùng phòng thủ (Sightline Signaling)</td><td>Chặn DDoS gần nguồn, trước khi traffic vào mạng</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>6.2 Arbor TMS — Countermeasures Portfolio</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Nhóm countermeasure</th><th>Kỹ thuật cụ thể</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Packet Filtering</strong></td><td>Invalid Packets, IP Filter Lists, Black/White Lists, Packet Header Filtering, IP Location Filter</td></tr>
+        <tr><td><strong>TCP/SYN Protection</strong></td><td>Zombie Detection, TCP SYN Authentication (cookie), TCP Connection Limiting, TCP SYN Flood, Spoofed SYN flood</td></tr>
+        <tr><td><strong>UDP Amplification</strong></td><td>UDP Reflection/Amplification Protection (NTP, DNS, SSDP, CharGen, Memcached, L2TP, RIPv1, SNMP, v.v)</td></tr>
+        <tr><td><strong>HTTP/HTTPS</strong></td><td>HTTP Authentication (CAPTCHA/302), HTTP Malformed, HTTP Rate Limiting, HTTP/URL RegEx, Slow HTTP attacks</td></tr>
+        <tr><td><strong>DNS Protection</strong></td><td>DNS Authentication, DNS Malformed, DNS Rate Limiting, DNS RegEx, DNS Cache Poisoning</td></tr>
+        <tr><td><strong>SSL/TLS</strong></td><td>SSL Negotiation, Malformed SSL, SSL Renegotiation, SSL Session Floods, HTTPS Protocol Attacks</td></tr>
+        <tr><td><strong>SIP/VoIP</strong></td><td>SIP Malformed, SIP Request Limiting, SIP Invite Floods</td></tr>
+        <tr><td><strong>Application Layer</strong></td><td>Payload Regular Expression Filter, Protocol Baselines, Inline Filter, Blacklist Fingerprints</td></tr>
+        <tr><td><strong>Rate Limiting &amp; Shaping</strong></td><td>Per Connection Flood Protection, Shaping, IP Location Policing</td></tr>
+        <tr><td><strong>AI/ML — ADP</strong></td><td>Adaptive DDoS Protection: ML tự động nhận diện attack pattern mới, điều chỉnh countermeasure theo thời gian thực</td></tr>
+        <tr><td><strong>AIF Integration</strong></td><td>DDoS IP Reputation (&gt;1.5M indicators), DDoS Attack Payload signatures, TMS Mitigation Templates từ ASERT</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>6.3 Deployment Modes của TMS</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Mode</th><th>Cách hoạt động</th><th>Use case</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Out-of-band Diversion/Reinjection</strong></td><td>Traffic bình thường đi qua router. Khi attack, Sightline điều hướng BGP (divert) vào TMS, sau scrub re-inject về</td><td>SP core network — phổ biến nhất</td></tr>
+        <tr><td><strong>Inline Active</strong></td><td>Toàn bộ traffic luôn đi qua TMS, TMS luôn lọc</td><td>Data center edge, cần always-on protection</td></tr>
+        <tr><td><strong>Inline Monitoring</strong></td><td>TMS copy traffic (bypass mode), không can thiệp, chỉ quan sát</td><td>Giai đoạn triển khai &amp; test</td></tr>
+        <tr><td><strong>SPAN Port</strong></td><td>Nhận traffic từ SPAN/mirror port của switch/router</td><td>Visibility-only, không mitigation</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SECTION 7: DIFFERENTIATORS -->
+<div class="section" id="s-differentiator">
+  <div class="section-tag">Lợi thế cạnh tranh</div>
+  <h2>7. Điểm mạnh công nghệ độc đáo của Netscout — Unique Features</h2>
+
+  <div class="key-diff">
+    <div class="kd-badge">KEY DIFFERENTIATOR #1</div>
+    <h4>ATLAS Global Threat Intelligence — Không ai có được</h4>
+    <p>NETSCOUT giám sát 800+ Tbps traffic internet thực tế từ 550+ deployment, đại diện ~50% global internet. Chỉ Netscout có loại intelligence này. ASERT liên tục phân tích DDoS attack data toàn cầu, cung cấp danh sách reflector/botnet chính xác đến từng source:port (1.5+ triệu IP indicators), thay vì chặn cả block/protocol. Đối thủ không thể sao chép ATLAS vì đây là lợi thế network effect tích lũy qua 20+ năm.</p>
+  </div>
+
+  <div class="key-diff">
+    <div class="kd-badge">KEY DIFFERENTIATOR #2</div>
+    <h4>Surgical Mitigation — Lọc chính xác, không cắt user hợp lệ</h4>
+    <p>TMS không chặn toàn bộ traffic đến victim (như Blackholing). Thay vào đó, dùng hàng chục countermeasure kết hợp AIF để chỉ drop packet attack. Ví dụ: NTP reflection attack — thay vì block toàn bộ UDP/123, Netscout chỉ block ~250K IP đang thực sự thực hiện attack (từ 9M+ open NTP reflectors). Đây là điểm mà đối thủ như NSFOCUS, FortiDDoS không có intelligence để làm được.</p>
+  </div>
+
+  <div class="key-diff">
+    <div class="kd-badge">KEY DIFFERENTIATOR #3</div>
+    <h4>Sightline Sentinel — Orchestrated Network Defense</h4>
+    <p>Sentinel cho phép Sightline điều phối toàn bộ tài nguyên mạng (multi-vendor routers, Flowspec, TMS) để chặn attack một cách có chiến lược. Single pane of glass cho toàn bộ Flowspec traffic trên mạng. Tính năng inter-network signaling cho phép ISP chia sẻ attack signature với ISP khác để chặn gần source. Không có competitor nào cung cấp tích hợp inter-carrier coordination ở cấp này.</p>
+  </div>
+
+  <div class="key-diff">
+    <div class="kd-badge">KEY DIFFERENTIATOR #4</div>
+    <h4>Scale chưa từng có: 40 Tbps mitigation từ single pane of glass</h4>
+    <p>Một deployment Sightline có thể quản lý tới 100 appliances TMS, tổng cộng 40 Tbps mitigation capacity. HD1000 appliance đơn lẻ đạt 400 Gbps. Không có on-prem DDoS solution nào trên thị trường đạt tầm này.</p>
+  </div>
+
+  <div class="key-diff">
+    <div class="kd-badge">KEY DIFFERENTIATOR #5</div>
+    <h4>BGP + Flow Correlation — Thấu hiểu mạng từ bên trong</h4>
+    <p>Sightline không chỉ là DDoS detector — nó là platform toàn diện giám sát BGP routing (25M routes) và flow data (48M fps) đồng thời. Khi attack xảy ra, operator hiểu rõ traffic đang vào từ AS nào, qua interface nào, đến customer nào. Mức độ context này giúp ra quyết định mitigation chính xác gấp nhiều lần so với chỉ xem alert đơn thuần.</p>
+  </div>
+
+  <h3>Tính năng Netscout có — Đối thủ chính KHÔNG có hoặc yếu hơn:</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Tính năng</th><th>Netscout</th><th>Cloudflare</th><th>Radware</th><th>Imperva</th><th>FortiDDoS</th></tr></thead>
+      <tbody>
+        <tr><td>BGP routing analysis &amp; hijack detection</td><td class="badge-yes">✓</td><td class="badge-no">✗</td><td class="badge-partial">Hạn chế</td><td class="badge-no">✗</td><td class="badge-no">✗</td></tr>
+        <tr><td>Network-wide flow visibility (ISP scale)</td><td class="badge-yes">✓</td><td class="badge-no">✗</td><td class="badge-partial">Hạn chế</td><td class="badge-no">✗</td><td class="badge-no">✗</td></tr>
+        <tr><td>ATLAS global real-time threat intelligence</td><td class="badge-yes">✓ Độc quyền</td><td class="badge-partial">Một phần</td><td class="badge-partial">Hạn chế</td><td class="badge-partial">Hạn chế</td><td class="badge-no">✗</td></tr>
+        <tr><td>ISP Managed Service enablement (multi-tenant)</td><td class="badge-yes">✓</td><td class="badge-partial">Hạn chế</td><td class="badge-partial">Có</td><td class="badge-no">✗</td><td class="badge-no">✗</td></tr>
+        <tr><td>Inter-network DDoS signaling (SP-to-SP)</td><td class="badge-yes">✓ Sentinel</td><td class="badge-no">✗</td><td class="badge-no">✗</td><td class="badge-no">✗</td><td class="badge-no">✗</td></tr>
+        <tr><td>On-prem mitigation đến 40 Tbps</td><td class="badge-yes">✓</td><td class="badge-no">✗ Cloud only</td><td class="badge-partial">Hạn chế</td><td class="badge-no">✗ Cloud only</td><td class="badge-partial">Hạn chế</td></tr>
+        <tr><td>Adaptive DDoS Protection (ML tracking)</td><td class="badge-yes">✓ ADP</td><td class="badge-partial">ML cơ bản</td><td class="badge-partial">Có</td><td class="badge-partial">Có</td><td class="badge-partial">Hạn chế</td></tr>
+        <tr><td>Sample packet capture trong mitigation</td><td class="badge-yes">✓ TMS</td><td class="badge-no">✗</td><td class="badge-partial">Có</td><td class="badge-no">✗</td><td class="badge-partial">Hạn chế</td></tr>
+        <tr><td>OTT service classification (L7 via ATLAS)</td><td class="badge-yes">✓</td><td class="badge-partial">Có</td><td class="badge-no">✗</td><td class="badge-no">✗</td><td class="badge-no">✗</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SECTION 8: ARCHITECTURE -->
+<div class="section" id="s-architecture">
+  <div class="section-tag">Kỹ thuật triển khai</div>
+  <h2>8. Kiến trúc giải pháp &amp; Mô hình triển khai</h2>
+
+  <h3>8.1 Sơ đồ kiến trúc tổng quan</h3>
+  <div class="arch-diagram">
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │                        NETSCOUT ARBOR SOLUTION ARCHITECTURE             │
+  └─────────────────────────────────────────────────────────────────────────┘
+
+  GLOBAL INTELLIGENCE                    CLOUD LAYER
+  ┌──────────────────┐                  ┌─────────────────────┐
+  │  NETSCOUT ATLAS  │ ──── AIF Feed ──►│   Arbor Cloud       │
+  │  800+ Tbps       │                  │   16 scrubbing PoPs │
+  │  ~50% Internet   │                  │   15+ Tbps capacity │
+  └──────────────────┘                  └──────────┬──────────┘
+          │                                         │ Cloud Signaling
+          │ AIF Subscription                        │ (auto when TMS overwhelmed)
+          ▼                                         ▼
+  ┌───────────────────────────────────────────────────────┐
+  │                  ON-PREMISES CORE                     │
+  │  ┌─────────────────────────────────────────────────┐  │
+  │  │           ARBOR SIGHTLINE (Detection)           │  │
+  │  │  • Flow collector (NetFlow/IPFIX/sFlow/J-Flow)  │  │
+  │  │  • BGP routing analysis                        │  │
+  │  │  • Managed Objects (20,000 max)                │  │
+  │  │  • Alert engine + Dashboard UI                 │  │
+  │  │  • Flowspec Sentinel orchestration             │  │
+  │  │  • Multi-tenant customer portal               │  │
+  │  │  • RESTful API                                │  │
+  │  └──────────────┬──────────────────────────────────┘  │
+  │                 │                                      │
+  │       BGP Divert│(attack traffic)                      │
+  │                 ▼                                      │
+  │  ┌─────────────────────────────────────────────────┐  │
+  │  │           ARBOR TMS (Mitigation)                │  │
+  │  │  • Scrubbing engine                            │  │
+  │  │  • 30+ countermeasure modules                 │  │
+  │  │  • ADP (ML-based adaptive protection)         │  │
+  │  │  • Packet sample capture                      │  │
+  │  │  • BGP re-injection (clean traffic)           │  │
+  │  └──────────────────────────────────────────────────┘  │
+  └───────────────────────────────────────────────────────┘
+          ▲                       ▲
+          │ Flow/BGP export        │ BGP Flowspec rules
+          │                        │
+  ┌───────┴──────────┐   ┌────────┴──────────┐
+  │  CORE ROUTERS    │   │  EDGE/BORDER      │
+  │  (Cisco/Juniper/ │   │  ROUTERS          │
+  │  Nokia/Huawei)   │   │  (Flowspec-capable│
+  └──────────────────┘   └────────────────────┘
+  </div>
+
+  <h3>8.2 Các thành phần hệ thống</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Thành phần</th><th>Vai trò</th><th>Hình thức</th><th>Bắt buộc?</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Sightline — Traffic Analysis role</strong></td><td>Thu thập flow từ routers, phân tích traffic, build baseline</td><td>Appliance (SP7500) hoặc VM</td><td>Bắt buộc</td></tr>
+        <tr><td><strong>Sightline — User Interface role</strong></td><td>Giao diện web quản lý, dashboard, report, portal; tối đa 100 concurrent users</td><td>VM hoặc appliance</td><td>Bắt buộc</td></tr>
+        <tr><td><strong>Sightline — Data Storage role</strong></td><td>Lưu trữ flow data, managed objects; mỗi instance hỗ trợ 1,000 MO</td><td>VM hoặc appliance</td><td>Bắt buộc</td></tr>
+        <tr><td><strong>Arbor TMS Appliance</strong></td><td>Hardware scrubbing; dòng 8100 (đến 40Gbps), HD1000 (đến 400Gbps), 2600/2800</td><td>Physical 2RU appliance</td><td>Khi cần high-performance mitigation</td></tr>
+        <tr><td><strong>Software TMS / Distributed TMS</strong></td><td>Scrubbing trên VM (VMware/KVM) hoặc bare-metal; 50Mbps - 110Gbps+</td><td>Virtual / Bare-metal</td><td>Tùy chọn (thay appliance)</td></tr>
+        <tr><td><strong>AIF Subscription</strong></td><td>Threat intelligence feed từ ATLAS; IP reputation, attack payloads, TMS templates</td><td>Cloud subscription</td><td>Khuyến nghị cao</td></tr>
+        <tr><td><strong>Sightline Sentinel (add-on)</strong></td><td>Flowspec orchestration nâng cao, AIF threat detection, inter-network signaling</td><td>Software add-on</td><td>Tùy chọn (nâng cao)</td></tr>
+        <tr><td><strong>Arbor Cloud (hybrid)</strong></td><td>Cloud scrubbing backup khi TMS local bị overwhelm; Cloud Signaling tự động</td><td>SaaS Cloud Service</td><td>Tùy chọn (hybrid)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>8.3 Mô hình triển khai</h3>
+  <div class="card-grid">
+    <div class="card">
+      <h4>🏢 On-Premises Deployment</h4>
+      <p>Sightline (VM/Appliance) + TMS (Appliance/VM) tại data center khách hàng. Phổ biến nhất với ISP và large enterprise. Toàn quyền kiểm soát dữ liệu.</p>
+    </div>
+    <div class="card">
+      <h4>☁️ Hybrid Deployment</h4>
+      <p>On-prem Sightline/TMS + Cloud Signaling lên Arbor Cloud khi cần. Tự động scale-out khi volumetric attack vượt on-prem capacity. Best practice cho ISP và telco.</p>
+    </div>
+    <div class="card">
+      <h4>🔁 Fully Virtualized</h4>
+      <p>100% trên VMware ESXi hoặc KVM. Tận dụng lợi thế SDN/NFV. Software TMS trên VM 50Mbps - 55Gbps; Distributed TMS bare-metal lên đến 110Gbps+.</p>
+    </div>
+    <div class="card">
+      <h4>📦 Managed Service Model</h4>
+      <p>ISP dùng Sightline/TMS để cung cấp DDoS Protection as a Service cho khách hàng doanh nghiệp. Multi-tenant portal, billing tích hợp, tăng doanh thu.</p>
+    </div>
+  </div>
+
+  <h3>8.4 Các bước triển khai điển hình (On-Prem)</h3>
+  <div class="timeline">
+    <div class="tl-item">
+      <h4>Bước 1: Khảo sát &amp; Design</h4>
+      <p>Xác định số router, volume flow/giây, số managed objects, capacity TMS cần thiết. Lựa chọn appliance hoặc VM, topology divert/re-inject.</p>
+    </div>
+    <div class="tl-item">
+      <h4>Bước 2: Triển khai Sightline</h4>
+      <p>Cài đặt Sightline (roles: Traffic, UI, Storage). Cấu hình export flow từ routers. Cấu hình BGP peering với Sightline. Đưa routers vào giám sát.</p>
+    </div>
+    <div class="tl-item">
+      <h4>Bước 3: Cấu hình Managed Objects</h4>
+      <p>Định nghĩa các prefix/customer/network cần theo dõi. Cấu hình threshold và detection templates. Cấu hình BGP Blackhole và Flowspec routers.</p>
+    </div>
+    <div class="tl-item">
+      <h4>Bước 4: Triển khai TMS</h4>
+      <p>Rack &amp; stack appliance hoặc deploy VM. Kết nối TMS vào Sightline. Cấu hình diversion path (BGP announcement), re-injection path, auto-mitigation.</p>
+    </div>
+    <div class="tl-item">
+      <h4>Bước 5: AIF &amp; Learning</h4>
+      <p>Đăng ký AIF subscription. Hệ thống học baseline traffic (thường 1-2 tuần). Fine-tune threshold để giảm false positive. Cấu hình TMS mitigation templates.</p>
+    </div>
+    <div class="tl-item">
+      <h4>Bước 6: Testing &amp; Handover</h4>
+      <p>Test attack simulation. Verify auto-mitigation. Training vận hành. Go-live và monitoring.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 9: LICENSE & SIZING -->
+<div class="section" id="s-license">
+  <div class="section-tag">Thương mại &amp; Licensing</div>
+  <h2>9. Cơ chế License &amp; Sizing</h2>
+
+  <div class="alert alert-info">
+    <strong>Tóm tắt nhanh:</strong> Sightline và TMS là sản phẩm có cả phần cứng và phần mềm. License Sightline theo model <em>Perpetual + Annual Maintenance</em> hoặc <em>Subscription</em>. TMS license theo <em>throughput capacity</em> (Gbps). AIF là <em>Subscription hàng năm</em>. Tất cả đều có thể triển khai on-prem (không phụ thuộc Cloud).
+  </div>
+
+  <h3>9.1 Mô hình License — Arbor Sightline Flex Licensing</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Model</th><th>Mô tả</th><th>Phù hợp với</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Perpetual License</strong></td>
+          <td>Mua một lần, sở hữu vĩnh viễn quyền sử dụng phần mềm. Trả Annual Maintenance &amp; Support (M&S) hàng năm (~20% list price) để nhận updates, patches, support. Nếu không gia hạn M&S: vẫn chạy được nhưng không nhận bản vá &amp; hỗ trợ.</td>
+          <td>CAPEX-centric, tổ chức ưu tiên sở hữu tài sản, ngân sách lớn ban đầu, kế hoạch dài hạn</td>
+        </tr>
+        <tr>
+          <td><strong>Subscription License</strong></td>
+          <td>Trả phí hàng năm bao gồm cả license + M&S. Khi hết hạn subscription: không thể tiếp tục sử dụng. Model OPEX, phù hợp với tổ chức linh hoạt về ngân sách.</td>
+          <td>OPEX-centric, tổ chức cần linh hoạt, bất định về growth, muốn dễ scale up/down</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>9.2 License Metric — Sightline Flex</h3>
+  <p style="margin-bottom:14px; color:var(--text-dim);">Sightline sử dụng <strong style="color:var(--white)">Flex Licensing</strong> — mô hình soft-license theo capacity. Các metric chính:</p>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Metric</th><th>Giải thích</th><th>Scaling</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Flows Per Second (FPS)</strong></td><td>Số lượng flow records/giây Sightline có thể xử lý (non-sampled). Scale từ vài triệu đến 48M fps per deployment.</td><td>Mua thêm Flex License FPS</td></tr>
+        <tr><td><strong>Số Router giám sát</strong></td><td>Mỗi role Traffic Analysis node hỗ trợ 32 core routers hoặc 100 edge routers. Deployment đến 5,000 routers.</td><td>Thêm role node</td></tr>
+        <tr><td><strong>Managed Objects (MO)</strong></td><td>Số lượng đối tượng được bảo vệ/giám sát. 1,000 MO/Data Storage node, tổng đến 20,000 MO/deployment.</td><td>Thêm Data Storage node</td></tr>
+        <tr><td><strong>TMS Appliances Managed</strong></td><td>Số appliances TMS mà Sightline quản lý. Đến 100 TMS/Sightline deployment.</td><td>Mua thêm TMS units</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>9.3 License — Arbor TMS</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Model TMS</th><th>Throughput License</th><th>Hình thức</th></tr></thead>
+      <tbody>
+        <tr><td>TMS 8100 Appliance</td><td>1, 2, 5, 10, 20, 30, 40 Gbps; up to 37 Mpps</td><td>Perpetual + Annual M&S</td></tr>
+        <tr><td>TMS HD1000 Appliance</td><td>Lên đến 400 Gbps (multiple PPM modules)</td><td>Perpetual + Annual M&S</td></tr>
+        <tr><td>TMS 2600 Appliance</td><td>1, 2, 5, 10 Gbps (có thể add-on lên 20 Gbps)</td><td>Perpetual + Annual M&S</td></tr>
+        <tr><td>TMS 2800 Appliance</td><td>10, 20, 30, 40 Gbps, up to 30 Mpps</td><td>Perpetual + Annual M&S</td></tr>
+        <tr><td>Software TMS (VM)</td><td>50 Mbps - 55 Gbps; up to 11 Mpps</td><td>Subscription hoặc Perpetual</td></tr>
+        <tr><td>Distributed TMS (Bare-metal)</td><td>50 Mbps - 110 Gbps+; up to 29 Mpps</td><td>Subscription hoặc Perpetual</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>9.4 AIF — ATLAS Intelligence Feed</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>AIF cho</th><th>Nội dung</th><th>Model</th></tr></thead>
+      <tbody>
+        <tr><td>AIF for Sightline</td><td>OTT service classification, Cyber Threat Detection (C2, botnet), IP reputation lists</td><td>Annual Subscription</td></tr>
+        <tr><td>AIF for TMS</td><td>DDoS IP Reputation (1.5M+ indicators), DDoS Attack Payload signatures, TMS Mitigation Templates</td><td>Annual Subscription</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>9.5 Sizing Guide — Cách chọn giải pháp phù hợp</h3>
+  <div class="alert alert-warn">
+    <strong>Lưu ý:</strong> Netscout không công bố list price. Báo giá cần qua authorized distributor hoặc Netscout sales trực tiếp. Các thông số sizing dưới đây là kỹ thuật, không phải giá.
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Câu hỏi sizing</th><th>Input cần thu thập từ KH</th><th>Ảnh hưởng đến</th></tr></thead>
+      <tbody>
+        <tr><td>Tổng bandwidth mạng</td><td>Upstream/transit bandwidth (Gbps)</td><td>TMS throughput capacity cần mua</td></tr>
+        <tr><td>Số routers cần giám sát</td><td>Số core/edge routers, vendor</td><td>Sightline Traffic role count</td></tr>
+        <tr><td>Volume flow data</td><td>Flow/giây (NetFlow sampling rate × router count)</td><td>Sightline FPS license</td></tr>
+        <tr><td>Số khách hàng / protected objects</td><td>Số customer IP prefix cần tạo managed object</td><td>Sightline MO count, Data Storage nodes</td></tr>
+        <tr><td>Yêu cầu peak mitigation</td><td>Kích thước attack lớn nhất từng gặp/dự kiến</td><td>TMS appliance model (2600/8100/HD1000)</td></tr>
+        <tr><td>Multi-site / HA</td><td>Số data center, yêu cầu redundancy</td><td>Số Sightline nodes, TMS đặt tại nhiều site</td></tr>
+        <tr><td>Managed service</td><td>Số customer tenant cần portal riêng</td><td>Sightline UI/Portal license; APS appliances</td></tr>
+        <tr><td>Virtualization</td><td>VMware/KVM available? Hardware appliance cho phép?</td><td>Appliance vs Software TMS vs Distributed TMS</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="alert alert-success">
+    <strong>Rule of thumb sizing TMS:</strong> TMS throughput capacity = Peak attack size dự kiến × 1.5 (safety factor). Ví dụ: mạng ISP 100Gbps, attack lớn nhất 50Gbps → cần TMS ≥ 75Gbps → 2× TMS 8100 @ 40Gbps mỗi thiết bị (HA pair).
+  </div>
+</div>
+
+<!-- SECTION 10: SWOT -->
+<div class="section" id="s-swot">
+  <div class="section-tag">Phân tích chiến lược</div>
+  <h2>10. Phân tích SWOT — Nhắm vào ISP &amp; Service Provider Việt Nam</h2>
+
+  <div class="swot-grid">
+    <div class="swot-cell strengths">
+      <h4>💪 Strengths — Điểm mạnh</h4>
+      <ul>
+        <li>ATLAS là unique global intelligence không ai sao chép được</li>
+        <li>Surgical mitigation — không ảnh hưởng user hợp lệ</li>
+        <li>Scale on-prem lên đến 40Tbps một deployment</li>
+        <li>20+ năm track record với ISP &amp; Telco toàn cầu</li>
+        <li>Giải pháp nền tảng: DDoS + BGP + Traffic engineering</li>
+        <li>Multi-tenant: ISP có thể kinh doanh managed DDoS service</li>
+        <li>Adaptive DDoS Protection (ML) theo dõi attack thay đổi</li>
+        <li>Tích hợp Flowspec native với multi-vendor routers</li>
+        <li>94% user recommend (PeerSpot)</li>
+      </ul>
+    </div>
+    <div class="swot-cell weaknesses">
+      <h4>⚠️ Weaknesses — Điểm yếu</h4>
+      <ul>
+        <li>Giá cao — barrier entry lớn cho SME</li>
+        <li>Phức tạp khi triển khai ban đầu, cần kỹ sư chuyên sâu</li>
+        <li>Thời gian stable operation cần training &amp; tuning</li>
+        <li>Không có WAF/CDN tích hợp như Cloudflare/Imperva</li>
+        <li>AIF là subscription riêng — tăng TCO</li>
+        <li>Support tiếng Việt hạn chế (qua partner)</li>
+      </ul>
+    </div>
+    <div class="swot-cell opportunities">
+      <h4>🚀 Opportunities — Cơ hội</h4>
+      <ul>
+        <li>DDoS attack tại VN tăng mạnh, KH bắt đầu có ngân sách</li>
+        <li>ISP cần platform để bán DDoS managed service</li>
+        <li>Cơ quan nhà nước bắt đầu yêu cầu bảo vệ hạ tầng</li>
+        <li>Fintech, banking phải tuân thủ quy định bảo mật</li>
+        <li>Data center và cloud provider mở rộng cần bảo vệ</li>
+        <li>Không có local competitor mạnh ở phân khúc ISP-grade</li>
+        <li>Có thể đề xuất managed service model (OPEX)</li>
+      </ul>
+    </div>
+    <div class="swot-cell threats">
+      <h4>🔴 Threats — Thách thức</h4>
+      <ul>
+        <li>Cloudflare ngày càng phổ biến ở phân khúc web/SaaS</li>
+        <li>NSFOCUS/Huawei cạnh tranh giá mạnh tại APAC</li>
+        <li>KH có thể chọn giải pháp on-prem giá rẻ hơn</li>
+        <li>Quy trình mua sắm công chậm, ngân sách hạn chế</li>
+        <li>Thiếu nhân lực vận hành tại VN cho giải pháp phức tạp</li>
+        <li>Địa chính trị: một số KH nhà nước nhạy cảm với nguồn gốc sản phẩm</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 11: BENEFITS -->
+<div class="section" id="s-benefits">
+  <div class="section-tag">Giá trị mang lại</div>
+  <h2>11. Lợi ích giải pháp mang lại cho khách hàng</h2>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="icon">⏱️</div>
+      <h4>Giảm thời gian phát hiện attack</h4>
+      <p>Từ hàng giờ xuống còn vài phút. Auto-mitigation có thể kích hoạt trong vòng 1-3 phút sau khi traffic vượt threshold. SOC giảm thời gian response đáng kể.</p>
+    </div>
+    <div class="card">
+      <div class="icon">💰</div>
+      <h4>Bảo vệ doanh thu &amp; SLA</h4>
+      <p>Uptime cao hơn = ít vi phạm SLA = ít bồi thường = bảo vệ doanh thu. Đặc biệt quan trọng với ISP có hàng nghìn khách hàng phụ thuộc.</p>
+    </div>
+    <div class="card">
+      <div class="icon">📈</div>
+      <h4>Cơ hội doanh thu mới</h4>
+      <p>ISP sử dụng Sightline/TMS để bán DDoS Managed Service cho khách hàng doanh nghiệp. Một dịch vụ mới, recurring revenue, tận dụng hạ tầng đã đầu tư.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🔍</div>
+      <h4>Network visibility toàn diện</h4>
+      <p>Không chỉ bảo vệ DDoS — Sightline còn cung cấp traffic analytics, capacity planning, BGP routing intelligence phục vụ toàn bộ bộ phận mạng.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🤝</div>
+      <h4>Giảm tải cho nhân sự SOC</h4>
+      <p>Auto-mitigation, AIF pre-built templates, ADP tự adapt — giảm thiểu can thiệp thủ công. SOC tập trung vào các attack phức tạp thay vì bị áp đảo bởi volumetric floods.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🌐</div>
+      <h4>Bảo vệ khách hàng cuối (downstream)</h4>
+      <p>ISP bảo vệ được cả mạng uplink và downstream customers. Tăng uy tín, giảm churn, tăng retention khách hàng doanh nghiệp.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🔗</div>
+      <h4>Tối ưu transit cost</h4>
+      <p>Sightline phân tích OTT traffic, tư vấn peering decision, giảm transit cost. ROI không chỉ từ bảo mật mà còn từ tối ưu hạ tầng.</p>
+    </div>
+    <div class="card">
+      <div class="icon">⚖️</div>
+      <h4>Tuân thủ quy định</h4>
+      <p>Đáp ứng yêu cầu bảo vệ hạ tầng mạng theo quy định của VNPT, NĐ13, yêu cầu của NHNN với fintech/banking, tiêu chuẩn ISO 27001.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 12: RANKING -->
+<div class="section" id="s-ranking">
+  <div class="section-tag">Vị thế thị trường</div>
+  <h2>12. Đánh giá &amp; Xếp hạng thị trường</h2>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Nguồn đánh giá</th><th>Xếp hạng Netscout/Arbor</th><th>Chi tiết</th></tr></thead>
+      <tbody>
+        <tr><td><strong>PeerSpot (2025)</strong></td><td>#2 trong DDoS Protection (sau Cloudflare)</td><td>Mindshare 13.9-15.9%, Rating 9.0/10, 94% user recommend. Cloudflare #1 (web-focused), Netscout #2 (SP/Enterprise on-prem)</td></tr>
+        <tr><td><strong>MarketsandMarkets</strong></td><td>Top 5 DDoS market leader</td><td>Cùng với Akamai, Radware, Huawei, Fortinet. Thị trường 5.8B USD (2025), CAGR 12.3%</td></tr>
+        <tr><td><strong>Expert Insights (2026)</strong></td><td>Top-tier on-prem/hybrid DDoS</td><td>Đánh giá cao hybrid architecture, ATLAS intelligence, support quality cho telco/finance</td></tr>
+        <tr><td><strong>ISP/Telco market thực tế</strong></td><td>#1 cho SP/Telco</td><td>"More Service Providers use Arbor TMS than any other solution" — Netscout official statement</td></tr>
+        <tr><td><strong>User feedback tổng hợp</strong></td><td>Premium support, premium price</td><td>Khen: deep visibility, intelligence quality, SP-grade scale. Chê: expensive, initial setup complexity</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="alert alert-success">
+    <strong>Tóm tắt vị thế:</strong> Trong phân khúc ISP/Telco/Large Enterprise on-prem, Netscout Arbor không có competitor thực sự ở cùng tầm. Cloudflare dẫn đầu market share nhưng phục vụ phân khúc khác (web/cloud). Với khách hàng là ISP cần scrubbing center, on-prem DDoS managed service, BGP visibility — Netscout là lựa chọn tiêu chuẩn de facto toàn cầu.
+  </div>
+</div>
+
+<!-- SECTION 13: TARGET CUSTOMERS VN -->
+<div class="section" id="s-target">
+  <div class="section-tag">Chiến lược bán hàng Việt Nam</div>
+  <h2>13. Nhóm khách hàng phù hợp tại Việt Nam</h2>
+
+  <h3>Tier 1 — Ưu tiên cao nhất (Best Fit)</h3>
+  <div class="card-grid">
+    <div class="card">
+      <h4>🌐 ISP / Nhà mạng lớn</h4>
+      <p><strong>VNPT, Viettel, FPT, CMC Telecom, SCTV, GTel.</strong> Đây là khách hàng lý tưởng nhất — có hạ tầng BGP/router phù hợp, có nhu cầu bán DDoS managed service, cần network-wide visibility. Budget lớn.</p>
+      <div style="margin-top:10px">
+        <span class="pill pill-cyan">BGP telemetry</span>
+        <span class="pill pill-cyan">Managed service</span>
+        <span class="pill pill-cyan">Core routing</span>
+      </div>
+    </div>
+    <div class="card">
+      <h4>🏢 Data Center &amp; Cloud Provider</h4>
+      <p><strong>VNG Cloud, Viettel IDC, CMC Data Center, VNPT-IT, FPT Telecom IDC.</strong> Cần bảo vệ hosting customers, SLA uptime, multi-tenant. Sightline/TMS phù hợp hoàn toàn với mô hình scrubbing center.</p>
+      <div style="margin-top:10px">
+        <span class="pill pill-blue">Hosting protection</span>
+        <span class="pill pill-blue">Scrubbing center</span>
+      </div>
+    </div>
+    <div class="card">
+      <h4>🏦 Banking &amp; Fintech lớn</h4>
+      <p><strong>Vietcombank, Techcombank, VPBank, MB Bank, các công ty Fintech top.</strong> Internet banking là mục tiêu DDoS. Yêu cầu regulatory từ NHNN. Budget cao, quyết định cẩn thận.</p>
+      <div style="margin-top:10px">
+        <span class="pill pill-gold">NHNN compliance</span>
+        <span class="pill pill-gold">High-value target</span>
+      </div>
+    </div>
+  </div>
+
+  <h3>Tier 2 — Tiềm năng tốt</h3>
+  <div class="card-grid">
+    <div class="card">
+      <h4>🏛️ Chính phủ &amp; Hạ tầng trọng yếu</h4>
+      <p>Các Bộ, cơ quan nhà nước có hạ tầng mạng lớn. NCSC, VNISA push các đơn vị nhà nước tăng cường bảo vệ hạ tầng mạng. Chu kỳ mua sắm dài, cần đấu thầu.</p>
+    </div>
+    <div class="card">
+      <h4>⚡ Năng lượng &amp; Tiện ích</h4>
+      <p>EVN, PetroVietnam, các công ty tiện ích lớn. OT/IT converge, SCADA connected to internet. Rủi ro DDoS ảnh hưởng hạ tầng quốc gia.</p>
+    </div>
+    <div class="card">
+      <h4>🎮 Gaming &amp; Entertainment</h4>
+      <p>VNG, Garena, các game publisher lớn. Game server là mục tiêu DDoS kinh điển. Cần scrubbing nhanh, low-latency.</p>
+    </div>
+  </div>
+
+  <div class="alert alert-warn">
+    <strong>Cách tìm khách hàng mục tiêu:</strong> (1) Xem ASN registry — tổ chức nào có nhiều IP block lớn là ISP/DC potential; (2) Theo dõi tin tức DDoS tại VN — đơn vị nào bị attack là prospect nóng; (3) VNISA, VNCERT membership list; (4) Các sự kiện TechDay, Security Summit tại Hà Nội và HCMC; (5) Tìm organizations đang dùng Arbor/Netscout (thường công khai trên LinkedIn case study).
+  </div>
+</div>
+
+<!-- SECTION 14: TECH SPEC -->
+<div class="section" id="s-techspec">
+  <div class="section-tag">Tài liệu kỹ thuật</div>
+  <h2>14. Bảng Technical Specification — Tham chiếu Netscout Arbor Sightline/TMS</h2>
+  <p style="color:var(--text-dim); margin-bottom:20px;">Bảng này có thể dùng làm cơ sở tham chiếu khi soạn chỉ tiêu kỹ thuật RFP/HSMT. Các mục <strong style="color:var(--gold)">KEY LOCK</strong> là tính năng đặc trưng mà Netscout sở hữu.</p>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr>
+        <th style="width:30%">Chỉ tiêu kỹ thuật</th>
+        <th style="width:50%">Mô tả &amp; giá trị tham chiếu</th>
+        <th style="width:20%">Ghi chú</th>
+      </tr></thead>
+      <tbody>
+        <!-- SIGHTLINE DETECTION -->
+        <tr class="spec-row-header">
+          <td colspan="3">I. HỆ THỐNG PHÁT HIỆN TẤN CÔNG (Detection Engine)</td>
+        </tr>
+        <tr><td>Giao thức thu thập flow</td><td>NetFlow v5/v9, IPFIX, sFlow, J-Flow, BGP</td><td></td></tr>
+        <tr><td>Throughput flow analysis</td><td>≥ 48,000,000 flows/giây (non-sampled) per deployment</td><td></td></tr>
+        <tr><td>Số router giám sát</td><td>Đến 5,000 routers; 32 core hoặc 100 edge/node</td><td></td></tr>
+        <tr><td>Số interface giám sát</td><td>Đến 200,000 monitored interfaces; 550,000 total</td><td></td></tr>
+        <tr><td>Managed Objects</td><td>Đến 20,000 managed objects/deployment; 1,000/Data Storage node</td><td></td></tr>
+        <tr><td>BGP routing table</td><td>≥ 25,000,000 BGP routes unique</td><td><span class="pill pill-gold">KEY LOCK</span></td></tr>
+        <tr><td>BGP hijack/anomaly detection</td><td>Phát hiện prefix hijack, route leak, origin change, de-aggregation</td><td><span class="pill pill-gold">KEY LOCK</span></td></tr>
+        <tr><td>Loại tấn công phát hiện</td><td>Volumetric (UDP/ICMP/SYN flood), Amplification (DNS/NTP/Memcached/SSDP), Application Layer (HTTP/HTTPS/DNS), Protocol (TCP stack), Multi-vector</td><td></td></tr>
+        <tr><td>Detection method</td><td>Threshold-based, Profiled/Baseline anomaly detection, AIF IP Reputation, Behavioral pattern</td><td></td></tr>
+        <tr><td>Alert response time</td><td>Phát hiện và cảnh báo trong ≤ 1-3 phút</td><td></td></tr>
+        <tr><td>Giao diện quản lý</td><td>Web UI (HTTPS), RESTful API, SNMP; đến 100 concurrent users/UI node</td><td></td></tr>
+        <tr><td>Multi-tenant portal</td><td>Customer self-service portal phân tách theo managed object; Portal API</td><td><span class="pill pill-gold">KEY LOCK</span></td></tr>
+        <tr><td>ATLAS Intelligence Feed (AIF)</td><td>Global threat intelligence: IP reputation, botnet C2, reflector lists, attack payload signatures, TMS templates. Update liên tục qua SSL subscription</td><td><span class="pill pill-gold">KEY LOCK</span></td></tr>
+        <tr><td>Inter-network signaling</td><td>Chia sẻ attack data giữa các ISP/SP khác nhau để phòng thủ upstream (Sightline Signaling)</td><td><span class="pill pill-gold">KEY LOCK</span></td></tr>
+        <tr><td>Cloud Signaling</td><td>Tự động scale-up lên Arbor Cloud khi on-prem capacity bị vượt</td><td></td></tr>
+        <tr><td>OTT/L7 traffic classification</td><td>Phân loại theo provider (AWS, Netflix, YouTube), owner, type dựa trên ATLAS + DNS; hỗ trợ peering decision</td><td><span class="pill pill-gold">KEY LOCK</span></td></tr>
+        <tr><td>Flowspec orchestration</td><td>Push Flowspec rules tự động tới toàn bộ routers; per-rule/per-router reporting; single pane of glass (Sentinel)</td><td><span class="pill pill-gold">KEY LOCK</span></td></tr>
+        <tr><td>BGP Blackholing (RTBH)</td><td>Hỗ trợ remote triggered blackholing, destination và source-based RTBH</td><td></td></tr>
+        <tr><td>HA/Redundancy</td><td>Có thể triển khai clustered, multi-node Sightline deployment</td><td></td></tr>
+
+        <!-- TMS MITIGATION -->
+        <tr class="spec-row-header">
+          <td colspan="3">II. HỆ THỐNG CHẶN TẤN CÔNG (Mitigation / Scrubbing)</td>
+        </tr>
+        <tr><td>Deployment mode</td><td>Out-of-band Diversion/Reinjection, Inline Active, Inline Monitoring, SPAN port</td><td></td></tr>
+        <tr><td>Mitigation throughput (hardware)</td><td>TMS 8100: đến 40 Gbps / 37 Mpps; TMS HD1000: đến 400 Gbps / 198 Mpps</td><td></td></tr>
+        <tr><td>Mitigation throughput (software)</td><td>Software TMS: 50 Mbps - 55 Gbps; Distributed TMS: đến 110 Gbps+ bare-metal</td><td></td></tr>
+        <tr><td>Tổng capacity per deployment</td><td>Đến 40 Tbps (100 TMS managed by Sightline) — confirmed 40 Tbps single pane of glass</td><td><span class="pill pill-gold">KEY LOCK</span></td></tr>
+        <tr><td>Latency</td><td>&lt;80μs (hardware appliance); &lt;3ms (Software TMS); &lt;1ms (Distributed TMS bare-metal)</td><td></td></tr>
+        <tr><td>Session limit</td><td>Not session limited (stateless design)</td><td></td></tr>
+        <tr><td>TCP SYN protection</td><td>TCP SYN Authentication (cookie), Zombie Detection, TCP SYN Flood, Spoofed SYN, TCP Connection Limiting, TCP Connection Reset, Slow TCP attacks</td><td></td></tr>
+        <tr><td>UDP amplification protection</td><td>DNS, NTP, SSDP, Memcached, CharGen, L2TP, RIPv1, SNMP, NetBIOS, rpcbind, mDNS, SQL RS, Microsoft SQL, ICMP reflection — sử dụng AIF active reflector lists</td><td><span class="pill pill-gold">KEY LOCK</span></td></tr>
+        <tr><td>HTTP/HTTPS protection</td><td>HTTP Authentication (CAPTCHA/302 redirect), HTTP Malformed, HTTP Rate Limiting, HTTP/URL RegEx, Slow HTTP (Slowloris/Pyloris), SSL Renegotiation, SSL Session Floods, HTTPS Protocol Attacks</td><td></td></tr>
+        <tr><td>DNS protection</td><td>DNS Authentication, DNS Malformed, DNS Scoping, DNS Rate Limiting, DNS RegEx, DNS Cache Poisoning</td><td></td></tr>
+        <tr><td>Application Layer</td><td>SIP/VoIP, Gaming protocol attacks, Flash Crowd Protection, Resource Exhaustion (LOIC, etc.)</td><td></td></tr>
+        <tr><td>Adaptive DDoS Protection (ADP)</td><td>ML-based detection kết hợp threat intelligence, tự động track &amp; adapt khi attack thay đổi chiến thuật</td><td><span class="pill pill-gold">KEY LOCK</span></td></tr>
+        <tr><td>Packet capture</td><td>Live sample packet capture cho dropped/passed packets trong quá trình mitigation; giải mã protocol</td><td><span class="pill pill-gold">KEY LOCK</span></td></tr>
+        <tr><td>Auto-mitigation</td><td>Tự động kích hoạt TMS mitigation khi Sightline phát hiện attack vượt threshold; có thể manual adjust trong khi chạy</td><td></td></tr>
+        <tr><td>Mitigation templates</td><td>Pre-built templates từ ASERT/AIF; custom templates; inactive mitigation verify trước khi activate</td><td></td></tr>
+        <tr><td>BGP Flowspec Source/Destination blocking</td><td>Automated BGP Flowspec Source/Destination Blocking tích hợp countermeasure</td><td></td></tr>
+        <tr><td>Managed services support</td><td>Cung cấp DDoS protection service cho khách hàng (in-cloud SaaS DDoS protection)</td><td><span class="pill pill-gold">KEY LOCK</span></td></tr>
+
+        <!-- PLATFORM -->
+        <tr class="spec-row-header">
+          <td colspan="3">III. NỀN TẢNG &amp; TÍCH HỢP</td>
+        </tr>
+        <tr><td>Hình thức triển khai Sightline</td><td>Physical Appliance (SP7500), VMware vSphere 5.5/6.0/6.5, KVM QEMU v2.11</td><td></td></tr>
+        <tr><td>VM requirements Sightline</td><td>16-32 vCPU, 24-32GB RAM, 100GB storage minimum, 1-10 NICs</td><td></td></tr>
+        <tr><td>Hình thức triển khai TMS</td><td>Appliance (8100, HD1000, 2600, 2800), VMware ESXi, KVM, Bare-metal (Distributed TMS)</td><td></td></tr>
+        <tr><td>NFV/Orchestration support</td><td>OpenStack (Heat, Tacker), Ansible, Cisco NSO/ESC, Nokia CloudBand, AWS CloudFormation</td><td></td></tr>
+        <tr><td>API</td><td>RESTful API đầy đủ: alerts, mitigations, routers, managed objects, templates, reports</td><td></td></tr>
+        <tr><td>SIEM integration</td><td>Syslog, SNMP, REST API — tích hợp với Splunk, IBM QRadar, ArcSight, Palo Alto XSOAR</td><td></td></tr>
+        <tr><td>Router vendor support</td><td>Cisco, Juniper, Nokia (Alcatel), Huawei, và các vendor hỗ trợ NetFlow/IPFIX/sFlow chuẩn</td><td></td></tr>
+        <tr><td>OS</td><td>ArbOS — Arbor proprietary embedded OS (Linux-based), full disk encryption option</td><td></td></tr>
+
+        <!-- LICENSE -->
+        <tr class="spec-row-header">
+          <td colspan="3">IV. LICENSE &amp; THƯƠNG MẠI</td>
+        </tr>
+        <tr><td>Mô hình license Sightline</td><td>Perpetual (+ Annual M&S) hoặc Subscription (Annual, bao gồm M&S). Flex Licensing model.</td><td></td></tr>
+        <tr><td>Mô hình license TMS</td><td>Perpetual by throughput capacity (Gbps). Software TMS có thể subscription.</td><td></td></tr>
+        <tr><td>AIF subscription</td><td>Annual subscription cho AIF for Sightline và/hoặc AIF for TMS. Delivered via SSL, auto-update.</td><td></td></tr>
+        <tr><td>Hình thức triển khai</td><td>On-premises (primary), Hybrid với Arbor Cloud, Fully virtualized (SDN/NFV)</td><td></td></tr>
+        <tr><td>Support</td><td>Annual M&S: 24/7 TAC support, software updates, security patches. Toll-free US + international numbers.</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SECTION 15: Q&A -->
+<div class="section" id="s-qa">
+  <div class="section-tag">Tình huống thực tế</div>
+  <h2>15. Câu hỏi &amp; Tình huống thường gặp trong quá trình tư vấn bán hàng</h2>
+
+  <div class="qa-item">
+    <div class="qa-q" onclick="toggleQA(this)">Nhóm khách hàng nào phù hợp nhất để tiếp cận bán Netscout? <span class="arrow">▼</span></div>
+    <div class="qa-a">
+      <strong>Tier 1 (ưu tiên cao nhất):</strong> ISP/Nhà mạng (VNPT, Viettel, FPT, CMC, SCTV), Data Center &amp; Cloud Provider (VNG Cloud, Viettel IDC, CMC DC, FPT IDC), Banking/Fintech lớn (Big-4 bank, Top fintech). <br><br>
+      <strong>Lý do:</strong> Đây là các tổ chức có hạ tầng BGP/routing phức tạp đúng với thế mạnh Sightline. Họ cần scale lớn, cần multi-tenant (bán lại cho customer của mình), có ngân sách và nhận thức về DDoS risk. <br><br>
+      <strong>Không phù hợp:</strong> SME với website đơn giản, startup nhỏ — với các đối tượng này, Cloudflare Pro/Business là đủ và rẻ hơn nhiều.
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q" onclick="toggleQA(this)">License của giải pháp là loại gì? Perpetual hay Subscription? <span class="arrow">▼</span></div>
+    <div class="qa-a">
+      Sightline và TMS có <strong>cả hai option: Perpetual và Subscription</strong>.<br><br>
+      • <strong>Perpetual:</strong> Trả một lần để sở hữu vĩnh viễn quyền sử dụng phần mềm. Sau đó trả Annual Maintenance &amp; Support (M&S) hàng năm (~20% list price) để nhận updates và support. Khi không gia hạn M&S: phần mềm vẫn chạy nhưng không nhận bản vá bảo mật, không được hỗ trợ kỹ thuật.<br><br>
+      • <strong>Subscription:</strong> Trả hàng năm, bao gồm cả license + M&S. Nếu không gia hạn: không thể tiếp tục sử dụng.<br><br>
+      • <strong>AIF (ATLAS Intelligence Feed):</strong> Luôn là Annual Subscription — đây là dịch vụ liên tục cung cấp threat intelligence real-time.<br><br>
+      Tổ chức CAPEX-centric (nhà nước, bank): thường chọn Perpetual. OPEX-centric hoặc cần linh hoạt: chọn Subscription.
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q" onclick="toggleQA(this)">Giải pháp triển khai như thế nào? Mất bao lâu? <span class="arrow">▼</span></div>
+    <div class="qa-a">
+      <strong>Mô hình phổ biến nhất (On-Prem tại ISP):</strong><br>
+      1. Sightline (VM hoặc SP7500 appliance) đặt tại data center của ISP.<br>
+      2. Cấu hình export NetFlow/IPFIX từ tất cả core routers về Sightline.<br>
+      3. BGP peering giữa Sightline và routers để lấy routing table và gửi diversion/Flowspec commands.<br>
+      4. TMS appliance (hoặc VM) đặt song song với mạng, không in-line mặc định.<br>
+      5. Khi attack: Sightline phát hiện → announce BGP divert route → traffic attack chạy vào TMS → TMS scrub → re-inject traffic sạch qua BGP.<br><br>
+      <strong>Timeline điển hình:</strong> POC 2-4 tuần (setup cơ bản, test); Production deployment 4-8 tuần (bao gồm baseline learning, tuning threshold, training); Stable operation sau 2-3 tháng.
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q" onclick="toggleQA(this)">Khi tiếp cận C-level (CEO, CTO, CISO) — nên nói gì? <span class="arrow">▼</span></div>
+    <div class="qa-a">
+      <strong>Thông điệp chính cho C-level:</strong><br><br>
+      <em>"Mỗi giờ dịch vụ bị gián đoạn do DDoS có thể gây thiệt hại [X] tỷ đồng và ảnh hưởng uy tín với hàng nghìn khách hàng. Netscout Arbor là nền tảng mà hơn 500 ISP và nhà mạng lớn nhất thế giới đang dùng — không phải vì rẻ nhất, mà vì không có giải pháp nào khác cho phép bảo vệ toàn bộ mạng lõi ở tầm này. Đặc biệt với [tên khách hàng], giải pháp này không chỉ bảo vệ mạng mà còn mở ra dịch vụ DDoS protection thu phí cho khách hàng doanh nghiệp của bạn."</em><br><br>
+      Tập trung vào: <strong>ROI (bảo vệ doanh thu + cơ hội revenue mới), Risk reduction (SLA, reputation), Regulatory compliance</strong>. Không đi vào chi tiết kỹ thuật.
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q" onclick="toggleQA(this)">Khi tiếp cận Decision Maker (VP/Director IT, Giám đốc hạ tầng) — nên nói gì? <span class="arrow">▼</span></div>
+    <div class="qa-a">
+      <strong>Thông điệp cho Decision Maker:</strong><br><br>
+      Nhấn mạnh vào <strong>risk vs investment</strong> và <strong>operational impact</strong>:<br><br>
+      • "Hệ thống của bạn đang bảo vệ uptime bằng gì khi DDoS 50-100 Gbps tấn công? Firewall sẽ không chịu được."<br>
+      • "Netscout không chỉ là anti-DDoS — đây là platform nhìn thấy toàn bộ traffic trong mạng của bạn. Bạn biết ngay lúc nào có routing anomaly, ai đang tấn công, traffic từ đâu đến đâu."<br>
+      • "ATLAS intelligence cho phép chúng tôi chặn 1.5 triệu IP độc hại cụ thể, không phải chặn cả subnet — nghĩa là user hợp lệ không bị ảnh hưởng trong khi attack bị chặn."<br>
+      • Hỏi thăm dò: "Bạn đã từng bị DDoS chưa? Lần đó xử lý mất bao lâu? Team của bạn phản ứng thế nào?"
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q" onclick="toggleQA(this)">Khi tiếp cận IT Manager / Security Manager — nên nói gì? <span class="arrow">▼</span></div>
+    <div class="qa-a">
+      <strong>Thông điệp kỹ thuật cho Manager:</strong><br><br>
+      • Deep-dive vào flow visibility: "Sightline thu thập toàn bộ NetFlow từ tất cả routers của bạn, build baseline, và alert khi có bất thường — trước khi dịch vụ bị ảnh hưởng."<br>
+      • Demonstrate surgical mitigation: "TMS không phải blackhole — nó dùng 30+ countermeasures để chỉ drop packet attack. Sample packet capture ngay trong quá trình chặn để bạn verify."<br>
+      • Nói về integration: "RESTful API đầy đủ — có thể integrate với SIEM/SOAR của bạn, tự động tạo ticket, correlate events."<br>
+      • Nói về auto-mitigation: "Team bạn không cần online 24/7 — auto-mitigation kích hoạt trong vài phút, giảm mean time to mitigate từ hàng giờ xuống vài phút."<br>
+      • Đề xuất POC: "Hãy để chúng tôi deploy trial Sightline trong 2-4 tuần — bạn sẽ thấy ngay traffic analysis và các pattern bất thường đang xảy ra trong mạng của bạn."
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q" onclick="toggleQA(this)">Khách hàng nói "chúng tôi đã có nhiều giải pháp rồi, Netscout ưu tiên thấp" — phản hồi thế nào? <span class="arrow">▼</span></div>
+    <div class="qa-a">
+      <strong>Chiến lược phản hồi:</strong><br><br>
+      <strong>Bước 1 — Xác nhận, không phản bác ngay:</strong> "Tôi hiểu — bạn đã đầu tư nhiều cho bảo mật. Có thể cho tôi biết hiện tại các giải pháp đó bảo vệ bạn ở tầng nào? Firewall, IPS, hay có gì cho tầng network/backbone chưa?"<br><br>
+      <strong>Bước 2 — Định vị lại (không compete, mà complement):</strong> "Netscout Sightline không thay thế firewall hay SIEM của bạn — nó fill gap mà không giải pháp nào trong danh sách đó làm được: network-wide visibility ở tầng BGP + flow + DDoS detection ở quy mô ISP/core network."<br><br>
+      <strong>Bước 3 — Đặt câu hỏi kích thích nhu cầu:</strong> "Khi nhà mạng của bạn nhận 50Gbps DDoS volumetric, hệ thống nào hiện tại xử lý được? Firewall stateful sẽ die trước. IPS sẽ die tiếp theo. Giải pháp nào bạn có đang bảo vệ ở core routing level?"<br><br>
+      <strong>Bước 4 — Đề xuất POC không risk:</strong> "Hãy để chúng tôi làm một demo không ràng buộc hoặc POC 2-4 tuần. Nếu Sightline không cho bạn thấy gì mới mà bạn chưa biết về mạng của mình — chúng tôi rút."
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q" onclick="toggleQA(this)">Các đối thủ trực tiếp của Netscout là ai? <span class="arrow">▼</span></div>
+    <div class="qa-a">
+      <strong>Đối thủ trực tiếp theo phân khúc:</strong><br><br>
+      • <strong>ISP/SP tier:</strong> Radware DefensePro/DefenseFlow, NSFOCUS ADS, Huawei AntiDDoS — không ai sánh được với ATLAS intelligence và scale 40Tbps của Netscout.<br>
+      • <strong>Cloud/Edge:</strong> Cloudflare Magic Transit, Akamai Prolexic — đây là hybrid cloud approach, không on-prem. Khác phân khúc.<br>
+      • <strong>Enterprise on-prem:</strong> Radware AppWall/DefensePro, Fortinet FortiDDoS, F5 BIG-IP DOSP.<br>
+      • <strong>Managed service:</strong> Akamai Prolexic, Imperva DDoS Cloud — nhưng đây là pure cloud service, không có on-prem platform.<br><br>
+      <strong>Kết luận:</strong> Netscout không có real competitor ở phân khúc ISP on-prem với đầy đủ BGP visibility + surgical mitigation + ATLAS intelligence.
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q" onclick="toggleQA(this)">Ngoài Sightline/TMS, Netscout còn có giải pháp nào khác? <span class="arrow">▼</span></div>
+    <div class="qa-a">
+      <strong>Portfolio Netscout đầy đủ:</strong><br><br>
+      • <strong>Arbor Edge Defense (AED):</strong> Inline appliance cho enterprise perimeter/DC edge, always-on, sub-100Mbps đến 40Gbps.<br>
+      • <strong>Arbor Cloud:</strong> Cloud scrubbing service, 16 PoPs toàn cầu, 15+ Tbps capacity.<br>
+      • <strong>Arbor Insight:</strong> Traffic engineering analytics add-on cho Sightline.<br>
+      • <strong>nGeniusONE:</strong> Network performance management và service assurance (L2-L7 observability).<br>
+      • <strong>Omnis CyberStream:</strong> NDR — full packet capture và threat hunting.<br>
+      • <strong>InfiniStreamNG:</strong> Full-packet capture probe tích hợp Smart Data.<br>
+      • <strong>Omnis Cyber Intelligence:</strong> Security analytics và threat investigation platform.<br>
+      • <strong>ATLAS Intelligence Feed (AIF):</strong> Subscription threat intelligence cho Sightline và TMS.<br><br>
+      Netscout định vị mình là "Guardians of the Connected World" — bao phủ cả network performance management lẫn security cho cả SP và Enterprise.
+    </div>
+  </div>
+
+  <div class="qa-item">
+    <div class="qa-q" onclick="toggleQA(this)">Cách tìm khách hàng mục tiêu để giới thiệu Netscout như thế nào? <span class="arrow">▼</span></div>
+    <div class="qa-a">
+      <strong>Các kênh tìm kiếm khách hàng tiềm năng:</strong><br><br>
+      1. <strong>RIPE/APNIC database:</strong> Tìm organizations có nhiều /24 prefix, AS number riêng → đây là ISP, DC, hoặc large enterprise có hạ tầng đủ lớn.<br>
+      2. <strong>Tin tức DDoS Việt Nam:</strong> VNCERT, VNPT-VNCS, các báo công nghệ. Tổ chức nào vừa bị DDoS là hot lead.<br>
+      3. <strong>LinkedIn targeting:</strong> Tìm "Network Engineer", "Security Manager", "CTO" tại ISP, DC, banking VN. Connect và warm up.<br>
+      4. <strong>Sự kiện ngành:</strong> Vietnam Network Security, VNS Summit, VNISA events, Techcombank/VPBank hackathon events.<br>
+      5. <strong>Partner referral:</strong> Đối tác bán Cisco, Juniper routers thường biết ISP nào đang có flow export nhưng thiếu analytics platform.<br>
+      6. <strong>Cú hích regulatory:</strong> Thông tư 06 NHNN, Nghị định 13/2023 về bảo vệ dữ liệu — tạo deadline compliance cho banking/fintech.<br>
+      7. <strong>Ask existing customers:</strong> Nếu đã có customer ở lĩnh vực khác, hỏi xem họ có network partner/subsidiary cần bảo vệ không.
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 16: REFERENCES -->
+<div class="section" id="s-references">
+  <div class="section-tag">Nguồn tham chiếu</div>
+  <h2>16. Tài liệu tham chiếu đã sử dụng để tổng hợp báo cáo này</h2>
+
+  <h3>Tài liệu nội bộ (Project Knowledge)</h3>
+  <ul class="ref-list">
+    <li><strong>Arbor Sightline Datasheet (SECPDS_005_EN-2401, 03/2024)</strong> — Thông số kỹ thuật, deployment scaling, VM requirements, appliance SP7500 specs, Flex Licensing options. Nguồn: arborsightline.pdf</li>
+    <li><strong>Arbor Threat Mitigation System Datasheet (SECPDS_004_EN-2401, 06/2024)</strong> — Appliance specs (8100, HD1000, 2600, 2800), countermeasures portfolio, Software TMS/Distributed TMS specs. Nguồn: arborthreatmitigationsystem.pdf</li>
+    <li><strong>ATLAS Intelligence Feed (AIF) for Arbor Sightline Datasheet (SECPDS_019_EN-2201, 02/2022)</strong> — AIF features, ASERT team, OTT classification, cyber threat detection. Nguồn: atlasintelligencefeedaifforsightline.pdf</li>
+    <li><strong>ATLAS Intelligence Feed (AIF) for Arbor TMS Datasheet (SECPDS_020_EN-2201, 02/2022)</strong> — DDoS IP Reputation, Attack Payload, TMS Templates, reflector correlation. Nguồn: atlasintelligencefeedforarbortms.pdf</li>
+    <li><strong>Auto-mitigation Demo Guide</strong> — Workflow phát hiện, phân tích alert, auto-mitigation, sample packet capture, countermeasure adjustment. Nguồn: Automitigation.pdf</li>
+    <li><strong>Flowspec Mitigation Demo Guide</strong> — Workflow Flowspec manual mitigation, alert characterization, edge dropping, verification. Nguồn: Flowspec_Mitigation.pdf</li>
+    <li><strong>Sightline/TMS DDoS Detection &amp; Mitigation Admin Course 9.7.0.0</strong> — BGP matching, managed object configuration, detection settings, mitigation templates, learning mitigation. Nguồn: Sightline_TMS_DDoS_Detection_Mitigation_Admin_Course_9_7_0_0.pdf</li>
+    <li><strong>Sightline User Guide</strong> — Hướng dẫn vận hành chi tiết. Nguồn: userguide_Sighline.pdf</li>
+  </ul>
+
+  <h3>Nguồn Web Official (Netscout)</h3>
+  <ul class="ref-list">
+    <li><strong>NETSCOUT Arbor Sightline Product Page</strong> — www.netscout.com/product/arbor-sightline</li>
+    <li><strong>NETSCOUT Arbor TMS Product Page</strong> — www.netscout.com/product/arbor-threat-mitigation-system</li>
+    <li><strong>NETSCOUT Arbor Sightline with Sentinel</strong> — www.netscout.com/product/arbor-sightline-sentinel</li>
+    <li><strong>NETSCOUT DDoS Protection Solutions</strong> — www.netscout.com/solutions/ddos-protection</li>
+    <li><strong>NETSCOUT Service Provider DDoS Protection</strong> — www.netscout.com/solutions/service-provider-ddos-protection</li>
+    <li><strong>Arbor Sightline Flex Licensing Datasheet</strong> — www.netscout.com/resources/data-sheets/arbor-sightline-flex-licensing</li>
+    <li><strong>ATLAS Global Threat Intelligence</strong> — www.netscout.com/global-threat-intelligence</li>
+  </ul>
+
+  <h3>Nguồn phân tích thị trường &amp; cạnh tranh</h3>
+  <ul class="ref-list">
+    <li><strong>PeerSpot DDoS Protection Reviews &amp; Comparisons (2024-2025)</strong> — Arbor vs Cloudflare, vs Radware, vs Imperva. www.peerspot.com</li>
+    <li><strong>MarketsandMarkets DDoS Protection Market Report</strong> — Top companies, market size $5.8B-$10.4B, CAGR 12.3%. marketsandmarkets.com</li>
+    <li><strong>Expert Insights: Best DDoS Defense Solutions (2026)</strong> — expertinsights.com</li>
+    <li><strong>NETSCOUT Arbor Sightline &amp; TMS Demo Videos</strong> — www.netscout.com/resources/enterprise-ddos-videos</li>
+  </ul>
+
+  <div class="alert alert-warn" style="margin-top:24px">
+    <strong>Disclaimer:</strong> Tài liệu này được tổng hợp từ tài liệu chính thức của hãng và nguồn công khai cho mục đích nghiên cứu presales nội bộ. Thông tin về list price, discount, và điều khoản hợp đồng cụ thể cần xác nhận lại với Netscout hoặc authorized distributor trước khi đưa vào hồ sơ chính thức. Một số thông số kỹ thuật có thể thay đổi theo phiên bản sản phẩm mới nhất.
+  </div>
+</div>
+
+</div><!-- end #main -->
+
+<script>
+function toggleQA(el) {
+  el.classList.toggle('open');
+  const ans = el.nextElementSibling;
+  ans.classList.toggle('visible');
+}
+
+// Active nav highlight on scroll
+const sections = document.querySelectorAll('.section[id]');
+const navLinks = document.querySelectorAll('#sidebar nav a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(sec => {
+    const top = sec.offsetTop - 80;
+    if (window.scrollY >= top) current = sec.id;
+  });
+  navLinks.forEach(link => {
+    link.classList.remove('active');
+    if (link.getAttribute('href') === '#' + current) link.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>

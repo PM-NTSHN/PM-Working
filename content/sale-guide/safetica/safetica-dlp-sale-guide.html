@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Safetica DLP - Cẩm Nang Bán Hàng Dành Cho Sale</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg: #0f172a; /* Slate 900 */
+    --surface: #1e293b; /* Slate 800 */
+    --surface2: #334155; /* Slate 700 */
+    --border: #475569; /* Slate 600 */
+    --accent: #10b981; /* Emerald 500 - Security Green */
+    --accent-hover: #059669;
+    --accent2: #3b82f6; /* Blue 500 */
+    --warning: #f59e0b; /* Amber 500 */
+    --danger: #ef4444; /* Red 500 */
+    --text: #f8fafc;
+    --text-muted: #cbd5e1;
+    --text-dim: #94a3b8;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    display: flex;
+  }
+
+  /* Sidebar TOC */
+  aside {
+    width: 280px;
+    height: 100vh;
+    position: fixed;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    padding: 2rem 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .toc {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .toc a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    padding: 0.5rem;
+    border-radius: 6px;
+  }
+
+  .toc a:hover {
+    background: var(--surface2);
+    color: var(--text);
+  }
+
+  .toc a.active {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--accent);
+    font-weight: 600;
+    border-left: 3px solid var(--accent);
+  }
+
+  /* Main Content */
+  main {
+    margin-left: 280px;
+    padding: 3rem 4rem;
+    max-width: 1200px;
+    width: 100%;
+  }
+
+  header {
+    margin-bottom: 4rem;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 2rem;
+  }
+
+  h1 { font-size: 2.5rem; font-weight: 700; color: var(--text); margin-bottom: 1rem; line-height: 1.2; }
+  .subtitle { font-size: 1.2rem; color: var(--text-dim); }
+
+  section { margin-bottom: 4rem; scroll-margin-top: 2rem; }
+  h2 { font-size: 1.75rem; color: var(--accent2); margin-bottom: 1.5rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--surface2); }
+  h3 { font-size: 1.25rem; color: var(--text); margin-top: 2rem; margin-bottom: 1rem; }
+  
+  p, ul { margin-bottom: 1.25rem; color: var(--text-muted); }
+  ul { padding-left: 1.5rem; }
+  li { margin-bottom: 0.5rem; }
+
+  /* Info Cards */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: transform 0.2s;
+  }
+  .card:hover { transform: translateY(-5px); border-color: var(--accent); }
+  .card h3 { margin-top: 0; color: var(--accent); }
+
+  /* Tables */
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+  }
+  .data-table th, .data-table td {
+    border: 1px solid var(--border);
+    padding: 1rem;
+    text-align: left;
+  }
+  .data-table th {
+    background: var(--surface2);
+    color: var(--text);
+    font-weight: 600;
+  }
+  .data-table td:first-child { width: 25%; font-weight: 500; color: var(--text); }
+  
+  .quote {
+    font-family: 'JetBrains Mono', monospace;
+    background: #000;
+    color: #a78bfa;
+    padding: 0.75rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    display: block;
+    border-left: 3px solid #a78bfa;
+  }
+
+  .evaluator-note {
+    background: rgba(245, 158, 11, 0.1);
+    border-left: 4px solid var(--warning);
+    padding: 1rem;
+    border-radius: 0 8px 8px 0;
+    margin-top: 1rem;
+    font-size: 0.95rem;
+  }
+  
+  .evaluator-note strong { color: var(--warning); }
+
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--surface2);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.9em;
+    color: #38bdf8;
+  }
+
+  /* Notice Callout */
+  .callout {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid var(--accent2);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  .callout h4 { color: var(--accent2); margin-bottom: 0.5rem; }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding-top: 2rem;
+    margin-top: 4rem;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+  }
+
+</style>
+</head>
+<body>
+
+<aside>
+  <div class="logo">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+    Safetica Sales
+  </div>
+  <nav class="toc">
+    <a href="#overview">1. Tổng quan Giải pháp</a>
+    <a href="#licensing">2. Các Gói License</a>
+    <a href="#features">3. Các Tính năng Nổi bật</a>
+    <a href="#objections">4. Xử lý từ chối & Battlecard</a>
+    <a href="#deployment">5. Mô hình Triển khai</a>
+  </nav>
+</aside>
+
+<main>
+  <header>
+    <h1>Cẩm Nang Bán Hàng: Safetica DLP</h1>
+    <p class="subtitle">Bản nghiên cứu nội bộ dành cho team Sales & Presales | Focus: Kiến thức giải pháp & Xử lý từ chối (Battlecard)</p>
+  </header>
+
+  <div class="callout">
+    <h4>💡 Hướng dẫn sử dụng tài liệu</h4>
+    <p>Tài liệu này được biên soạn nhằm trang bị cho team Sales và Presales những kiến thức cốt lõi nhất về Safetica. Nội dung tập trung vào việc làm nổi bật các tính năng (USP), hiểu rõ các gói cấp phép (License), và đặc biệt là cách <strong>xử lý từ chối (Objection Handling)</strong> khi khách hàng so sánh Safetica với các đối thủ khác trên thị trường.</p>
+  </div>
+
+  <section id="overview">
+    <h2>1. Tổng quan Giải pháp Safetica</h2>
+    <p>Safetica là nền tảng Bảo mật Dữ liệu Thông minh (Intelligent Data Security) được thúc đẩy bởi <strong>Contextual Defense (Phòng thủ theo ngữ cảnh)</strong>. Safetica không chỉ tập trung vào Data Loss Prevention (DLP) truyền thống mà còn kết hợp Insider Risk Management (Quản lý rủi ro nội bộ).</p>
+    
+    <div class="grid">
+      <div class="card">
+        <h3>Đối tượng Khách hàng</h3>
+        <p>Các tổ chức cần bảo vệ dữ liệu nhạy cảm (PII, PCI, Sở hữu trí tuệ), cần tuân thủ tiêu chuẩn (GDPR, ISO 27001) nhưng <strong>không muốn phá vỡ quy trình làm việc</strong> của nhân viên.</p>
+      </div>
+      <div class="card">
+        <h3>3 Trụ cột Công nghệ (USP)</h3>
+        <ul>
+          <li><strong>Smart Classification:</strong> Phân loại tự động dựa trên ngữ cảnh và nội dung.</li>
+          <li><strong>Contextual Risk Analysis:</strong> Đánh giá rủi ro theo thời gian thực (hành động, điểm đến).</li>
+          <li><strong>Adaptive Security:</strong> Tự động điều chỉnh chính sách dựa trên học máy (Machine Learning) về thói quen người dùng.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="licensing">
+    <h2>2. Các Gói License (Product Plans)</h2>
+    <p>Safetica phân phối theo 3 gói chính. Sale cần nắm rõ để tư vấn Upsell hoặc tránh Over-promise (hứa hẹn lố) các tính năng không có trong gói cơ bản.</p>
+    
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Gói (Plan)</th>
+          <th>Phù hợp cho</th>
+          <th>Tính năng nổi bật / Giới hạn lưu trữ</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Essentials</strong></td>
+          <td>Doanh nghiệp bắt đầu làm quen với DLP, cần Discovery và Audit.</td>
+          <td>
+            - Khám phá dữ liệu (Discovery).<br>
+            - Báo cáo và Quản trị.<br>
+            - <strong>Retention:</strong> Cloud (6 tháng) / On-Prem (Tùy Database).
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Pro</strong></td>
+          <td>Doanh nghiệp cần ngăn chặn thất thoát thực sự (Enforcement).</td>
+          <td>
+            - Tất cả của Essentials.<br>
+            - <strong>OCR Technology</strong> (Quét nội dung hình ảnh).<br>
+            - Kiểm soát Website/App, Thiết bị ngoại vi.<br>
+            - Bảo vệ M365, Chính sách bảo vệ động (Dynamic).<br>
+            - <strong>Retention:</strong> Cloud (18 tháng) / On-Prem (Tùy Database).
+          </td>
+        </tr>
+        <tr>
+          <td><strong>Premium</strong></td>
+          <td>Doanh nghiệp Enterprise cần tự động hóa và AI.</td>
+          <td>
+            - Tất cả của Pro.<br>
+            - Tích hợp lõi AI (Enhanced AI-core integration).<br>
+            - Tùy chỉnh nâng cao (Customization options).<br>
+            - <strong>Retention:</strong> Cloud (36+ tháng) / On-Prem (Tùy Database).
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="features">
+    <h2>3. Các Tính năng Nổi bật (Outstanding Features)</h2>
+    <p>Dưới đây là các tính năng kỹ thuật và giải pháp cốt lõi tạo nên sức mạnh của nền tảng bảo mật Safetica, giúp Sale tự tin làm nổi bật giá trị giải pháp trước khách hàng.</p>
+
+    <div class="grid">
+      <div class="card">
+        <h3>🧠 Phân loại Thông minh (Smart Classification)</h3>
+        <ul>
+          <li>Tự động phân loại dữ liệu có cấu trúc và phi cấu trúc.</li>
+          <li>Sử dụng các tín hiệu ngữ cảnh (context signals) và phân tích nội dung để nhận diện chính xác.</li>
+          <li>Tích hợp nguồn gốc tệp, lịch sử và hành vi sử dụng ứng dụng để tối đa hóa độ chuẩn xác.</li>
+        </ul>
+      </div>
+      
+      <div class="card">
+        <h3>📊 Phân tích Rủi ro theo Ngữ cảnh (Contextual Risk Analysis)</h3>
+        <ul>
+          <li>Chấm điểm mọi thao tác dữ liệu (copy, upload, v.v.) theo thời gian thực.</li>
+          <li>Đánh giá rủi ro dựa trên thời gian, điểm đến, phương thức và mức độ phân loại dữ liệu.</li>
+          <li>Đánh dấu (Flag) các hành động rủi ro cao mà không làm gián đoạn quy trình làm việc.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>🛡️ Bảo mật Thích ứng (Adaptive Security & Dynamic Action)</h3>
+        <ul>
+          <li>Học máy (Machine Learning) theo dõi thói quen sử dụng dữ liệu thông thường để xác định hoạt động bất thường.</li>
+          <li><strong>Dynamic Action:</strong> Tự động thắt chặt hoặc nới lỏng chính sách (từ Ghi log -> Cảnh báo -> Chặn) dựa trên hành vi cụ thể của từng người dùng.</li>
+          <li>Cảnh báo người dùng kèm tùy chọn bỏ qua (override), hoặc tự động chặn đứng các bất thường nghiêm trọng.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>☁️ Bảo vệ Đám mây & M365 (Cloud Security)</h3>
+        <ul>
+          <li>Đồng nhất chính sách bảo vệ email trên cả Endpoint và Exchange Online.</li>
+          <li>Kiểm tra, giám sát, và kiểm soát quyền truy cập tệp tin khi cộng tác trên <strong>Microsoft 365, OneDrive, SharePoint, và Teams</strong>.</li>
+          <li>Tự động áp dụng kiểm soát ngay cả khi thiết bị không nằm trong mạng nội bộ của tổ chức.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>👁️ Công nghệ Nhận diện Quang học (OCR)</h3>
+        <ul>
+          <li>Quét và phân tích sâu nội dung bên trong các hình ảnh (ảnh chụp màn hình, tài liệu scan).</li>
+          <li>Ngăn chặn hiệu quả các chiêu trò rò rỉ dữ liệu nhạy cảm được ẩn giấu dưới định dạng ảnh.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>⚙️ Tích hợp SIEM & Cảnh báo Real-time</h3>
+        <ul>
+          <li><strong>Real-time Alerts:</strong> Gửi thông báo ngay lập tức qua Email hoặc Safetica Console khi có sự cố vi phạm chính sách.</li>
+          <li>Tự động báo cáo sự cố đến các hệ thống SIEM hàng đầu như <strong>Splunk, QRadar, LogRhythm, ArcSight</strong>.</li>
+          <li>Hỗ trợ Reporting API để đẩy dữ liệu ra các dịch vụ phân tích bên thứ 3.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>🌐 Quản lý Ứng dụng & Trang web (App & Web Control)</h3>
+        <ul>
+          <li>Giám sát và kiểm soát chi tiết quyền truy cập vào các trang web và ứng dụng của người dùng.</li>
+          <li>Phân loại ứng dụng (VD: Instant Messaging) và áp dụng các chính sách ngăn chặn rò rỉ dữ liệu qua các kênh này một cách linh hoạt.</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>📈 Báo cáo Tự động & Khám phá Rủi ro</h3>
+        <ul>
+          <li>Nhận diện các rủi ro nội bộ tiềm ẩn (Insider Risks) và khám phá dữ liệu nhạy cảm.</li>
+          <li>Tự động trích xuất và gửi báo cáo định kỳ (hàng ngày, tuần, tháng) qua Email cho ban quản trị (dựa trên các Layout cấu hình sẵn).</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="objections">
+    <h2>4. Xử lý từ chối & Battlecard (Objection Handling)</h2>
+    <p>Không có giải pháp nào hoàn hảo. Khách hàng đôi khi sẽ hỏi những tính năng rất ngách hoặc so sánh với hãng khác. Dưới đây là các điểm Safetica <strong>KHÔNG</strong> hỗ trợ trực tiếp và cách tư vấn/lái vấn đề để thuyết phục khách hàng.</p>
+
+    <div class="evaluator-note" style="margin-bottom: 2rem;">
+      <strong>Nguyên tắc tư vấn:</strong> Tránh việc trả lời "Không hỗ trợ" một cách cụt lủn. Hãy dùng các cụm từ như "Dạ bên em đáp ứng thông qua việc tích hợp..." hoặc giải thích logic mang tính Best-practice của ngành bảo mật để khách hàng hiểu bản chất vấn đề.
+    </div>
+
+    <h3>Trường hợp 1: Khách hàng muốn chặn xóa file (Prevent file deletion)</h3>
+    <ul>
+      <li><strong>Khách hàng hỏi:</strong> "Hệ thống Endpoint DLP của em có ngăn chặn được nhân viên cố tình xóa các tệp dữ liệu quan trọng không?"</li>
+      <li><strong>Thực tế Safetica:</strong> ❌ KHÔNG HỖ TRỢ. (Theo tài liệu hãng: <em>"No, Safetica does not audit or block delete operations, since they are not related to data loss."</em>)</li>
+      <li><strong>Cách Sale / Presales trả lời:</strong> 
+        <br><br>
+        <em>"Dạ thưa anh/chị, theo tiêu chuẩn bảo mật phòng thủ chiều sâu (Defense-in-Depth) và định nghĩa của Gartner về DLP, việc thao tác xóa (Delete) nội bộ thuộc về phạm trù tính khả dụng của dữ liệu (Availability) chứ không phải rò rỉ dữ liệu (Data Loss/Confidentiality). Safetica tối ưu hóa tài nguyên máy trạm bằng cách không can thiệp vào tiến trình xóa của Hệ điều hành. 
+        <br>Để đáp ứng yêu cầu chống xóa tệp tin, best-practice là anh/chị nên sử dụng tính năng File System Permissions (NTFS Permissions) trên Windows hoặc File Server Resource Manager được tích hợp sẵn. Việc này giúp chặn quyền Delete ở cấp độ lõi của hệ điều hành, đảm bảo hiệu suất tốt nhất cho máy trạm thay vì bắt DLP agent phải xử lý."</em>
+      </li>
+    </ul>
+
+    <h3>Trường hợp 2: Hạn chế của tính năng tự động (Dynamic Action)</h3>
+    <ul>
+      <li><strong>Khách hàng thắc mắc:</strong> "Tính năng AI hành động động (Dynamic action) bên em có áp dụng được để tự động chặn in ấn (print) hay copy clipboard không?"</li>
+      <li><strong>Thực tế Safetica:</strong> ❌ BỊ GIỚI HẠN. (Theo tài liệu: <em>"Policies with dynamic action do not support the following data destinations: Git, M365 file sharing, print, and virtual print. The options Block copy to clipboard and Block screen capture are not supported."</em>)</li>
+      <li><strong>Cách Sale / Presales trả lời:</strong>
+        <br><br>
+        <em>"Dạ, với các hành vi chia sẻ dữ liệu qua Web, USB, Email, hệ thống của bên em đáp ứng 100% việc thắt chặt/nới lỏng tự động bằng thuật toán Contextual Defense (Dynamic action). Tuy nhiên, đối với các thao tác đặc thù có giao thức cố định ngay trên máy như In ấn (Print), Copy & Paste (Clipboard), hoặc chụp màn hình, để đảm bảo không xảy ra sai sót (False Positive) từ AI gây gián đoạn bực bội cho người dùng, Safetica áp dụng cơ chế <strong>Strict Policy (Chính sách tĩnh tuyệt đối)</strong>. Tức là quản trị viên sẽ cấu hình Block cứng hẳn hoặc Block with override cho các kênh này, đảm bảo tính tuân thủ bảo mật tuyệt đối 100% thay vì để máy học tự suy đoán."</em>
+      </li>
+    </ul>
+  </section>
+
+  <section id="deployment">
+    <h2>5. Mô hình Triển khai (Deployment Models)</h2>
+    <p>Safetica cung cấp tính linh hoạt cao trong việc triển khai, phù hợp với mọi quy mô và chính sách bảo mật hạ tầng của khách hàng. Sale cần nắm rõ giới hạn lưu trữ của từng mô hình để tư vấn chuẩn xác.</p>
+    
+    <div class="grid">
+      <div class="card">
+        <h3>☁️ Safetica Cloud (SaaS)</h3>
+        <p>Mô hình triển khai nhanh chóng, hệ thống backend được lưu trữ và quản lý hoàn toàn bởi Safetica.</p>
+        <ul>
+          <li><strong>Ưu điểm:</strong> Không tốn chi phí và công sức quản trị hạ tầng (Server, Database). Thời gian Go-live cực nhanh.</li>
+          <li><strong>Lưu trữ Log (Retention):</strong> Bị giới hạn phụ thuộc vào gói License (Gói Essentials: 6 tháng | Gói Pro: 18 tháng | Gói Premium: 36+ tháng).</li>
+          <li><strong>Phù hợp cho:</strong> Các doanh nghiệp hiện đại, ưu tiên chiến lược Cloud-first, hoặc các công ty có lực lượng lao động phân tán.</li>
+        </ul>
+      </div>
+      
+      <div class="card">
+        <h3>🏢 Safetica On-Premises</h3>
+        <p>Khách hàng tự triển khai hệ thống trên hạ tầng máy chủ và mạng nội bộ của riêng mình.</p>
+        <ul>
+          <li><strong>Ưu điểm:</strong> Nắm quyền kiểm soát 100% dữ liệu. Có thêm Safetica Maintenance Console cho các thiết lập cảnh báo (Alert) hệ thống chuyên sâu.</li>
+          <li><strong>Lưu trữ Log (Retention):</strong> Không giới hạn bởi hãng. Hoàn toàn phụ thuộc vào dung lượng máy chủ Database SQL của khách hàng.</li>
+          <li><strong>Phù hợp cho:</strong> Khối Chính phủ, Ngân hàng, Y tế, hoặc các tổ chức yêu cầu mạng nội bộ khép kín (Air-gapped) và tuân thủ nghiêm ngặt việc không đưa dữ liệu ra ngoài Internet.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+// Smooth scroll for TOC
+document.querySelectorAll('.toc a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.querySelector(a.getAttribute('href'));
+    if (target) {
+      const headerOffset = 20;
+      const elementPosition = target.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+    }
+  });
+});
+
+// Highlight active TOC item
+const sections = document.querySelectorAll('section[id]');
+const tocLinks = document.querySelectorAll('.toc a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-10% 0px -80% 0px' });
+
+sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,497 @@
+Dưới đây là mã nguồn cho file HTML bài kiểm tra trắc nghiệm gồm 30 câu hỏi được thiết kế riêng cho đội ngũ Sale, tập trung vào các điểm bán hàng (Key Selling Points), Use case, thông tin cạnh tranh (CyberArk, BeyondTrust) và các tính năng cốt lõi của Delinea. 
+
+File HTML này đã được tích hợp sẵn code JavaScript để tự động chấm điểm, hiển thị đáp án đúng/sai và có thông báo đánh giá Đạt (Pass) nếu Sale trả lời đúng trên 75% (từ 23/30 câu trở lên).
+
+Bạn chỉ cần copy toàn bộ đoạn mã bên dưới, lưu thành một file có đuôi `.html` (ví dụ: `delinea_quiz_sale.html`) và mở bằng bất kỳ trình duyệt web nào (Chrome, Edge, Cốc Cốc...) để sử dụng.
+
+```html
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Kiểm Tra: Giải Pháp PAM Delinea (Dành Cho Sale)</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #1a5276;
+            border-bottom: 2px solid #1a5276;
+            padding-bottom: 10px;
+        }
+        .question-block {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #fcfcfc;
+            border-left: 4px solid #3498db;
+        }
+        .question-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        .options label {
+            display: block;
+            margin-bottom: 8px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .options label:hover {
+            background-color: #eaf2f8;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #28b463;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #239b56;
+        }
+        #result-container {
+            display: none;
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .pass { background-color: #d4efdf; color: #1d8348; border: 2px solid #28b463; }
+        .fail { background-color: #fadbd8; color: #943126; border: 2px solid #e74c3c; }
+        .correct-answer { background-color: #d5f5e3; font-weight: bold; }
+        .wrong-answer { background-color: #f5b7b1; text-decoration: line-through; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Đánh Giá Kiến Thức Giải Pháp Delinea PAM</h1>
+    <p><strong>Mục tiêu:</strong> Đánh giá mức độ hiểu giải pháp của Sale. Điểm đạt (Pass) là > 75%.</p>
+    <form id="quiz-form">
+        <!-- Q1 -->
+        <div class="question-block" id="block-q1">
+            <div class="question-title">Câu 1: Điểm cốt lõi của giải pháp PAM Delinea là gì?</div>
+            <div class="options">
+                <label><input type="radio" name="q1" value="A"> A. Chỉ quản lý mật khẩu cá nhân cho nhân viên văn phòng</label>
+                <label><input type="radio" name="q1" value="B"> B. Quản lý quyền truy cập đặc quyền (Privileged Access Management)</label>
+                <label><input type="radio" name="q1" value="C"> C. Chống virus và mã độc cho máy trạm (Endpoint Antivirus)</label>
+                <label><input type="radio" name="q1" value="D"> D. Tối ưu hóa băng thông mạng nội bộ</label>
+            </div>
+        </div>
+
+        <!-- Q2 -->
+        <div class="question-block" id="block-q2">
+            <div class="question-title">Câu 2: Thuật ngữ JIT trong chiến lược PAM của Delinea mang ý nghĩa gì?</div>
+            <div class="options">
+                <label><input type="radio" name="q2" value="A"> A. Just In Time (Cấp quyền truy cập đúng lúc/tạm thời)</label>
+                <label><input type="radio" name="q2" value="B"> B. Just In Transition</label>
+                <label><input type="radio" name="q2" value="C"> C. Jump In Time (Tính năng kết nối trực tiếp)</label>
+                <label><input type="radio" name="q2" value="D"> D. Join In Team</label>
+            </div>
+        </div>
+
+        <!-- Q3 -->
+        <div class="question-block" id="block-q3">
+            <div class="question-title">Câu 3: Thuật ngữ JEA trong chiến lược phân quyền được hiểu là gì?</div>
+            <div class="options">
+                <label><input type="radio" name="q3" value="A"> A. Just Enough Authentication</label>
+                <label><input type="radio" name="q3" value="B"> B. Just Enough Access (Cấp quyền vừa đủ cho công việc)</label>
+                <label><input type="radio" name="q3" value="C"> C. Joint Enterprise Access</label>
+                <label><input type="radio" name="q3" value="D"> D. Jump Endpoint Access</label>
+            </div>
+        </div>
+
+        <!-- Q4 -->
+        <div class="question-block" id="block-q4">
+            <div class="question-title">Câu 4: Vị thế của Delinea trong báo cáo Gartner Magic Quadrant đánh giá giải pháp PAM năm 2024, 2025 là gì?</div>
+            <div class="options">
+                <label><input type="radio" name="q4" value="A"> A. Niche Players</label>
+                <label><input type="radio" name="q4" value="B"> B. Visionaries</label>
+                <label><input type="radio" name="q4" value="C"> C. Challengers</label>
+                <label><input type="radio" name="q4" value="D"> D. Leaders (Nhóm dẫn đầu)</label>
+            </div>
+        </div>
+
+        <!-- Q5 -->
+        <div class="question-block" id="block-q5">
+            <div class="question-title">Câu 5: Tính năng Web Password Filler (WPF) của Delinea giải quyết "Pain Point" gì của khách hàng?</div>
+            <div class="options">
+                <label><input type="radio" name="q5" value="A"> A. Chặn các trang web độc hại</label>
+                <label><input type="radio" name="q5" value="B"> B. Ngăn người dùng lưu mật khẩu nhạy cảm lên trình duyệt bằng cách tự động điền (autofill) an toàn</label>
+                <label><input type="radio" name="q5" value="C"> C. Quét lỗ hổng của các ứng dụng web</label>
+                <label><input type="radio" name="q5" value="D"> D. Đổi mật khẩu website của bên thứ ba tự động</label>
+            </div>
+        </div>
+
+        <!-- Q6 -->
+        <div class="question-block" id="block-q6">
+            <div class="question-title">Câu 6: Thành phần nào của Secret Server giúp dễ dàng quản lý máy chủ ở các chi nhánh, site ở xa mà không cần mở port Inbound?</div>
+            <div class="options">
+                <label><input type="radio" name="q6" value="A"> A. Connection Manager</label>
+                <label><input type="radio" name="q6" value="B"> B. Protocol Handler</label>
+                <label><input type="radio" name="q6" value="C"> C. Distributed Engine (DE)</label>
+                <label><input type="radio" name="q6" value="D"> D. Secret Policy</label>
+            </div>
+        </div>
+
+        <!-- Q7 -->
+        <div class="question-block" id="block-q7">
+            <div class="question-title">Câu 7: Điểm khác biệt CỐT LÕI về Licensing của Delinea Secret Server Platinum so với CyberArk là gì?</div>
+            <div class="options">
+                <label><input type="radio" name="q7" value="A"> A. Delinea đếm License theo địa chỉ IP</label>
+                <label><input type="radio" name="q7" value="B"> B. Delinea tính gộp cả tính năng Vault mật khẩu và Quản lý phiên (Session Management) không giới hạn trong 1 license, không cần mua rời như CyberArk</label>
+                <label><input type="radio" name="q7" value="C"> C. CyberArk miễn phí quản lý phiên, Delinea thì không</label>
+                <label><input type="radio" name="q7" value="D"> D. Tính license dựa trên số lượng máy chủ mục tiêu</label>
+            </div>
+        </div>
+
+        <!-- Q8 -->
+        <div class="question-block" id="block-q8">
+            <div class="question-title">Câu 8: So sánh với BeyondTrust, cách tính license của Delinea Secret Server dựa trên tiêu chí nào có lợi hơn cho khách hàng quản lý nhiều server?</div>
+            <div class="options">
+                <label><input type="radio" name="q8" value="A"> A. Delinea tính theo số lượng Named User (người quản trị), không quan tâm có bao nhiêu thiết bị/server mục tiêu</label>
+                <label><input type="radio" name="q8" value="B"> B. Delinea tính license dựa trên số lượng Server đích</label>
+                <label><input type="radio" name="q8" value="C"> C. Delinea tính license theo số lượng phiên truy cập đồng thời</label>
+                <label><input type="radio" name="q8" value="D"> D. Delinea tính theo lưu lượng mạng</label>
+            </div>
+        </div>
+
+        <!-- Q9 -->
+        <div class="question-block" id="block-q9">
+            <div class="question-title">Câu 9: Tính năng "DoubleLock" trong Secret Server mang lại giá trị kinh doanh (Business Value) gì?</div>
+            <div class="options">
+                <label><input type="radio" name="q9" value="A"> A. Khóa tài khoản vĩnh viễn khi phát hiện tấn công</label>
+                <label><input type="radio" name="q9" value="B"> B. Khóa cả máy trạm và máy chủ</label>
+                <label><input type="radio" name="q9" value="C"> C. Cung cấp lớp bảo vệ thứ 2 bằng mật khẩu cá nhân riêng biệt cho dữ liệu siêu nhạy cảm (như mã PIN, thẻ tín dụng)</label>
+                <label><input type="radio" name="q9" value="D"> D. Yêu cầu hai quản trị viên cùng bấm nút đăng nhập</label>
+            </div>
+        </div>
+
+        <!-- Q10 -->
+        <div class="question-block" id="block-q10">
+            <div class="question-title">Câu 10: "Checkout" (cấp quyền bằng OTP) giải quyết rủi ro nào cho khách hàng?</div>
+            <div class="options">
+                <label><input type="radio" name="q10" value="A"> A. Ngăn chặn việc nhiều admin dùng chung 1 tài khoản đặc quyền cùng lúc, giúp truy vết trách nhiệm chính xác</label>
+                <label><input type="radio" name="q10" value="B"> B. Tự động thanh toán phí sử dụng cloud</label>
+                <label><input type="radio" name="q10" value="C"> C. Chia sẻ mật khẩu cho toàn bộ nhân sự công ty dễ dàng hơn</label>
+                <label><input type="radio" name="q10" value="D"> D. Backup cấu hình của hệ thống</label>
+            </div>
+        </div>
+
+        <!-- Q11 -->
+        <div class="question-block" id="block-q11">
+            <div class="question-title">Câu 11: Một Use Case tiêu biểu của phòng Marketing được ứng dụng hiệu quả trong Secret Server là gì?</div>
+            <div class="options">
+                <label><input type="radio" name="q11" value="A"> A. Tự động gửi email quảng cáo</label>
+                <label><input type="radio" name="q11" value="B"> B. Quản lý, kiểm soát và chia sẻ an toàn mật khẩu các mạng xã hội (Twitter, Facebook, LinkedIn) mà không bị lộ mật khẩu thật</label>
+                <label><input type="radio" name="q11" value="C"> C. Quản lý danh sách khách hàng tiềm năng</label>
+                <label><input type="radio" name="q11" value="D"> D. Lưu trữ dữ liệu thiết kế hình ảnh</label>
+            </div>
+        </div>
+
+        <!-- Q12 -->
+        <div class="question-block" id="block-q12">
+            <div class="question-title">Câu 12: Khi triển khai kiến trúc High Availability (HA/DR) cho Secret Server On-Premise, yêu cầu bắt buộc đối với cơ sở dữ liệu (Database) là gì?</div>
+            <div class="options">
+                <label><input type="radio" name="q12" value="A"> A. MS SQL Mirroring</label>
+                <label><input type="radio" name="q12" value="B"> B. Oracle RAC</label>
+                <label><input type="radio" name="q12" value="C"> C. MS SQL AlwaysOn Availability Group</label>
+                <label><input type="radio" name="q12" value="D"> D. MongoDB Cluster</label>
+            </div>
+        </div>
+
+        <!-- Q13 -->
+        <div class="question-block" id="block-q13">
+            <div class="question-title">Câu 13: Các khách hàng thuộc khối Viễn thông nào dưới đây tại Việt Nam ĐÃ sử dụng giải pháp của Delinea?</div>
+            <div class="options">
+                <label><input type="radio" name="q13" value="A"> A. FPT Telecom, MobiFone</label>
+                <label><input type="radio" name="q13" value="B"> B. VNPT Net, Viettel Telecom, CMC Telecom</label>
+                <label><input type="radio" name="q13" value="C"> C. SCTV, Vietnamobile</label>
+                <label><input type="radio" name="q13" value="D"> D. NetNam, Gmobile</label>
+            </div>
+        </div>
+
+        <!-- Q14 -->
+        <div class="question-block" id="block-q14">
+            <div class="question-title">Câu 14: Lợi ích của ứng dụng "Connection Manager" mà Delinea cung cấp là gì?</div>
+            <div class="options">
+                <label><input type="radio" name="q14" value="A"> A. Tăng tốc độ truy cập Internet</label>
+                <label><input type="radio" name="q14" value="B"> B. Cho phép người dùng cấu hình Switch/Router nhanh chóng</label>
+                <label><input type="radio" name="q14" value="C"> C. Cung cấp giao diện duy nhất để quản lý tập trung và tương tác cùng lúc nhiều phiên kết nối RDP/SSH</label>
+                <label><input type="radio" name="q14" value="D"> D. Quản lý các thiết bị di động (MDM)</label>
+            </div>
+        </div>
+
+        <!-- Q15 -->
+        <div class="question-block" id="block-q15">
+            <div class="question-title">Câu 15: Secret Server mã hóa tất cả dữ liệu cực kỳ nhạy cảm tại kho (Vault) bằng thuật toán nào để đáp ứng bảo mật?</div>
+            <div class="options">
+                <label><input type="radio" name="q15" value="A"> A. MD5</label>
+                <label><input type="radio" name="q15" value="B"> B. RSA-1024</label>
+                <label><input type="radio" name="q15" value="C"> C. AES-256</label>
+                <label><input type="radio" name="q15" value="D"> D. SHA-1</label>
+            </div>
+        </div>
+
+        <!-- Q16 -->
+        <div class="question-block" id="block-q16">
+            <div class="question-title">Câu 16: Tập tin cực kỳ quan trọng chứa Master Encryption Key (MEK) không thể làm mất khi vận hành Secret Server là?</div>
+            <div class="options">
+                <label><input type="radio" name="q16" value="A"> A. secret.config</label>
+                <label><input type="radio" name="q16" value="B"> B. masterkey.xml</label>
+                <label><input type="radio" name="q16" value="C"> C. web.config</label>
+                <label><input type="radio" name="q16" value="D"> D. encryption.config</label>
+            </div>
+        </div>
+
+        <!-- Q17 -->
+        <div class="question-block" id="block-q17">
+            <div class="question-title">Câu 17: Tính năng "Session Recording" (Ghi hình phiên) mang lại lợi thế cạnh tranh gì trong báo cáo Audit của doanh nghiệp?</div>
+            <div class="options">
+                <label><input type="radio" name="q17" value="A"> A. Chỉ chụp màn hình ngẫu nhiên mỗi 5 phút để tiết kiệm dung lượng</label>
+                <label><input type="radio" name="q17" value="B"> B. Ghi lại hình ảnh, thao tác tổ hợp phím (Keystroke) và danh sách tiến trình, giúp xem lại trực quan mọi hành động của Admin</label>
+                <label><input type="radio" name="q17" value="C"> C. Dịch âm thanh hội thoại của quản trị viên ra text</label>
+                <label><input type="radio" name="q17" value="D"> D. Ghi hình lại camera của người dùng qua Laptop</label>
+            </div>
+        </div>
+
+        <!-- Q18 -->
+        <div class="question-block" id="block-q18">
+            <div class="question-title">Câu 18: Việc áp dụng quy trình "Require Comment" tích hợp với hệ thống ITSM (vd: ServiceNow) có ý nghĩa như thế nào?</div>
+            <div class="options">
+                <label><input type="radio" name="q18" value="A"> A. Tự động lấy cấu hình phần cứng từ CMDB</label>
+                <label><input type="radio" name="q18" value="B"> B. Người dùng bắt buộc phải nhập số Ticket hoặc lý do hợp lệ thì mới có thể sử dụng quyền quản trị viên</label>
+                <label><input type="radio" name="q18" value="C"> C. Giảm thiểu chi phí mua license Service Desk</label>
+                <label><input type="radio" name="q18" value="D"> D. Tự động chấm công nhân viên IT</label>
+            </div>
+        </div>
+
+        <!-- Q19 -->
+        <div class="question-block" id="block-q19">
+            <div class="question-title">Câu 19: Tính năng "Hide Launcher Password" giúp giải quyết bài toán bảo mật gì?</div>
+            <div class="options">
+                <label><input type="radio" name="q19" value="A"> A. Người dùng (hoặc bên thứ 3) đăng nhập thành công vào server nhưng tuyệt đối không nhìn thấy mật khẩu thực sự</label>
+                <label><input type="radio" name="q19" value="B"> B. Không cho phép đổi mật khẩu</label>
+                <label><input type="radio" name="q19" value="C"> C. Làm mờ màn hình của người dùng khi nhập lệnh</label>
+                <label><input type="radio" name="q19" value="D"> D. Ẩn lịch sử truy cập web</label>
+            </div>
+        </div>
+
+        <!-- Q20 -->
+        <div class="question-block" id="block-q20">
+            <div class="question-title">Câu 20: Công cụ Discovery trong Secret Server giải quyết Pain Point gì trong quản trị vận hành?</div>
+            <div class="options">
+                <label><input type="radio" name="q20" value="A"> A. Tìm kiếm mã độc ẩn sâu trong hệ điều hành</label>
+                <label><input type="radio" name="q20" value="B"> B. Giúp dò quét, phát hiện tự động các tài khoản/mật khẩu "vô chủ" hoặc chưa được biết tới trong hạ tầng để đưa vào quản lý</label>
+                <label><input type="radio" name="q20" value="C"> C. Phân tích lưu lượng mã hóa SSL</label>
+                <label><input type="radio" name="q20" value="D"> D. Giám sát băng thông các ứng dụng Cloud</label>
+            </div>
+        </div>
+
+        <!-- Q21 -->
+        <div class="question-block" id="block-q21">
+            <div class="question-title">Câu 21: Tùy chọn "Unlimited Vault Access" (Chế độ Phá kính - Break Glass) hỗ trợ gì khi hệ thống gặp rủi ro?</div>
+            <div class="options">
+                <label><input type="radio" name="q21" value="A"> A. Cấp quyền truy cập khẩn cấp để vào kho mật khẩu kể cả khi Role của người đó bình thường không được phép</label>
+                <label><input type="radio" name="q21" value="B"> B. Kích hoạt xóa toàn bộ dữ liệu máy chủ</label>
+                <label><input type="radio" name="q21" value="C"> C. Mở khóa toàn bộ IP bị chặn của Firewall</label>
+                <label><input type="radio" name="q21" value="D"> D. Khôi phục máy chủ ảo bị xóa</label>
+            </div>
+        </div>
+
+        <!-- Q22 -->
+        <div class="question-block" id="block-q22">
+            <div class="question-title">Câu 22: Trong mô hình tích hợp, Delinea PAM hỗ trợ cấu hình xác thực MFA qua cơ chế tiêu chuẩn nào để tương thích rộng rãi nhất?</div>
+            <div class="options">
+                <label><input type="radio" name="q22" value="A"> A. IPsec</label>
+                <label><input type="radio" name="q22" value="B"> B. SNMP</label>
+                <label><input type="radio" name="q22" value="C"> C. RADIUS (và SAML/OIDC)</label>
+                <label><input type="radio" name="q22" value="D"> D. FTP</label>
+            </div>
+        </div>
+
+        <!-- Q23 -->
+        <div class="question-block" id="block-q23">
+            <div class="question-title">Câu 23: Secret Server có thể hoạt động hiệu quả trong môi trường mạng hoàn toàn cách ly (Air-gapped) hay không?</div>
+            <div class="options">
+                <label><input type="radio" name="q23" value="A"> A. Không, bắt buộc phải có internet để kích hoạt bản quyền</label>
+                <label><input type="radio" name="q23" value="B"> B. Có, Delinea hỗ trợ cơ chế Offline Activation cho hệ thống bị cách ly hoàn toàn</label>
+                <label><input type="radio" name="q23" value="C"> C. Có, nhưng chỉ sử dụng được 30 ngày</label>
+                <label><input type="radio" name="q23" value="D"> D. Chỉ hỗ trợ trên nền tảng Cloud</label>
+            </div>
+        </div>
+
+        <!-- Q24 -->
+        <div class="question-block" id="block-q24">
+            <div class="question-title">Câu 24: Khi triển khai môi trường multisite lớn, việc sử dụng thành phần RabbitMQ mang lại lợi ích kỹ thuật gì?</div>
+            <div class="options">
+                <label><input type="radio" name="q24" value="A"> A. RabbitMQ thay thế hoàn toàn hệ quản trị CSDL MS SQL</label>
+                <label><input type="radio" name="q24" value="B"> B. Đảm bảo độ tin cậy và tối ưu hàng đợi thông điệp (message queue) giao tiếp giữa Secret Server và Distributed Engines</label>
+                <label><input type="radio" name="q24" value="C"> C. Tự động mã hóa thư mục máy trạm</label>
+                <label><input type="radio" name="q24" value="D"> D. Giúp tăng số lượng license giới hạn</label>
+            </div>
+        </div>
+
+        <!-- Q25 -->
+        <div class="question-block" id="block-q25">
+            <div class="question-title">Câu 25: Đối với các khách hàng trong lĩnh vực Tài chính, chức năng File Attachments (đính kèm tệp) trên Secret Server hỗ trợ mã hóa lưu trữ những loại dữ liệu nào?</div>
+            <div class="options">
+                <label><input type="radio" name="q25" value="A"> A. Chỉ hỗ trợ file .TXT</label>
+                <label><input type="radio" name="q25" value="B"> B. Chứng chỉ SSL, Private Keys, Sơ đồ mạng, File Licenses v.v.. được lưu cùng mật khẩu</label>
+                <label><input type="radio" name="q25" value="C"> C. File ISO hệ điều hành lên tới 100GB</label>
+                <label><input type="radio" name="q25" value="D"> D. Không hỗ trợ đính kèm tệp tin</label>
+            </div>
+        </div>
+
+        <!-- Q26 -->
+        <div class="question-block" id="block-q26">
+            <div class="question-title">Câu 26: Việc tổ chức cấu trúc Thư mục (Folder) trong Secret Server đóng vai trò quan trọng nào?</div>
+            <div class="options">
+                <label><input type="radio" name="q26" value="A"> A. Chỉ để làm đẹp giao diện</label>
+                <label><input type="radio" name="q26" value="B"> B. Thực thi Role-Based Access Control (RBAC) chặt chẽ, kế thừa phân quyền nhóm IT, Marketing, DB Admin riêng biệt</label>
+                <label><input type="radio" name="q26" value="C"> C. Chỉ phục vụ cho tính năng Backup</label>
+                <label><input type="radio" name="q26" value="D"> D. Gom nhóm tất cả mật khẩu vào một thư mục gốc để dễ dùng</label>
+            </div>
+        </div>
+
+        <!-- Q27 -->
+        <div class="question-block" id="block-q27">
+            <div class="question-title">Câu 27: Điểm nổi bật khi so sánh Delinea Secret Server với CyberArk về mặt cơ sở hạ tầng (Infrastructure) triển khai là gì?</div>
+            <div class="options">
+                <label><input type="radio" name="q27" value="A"> A. Delinea yêu cầu phần cứng cực lớn và phức tạp như CyberArk</label>
+                <label><input type="radio" name="q27" value="B"> B. Delinea có thể cài đặt dễ dàng, linh hoạt trong môi trường ảo hóa chuẩn Windows Server mà không cần thiết bị cứng (Hardened Appliance) bắt buộc</label>
+                <label><input type="radio" name="q27" value="C"> C. Delinea không thể cài trên môi trường On-Premises</label>
+                <label><input type="radio" name="q27" value="D"> D. Cần có chuyên gia chứng chỉ đặc biệt mới có thể cài đặt được Delinea</label>
+            </div>
+        </div>
+
+        <!-- Q28 -->
+        <div class="question-block" id="block-q28">
+            <div class="question-title">Câu 28: Tại thị trường Việt Nam, nhóm đối tượng khách hàng (Target Customer) nào đang sử dụng Delinea PAM rất phổ biến?</div>
+            <div class="options">
+                <label><input type="radio" name="q28" value="A"> A. Siêu thị bán lẻ</label>
+                <label><input type="radio" name="q28" value="B"> B. Khối y tế tư nhân nhỏ</label>
+                <label><input type="radio" name="q28" value="C"> C. Khối Viễn thông, Điện lực, Chứng khoán, Chính phủ (Bộ KH&ĐT, Bộ TNMT)</label>
+                <label><input type="radio" name="q28" value="D"> D. Các trường mầm non</label>
+            </div>
+        </div>
+
+        <!-- Q29 -->
+        <div class="question-block" id="block-q29">
+            <div class="question-title">Câu 29: Secret Server cung cấp tính năng "Secret Template" nhằm mục đích gì?</div>
+            <div class="options">
+                <label><input type="radio" name="q29" value="A"> A. Tạo giao diện website cho người dùng</label>
+                <label><input type="radio" name="q29" value="B"> B. Thay đổi màu sắc của phần mềm</label>
+                <label><input type="radio" name="q29" value="C"> C. Định nghĩa cấu trúc trường dữ liệu, chính sách đổi mật khẩu, thời gian hết hạn cho từng loại thiết bị cụ thể (SQL, Windows, Cisco...)</label>
+                <label><input type="radio" name="q29" value="D"> D. Tạo file Word báo cáo</label>
+            </div>
+        </div>
+
+        <!-- Q30 -->
+        <div class="question-block" id="block-q30">
+            <div class="question-title">Câu 30: Để giúp khách hàng tuân thủ Compliance hiệu quả, báo cáo của Delinea hỗ trợ định dạng nào?</div>
+            <div class="options">
+                <label><input type="radio" name="q30" value="A"> A. Chỉ có định dạng Text đơn thuần</label>
+                <label><input type="radio" name="q30" value="B"> B. Hỗ trợ hệ thống báo cáo tùy chỉnh đa dạng, gửi cảnh báo qua email/SIEM và tích hợp sẵn nhiều Template Audit</label>
+                <label><input type="radio" name="q30" value="C"> C. Không thể xuất báo cáo</label>
+                <label><input type="radio" name="q30" value="D"> D. Dữ liệu chỉ có thể xem trên Database SQL trực tiếp</label>
+            </div>
+        </div>
+
+        <button type="button" onclick="submitQuiz()">Nộp Bài & Chấm Điểm</button>
+    </form>
+
+    <div id="result-container">
+        <h2 id="score-text"></h2>
+        <h3 id="evaluation-text"></h3>
+        <button onclick="location.reload()" style="background-color:#3498db; margin-top:20px;">Làm Lại Bài</button>
+    </div>
+</div>
+
+<script>
+    // Đáp án chuẩn
+    const correctAnswers = {
+        q1: 'B', q2: 'A', q3: 'B', q4: 'D', q5: 'B', 
+        q6: 'C', q7: 'B', q8: 'A', q9: 'C', q10: 'A', 
+        q11: 'B', q12: 'C', q13: 'B', q14: 'C', q15: 'C', 
+        q16: 'D', q17: 'B', q18: 'B', q19: 'A', q20: 'B', 
+        q21: 'A', q22: 'C', q23: 'B', q24: 'B', q25: 'B', 
+        q26: 'B', q27: 'B', q28: 'C', q29: 'C', q30: 'B'
+    };
+
+    function submitQuiz() {
+        let score = 0;
+        let total = Object.keys(correctAnswers).length;
+        
+        // Loop through all questions
+        for (let i = 1; i <= total; i++) {
+            let questionName = 'q' + i;
+            let block = document.getElementById('block-' + questionName);
+            let selectedOption = document.querySelector(`input[name="${questionName}"]:checked`);
+            
+            // Highlight labels
+            let options = block.querySelectorAll('label');
+            options.forEach(label => {
+                let radio = label.querySelector('input');
+                if (radio.value === correctAnswers[questionName]) {
+                    label.classList.add('correct-answer');
+                } else if (selectedOption && radio.checked && radio.value !== correctAnswers[questionName]) {
+                    label.classList.add('wrong-answer');
+                }
+            });
+
+            // Scoring
+            if (selectedOption && selectedOption.value === correctAnswers[questionName]) {
+                score++;
+            }
+        }
+
+        // Calculation
+        let percentage = (score / total) * 100;
+        let resultContainer = document.getElementById('result-container');
+        let scoreText = document.getElementById('score-text');
+        let evaluationText = document.getElementById('evaluation-text');
+
+        resultContainer.style.display = 'block';
+        scoreText.innerText = `Điểm của bạn: ${score} / ${total} (${percentage.toFixed(1)}%)`;
+
+        // Pass condition > 75% -> Score >= 23/30
+        if (percentage > 75) {
+            resultContainer.className = 'pass';
+            evaluationText.innerText = '🎉 CHÚC MỪNG! BẠN ĐÃ PASS (Mức độ nắm giải pháp rất tốt) 🎉';
+        } else {
+            resultContainer.className = 'fail';
+            evaluationText.innerText = '❌ BẠN CHƯA ĐẠT (Yêu cầu > 75%). Vui lòng ôn lại tài liệu và làm lại bài. ❌';
+        }
+
+        // Scroll to results
+        resultContainer.scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
+```

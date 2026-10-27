@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kiểm tra kiến thức WhatsUp Gold — Dành cho Sale & Tư vấn giải pháp</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g:#00C853;--gd:#009624;--gp:#E8F9EE;--gpp:#C8EDD6;
+  --navy:#0A1628;--navy2:#112240;--slate:#457B9D;
+  --text:#1A1A2E;--muted:#6B7A90;--border:#E2EAF0;--bg:#F7FAFC;--white:#fff;
+  --amber:#FFB300;--red:#E53935;--blue:#1565C0;--purple:#7B1FA2;
+  --r:10px;--r2:16px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Be Vietnam Pro',sans-serif;background:var(--bg);color:var(--text);line-height:1.65;min-height:100vh}
+
+/* HEADER */
+.hdr{background:linear-gradient(135deg,var(--navy) 0%,var(--navy2) 100%);padding:40px 24px 36px;text-align:center;position:relative;overflow:hidden}
+.hdr::before{content:'';position:absolute;top:-80px;right:-80px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(0,200,83,.15) 0%,transparent 70%)}
+.hdr::after{content:'';position:absolute;bottom:-60px;left:-60px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(69,123,157,.15) 0%,transparent 70%)}
+.hdr-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,200,83,.12);border:1px solid rgba(0,200,83,.3);border-radius:100px;padding:5px 16px;font-size:11px;font-weight:700;color:var(--g);letter-spacing:.1em;text-transform:uppercase;margin-bottom:18px;position:relative;z-index:1}
+.hdr h1{font-size:26px;font-weight:800;color:#fff;line-height:1.25;margin-bottom:10px;position:relative;z-index:1}
+.hdr h1 em{color:var(--g);font-style:normal}
+.hdr p{font-size:13.5px;color:rgba(255,255,255,.55);max-width:540px;margin:0 auto 24px;position:relative;z-index:1}
+.hdr-meta{display:flex;justify-content:center;gap:28px;position:relative;z-index:1}
+.hdr-meta span{font-size:12px;color:rgba(255,255,255,.45);display:flex;align-items:center;gap:6px}
+.hdr-meta strong{color:var(--g);font-size:14px}
+
+/* PROGRESS BAR */
+#prog-wrap{background:rgba(255,255,255,.08);height:6px;border-radius:100px;margin:20px 24px 0;position:relative;z-index:1}
+#prog-bar{height:100%;border-radius:100px;background:var(--g);width:0%;transition:width .4s}
+
+/* MAIN */
+.main{max-width:780px;margin:0 auto;padding:28px 20px 60px}
+
+/* SECTIONS */
+.sec-label{display:flex;align-items:center;gap:10px;margin:32px 0 16px}
+.sec-label .sl-icon{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.sec-label h3{font-size:14px;font-weight:800;color:var(--navy);letter-spacing:.04em}
+.sec-label p{font-size:11.5px;color:var(--muted);margin-top:1px}
+.sec-line{flex:1;height:1px;background:var(--border)}
+
+/* QUESTION CARD */
+.q-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r2);padding:22px 24px;margin-bottom:14px;transition:border-color .2s,box-shadow .2s;position:relative}
+.q-card.answered{border-color:var(--border)}
+.q-card.correct-card{border-color:#4CAF50;box-shadow:0 0 0 3px rgba(76,175,80,.1)}
+.q-card.wrong-card{border-color:var(--red);box-shadow:0 0 0 3px rgba(229,57,53,.08)}
+
+.q-num{display:inline-flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:500;color:var(--muted);margin-bottom:10px}
+.q-num .cat{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-size:10px;font-weight:700;letter-spacing:.06em}
+.q-num .cat.c1{color:#7B1FA2;border-color:#CE93D8;background:#F3E5F5}
+.q-num .cat.c2{color:#1565C0;border-color:#90CAF9;background:#E3F2FD}
+.q-num .cat.c3{color:#E65100;border-color:#FFCC80;background:#FFF3E0}
+.q-num .cat.c4{color:#1B5E20;border-color:#A5D6A7;background:#E8F5E9}
+.q-num .cat.c5{color:#880E4F;border-color:#F48FB1;background:#FCE4EC}
+.q-num .cat.c6{color:#0D47A1;border-color:#90CAF9;background:#E3F2FD}
+
+.q-text{font-size:14.5px;font-weight:600;color:var(--navy);line-height:1.55;margin-bottom:16px}
+
+/* OPTIONS */
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--bg);cursor:pointer;transition:all .15s;user-select:none}
+.opt:hover:not(.disabled){border-color:var(--g);background:var(--gp)}
+.opt input[type=radio]{display:none}
+.opt-key{width:26px;height:26px;border-radius:6px;border:1.5px solid var(--border);background:var(--white);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--muted);flex-shrink:0;transition:all .15s;margin-top:1px}
+.opt-text{font-size:13.5px;color:var(--text);line-height:1.5;flex:1}
+.opt.selected{border-color:var(--blue);background:#EEF5FF}
+.opt.selected .opt-key{background:var(--blue);border-color:var(--blue);color:#fff}
+.opt.correct{border-color:#4CAF50;background:#E8F5E9}
+.opt.correct .opt-key{background:#4CAF50;border-color:#4CAF50;color:#fff}
+.opt.wrong{border-color:var(--red);background:#FFEBEE}
+.opt.wrong .opt-key{background:var(--red);border-color:var(--red);color:#fff}
+.opt.show-correct{border-color:#4CAF50;background:#E8F5E9}
+.opt.show-correct .opt-key{background:#4CAF50;border-color:#4CAF50;color:#fff}
+.opt.disabled{cursor:default}
+
+/* CHECK BTN */
+.q-footer{display:flex;justify-content:flex-end;margin-top:14px}
+.btn-check{background:var(--g);color:var(--navy);border:none;border-radius:8px;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s;display:none}
+.btn-check:hover{background:var(--gd);color:#fff}
+.btn-check.show{display:block}
+.btn-check.disabled{background:#ccc;color:#888;cursor:default}
+
+/* EXPLANATION */
+.explain{margin-top:14px;border-radius:8px;padding:12px 16px;font-size:13px;line-height:1.65;display:none}
+.explain.show{display:block}
+.explain.ok{background:#E8F5E9;border:1px solid #A5D6A7;color:#1B5E20}
+.explain.bad{background:#FFEBEE;border:1px solid #FFCDD2;color:#B71C1C}
+.explain strong{font-weight:700}
+
+/* STATUS CHIP */
+.q-status{position:absolute;top:16px;right:18px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px}
+.q-status.st-ok{background:#E8F5E9;color:#2E7D32}
+.q-status.st-bad{background:#FFEBEE;color:#C62828}
+
+/* STICKY COUNTER */
+#sticky{position:fixed;top:0;left:0;right:0;background:var(--navy);z-index:999;padding:8px 20px;display:flex;align-items:center;justify-content:space-between;font-size:12px;color:rgba(255,255,255,.5);transform:translateY(-100%);transition:transform .3s}
+#sticky.show{transform:translateY(0)}
+#sticky .sc-left{display:flex;align-items:center;gap:8px;font-weight:700;color:var(--g);font-size:13px}
+#sticky .sc-right{display:flex;gap:16px}
+#sticky .sc-right span{display:flex;align-items:center;gap:4px}
+
+/* RESULT PANEL */
+#result{display:none;background:var(--white);border:2px solid var(--border);border-radius:var(--r2);padding:36px 28px;margin-top:32px;text-align:center}
+#result.show{display:block}
+.res-score{font-family:'JetBrains Mono',monospace;font-size:64px;font-weight:500;line-height:1;margin:12px 0}
+.res-score.pass{color:var(--g)}
+.res-score.fail{color:var(--red)}
+.res-verdict{font-size:18px;font-weight:800;margin-bottom:8px}
+.res-verdict.pass{color:#2E7D32}
+.res-verdict.fail{color:#C62828}
+.res-sub{font-size:13.5px;color:var(--muted);margin-bottom:28px}
+.res-bars{display:flex;gap:16px;justify-content:center;margin:24px 0;flex-wrap:wrap}
+.res-bar-item{background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:14px 20px;min-width:140px;text-align:center}
+.res-bar-item .rbn{font-size:22px;font-weight:800;color:var(--navy)}
+.res-bar-item .rbl{font-size:11px;color:var(--muted);margin-top:2px;line-height:1.4}
+.btn-retry{background:var(--navy);color:#fff;border:none;border-radius:10px;padding:14px 32px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:8px;transition:.2s}
+.btn-retry:hover{background:var(--g);color:var(--navy)}
+
+/* SUBMIT AREA */
+#submit-area{text-align:center;margin-top:32px;display:none}
+#submit-area.show{display:block}
+.btn-submit{background:var(--g);color:var(--navy);border:none;border-radius:12px;padding:16px 48px;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;transition:.2s;letter-spacing:.04em}
+.btn-submit:hover{background:var(--gd);color:#fff}
+.btn-submit:disabled{background:#ccc;color:#888;cursor:default}
+.submit-hint{font-size:12px;color:var(--muted);margin-top:10px}
+
+/* REVIEW CHIPS */
+.q-review{display:flex;flex-wrap:wrap;gap:6px;margin:20px 0 8px;justify-content:center}
+.qr-chip{width:36px;height:36px;border-radius:8px;border:2px solid var(--border);background:var(--bg);font-size:12px;font-weight:700;color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:.15s;text-decoration:none}
+.qr-chip:hover{border-color:var(--g);color:var(--g)}
+.qr-chip.ans-ok{background:#E8F5E9;border-color:#4CAF50;color:#2E7D32}
+.qr-chip.ans-bad{background:#FFEBEE;border-color:var(--red);color:#C62828}
+
+@media(max-width:600px){
+  .hdr h1{font-size:20px}
+  .hdr-meta{gap:16px}
+  .main{padding:20px 14px 60px}
+  .q-text{font-size:13.5px}
+}
+</style>
+</head>
+<body>
+
+<!-- STICKY TOP -->
+<div id="sticky">
+  <div class="sc-left">📊 <span id="sticky-prog">0/30 câu</span></div>
+  <div class="sc-right">
+    <span>✅ <span id="sticky-ok">0</span></span>
+    <span>❌ <span id="sticky-bad">0</span></span>
+  </div>
+</div>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-badge">🟢 Progress Software · WhatsUp Gold</div>
+  <h1>Kiểm tra kiến thức<br><em>Giải pháp giám sát mạng</em><br>WhatsUp Gold</h1>
+  <p>Bài kiểm tra dành cho Sale & Tư vấn giải pháp. Trả lời trung thực — kết quả giúp bạn biết cần ôn thêm phần nào.</p>
+  <div class="hdr-meta">
+    <span>📋 <strong>30</strong> câu hỏi</span>
+    <span>🎯 Đạt: <strong>≥ 80%</strong> (24/30)</span>
+    <span>⏱️ Không giới hạn thời gian</span>
+  </div>
+  <div id="prog-wrap"><div id="prog-bar"></div></div>
+</div>
+
+<div class="main" id="quiz-main">
+
+  <!-- QUESTION REVIEW MAP -->
+  <div id="q-review-map" style="display:none;margin-bottom:8px">
+    <p style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:8px">Nhảy đến câu hỏi:</p>
+    <div class="q-review" id="q-chips"></div>
+  </div>
+
+  <!-- QUESTIONS INJECTED BY JS -->
+  <div id="q-container"></div>
+
+  <!-- SUBMIT AREA -->
+  <div id="submit-area">
+    <button class="btn-submit" id="btn-submit" onclick="submitQuiz()" disabled>Nộp bài & xem kết quả</button>
+    <p class="submit-hint" id="submit-hint">Vui lòng trả lời tất cả 30 câu trước khi nộp bài</p>
+  </div>
+
+  <!-- RESULT PANEL -->
+  <div id="result">
+    <div style="font-size:40px;margin-bottom:8px" id="res-emoji">🏆</div>
+    <div class="res-verdict" id="res-verdict"></div>
+    <div class="res-score" id="res-score"></div>
+    <div class="res-sub" id="res-sub"></div>
+    <div class="res-bars" id="res-bars"></div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px" id="res-cats"></p>
+    <button class="btn-retry" onclick="retryQuiz()">🔄 Làm lại bài kiểm tra</button>
+  </div>
+
+</div>
+
+<script>
+const PASS_SCORE = 24; // 80% of 30
+
+const CATS = {
+  c1: {label:'Vai trò & Ý nghĩa', icon:'🎯', cls:'c1'},
+  c2: {label:'Tính năng sản phẩm', icon:'⚙️', cls:'c2'},
+  c3: {label:'Kỹ năng tư vấn', icon:'💬', cls:'c3'},
+  c4: {label:'Kỹ thuật & Triển khai', icon:'🔧', cls:'c4'},
+  c5: {label:'Tình huống thực tế', icon:'📋', cls:'c5'},
+  c6: {label:'Sizing & License', icon:'📐', cls:'c6'},
+};
+
+const QUESTIONS = [
+  // ──── C1: VAI TRÒ & Ý NGHĨA (5 câu) ────
+  {
+    id:1, cat:'c1',
+    q:'Mục tiêu cốt lõi của một giải pháp giám sát mạng như WhatsUp Gold là gì?',
+    opts:['A. Thay thế hoàn toàn đội ngũ IT, tự động vận hành hệ thống không cần con người','B. Phát hiện và khắc phục sự cố mạng nhanh chóng, thường trước khi người dùng cuối bị ảnh hưởng','C. Chỉ tạo báo cáo hiệu năng để cung cấp cho ban lãnh đạo hàng tháng','D. Giám sát an ninh mạng (security) là chức năng duy nhất của hệ thống'],
+    ans:'B',
+    explain:'WhatsUp Gold được thiết kế với triết lý "Find and fix problems fast — usually before they impact end-users." Đây không chỉ là bảo mật hay báo cáo, mà là visibility toàn diện và phản ứng chủ động để đảm bảo uptime.'
+  },
+  {
+    id:2, cat:'c1',
+    q:'Tổ chức/doanh nghiệp nào KHÔNG phải là đối tượng khách hàng phù hợp điển hình của WhatsUp Gold?',
+    opts:['A. Cơ quan nhà nước có 200 thiết bị mạng, cần compliance log và audit trail','B. Doanh nghiệp sản xuất có 500 server/switch cần giám sát uptime 24/7','C. Hộ gia đình với 5 thiết bị kết nối Internet tại nhà','D. Tập đoàn điện lực có nhiều chi nhánh tỉnh, cần giám sát tập trung'],
+    ans:'C',
+    explain:'WUG là giải pháp enterprise/SMB. Hộ gia đình với vài thiết bị không có nhu cầu về NMS. Tất cả các trường hợp còn lại (nhà nước, sản xuất, điện lực) đều là phân khúc điển hình của WUG.'
+  },
+  {
+    id:3, cat:'c1',
+    q:'Khách hàng phàn nàn "mỗi tuần đội IT mất 1-2 ngày để xử lý sự cố mà không biết nguyên nhân". Lợi ích WUG nào giải quyết đúng vấn đề này?',
+    opts:['A. Tính năng xuất báo cáo HTML/Excel cho lãnh đạo','B. Auto Discovery & Interactive Network Map kết hợp Smart Alerting — root cause được chỉ ra ngay lập tức','C. Tính năng lưu trữ log dài hạn theo chuẩn SOX/PCI','D. Module giám sát máy ảo VMware/Hyper-V'],
+    ans:'B',
+    explain:'Vấn đề ở đây là MTTR cao do thiếu khả năng xác định root cause nhanh. Auto Map + Smart Alerting giúp IT thấy ngay thiết bị nào gây ra vấn đề và chuỗi ảnh hưởng — giảm MTTR từ hàng giờ xuống vài phút.'
+  },
+  {
+    id:4, cat:'c1',
+    q:'Progress Software (nhà sản xuất WhatsUp Gold) được niêm yết trên sàn chứng khoán nào?',
+    opts:['A. NYSE (New York Stock Exchange)','B. LSE (London Stock Exchange)','C. NASDAQ','D. Tokyo Stock Exchange'],
+    ans:'C',
+    explain:'Progress Software Corporation niêm yết trên NASDAQ với mã cổ phiếu PRGS. Đây là thông tin quan trọng khi tư vấn khách hàng về độ tin cậy và tài chính ổn định của nhà sản xuất.'
+  },
+  {
+    id:5, cat:'c1',
+    q:'Khi khách hàng hỏi "Tại sao cần phải mua phần mềm giám sát mạng, đội IT có thể ping và check thủ công được không?", câu trả lời nào ĐÚNG nhất?',
+    opts:['A. Đồng ý với khách — nếu mạng nhỏ dưới 50 thiết bị thì check thủ công là đủ','B. Giám sát thủ công không liên tục 24/7, không phát hiện được sự cố lúc ngoài giờ, không có lịch sử trend, không thể cảnh báo ngưỡng tự động — WUG giải quyết tất cả điều này','C. Khuyên khách dùng open-source Nagios để tiết kiệm chi phí trước','D. Hỏi khách xem họ có ngân sách không, nếu ít thì thủ công cũng được'],
+    ans:'B',
+    explain:'Giám sát thủ công có 3 điểm yếu chết người: (1) không liên tục 24/7, (2) không có cảnh báo proactive, (3) không có dữ liệu trend/lịch sử để phân tích. Sale cần tự tin chỉ rõ giá trị của giải pháp tự động.'
+  },
+
+  // ──── C2: TÍNH NĂNG SẢN PHẨM (8 câu) ────
+  {
+    id:6, cat:'c2',
+    q:'Điều nào SAI về tính năng Auto Discovery & Network Mapping của WhatsUp Gold?',
+    opts:['A. Sử dụng Seed Scan Technology để tự động học topology mạng','B. Hỗ trợ phát hiện thiết bị qua SNMP, WMI, SSH, ICMP, HTTPS','C. Bản đồ phải được vẽ thủ công bởi admin sau khi discovery hoàn thành','D. Click vào thiết bị trên map có thể drill-down xem chi tiết performance'],
+    ans:'C',
+    explain:'WUG tự động vẽ bản đồ topology Layer 2/3 sau khi discovery — đây là điểm khác biệt lớn nhất so với SolarWinds (phải vẽ tay). Bản đồ tương tác, hiển thị trạng thái real-time theo màu sắc.'
+  },
+  {
+    id:7, cat:'c2',
+    q:'Smart Alerting trong WhatsUp Gold hoạt động theo cơ chế nào để tránh "bão cảnh báo" (alert storm)?',
+    opts:['A. Giới hạn tối đa 10 alert trong 1 giờ bằng cách lọc ngẫu nhiên','B. Dùng dependency map (được tạo tự động trong discovery) để suppress alert của thiết bị downstream — chỉ báo root cause','C. Gửi tất cả alert vào một hàng đợi và chỉ hiển thị sau 30 phút','D. Yêu cầu admin xác nhận thủ công từng alert trước khi gửi email'],
+    ans:'B',
+    explain:'Khi core switch down, WUG hiểu rằng tất cả thiết bị bên dưới phụ thuộc vào switch đó. Thay vì spam 100 alert, nó chỉ báo 1 alert về switch là root cause. Dependency map được tự động tạo trong quá trình discovery.'
+  },
+  {
+    id:8, cat:'c2',
+    q:'Tính năng NTA (Network Traffic Analysis) của WhatsUp Gold hỗ trợ giao thức flow nào trong số sau?',
+    opts:['A. Chỉ hỗ trợ Cisco NetFlow, không hỗ trợ các vendor khác','B. NetFlow, NetFlow-Lite, NSEL (Cisco), J-Flow (Juniper), sFlow, IPFIX — hỗ trợ đa-vendor','C. Chỉ sFlow và IPFIX — không hỗ trợ NetFlow vì đây là giao thức độc quyền','D. NetFlow và SNMP RMON — hai giao thức này là đủ cho mọi trường hợp'],
+    ans:'B',
+    explain:'WUG NTA hỗ trợ toàn diện: Cisco NetFlow/NetFlow-Lite/NSEL, Juniper J-Flow, sFlow (HP, Aruba, nhiều vendor), và IPFIX (chuẩn open). Đây là lợi thế quan trọng cho môi trường multi-vendor.'
+  },
+  {
+    id:9, cat:'c2',
+    q:'Module Configuration Management của WhatsUp Gold làm được việc gì trong các phương án dưới đây?',
+    opts:['A. Chỉ backup config thiết bị, không có khả năng phát hiện thay đổi','B. Backup config theo lịch, phát hiện thay đổi trái phép, so sánh running vs archived, có compliance template sẵn cho SOX/PCI/HIPAA/FISMA','C. Chỉ hỗ trợ thiết bị Cisco, không hỗ trợ Juniper hay Huawei','D. Yêu cầu cài agent trên từng thiết bị mạng để thu thập config'],
+    ans:'B',
+    explain:'Config Management của WUG rất đầy đủ: backup scheduled vào kho mã hóa, alert khi có thay đổi (kể cả qua SNMP trap), so sánh diff, và đặc biệt có sẵn compliance template cho Cisco/Juniper/Foundry theo các chuẩn SOX, PCI, HIPAA, FISMA.'
+  },
+  {
+    id:10, cat:'c2',
+    q:'Với Virtualization Monitoring trong WhatsUp Gold, admin có thể thực hiện hành động nào trực tiếp từ giao diện WUG?',
+    opts:['A. Chỉ có thể xem trạng thái VM, không thể thực hiện bất kỳ hành động nào','B. Có thể power on, power off, suspend, reset và lockdown VM trực tiếp từ WUG console','C. Có thể cài đặt phần mềm mới lên VM qua WUG','D. Có thể migrate VM giữa các host mà không cần vào vCenter'],
+    ans:'B',
+    explain:'WUG Virtualization Monitoring cho phép thực hiện power on/off/suspend/reset/lockdown VM trực tiếp từ giao diện WUG. Đây là tính năng hiếm có trong NMS — hầu hết đối thủ chỉ monitor, không action được.'
+  },
+  {
+    id:11, cat:'c2',
+    q:'Log Management trong WhatsUp Gold dùng công nghệ gì làm backend lưu trữ và tìm kiếm log?',
+    opts:['A. Microsoft SQL Server — cùng database với dữ liệu monitoring chính','B. Elasticsearch — cho phép tìm kiếm nhanh và lưu trữ dài hạn','C. MongoDB — NoSQL phù hợp với dữ liệu log có cấu trúc lỏng','D. Flat file text (.log) được compress và lưu trên filesystem'],
+    ans:'B',
+    explain:'WUG Log Management dùng Elasticsearch làm backend — đây là lý do tại sao nó có khả năng tìm kiếm nhanh và lưu trữ khối lượng log lớn. Đây là kiến thức kỹ thuật quan trọng khi khách hỏi về khả năng scale của Log Management.'
+  },
+  {
+    id:12, cat:'c2',
+    q:'Tính năng nào của WhatsUp Gold cho phép phát hiện kết nối mạng đến Dark Web (Tor) từ nội bộ?',
+    opts:['A. Configuration Management — theo dõi thay đổi config firewall','B. Virtualization Monitoring — phân tích network traffic của VM','C. NTA (Network Traffic Analysis) với IP Reputation Library tích hợp sẵn','D. Log Management — phân tích Windows Event Log từ DC'],
+    ans:'C',
+    explain:'WUG NTA có IP Reputation Library tích hợp, chứa danh sách IP blacklist và các Tor exit nodes. Khi phát hiện kết nối đến Dark Web (Tor) ports, hệ thống sẽ alert ngay. Đây là tính năng bảo mật độc đáo không có ở nhiều NMS truyền thống.'
+  },
+  {
+    id:13, cat:'c2',
+    q:'Action Policies trong WhatsUp Gold có thể thực hiện hành động tự động nào khi phát hiện sự cố?',
+    opts:['A. Chỉ gửi email thông báo, không thể tự động sửa lỗi','B. Restart service, rollback config thiết bị, chạy PowerShell script tùy chỉnh, backup/restore config — self-healing automation','C. Chỉ gửi SMS và email, không tích hợp với công cụ bên thứ ba','D. Chỉ tạo ticket trong hệ thống helpdesk nội bộ của WUG'],
+    ans:'B',
+    explain:'Action Policies là tính năng "self-healing" mạnh mẽ: restart service tự động, rollback config thiết bị, chạy bất kỳ PowerShell script nào. Kết hợp với Alerting, WUG có thể tự khắc phục nhiều loại sự cố mà không cần IT can thiệp.'
+  },
+
+  // ──── C3: KỸ NĂNG TƯ VẤN (5 câu) ────
+  {
+    id:14, cat:'c3',
+    q:'Khách hàng là giám đốc IT của một tập đoàn sản xuất hỏi: "Chúng tôi có 3 nhà máy ở 3 tỉnh khác nhau, tôi muốn nhìn thấy tất cả từ một màn hình." Bạn nên đề xuất mô hình triển khai nào?',
+    opts:['A. Cài 3 bản WUG riêng lẻ ở 3 nhà máy, không cần kết nối với nhau','B. WUG Distributed Edition: 1 Central Site + 3 Remote Sites, giám sát đa site từ 1 dashboard trung tâm','C. Dùng WUG Premium Edition tiêu chuẩn — đã đủ cho mọi mô hình','D. Cài WUG trên cloud SaaS để admin từ bất kỳ đâu cũng xem được'],
+    ans:'B',
+    explain:'Yêu cầu quản lý tập trung từ nhiều site → Distributed Edition. Central Site nhận rolled-up data từ Remote Sites. Mỗi Remote vẫn hoạt động độc lập khi mất kết nối Central. Đây là mô hình enterprise điển hình.'
+  },
+  {
+    id:15, cat:'c3',
+    q:'Khi khách hàng so sánh và nói "SolarWinds có nhiều tính năng hơn WUG", câu trả lời tư vấn nào HIỆU QUẢ nhất?',
+    opts:['A. Đồng ý với khách và đề xuất bán SolarWinds thay thế','B. Tranh luận rằng WUG có nhiều tính năng hơn SolarWinds trong mọi trường hợp','C. Hỏi khách về yêu cầu thực tế, chỉ ra WUG đáp ứng 90% nhu cầu phổ biến với giá thấp hơn 2-3 lần, và SolarWinds có tính năng nâng cao nhưng phức tạp và đắt hơn nhiều','D. Nói xấu SolarWinds về vụ bảo mật Sunburst để khách ngại mua'],
+    ans:'C',
+    explain:'Sale hiệu quả không tranh luận về tính năng mà tập trung vào giá trị phù hợp với nhu cầu thực. WUG đáp ứng 90% nhu cầu phổ biến với TCO thấp hơn. SolarWinds chỉ vượt trội ở DPI và NetPath — hỏi khách có thực sự cần không.'
+  },
+  {
+    id:16, cat:'c3',
+    q:'Khách hàng Sở Khoa học & Công nghệ tỉnh quan tâm đến "tuân thủ quy định về bảo mật thông tin". WUG có thể đáp ứng bằng tính năng nào?',
+    opts:['A. Chỉ báo cáo uptime thiết bị hàng tháng là đủ','B. Configuration Management với compliance template (SOX/PCI/HIPAA/FISMA) + Log Management lưu trữ dài hạn + Alert khi config thay đổi trái phép','C. Chỉ cần giám sát băng thông để phát hiện tấn công DDoS','D. WUG không phù hợp cho compliance, cần mua thêm giải pháp SIEM riêng'],
+    ans:'B',
+    explain:'Cho cơ quan nhà nước cần compliance: Config Management với out-of-the-box templates + Log Management lưu trữ dài hạn (SOX, PCI, HIPAA, FISMA) + Alert khi phát hiện thay đổi trái phép. Đây là bộ 3 tính năng cốt lõi để chào cho nhóm khách này.'
+  },
+  {
+    id:17, cat:'c3',
+    q:'Trong buổi demo WUG cho khách hàng, tính năng nào nên được demo ĐẦU TIÊN để tạo ấn tượng mạnh nhất ("wow effect")?',
+    opts:['A. Màn hình báo cáo PDF xuất dữ liệu CPU/RAM của từng server','B. Interactive Network Map tự động được vẽ ra sau khi discovery — click vào thiết bị thấy ngay trạng thái real-time','C. Bảng cấu hình threshold cảnh báo cho từng monitor','D. Màn hình quản lý người dùng và phân quyền'],
+    ans:'B',
+    explain:'Interactive Map là "killer feature" của WUG. Trong demo, hãy bắt đầu bằng discovery thật (hoặc demo environment) và show bản đồ mạng tự động hiện ra — khách hàng sẽ lập tức thấy giá trị khác biệt so với tool họ đang dùng.'
+  },
+  {
+    id:18, cat:'c3',
+    q:'Khách hàng hỏi: "Tại sao không dùng Zabbix miễn phí mà phải mua WUG?" Lập luận nào KHÔNG nên dùng?',
+    opts:['A. Zabbix không có commercial support 24/7, khi sự cố nghiêm trọng không ai chịu trách nhiệm','B. Chi phí thực của Zabbix = nhân công config (weeks/months) + maintain + đào tạo = thường cao hơn WUG','C. Zabbix là phần mềm nguồn mở nên không đáng tin cậy và có nhiều lỗ hổng bảo mật nghiêm trọng','D. WUG có auto discovery, interactive map, APM, config management out-of-the-box — Zabbix cần cấu hình thủ công tất cả'],
+    ans:'C',
+    explain:'Không nên nói Zabbix kém bảo mật — đây là tuyên bố sai và không có căn cứ, có thể mất tín nhiệm với khách. Lập luận đúng: TCO thực của open-source cao hơn (nhân công), thiếu support, thiếu out-of-the-box features.'
+  },
+
+  // ──── C4: KỸ THUẬT & TRIỂN KHAI (5 câu) ────
+  {
+    id:19, cat:'c4',
+    q:'WhatsUp Gold được cài đặt trên hệ điều hành nào?',
+    opts:['A. Linux (Ubuntu/CentOS) — vì ổn định và bảo mật hơn Windows','B. Bất kỳ OS nào vì WUG là web-based application chạy trên container Docker','C. Windows Server 2016/2019/2022 (64-bit) — không hỗ trợ Linux server','D. macOS Server — phổ biến trong môi trường doanh nghiệp hiện đại'],
+    ans:'C',
+    explain:'WUG chỉ cài trên Windows Server 64-bit. Đây là điểm cần lưu ý khi tư vấn — khách hàng cần chuẩn bị Windows Server. Không cài trên Domain Controller. Không cài trên Linux hay Docker (tính đến phiên bản 2026).'
+  },
+  {
+    id:20, cat:'c4',
+    q:'Scalability Poller trong WUG giao tiếp với WUG Server qua port nào (mặc định)?',
+    opts:['A. TCP 443 (HTTPS)','B. TCP 9713','C. TCP 9394','D. UDP 9999'],
+    ans:'B',
+    explain:'Scalability Poller giao tiếp với WUG Server qua TCP 9713 (default). Port 9394 là dùng cho Remote→Central trong Distributed Edition. Port 9999 là UDP dành cho NTA NetFlow listener. Port 443 là HTTPS Web UI.'
+  },
+  {
+    id:21, cat:'c4',
+    q:'Trong mô hình Distributed Edition, điều nào ĐÚNG về luồng dữ liệu giữa Remote Site và Central Site?',
+    opts:['A. Central Site có toàn bộ raw data của Remote Site — có thể query trực tiếp vào database Remote','B. Remote Site gửi rolled-up status/alert data đến Central qua port 9394; drill-down chi tiết yêu cầu HTTP/HTTPS kết nối đến Remote Web UI (port 80/443)','C. Dữ liệu được đồng bộ real-time 2 chiều giữa Central và Remote qua VPN','D. Central chỉ nhận alert, không thể xem bất kỳ thông tin gì về thiết bị Remote'],
+    ans:'B',
+    explain:'Kiến trúc Distributed rất quan trọng: (1) Remote gửi rolled-up summary → Central qua TCP 9394. (2) Raw historical data ở trong SQL DB của Remote. (3) Drill-down từ Central = HTTP request đến Remote Web UI (80/443). Cần 2 firewall rule khác nhau.'
+  },
+  {
+    id:22, cat:'c4',
+    q:'Khi khách hàng hỏi "WUG cần server như thế nào để monitor 800 thiết bị?", cấu hình phù hợp là gì?',
+    opts:['A. 2 CPU, 4GB RAM, 50GB HDD là đủ — WUG rất nhẹ','B. 8 CPU, 16GB RAM, 250GB HDD và xem xét dùng thêm Scalability Poller để phân tải','C. Cần server cao cấp nhất: 32 CPU, 128GB RAM, 2TB SSD','D. WUG không hỗ trợ quá 500 thiết bị — phải chia làm 2 instance'],
+    ans:'B',
+    explain:'800 devices là medium-large: 8 CPU, 16GB RAM, 250GB HDD. Hơn nữa, ~850+ devices nên xem xét thêm Scalability Pollers để phân tải polling. WUG không giới hạn số device (phụ thuộc license), nhưng cần hardware phù hợp.'
+  },
+  {
+    id:23, cat:'c4',
+    q:'Tính năng nào sau đây KHÔNG thể được xử lý bởi Scalability Poller (phải do WUG Server chính thực hiện)?',
+    opts:['A. Polling CPU/RAM của server qua WMI','B. Polling SNMP của switch','C. Network Discovery và Configuration Management Tasks','D. Ping ICMP để check availability'],
+    ans:'C',
+    explain:'Scalability Poller có giới hạn — nó không thể làm: Discovery, Configuration Management Tasks, MIB Walker, Passive Monitors, Wireless Polling. Đây là điểm kỹ thuật quan trọng khi thiết kế architecture cho khách.'
+  },
+
+  // ──── C5: TÌNH HUỐNG THỰC TẾ (4 câu) ────
+  {
+    id:24, cat:'c5',
+    q:'Nhà máy điện Nhiệt điện Thái Bình báo cáo: "Thứ 6 tuần rồi hệ thống mạng chậm bất thường vào 14h-16h, nhưng đến khi IT check thì đã hết". WUG giải quyết vấn đề này bằng cách nào?',
+    opts:['A. Không giải quyết được — cần cài camera giám sát phòng server','B. NTA lưu lịch sử flow data, có thể phân tích retrospectively: ai/ứng dụng nào chiếm băng thông khung giờ đó, và cấu hình alert ngưỡng băng thông để cảnh báo lần sau','C. Chỉ cần tăng bandwidth đường truyền là giải quyết được','D. Yêu cầu IT phải trực tiếp monitor từ 14h-16h thứ 6 tuần sau'],
+    ans:'B',
+    explain:'NTA lưu trữ flow data lịch sử — có thể quay lại phân tích bất kỳ khoảng thời gian nào. IT có thể xem top sender/receiver, top application trong khung giờ 14h-16h thứ 6 để xác định nguyên nhân, và đặt threshold alert để cảnh báo tự động lần sau.'
+  },
+  {
+    id:25, cat:'c5',
+    q:'Sở KHCN tỉnh bị kiểm toán về an ninh thông tin và bị yêu cầu "cung cấp bằng chứng rằng không có thay đổi cấu hình thiết bị mạng trái phép trong 6 tháng qua". WUG giải quyết thế nào?',
+    opts:['A. WUG không lưu lịch sử config, cần phải dùng thêm phần mềm quản lý config khác','B. Configuration Management của WUG đã backup và lưu lịch sử config có timestamp, có thể xuất báo cáo so sánh running vs archived — bằng chứng rõ ràng cho kiểm toán','C. Chỉ có thể cung cấp log Syslog, không có lịch sử config cụ thể','D. Cần mua thêm module SIEM riêng để đáp ứng yêu cầu kiểm toán'],
+    ans:'B',
+    explain:'WUG Config Management lưu lịch sử đầy đủ có timestamp mỗi lần backup. Có thể so sánh running config vs archived config — bất kỳ thay đổi nào đều được phát hiện và ghi lại. Đây là bằng chứng rõ ràng cho kiểm toán nội bộ và external audit.'
+  },
+  {
+    id:26, cat:'c5',
+    q:'Một doanh nghiệp FDI (Daikin) lo ngại rằng nhân viên nội bộ đang sử dụng mạng công ty để upload dữ liệu lên cloud cá nhân (Dropbox, Google Drive) tốn nhiều băng thông. WUG giải quyết thế nào?',
+    opts:['A. WUG chỉ giám sát thiết bị mạng, không thể phân biệt được ứng dụng người dùng đang dùng','B. NTA với NBAR (Network Based Application Recognition) có thể phân loại traffic theo ứng dụng, thấy rõ ai đang dùng Dropbox/Google Drive và chiếm bao nhiêu băng thông','C. Phải cài agent trên từng máy tính của nhân viên để biết họ đang làm gì','D. Cần mua thêm giải pháp DLP (Data Loss Prevention) riêng để giải quyết'],
+    ans:'B',
+    explain:'NTA với NBAR có thể nhận diện application-level traffic — không chỉ port mà còn phân loại ứng dụng thực tế. Kết hợp với IP Reputation Library, WUG thấy được top ứng dụng, top sender, kết nối đến cloud storage cá nhân.'
+  },
+  {
+    id:27, cat:'c5',
+    q:'Khách hàng EVN (Điện lực) yêu cầu: "Nếu kết nối giữa trung tâm và chi nhánh bị đứt, hệ thống giám sát tại chi nhánh có tiếp tục hoạt động không?" Câu trả lời đúng là:',
+    opts:['A. Không — khi mất kết nối Central, Remote Site sẽ ngừng hoàn toàn mọi hoạt động giám sát','B. Có — trong Distributed Edition, Remote Site hoạt động hoàn toàn độc lập khi mất kết nối Central, dữ liệu vẫn được thu thập và lưu tại Remote','C. Một phần — Remote vẫn polling nhưng không lưu dữ liệu được','D. Chỉ hoạt động 4 tiếng sau đó tự shutdown để chờ kết nối lại'],
+    ans:'B',
+    explain:'Đây là một trong những điểm quan trọng nhất của Distributed Edition: mỗi Remote Site vận hành HOÀN TOÀN ĐỘC LẬP. Khi mất kết nối Central, Remote vẫn giám sát, lưu dữ liệu, alert. Khi kết nối phục hồi, dữ liệu được đồng bộ. Rất phù hợp cho mô hình DC-DR.'
+  },
+
+  // ──── C6: SIZING & LICENSE (7 câu) ────
+  {
+    id:28, cat:'c6',
+    q:'Khách hàng có 150 switch/router, 80 server, cần giám sát NTA và Virtual Monitoring (200 VM). Nên chọn phiên bản nào?',
+    opts:['A. Premium Edition với các add-on NTA và Virtual Monitoring riêng lẻ','B. Total Plus Edition — bao gồm sẵn NTA, Virtual Monitoring, APM, Config Mgmt, Log Mgmt và Scalability Pollers trong 1 license duy nhất, giá trị tốt hơn nhiều','C. Premium Edition là đủ, không cần mua thêm tính năng NTA hay VM','D. WUG 360 SaaS Edition cho dễ quản lý'],
+    ans:'B',
+    explain:'Khi khách cần nhiều module (NTA + VM + có thể cần Log, Config sau), Total Plus là lựa chọn tối ưu. Mua các add-on riêng cho Premium thường tốn hơn. Total Plus cũng include Scalability Pollers — không tốn thêm. Luôn tính ROI khi so sánh.'
+  },
+  {
+    id:29, cat:'c6',
+    q:'Premium Edition tính license theo số DEVICE. Khách có: 200 switch, 50 router, 100 server, 30 printer, 50 AP. Tổng số device cần license là bao nhiêu?',
+    opts:['A. 200 — chỉ tính thiết bị mạng chủ động, không tính server và printer','B. 250 — chỉ tính network device (switch + router + AP)','C. 430 — tổng tất cả (200+50+100+30+50), chọn tier 500 devices','D. 350 — không tính printer vì printer không cần monitor hiệu năng'],
+    ans:'C',
+    explain:'Premium tính tất cả thiết bị cần monitor: 200+50+100+30+50 = 430. Chọn tier gần nhất trên là 500 devices. Printer cũng tính nếu cần monitor (availability, toner...). Không loại bỏ bất kỳ thiết bị nào nếu cần giám sát.'
+  },
+  {
+    id:30, cat:'c6',
+    q:'Điều nào SAI về license Scalability Pollers trong Total Plus Edition?',
+    opts:['A. Scalability Pollers đã được include trong Total Plus — không tốn thêm phí','B. Scalability Pollers trong Total Plus cần mua thêm license riêng theo số poller','C. Với Premium Edition, Scalability Pollers là add-on cần mua thêm','D. Scalability Pollers giúp phân tải polling khi số lượng device lớn (thường từ ~850+)'],
+    ans:'B',
+    explain:'Sai! Scalability Pollers ĐÃ ĐƯỢC INCLUDE trong Total Plus Edition — đây là một trong những lý do Total Plus có giá trị tốt hơn nhiều so với Premium + add-ons. Chỉ với Premium Edition, Pollers mới là add-on cần mua thêm.'
+  },
+
+  // 3 bonus questions to reach 30 ────
+  {
+    id:31, cat:'c6',
+    q:'Khách hàng hỏi "Log Management cần license thêm không?" khi họ đang dùng Total Plus Edition. Câu trả lời đúng là:',
+    opts:['A. Có — Log Management luôn là add-on riêng bất kể phiên bản nào','B. Không — Log Management đã được include trong Total Plus Edition; chỉ là add-on khi dùng Premium','C. Phụ thuộc vào số lượng log source, dưới 100 thì miễn phí, trên 100 mới tính tiền','D. Log Management chỉ available trong WUG 360 SaaS, không có trong on-premises'],
+    ans:'B',
+    explain:'Log Management INCLUDED trong Total Plus. Đối với Premium Edition, Log Management là add-on cần mua thêm. Khi khách đã chọn Total Plus, đây là giá trị thêm không cần trả tiền — hãy nhấn mạnh điều này khi tư vấn.'
+  },
+  {
+    id:32, cat:'c5',
+    q:'Khách hàng nói: "Chúng tôi đang dùng SolarWinds NPM nhưng chi phí maintenance hàng năm quá cao." Chiến lược tư vấn WUG nào phù hợp nhất?',
+    opts:['A. Chỉ tập trung vào giá rẻ hơn, không đề cập đến tính năng','B. Nhấn mạnh TCO thấp hơn, tính năng tương đương cho 90% nhu cầu thực, thời gian migration nhanh, và interactive map vượt trội so với SolarWinds','C. Đề xuất dùng thử miễn phí 3 tháng trước khi quyết định','D. Nói SolarWinds sắp bị dừng phát triển để tạo urgency'],
+    ans:'B',
+    explain:'Đây là cơ hội thay thế SolarWinds. Chiến lược đúng: (1) TCO thấp hơn rõ ràng, (2) tính năng đáp ứng 90% nhu cầu thực, (3) Interactive Map là điểm vượt trội cụ thể, (4) migration plan rõ ràng. Không nói sai về đối thủ.'
+  },
+  {
+    id:33, cat:'c2',
+    q:'WhatsUp Gold có thể giám sát cloud AWS và Azure theo cách nào ĐẶC BIỆT hơn so với native tools của AWS/Azure?',
+    opts:['A. WUG dùng agent cài trên từng cloud instance để monitor từ bên trong','B. WUG lưu trữ cloud metrics nhiều NĂM — vượt qua giới hạn 60-90 ngày của CloudWatch/Azure Monitor native; và hiển thị cùng dashboard với on-premises','C. WUG chỉ giám sát cloud billing, không theo dõi được performance metrics','D. WUG dùng công nghệ AI tiên tiến hơn native tools của cloud provider'],
+    ans:'B',
+    explain:'Hai lợi thế chính của WUG với cloud: (1) Lưu trữ metrics nhiều năm — CloudWatch/Azure Monitor chỉ giữ 60-90 ngày, (2) Unified dashboard — xem cloud và on-premises trong cùng 1 giao diện. Đây là value prop quan trọng cho hybrid cloud environments.'
+  },
+];
+
+// Shuffle and take first 30
+let questions = [...QUESTIONS];
+let answered = {};
+let submitted = false;
+
+function renderQuiz() {
+  const container = document.getElementById('q-container');
+  container.innerHTML = '';
+  answered = {};
+  submitted = false;
+
+  // Group by category
+  const cats = {};
+  questions.forEach(q => {
+    if (!cats[q.cat]) cats[q.cat] = [];
+    cats[q.cat].push(q);
+  });
+
+  let qNum = 0;
+  Object.keys(CATS).forEach(catKey => {
+    const catQs = cats[catKey] || [];
+    if (!catQs.length) return;
+    const cat = CATS[catKey];
+
+    // Section label
+    const sec = document.createElement('div');
+    sec.className = 'sec-label';
+    sec.innerHTML = `
+      <div class="sl-icon" style="background:var(--gp)">${cat.icon}</div>
+      <div><h3>${cat.label}</h3><p>${catQs.length} câu hỏi</p></div>
+      <div class="sec-line"></div>
+    `;
+    container.appendChild(sec);
+
+    catQs.forEach(q => {
+      qNum++;
+      const card = document.createElement('div');
+      card.className = 'q-card';
+      card.id = `q-${q.id}`;
+
+      const opts = q.opts.map((opt, i) => {
+        const key = ['A','B','C','D'][i];
+        return `
+          <label class="opt" id="opt-${q.id}-${key}" onclick="selectOpt(${q.id},'${key}')">
+            <input type="radio" name="q${q.id}" value="${key}">
+            <div class="opt-key">${key}</div>
+            <div class="opt-text">${opt.substring(3)}</div>
+          </label>
+        `;
+      }).join('');
+
+      card.innerHTML = `
+        <div class="q-num">
+          <span>Câu ${qNum}/30</span>
+          <span class="cat ${q.cat}">${CATS[q.cat].label}</span>
+        </div>
+        <div class="q-text">${q.q}</div>
+        <div class="opts">${opts}</div>
+        <div class="q-footer">
+          <button class="btn-check" id="btn-${q.id}" onclick="checkAnswer(${q.id},'${q.ans}')">Xác nhận</button>
+        </div>
+        <div class="explain" id="exp-${q.id}"></div>
+      `;
+      container.appendChild(card);
+    });
+  });
+
+  // Build chips
+  buildChips();
+  document.getElementById('submit-area').classList.add('show');
+  updateProgress();
+}
+
+function buildChips() {
+  const chips = document.getElementById('q-chips');
+  chips.innerHTML = '';
+  questions.forEach((q, i) => {
+    const chip = document.createElement('a');
+    chip.href = `#q-${q.id}`;
+    chip.className = 'qr-chip';
+    chip.id = `chip-${q.id}`;
+    chip.textContent = i + 1;
+    chips.appendChild(chip);
+  });
+  document.getElementById('q-review-map').style.display = 'block';
+}
+
+function selectOpt(qId, key) {
+  if (submitted) return;
+  if (answered[qId] && answered[qId].checked) return;
+  answered[qId] = {selected: key, checked: false};
+
+  ['A','B','C','D'].forEach(k => {
+    const el = document.getElementById(`opt-${qId}-${k}`);
+    if (el) el.classList.remove('selected');
+  });
+  const el = document.getElementById(`opt-${qId}-${key}`);
+  if (el) el.classList.add('selected');
+
+  const btn = document.getElementById(`btn-${qId}`);
+  if (btn) btn.classList.add('show');
+
+  updateSubmitBtn();
+}
+
+function checkAnswer(qId, correct) {
+  if (!answered[qId] || answered[qId].checked) return;
+  const selected = answered[qId].selected;
+  answered[qId].checked = true;
+
+  const isCorrect = selected === correct;
+  answered[qId].correct = isCorrect;
+
+  // Style options
+  ['A','B','C','D'].forEach(k => {
+    const el = document.getElementById(`opt-${qId}-${k}`);
+    if (!el) return;
+    el.classList.add('disabled');
+    el.classList.remove('selected');
+    if (k === correct) el.classList.add('show-correct');
+    else if (k === selected && !isCorrect) el.classList.add('wrong');
+  });
+
+  // Card style
+  const card = document.getElementById(`q-${qId}`);
+  if (card) {
+    card.classList.add(isCorrect ? 'correct-card' : 'wrong-card');
+    const status = document.createElement('div');
+    status.className = `q-status ${isCorrect ? 'st-ok' : 'st-bad'}`;
+    status.textContent = isCorrect ? '✓ Đúng' : '✗ Sai';
+    card.appendChild(status);
+  }
+
+  // Explanation
+  const q = questions.find(q => q.id === qId);
+  if (q) {
+    const exp = document.getElementById(`exp-${qId}`);
+    if (exp) {
+      exp.className = `explain show ${isCorrect ? 'ok' : 'bad'}`;
+      exp.innerHTML = `<strong>${isCorrect ? '✓ Chính xác!' : '✗ Chưa đúng!'}</strong> Đáp án đúng: <strong>${correct}</strong>. ${q.explain}`;
+    }
+  }
+
+  // Hide check btn
+  const btn = document.getElementById(`btn-${qId}`);
+  if (btn) btn.style.display = 'none';
+
+  // Update chip
+  const chip = document.getElementById(`chip-${qId}`);
+  if (chip) chip.className = `qr-chip ${isCorrect ? 'ans-ok' : 'ans-bad'}`;
+
+  updateProgress();
+  updateStickyCounter();
+  updateSubmitBtn();
+}
+
+function updateProgress() {
+  const checked = Object.values(answered).filter(a => a.checked).length;
+  const pct = (checked / questions.length) * 100;
+  document.getElementById('prog-bar').style.width = pct + '%';
+}
+
+function updateStickyCounter() {
+  const checked = Object.values(answered).filter(a => a.checked);
+  const ok = checked.filter(a => a.correct).length;
+  const bad = checked.filter(a => !a.correct).length;
+  document.getElementById('sticky-prog').textContent = `${checked.length}/30 câu`;
+  document.getElementById('sticky-ok').textContent = ok;
+  document.getElementById('sticky-bad').textContent = bad;
+  if (checked.length > 0) document.getElementById('sticky').classList.add('show');
+}
+
+function updateSubmitBtn() {
+  const checkedCount = Object.values(answered).filter(a => a.checked).length;
+  const btn = document.getElementById('btn-submit');
+  const hint = document.getElementById('submit-hint');
+  if (checkedCount === questions.length) {
+    btn.disabled = false;
+    hint.textContent = 'Bạn đã trả lời tất cả câu hỏi. Nhấn nộp bài để xem kết quả.';
+  } else {
+    btn.disabled = true;
+    hint.textContent = `Còn ${questions.length - checkedCount} câu chưa trả lời`;
+  }
+}
+
+function submitQuiz() {
+  submitted = true;
+  const correct = Object.values(answered).filter(a => a.correct).length;
+  const total = questions.length;
+  const pct = Math.round((correct / total) * 100);
+  const pass = correct >= PASS_SCORE;
+
+  // Count by category
+  const catStats = {};
+  Object.keys(CATS).forEach(k => { catStats[k] = {ok:0,total:0}; });
+  questions.forEach(q => {
+    const a = answered[q.id];
+    if (a && a.checked) {
+      catStats[q.cat].total++;
+      if (a.correct) catStats[q.cat].ok++;
+    }
+  });
+
+  const result = document.getElementById('result');
+  result.classList.add('show');
+  document.getElementById('res-emoji').textContent = pass ? '🏆' : '📚';
+  document.getElementById('res-verdict').textContent = pass ? 'ĐẠT — Kiến thức tốt!' : 'CHƯA ĐẠT — Cần ôn thêm';
+  document.getElementById('res-verdict').className = `res-verdict ${pass ? 'pass' : 'fail'}`;
+  document.getElementById('res-score').textContent = `${correct}/30`;
+  document.getElementById('res-score').className = `res-score ${pass ? 'pass' : 'fail'}`;
+  document.getElementById('res-sub').textContent = `Tỉ lệ đúng: ${pct}% ${pass ? '— Xuất sắc! Bạn đã sẵn sàng tư vấn khách hàng.' : '— Ngưỡng đạt là 80% (24/30). Xem lại các phần bị sai bên dưới.'}`;
+
+  const bars = document.getElementById('res-bars');
+  bars.innerHTML = Object.entries(catStats).map(([k, s]) => `
+    <div class="res-bar-item">
+      <div class="rbn" style="color:${s.ok===s.total?'var(--g)':s.ok>=s.total*0.6?'var(--amber)':'var(--red)'}">${s.ok}/${s.total}</div>
+      <div class="rbl">${CATS[k].icon} ${CATS[k].label}</div>
+    </div>
+  `).join('');
+
+  // Weak areas
+  const weak = Object.entries(catStats).filter(([k,s]) => s.ok < s.total * 0.6).map(([k]) => CATS[k].label);
+  document.getElementById('res-cats').textContent = weak.length ? `⚠️ Cần ôn thêm: ${weak.join(', ')}` : '✅ Bạn đã nắm tốt tất cả các chủ đề!';
+
+  result.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function retryQuiz() {
+  document.getElementById('result').classList.remove('show');
+  // Scroll to top
+  window.scrollTo({top:0, behavior:'smooth'});
+  setTimeout(() => {
+    renderQuiz();
+  }, 300);
+}
+
+// Init
+renderQuiz();
+</script>
+</body>
+</html>

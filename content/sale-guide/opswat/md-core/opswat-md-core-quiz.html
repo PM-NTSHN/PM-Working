@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OPSWAT MetaDefender Core — Kiểm tra Sales</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f6f9;
+    --surface: #ffffff;
+    --surface2: #edf0f5;
+    --border: rgba(0,0,0,0.08);
+    --accent: #1a56db;
+    --accent-light: rgba(26,86,219,.08);
+    --accent-border: rgba(26,86,219,.25);
+    --success: #047857;
+    --success-bg: rgba(4,120,87,.07);
+    --danger: #b91c1c;
+    --danger-bg: rgba(185,28,28,.07);
+    --warn: #b45309;
+    --text: #0f1117;
+    --muted: #5c677d;
+    --muted2: #98a2b3;
+    --radius: 14px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 20px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 50;
+    box-shadow: 0 1px 8px rgba(0,0,0,.06);
+  }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-icon {
+    width: 36px; height: 36px; border-radius: 9px;
+    background: var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .logo-text { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; }
+  .logo-sub { font-size: 12px; color: var(--muted); }
+  .progress-wrap {
+    display: flex; align-items: center; gap: 14px;
+    font-size: 13px; color: var(--muted);
+  }
+  .progress-bar-outer {
+    width: 180px; height: 7px; border-radius: 99px;
+    background: var(--surface2); overflow: hidden;
+  }
+  .progress-bar-inner {
+    height: 100%; border-radius: 99px;
+    background: linear-gradient(90deg, var(--accent), #6366f1);
+    transition: width .4s ease;
+    width: 0%;
+  }
+  #progress-text { font-weight: 600; color: var(--accent); }
+
+  /* ── MAIN ── */
+  main { max-width: 760px; margin: 0 auto; padding: 40px 24px 80px; }
+
+  /* ── INTRO SCREEN ── */
+  #screen-intro {
+    text-align: center;
+    padding: 60px 20px;
+  }
+  .intro-badge {
+    display: inline-block;
+    background: var(--accent-light);
+    border: 1px solid var(--accent-border);
+    color: var(--accent);
+    font-size: 11px; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; padding: 5px 14px; border-radius: 99px;
+    margin-bottom: 20px;
+  }
+  #screen-intro h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(26px, 5vw, 40px); font-weight: 800;
+    line-height: 1.15; margin-bottom: 16px;
+  }
+  #screen-intro h1 span { color: var(--accent); }
+  #screen-intro p { color: var(--muted); max-width: 480px; margin: 0 auto 32px; font-size: 15px; }
+  .info-grid {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 14px;
+    max-width: 480px; margin: 0 auto 36px;
+  }
+  .info-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 14px; text-align: center;
+  }
+  .info-box .num {
+    font-family: 'Syne', sans-serif; font-size: 26px; font-weight: 800;
+    color: var(--accent); display: block; margin-bottom: 4px;
+  }
+  .info-box .lbl { font-size: 12px; color: var(--muted); }
+  .btn-start {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent); color: #fff;
+    font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
+    padding: 14px 32px; border-radius: 10px; border: none; cursor: pointer;
+    transition: background .2s, transform .15s;
+  }
+  .btn-start:hover { background: #1648c0; transform: translateY(-1px); }
+
+  /* ── QUIZ SCREEN ── */
+  #screen-quiz { display: none; }
+
+  .q-counter {
+    font-size: 12px; font-weight: 600; color: var(--muted2);
+    text-transform: uppercase; letter-spacing: .1em; margin-bottom: 8px;
+  }
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 32px 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.04);
+    animation: slideIn .35s ease;
+  }
+  @keyframes slideIn {
+    from { opacity:0; transform: translateY(12px); }
+    to   { opacity:1; transform: translateY(0); }
+  }
+  .q-text {
+    font-size: 17px; font-weight: 600; line-height: 1.55;
+    margin-bottom: 24px; color: var(--text);
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option {
+    display: flex; align-items: flex-start; gap: 13px;
+    padding: 14px 18px; border-radius: 10px;
+    border: 1.5px solid var(--border);
+    background: var(--bg);
+    cursor: pointer;
+    transition: border-color .18s, background .18s, transform .12s;
+    font-size: 14px; line-height: 1.5;
+    user-select: none;
+  }
+  .option:hover { border-color: var(--accent-border); background: var(--accent-light); }
+  .option.selected {
+    border-color: var(--accent);
+    background: var(--accent-light);
+  }
+  .option.correct {
+    border-color: var(--success);
+    background: var(--success-bg);
+  }
+  .option.wrong {
+    border-color: var(--danger);
+    background: var(--danger-bg);
+  }
+  .opt-key {
+    width: 26px; height: 26px; border-radius: 6px; flex-shrink: 0;
+    border: 1.5px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; color: var(--muted);
+    background: var(--surface);
+    transition: all .18s;
+  }
+  .option.selected .opt-key { background: var(--accent); border-color: var(--accent); color:#fff; }
+  .option.correct .opt-key  { background: var(--success); border-color: var(--success); color:#fff; }
+  .option.wrong .opt-key    { background: var(--danger);  border-color: var(--danger);  color:#fff; }
+
+  .feedback {
+    display: none; margin-top: 16px;
+    padding: 14px 16px; border-radius: 10px;
+    font-size: 13px; line-height: 1.6;
+  }
+  .feedback.show { display: flex; align-items: flex-start; gap: 10px; }
+  .feedback.ok { background: var(--success-bg); color: var(--success); border: 1px solid rgba(4,120,87,.2); }
+  .feedback.fail { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(185,28,28,.2); }
+  .feedback .fb-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .feedback .fb-text strong { display: block; margin-bottom: 2px; }
+
+  .q-nav {
+    display: flex; justify-content: flex-end; margin-top: 24px;
+  }
+  .btn-next {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: var(--accent); color: #fff;
+    font-size: 14px; font-weight: 600;
+    padding: 11px 26px; border-radius: 9px; border: none; cursor: pointer;
+    transition: background .2s, opacity .2s;
+    opacity: 0; pointer-events: none;
+  }
+  .btn-next.visible { opacity:1; pointer-events: all; }
+  .btn-next:hover { background: #1648c0; }
+
+  /* ── RESULT SCREEN ── */
+  #screen-result { display: none; text-align: center; }
+  .result-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 48px 36px;
+    box-shadow: 0 4px 24px rgba(0,0,0,.06);
+    margin-bottom: 28px;
+  }
+  .result-icon { font-size: 56px; margin-bottom: 16px; display: block; }
+  .result-status {
+    font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 800;
+    margin-bottom: 8px;
+  }
+  .result-status.pass { color: var(--success); }
+  .result-status.fail { color: var(--danger); }
+  .result-score {
+    font-size: 15px; color: var(--muted); margin-bottom: 28px;
+  }
+  .score-big {
+    font-family: 'Syne', sans-serif; font-size: 72px; font-weight: 800;
+    line-height: 1;
+  }
+  .score-big.pass { color: var(--success); }
+  .score-big.fail { color: var(--danger); }
+  .score-label { font-size: 14px; color: var(--muted); margin-top: 4px; margin-bottom: 28px; }
+
+  .result-stats {
+    display: grid; grid-template-columns: repeat(3,1fr); gap: 14px;
+    margin-bottom: 28px;
+  }
+  .rstat {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 12px; text-align: center;
+  }
+  .rstat .rnum { font-family:'Syne',sans-serif; font-size:22px; font-weight:800; }
+  .rstat .rlbl { font-size:12px; color:var(--muted); }
+  .rstat.c .rnum { color: var(--success); }
+  .rstat.w .rnum { color: var(--danger); }
+  .rstat.p .rnum { color: var(--accent); }
+
+  .result-msg {
+    padding: 16px 20px; border-radius: 12px;
+    font-size: 14px; line-height: 1.65;
+    margin-bottom: 0;
+  }
+  .result-msg.pass { background: var(--success-bg); color: var(--success); border: 1px solid rgba(4,120,87,.2); }
+  .result-msg.fail { background: var(--danger-bg);  color: var(--danger);  border: 1px solid rgba(185,28,28,.2); }
+
+  .review-section { margin-top: 32px; text-align: left; }
+  .review-title {
+    font-family:'Syne',sans-serif; font-size:18px; font-weight:700;
+    margin-bottom: 16px;
+  }
+  .review-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 14px; padding: 20px 22px; margin-bottom: 12px;
+  }
+  .review-item.wrong-q { border-color: rgba(185,28,28,.2); }
+  .review-item .rv-num { font-size:11px; color:var(--muted2); font-weight:600; text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px; }
+  .review-item .rv-q { font-size:14px; font-weight:600; margin-bottom:10px; }
+  .review-item .rv-ans { display:flex; flex-direction:column; gap:4px; font-size:13px; }
+  .rv-correct { color: var(--success); }  
+  .rv-wrong   { color: var(--danger); text-decoration: line-through; }
+  .rv-expl { margin-top:8px; padding:10px 12px; background:var(--surface2); border-radius:8px; font-size:13px; color:var(--muted); }
+
+  .btn-retry {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent); color: #fff;
+    font-size: 15px; font-weight: 600;
+    padding: 13px 30px; border-radius: 10px; border: none; cursor: pointer;
+    transition: background .2s; margin-top: 8px;
+  }
+  .btn-retry:hover { background: #1648c0; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🛡️</div>
+    <div>
+      <div class="logo-text">OPSWAT Sales Quiz</div>
+      <div class="logo-sub">MetaDefender Core — NTS Hanoi</div>
+    </div>
+  </div>
+  <div class="progress-wrap" id="header-progress" style="display:none">
+    <span id="progress-text">0/30</span>
+    <div class="progress-bar-outer">
+      <div class="progress-bar-inner" id="prog-bar"></div>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- INTRO -->
+  <div id="screen-intro">
+    <div class="intro-badge">Sales Certification Quiz</div>
+    <h1>Kiểm tra kiến thức<br><span>MetaDefender Core</span></h1>
+    <p>Bài kiểm tra 30 câu trắc nghiệm về giải pháp OPSWAT MetaDefender Core. Cần đạt ≥75% để PASS.</p>
+    <div class="info-grid">
+      <div class="info-box"><span class="num">30</span><span class="lbl">Câu hỏi</span></div>
+      <div class="info-box"><span class="num">75%</span><span class="lbl">Điểm PASS</span></div>
+      <div class="info-box"><span class="num">~15'</span><span class="lbl">Thời gian</span></div>
+    </div>
+    <button class="btn-start" onclick="startQuiz()">▶ Bắt đầu kiểm tra</button>
+  </div>
+
+  <!-- QUIZ -->
+  <div id="screen-quiz">
+    <div class="q-counter" id="q-counter">Câu 1 / 30</div>
+    <div class="q-card" id="q-card">
+      <div class="q-text" id="q-text"></div>
+      <div class="options" id="options"></div>
+      <div class="feedback" id="feedback">
+        <span class="fb-icon"></span>
+        <div class="fb-text"></div>
+      </div>
+    </div>
+    <div class="q-nav">
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">Tiếp theo →</button>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="screen-result">
+    <div class="result-card">
+      <span class="result-icon" id="r-icon"></span>
+      <div class="result-status" id="r-status"></div>
+      <div class="result-score" id="r-score-label"></div>
+      <div class="score-big" id="r-pct"></div>
+      <div class="score-label">Điểm số</div>
+      <div class="result-stats">
+        <div class="rstat c"><div class="rnum" id="r-correct"></div><div class="rlbl">Đúng</div></div>
+        <div class="rstat w"><div class="rnum" id="r-wrong"></div><div class="rlbl">Sai</div></div>
+        <div class="rstat p"><div class="rnum">75%</div><div class="rlbl">Điểm PASS</div></div>
+      </div>
+      <div class="result-msg" id="r-msg"></div>
+    </div>
+    <button class="btn-retry" onclick="retryQuiz()">🔄 Làm lại bài kiểm tra</button>
+
+    <div class="review-section">
+      <div class="review-title">📋 Xem lại toàn bộ đáp án</div>
+      <div id="review-list"></div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+const QUESTIONS = [
+  {
+    q: "OPSWAT MetaDefender Core hoạt động theo triết lý bảo mật nào?",
+    opts: ["Trust but Verify — tin tưởng nhưng kiểm tra", "Zero Trust — không tin tưởng bất kỳ file hay thiết bị nào", "Defense in Depth — bảo vệ nhiều lớp", "Least Privilege — quyền tối thiểu"],
+    ans: 1,
+    expl: "MetaDefender Core hoạt động theo Zero Trust: mặc định mọi file đều có nguy cơ, bóc tách và tái cấu trúc trước khi cho phép sử dụng."
+  },
+  {
+    q: "Deep CDR (Content Disarm & Reconstruction) xử lý file theo cách nào?",
+    opts: ["Quét chữ ký mã độc rồi xóa file nếu phát hiện", "Chạy file trong môi trường ảo để quan sát hành vi", "Phân tách file, loại bỏ các thành phần nguy hiểm, tái tạo lại file sạch", "Mã hóa file và gửi lên cloud để phân tích"],
+    ans: 2,
+    expl: "Deep CDR bóc tách file, vứt bỏ macro/script nhúng, xây lại file mới an toàn giữ nguyên định dạng — không cần biết mã độc là gì."
+  },
+  {
+    q: "MetaDefender Core hỗ trợ quét song song tối đa bao nhiêu engine diệt virus?",
+    opts: ["Tối đa 10 engine", "Tối đa 20 engine", "Hơn 30 engine", "5 engine mặc định, có thể mở rộng lên 15"],
+    ans: 2,
+    expl: "Gói MAX của MetaDefender Core hỗ trợ hơn 30 engine AV hàng đầu chạy song song cùng lúc."
+  },
+  {
+    q: "Điểm bảo vệ của Deep CDR theo đánh giá độc lập của SE Labs là bao nhiêu?",
+    opts: ["97%", "98.5%", "99.2%", "100%"],
+    ans: 3,
+    expl: "Deep CDR đạt điểm bảo vệ tuyệt đối 100% theo đánh giá độc lập của SE Labs."
+  },
+  {
+    q: "Tại sao khách hàng cần MetaDefender Core dù đã có Firewall và Endpoint AV?",
+    opts: ["Vì Firewall không hỗ trợ IPv6", "Vì AV chỉ nhận diện bằng chữ ký/hành vi đã biết, bỏ lọt File-borne malware trong Word/Excel/PDF", "Vì MetaDefender thay thế được Firewall", "Vì Endpoint AV không cài được trên macOS"],
+    ans: 1,
+    expl: "Firewall chặn ở mức mạng; Endpoint AV dựa vào mẫu đã biết. Cả hai không xử lý được mã độc nhúng trong file thông thường — đây chính là lỗ hổng MetaDefender bịt."
+  },
+  {
+    q: "Adaptive Sandbox của OPSWAT khác sandbox truyền thống (VM-based) điểm gì nổi bật nhất?",
+    opts: ["Chạy trên cloud nên không cần server nội bộ", "Không dùng máy ảo (VM), giả lập cấp độ tập lệnh — mã độc không thể phát hiện môi trường và ẩn mình", "Phân tích nhanh hơn nhờ dùng GPU", "Tích hợp AI để tự vá lỗi hệ thống"],
+    ans: 1,
+    expl: "Mã độc tinh vi có khả năng nhận diện môi trường VM và ngủ đông. Adaptive Sandbox giả lập cấp tập lệnh (không dùng VM) nên chống được kỹ thuật sandbox-evasion này."
+  },
+  {
+    q: "Proactive DLP của MetaDefender Core sử dụng công nghệ nào để phát hiện dữ liệu nhạy cảm kể cả trong ảnh?",
+    opts: ["Machine Learning và fingerprinting", "AI và OCR", "Regular Expression thuần túy", "Hash matching"],
+    ans: 1,
+    expl: "Proactive DLP dùng AI kết hợp OCR để quét và phát hiện dữ liệu nhạy cảm (số CCCD, thẻ tín dụng, hồ sơ y tế) kể cả trong file ảnh."
+  },
+  {
+    q: "Cơ chế tính license của MetaDefender Core dựa trên yếu tố nào?",
+    opts: ["Số lượng endpoint được bảo vệ và số user", "Băng thông mạng tiêu thụ hàng tháng", "Tính năng module active và gói engine quét chọn", "Số lượng file quét mỗi ngày (transaction volume)"],
+    ans: 2,
+    expl: "License tính theo: (1) module tính năng active (CDR, DLP, Sandbox) và (2) gói engine chọn (8/12/16/20/MAX). Không giới hạn số lượng file hay số lần quét đồng thời."
+  },
+  {
+    q: "Khi một kỹ sư mang USB đến nhà máy điện (OT/Air-gapped), quy trình bảo vệ bằng OPSWAT diễn ra như thế nào?",
+    opts: ["USB bị chặn hoàn toàn — không ai được mang USB vào", "Kỹ sư cắm USB vào Kiosk kiểm tra; OPSWAT quét, làm sạch rồi mới cho chuyển file vào hệ thống nội bộ", "USB được gửi lên cloud OPSWAT để phân tích, sau đó trả kết quả", "Firewall OT tự quét USB khi cắm vào"],
+    ans: 1,
+    expl: "Use Case Kiosk & USB: kỹ sư cắm USB vào trạm kiểm tra (Kiosk), OPSWAT quét toàn bộ, làm sạch file, loại bỏ mã độc rồi mới cho phép chuyển vào hệ thống điều khiển Air-gapped."
+  },
+  {
+    q: "MetaDefender Core tích hợp vào Web Portal của khách hàng thông qua giao thức nào?",
+    opts: ["SNMP", "REST API", "LDAP", "FTP"],
+    ans: 1,
+    expl: "MetaDefender Core cung cấp REST API để tích hợp trực tiếp vào Web Portal, cổng dịch vụ công hoặc bất kỳ ứng dụng web nào."
+  },
+  {
+    q: "Để tích hợp MetaDefender Core với F5 BIG-IP hoặc NGINX WAF, giao thức nào được sử dụng?",
+    opts: ["REST API", "ICAP (Internet Content Adaptation Protocol)", "SNMP Trap", "Syslog"],
+    ans: 1,
+    expl: "Tích hợp Network Perimeter sử dụng ICAP — cho phép F5, NGINX, Fortinet WAF đẩy file sang OPSWAT để làm sạch rồi mới cho đi tiếp."
+  },
+  {
+    q: "File-based Vulnerability Assessment của MetaDefender phát hiện điều gì?",
+    opts: ["Lỗ hổng trong cấu hình tường lửa", "CVE trong bộ cài/file thực thi TRƯỚC khi cài đặt vào hệ thống", "Tài khoản người dùng có mật khẩu yếu", "Lỗ hổng trong giao thức mạng"],
+    ans: 1,
+    expl: "OPSWAT quét bộ cài, file thực thi để phát hiện lỗ hổng CVE trước khi deploy vào hệ thống — phòng ngừa từ nguồn gốc."
+  },
+  {
+    q: "Công nghệ OPSWAT đang bảo vệ bao nhiêu % cơ sở điện hạt nhân tại Hoa Kỳ?",
+    opts: ["75%", "85%", "90%", "98%"],
+    ans: 3,
+    expl: "OPSWAT bảo vệ 98% các cơ sở điện hạt nhân tại Hoa Kỳ — một con số tham chiếu mạnh khi bán cho khách hàng hạ tầng trọng yếu."
+  },
+  {
+    q: "Điểm yếu (Weakness) chính của MetaDefender Core cần lưu ý khi tư vấn khách hàng là gì?",
+    opts: ["Không hỗ trợ file PDF", "Chỉ chạy được trên Linux", "Chi phí có thể cao hơn AV đơn lẻ; yêu cầu phần cứng server tương đối mạnh", "Không tích hợp được với cloud"],
+    ans: 2,
+    expl: "Weakness cần thành thật với khách: chi phí cao hơn AV đơn lẻ và yêu cầu cấu hình phần cứng khá mạnh (đặc biệt gói MAX 30+ engine)."
+  },
+  {
+    q: "Phân khúc khách hàng nào PHÙ HỢP NHẤT để pitch Use Case Kiosk & USB?",
+    opts: ["Ngân hàng bán lẻ muốn chống DLP", "Nhà máy điện, dầu khí có mạng SCADA/OT Air-gapped", "Bệnh viện cần tuân thủ HIPAA", "Công ty thương mại điện tử có Web Portal"],
+    ans: 1,
+    expl: "Kiosk & USB là Use Case đặc thù cho môi trường OT/ICS Air-gapped — nhà máy điện, dầu khí, SCADA nơi USB là con đường tấn công chính."
+  },
+  {
+    q: "Adaptive Sandbox của OPSWAT nhanh hơn và nhẹ hơn sandbox VM truyền thống bao nhiêu lần?",
+    opts: ["Nhanh hơn 2×, nhẹ hơn 10×", "Nhanh hơn 5×, nhẹ hơn 50×", "Nhanh hơn 10×, nhẹ hơn 100×", "Tốc độ tương đương nhưng chính xác hơn"],
+    ans: 2,
+    expl: "Adaptive Sandbox giả lập cấp tập lệnh: nhanh hơn 10× và nhẹ hơn (tiêu thụ tài nguyên ít hơn) 100× so với sandbox dùng máy ảo truyền thống."
+  },
+  {
+    q: "Khách hàng nào sau đây là Reference Customer của OPSWAT tại Việt Nam trong lĩnh vực tài chính?",
+    opts: ["Vietinbank và BIDV", "OCB và Vietcombank", "TPBank và Techcombank", "MB Bank và HDBank"],
+    ans: 1,
+    expl: "Reference Customer tài chính tại Việt Nam: OCB và Vietcombank — có thể dẫn chiếu khi tư vấn cho khách hàng ngân hàng."
+  },
+  {
+    q: "Khi triển khai MetaDefender Core với môi trường Air-gapped không có Internet, cập nhật engine virus được thực hiện bằng cách nào?",
+    opts: ["Không thể cập nhật — hệ thống Air-gapped không dùng được OPSWAT", "Tải file cập nhật thủ công từ máy có mạng rồi đưa vào nội bộ; hoặc dùng Data Diode/NetWall để đồng bộ một chiều", "OPSWAT tự động cập nhật qua VPN ẩn", "Chỉ cần cập nhật 1 lần khi cài đặt ban đầu"],
+    ans: 1,
+    expl: "Với Air-gapped: tải file cập nhật engine thủ công hàng ngày từ máy có mạng và đưa vào hệ thống nội bộ, hoặc dùng Data Diode/NetWall để đồng bộ an toàn."
+  },
+  {
+    q: "MetaDefender Core hỗ trợ quét và làm sạch file trên các hệ thống lưu trữ nào? (Storage Security)",
+    opts: ["Chỉ hỗ trợ NAS on-premises", "Dell Isilon, Nutanix, AWS S3 và các kho lưu trữ phổ biến khác", "Chỉ hỗ trợ Google Drive và OneDrive", "Chỉ hỗ trợ Windows File Server"],
+    ans: 1,
+    expl: "Use Case Storage Security hỗ trợ Dell Isilon, Nutanix, AWS S3 — quét định kỳ kho dữ liệu dùng chung để phát hiện mã độc ẩn náu."
+  },
+  {
+    q: "Đối với gói MAX (hơn 30 engine), yêu cầu phần cứng tối thiểu là gì?",
+    opts: ["8 CPU Cores, 16GB RAM, 60GB SSD", "16 CPU Cores, 32GB RAM, 60GB SSD", "32 CPU Cores, 32GB RAM, 120GB SSD", "64 CPU Cores, 64GB RAM, 256GB SSD"],
+    ans: 2,
+    expl: "Gói MAX yêu cầu tối thiểu: 32 CPU Cores, 32GB RAM, 120GB SSD (chưa tính dung lượng DB). Cộng thêm 4 Cores + 8GB RAM nếu bật CDR/DLP/Sandbox."
+  },
+  {
+    q: "Deep CDR hỗ trợ xử lý bao nhiêu định dạng file?",
+    opts: ["Hơn 50 định dạng", "Hơn 100 định dạng", "Hơn 150 định dạng", "Hơn 200 định dạng"],
+    ans: 3,
+    expl: "Deep CDR hỗ trợ hơn 200 định dạng file — từ Office, PDF, ảnh, đến các định dạng đặc thù công nghiệp."
+  },
+  {
+    q: "Lợi thế cạnh tranh của OPSWAT so với các nền tảng all-in-one như Palo Alto hay CrowdStrike là gì?",
+    opts: ["OPSWAT rẻ hơn tuyệt đối trong mọi trường hợp", "OPSWAT tập trung chuyên sâu vào File Security — giá linh hoạt theo module, không cần mua cả gói tổng thể đắt đỏ", "OPSWAT bao gồm cả EDR và SIEM trong cùng một gói", "OPSWAT là lựa chọn của doanh nghiệp SMB, không phù hợp enterprise"],
+    ans: 1,
+    expl: "Palo Alto/CrowdStrike bán all-in-one cho toàn mạng rất đắt. OPSWAT chuyên sâu File Security, linh hoạt về giá và module — phù hợp khi khách chỉ cần giải quyết bài toán bảo mật luồng tệp tin."
+  },
+  {
+    q: "Khi khách hàng hỏi 'MetaDefender tìm và diệt mã độc Zero-day như thế nào?', câu trả lời đúng nhất là:",
+    opts: ["OPSWAT dùng AI dự đoán mã độc Zero-day dựa trên pattern", "MetaDefender không cần biết mã độc là gì — Deep CDR loại bỏ toàn bộ thành phần có thể thực thi, Zero-day không có cơ hội tồn tại trong file đã được tái cấu trúc", "OPSWAT kết nối threat intelligence toàn cầu để cập nhật signature Zero-day trong vòng 1 giờ", "MetaDefender block toàn bộ file lạ không cho đi qua"],
+    ans: 1,
+    expl: "Đây là điểm khác biệt cốt lõi: Deep CDR không cần nhận dạng mã độc. Nó phá hủy mọi thành phần thực thi và xây lại file từ đầu — Zero-day không còn đất để tồn tại."
+  },
+  {
+    q: "Tiêu chuẩn tuân thủ nào MetaDefender Core giúp khách hàng đáp ứng liên quan đến bảo vệ dữ liệu thẻ thanh toán?",
+    opts: ["ISO 27001", "SOC 1 Type II", "PCI-DSS", "NIST CSF"],
+    ans: 2,
+    expl: "Proactive DLP của MetaDefender hỗ trợ tuân thủ PCI-DSS (thẻ thanh toán), HIPAA (y tế) và GDPR (dữ liệu cá nhân EU)."
+  },
+  {
+    q: "Việc triển khai MetaDefender Core tích hợp với F5/NGINX mất bao lâu theo tài liệu sản phẩm?",
+    opts: ["1-2 ngày làm việc", "Khoảng 4 tiếng", "Chưa đầy 10 phút theo dạng Plug-and-Play", "2-4 tuần tùy độ phức tạp hệ thống"],
+    ans: 2,
+    expl: "MetaDefender tích hợp ICAP với F5/Citrix/NGINX dạng Plug-and-Play trong chưa đầy 10 phút, không cần thay đổi cấu trúc routing."
+  },
+  {
+    q: "Khách hàng ngân hàng nào phù hợp nhất để pitch Proactive DLP?",
+    opts: ["Ngân hàng muốn tăng tốc giao dịch online", "Ngân hàng cần ngăn nhân viên hoặc hệ thống vô tình gửi file chứa số tài khoản, số thẻ tín dụng khách hàng ra ngoài", "Ngân hàng đang tìm giải pháp thay thế Firewall", "Ngân hàng muốn triển khai zero-trust network access (ZTNA)"],
+    ans: 1,
+    expl: "Proactive DLP tự động phát hiện và redact số thẻ tín dụng, PII trong file/email — phù hợp nhất cho ngân hàng cần kiểm soát rò rỉ dữ liệu khách hàng."
+  },
+  {
+    q: "Khi khách hàng nói 'chúng tôi đã dùng sandbox rồi, không cần OPSWAT', cách phản bác hiệu quả nhất là:",
+    opts: ["Sandbox của OPSWAT rẻ hơn", "Sandbox truyền thống dùng VM dễ bị mã độc phát hiện và ngủ đông — Adaptive Sandbox của OPSWAT giả lập cấp tập lệnh, chống được sandbox-evasion mà sandbox VM không làm được", "OPSWAT sandbox hỗ trợ nhiều OS hơn", "OPSWAT cho phép xem live traffic trong sandbox"],
+    ans: 1,
+    expl: "Đây là điểm yếu căn bản của sandbox VM: mã độc tinh vi nhận ra môi trường ảo và ngủ đông. Adaptive Sandbox không dùng VM nên mã độc không thể né tránh."
+  },
+  {
+    q: "OPSWAT được thành lập năm nào và ở đâu?",
+    opts: ["1998, tại Đức", "2002, tại Mỹ", "2005, tại Israel", "2010, tại Singapore"],
+    ans: 1,
+    expl: "OPSWAT thành lập năm 2002 tại Mỹ, hiện là công ty dẫn đầu toàn cầu về bảo mật cơ sở hạ tầng trọng yếu (IT, OT, ICS)."
+  },
+  {
+    q: "Phần trăm phát hiện mã độc đã biết khi dùng Multiscanning (30+ engine) là bao nhiêu?",
+    opts: [">90%", ">95%", ">99.2%", "100% tất cả mã độc"],
+    ans: 2,
+    expl: "Multiscanning với 30+ engine song song đạt >99.2% phát hiện mã độc đã biết — vượt trội so với dùng 1 engine đơn lẻ (thường 70-85%)."
+  },
+  {
+    q: "Nếu khách hàng muốn bật thêm Deep CDR, Proactive DLP và Adaptive Sandbox trên gói 8 engine, cần cộng thêm bao nhiêu tài nguyên phần cứng?",
+    opts: ["Thêm 8 CPU Cores và 16GB RAM", "Thêm 4 CPU Cores và 8GB RAM", "Không cần thêm — đã tính sẵn trong cấu hình gói 8 engine", "Thêm 2 CPU Cores và 4GB RAM"],
+    ans: 1,
+    expl: "Khi bật thêm Deep CDR, Proactive DLP hoặc Sandbox, cần cộng thêm tối thiểu 4 CPU Cores và 8GB RAM ngoài cấu hình cơ bản của gói engine."
+  },
+  {
+    q: "Trong các nhóm khách hàng mục tiêu, tổ chức nào sau đây KHÔNG phải là target segment chính của MetaDefender Core?",
+    opts: ["Bộ Công an, Văn phòng Trung ương Đảng", "Ngân hàng, Tổ chức tài chính", "Công ty logistics và vận tải hàng hóa thông thường", "Nhà máy điện, Dầu khí, Hạ tầng trọng yếu"],
+    ans: 2,
+    expl: "Target segment của OPSWAT là Chính phủ, Tài chính/Ngân hàng, Hạ tầng trọng yếu (OT/ICS), và Y tế. Logistics thông thường không phải phân khúc trọng tâm."
+  }
+];
+
+let current = 0;
+let score = 0;
+let userAnswers = [];
+let answered = false;
+
+function startQuiz() {
+  document.getElementById('screen-intro').style.display = 'none';
+  document.getElementById('screen-quiz').style.display = 'block';
+  document.getElementById('header-progress').style.display = 'flex';
+  current = 0; score = 0; userAnswers = [];
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[current];
+  answered = false;
+
+  document.getElementById('q-counter').textContent = `Câu ${current + 1} / ${QUESTIONS.length}`;
+  document.getElementById('q-text').textContent = q.q;
+
+  const prog = ((current) / QUESTIONS.length) * 100;
+  document.getElementById('prog-bar').style.width = prog + '%';
+  document.getElementById('progress-text').textContent = `${current}/${QUESTIONS.length}`;
+
+  const btn = document.getElementById('btn-next');
+  btn.classList.remove('visible');
+  btn.textContent = current < QUESTIONS.length - 1 ? 'Tiếp theo →' : 'Xem kết quả';
+
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback';
+  fb.innerHTML = '';
+
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+  const keys = ['A', 'B', 'C', 'D'];
+  q.opts.forEach((o, i) => {
+    const el = document.createElement('div');
+    el.className = 'option';
+    el.innerHTML = `<div class="opt-key">${keys[i]}</div><div>${o}</div>`;
+    el.onclick = () => selectAnswer(i, el);
+    opts.appendChild(el);
+  });
+
+  const card = document.getElementById('q-card');
+  card.style.animation = 'none';
+  requestAnimationFrame(() => { card.style.animation = ''; });
+}
+
+function selectAnswer(idx, el) {
+  if (answered) return;
+  answered = true;
+
+  const q = QUESTIONS[current];
+  const allOpts = document.querySelectorAll('.option');
+  userAnswers[current] = idx;
+
+  allOpts.forEach((o, i) => {
+    if (i === q.ans) o.classList.add('correct');
+    else if (i === idx && idx !== q.ans) o.classList.add('wrong');
+    o.style.cursor = 'default';
+  });
+
+  if (idx === q.ans) score++;
+
+  const fb = document.getElementById('feedback');
+  const isCorrect = idx === q.ans;
+  fb.className = 'feedback show ' + (isCorrect ? 'ok' : 'fail');
+  fb.innerHTML = `
+    <span class="fb-icon">${isCorrect ? '✅' : '❌'}</span>
+    <div class="fb-text">
+      <strong>${isCorrect ? 'Chính xác!' : 'Chưa đúng!'}</strong>
+      ${q.expl}
+    </div>`;
+
+  document.getElementById('btn-next').classList.add('visible');
+}
+
+function nextQuestion() {
+  if (!answered) return;
+  current++;
+  if (current < QUESTIONS.length) {
+    renderQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  document.getElementById('screen-quiz').style.display = 'none';
+  document.getElementById('screen-result').style.display = 'block';
+  document.getElementById('header-progress').style.display = 'none';
+
+  const pct = Math.round((score / QUESTIONS.length) * 100);
+  const pass = pct >= 75;
+  const wrong = QUESTIONS.length - score;
+
+  document.getElementById('r-icon').textContent = pass ? '🏆' : '📚';
+  document.getElementById('r-status').textContent = pass ? 'PASS — Xuất sắc!' : 'CHƯA ĐẠT — Cần ôn thêm';
+  document.getElementById('r-status').className = 'result-status ' + (pass ? 'pass' : 'fail');
+  document.getElementById('r-score-label').textContent = `Bạn trả lời đúng ${score}/${QUESTIONS.length} câu`;
+  document.getElementById('r-pct').textContent = pct + '%';
+  document.getElementById('r-pct').className = 'score-big ' + (pass ? 'pass' : 'fail');
+  document.getElementById('r-correct').textContent = score;
+  document.getElementById('r-wrong').textContent = wrong;
+  document.getElementById('r-msg').className = 'result-msg ' + (pass ? 'pass' : 'fail');
+  document.getElementById('r-msg').textContent = pass
+    ? `🎉 Bạn đã vượt ngưỡng PASS (75%). Nắm tốt các tính năng cốt lõi và use case. Tiếp tục duy trì kiến thức và áp dụng thực tế khi gặp khách hàng!`
+    : `📖 Chưa đạt ngưỡng PASS 75%. Xem lại phần giải thích bên dưới và ôn kỹ các tính năng: Deep CDR, Multiscanning, Adaptive Sandbox, cơ chế tính license và các use case cụ thể.`;
+
+  // Build review
+  const list = document.getElementById('review-list');
+  list.innerHTML = '';
+  QUESTIONS.forEach((q, i) => {
+    const ua = userAnswers[i];
+    const correct = ua === q.ans;
+    const div = document.createElement('div');
+    div.className = 'review-item' + (correct ? '' : ' wrong-q');
+    div.innerHTML = `
+      <div class="rv-num">${correct ? '✅' : '❌'} Câu ${i+1}</div>
+      <div class="rv-q">${q.q}</div>
+      <div class="rv-ans">
+        ${!correct ? `<span class="rv-wrong">Bạn chọn: ${ua !== undefined ? q.opts[ua] : 'Không trả lời'}</span>` : ''}
+        <span class="rv-correct">✓ Đáp án: ${q.opts[q.ans]}</span>
+      </div>
+      <div class="rv-expl">💡 ${q.expl}</div>`;
+    list.appendChild(div);
+  });
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function retryQuiz() {
+  document.getElementById('screen-result').style.display = 'none';
+  document.getElementById('screen-intro').style.display = 'block';
+  document.getElementById('header-progress').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>

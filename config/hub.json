@@ -1,0 +1,111 @@
+{
+  "_readme": "Cấu trúc PM Hub. Sửa file này rồi chạy `node tools/build.mjs` (hoặc để GitHub Action tự chạy). Sale guide tự lấy từ repo PM-Knowledge-Hub, không khai báo ở đây.",
+
+  "sections": [
+    { "id": "bom", "title": "Tool chạy BOM", "short": "BOM", "icon": "calculator", "kind": "collection", "locked": true,
+      "desc": "Bộ công cụ lên cấu hình & báo giá cho từng giải pháp. Nội dung được mã hóa AES-256, cần mở khóa bằng tài khoản PM." },
+
+    { "id": "dealreg", "group": "Tổng hợp & Báo cáo", "title": "Tổng hợp Dealreg", "short": "Dealreg", "icon": "handshake", "kind": "app",
+      "src": "https://pm-ntshn.github.io/Tools-Dealreg/", "repo": "Tools-Dealreg",
+      "desc": "Tổng hợp & phân tích Deal Registration (Base service) từ file Excel export.",
+      "tags": ["Dealreg", "Deal registration", "Base", "Đăng ký cơ hội"] },
+
+    { "id": "po", "group": "Tổng hợp & Báo cáo", "title": "Tổng hợp yêu cầu đặt hàng", "short": "Đặt hàng (PO)", "icon": "cart", "kind": "app",
+      "src": "https://pm-ntshn.github.io/Tool_tonghop_PO/", "repo": "Tool_tonghop_PO",
+      "desc": "Tổng hợp yêu cầu đặt hàng / PO, theo dõi trạng thái và xuất báo cáo Excel.",
+      "tags": ["PO", "Đặt hàng", "Purchase order", "Đơn hàng"] },
+
+    { "id": "crm", "group": "Tổng hợp & Báo cáo", "title": "Tổng hợp CRM", "short": "CRM", "icon": "chart", "kind": "app",
+      "src": "https://pm-ntshn.github.io/Tool_CRM_v2/", "repo": "Tool_CRM_v2",
+      "desc": "Tổng hợp cơ hội kinh doanh từ CRM: pipeline, dashboard và báo cáo.",
+      "tags": ["CRM", "Pipeline", "Cơ hội", "Deal", "Khách hàng"] },
+
+    { "id": "kpi", "group": "Tổng hợp & Báo cáo", "title": "Tổng hợp KPI (HR)", "short": "KPI", "icon": "target", "kind": "app",
+      "src": "https://pm-ntshn.github.io/HCNS-KPI/", "repo": "HCNS-KPI",
+      "desc": "Tổng hợp & đánh giá KPI nhân sự (HCNS) từ file Excel.",
+      "tags": ["KPI", "HR", "HCNS", "Nhân sự", "Đánh giá"] },
+
+    { "id": "sale-guide", "group": "Kiến thức", "title": "Sale Guide", "short": "Sale Guide", "icon": "book", "kind": "sale-guide",
+      "desc": "Cẩm nang bán hàng, tài liệu nghiên cứu và bài kiểm tra theo hãng & dòng giải pháp." },
+
+    { "id": "update-solution", "group": "Kiến thức", "title": "Update Solution", "short": "Update Solution", "icon": "sparkles", "kind": "collection",
+      "desc": "Cập nhật giải pháp, khung pháp lý và tiêu chuẩn kỹ thuật phục vụ tư vấn." },
+
+    { "id": "learning", "group": "Kiến thức", "title": "Learning Center", "short": "Learning", "icon": "graduation", "kind": "collection",
+      "desc": "Các khóa học nội bộ: quản lý cấp trung, kỹ năng bán hàng B2B." }
+  ],
+
+  "items": [
+    { "id": "bom-kemp", "section": "bom", "title": "BOM Kemp LoadMaster", "kind": "bom", "src": "content/bom/kemp.bin",
+      "vendor": "Progress", "product": "kemp", "icon": "server",
+      "desc": "Lên cấu hình & báo giá Kemp LoadMaster (ADC / cân bằng tải).", "tags": ["Kemp", "LoadMaster", "ADC", "Cân bằng tải", "BOM"] },
+    { "id": "bom-ddos", "section": "bom", "title": "BOM Netscout DDoS", "kind": "bom", "src": "content/bom/netscout-ddos.bin",
+      "vendor": "NETSCOUT", "product": "netscout-ddos", "icon": "shield",
+      "desc": "Lên cấu hình & báo giá Netscout chống DDoS (gói 500M / 1G / 2G / 5G).", "tags": ["DDoS", "Netscout", "Arbor", "Sightline", "TMS", "BOM"] },
+    { "id": "bom-wug", "section": "bom", "title": "BOM WhatsUp Gold", "kind": "bom", "src": "content/bom/whatsup-gold.bin",
+      "vendor": "Progress", "product": "wug", "icon": "activity",
+      "desc": "Lên cấu hình & báo giá WhatsUp Gold (giám sát hạ tầng mạng).", "tags": ["WhatsUp Gold", "WUG", "NPM", "Giám sát mạng", "BOM"] },
+    { "id": "bom-gtb", "section": "bom", "title": "BOM GTB", "kind": "bom", "status": "soon",
+      "vendor": "GTB", "product": "gtb", "icon": "lock",
+      "desc": "Lên cấu hình & báo giá GTB DLP.", "tags": ["GTB", "DLP", "BOM"] },
+    { "id": "bom-easynac", "section": "bom", "title": "BOM Easy NAC", "kind": "bom", "status": "soon",
+      "vendor": "InfoExpress", "product": "easynac", "icon": "network",
+      "desc": "Lên cấu hình & báo giá Easy NAC (InfoExpress).", "tags": ["Easy NAC", "NAC", "InfoExpress", "BOM"] },
+
+    { "id": "us-khung-phap-ly-attt", "section": "update-solution", "title": "Khung pháp lý & tiêu chuẩn ATTT theo cấp độ", "kind": "html",
+      "src": "content/update-solution/khung-phap-ly-attt.html", "icon": "scale", "type": "Infographic",
+      "desc": "Luật 86/2015, NĐ 85/2016, TT 12/2022, TCVN 11930:2017, CV 708 — mối quan hệ phân cấp và mốc thời gian.",
+      "tags": ["Cấp độ", "ATTT", "Nghị định 85", "Thông tư 12", "TCVN 11930", "Pháp lý", "Đề án 06"] },
+
+    { "id": "lc-mmm", "section": "learning", "title": "Khóa học quản lý cấp trung (MMM)", "kind": "external",
+      "src": "https://pm-ntshn.github.io/MMM-course/", "repo": "MMM-course", "icon": "users", "type": "Khóa học",
+      "desc": "Chân dung quản lý cấp trung, quản trị thay đổi, quản trị đội ngũ, kiến tạo văn hóa — kèm bài test.",
+      "tags": ["Quản lý cấp trung", "Lãnh đạo", "Quản trị đội ngũ", "Văn hóa", "Quản trị thay đổi"] },
+    { "id": "lc-b2b-sales", "section": "learning", "title": "B2B Sales Master — Kỹ năng bán hàng", "kind": "html",
+      "src": "content/learning/b2b-sales-master.html", "icon": "trophy", "type": "Khóa học",
+      "desc": "Khóa học kỹ năng bán hàng B2B dành cho đội ngũ kinh doanh NTS Hà Nội.",
+      "tags": ["Kỹ năng bán hàng", "B2B", "Sales", "Đàm phán", "Tư vấn"] }
+  ],
+
+  "saleGuide": {
+    "source": "PM-Knowledge-Hub",
+    "vendorOrder": ["Progress", "OpenText", "NETSCOUT", "Delinea", "InfoExpress", "GTB", "OPSWAT", "Pentera", "Proofpoint", "Qualys", "Safetica", "SecPod", "Stellar Cyber"],
+    "vendorRename": { "Easy NAC": "InfoExpress" },
+    "productBySolution": {
+      "Kemp LoadMaster — ADC": "kemp",
+      "WhatsUp Gold — NPM": "wug",
+      "Sightline / TMS — DDoS": "netscout-ddos",
+      "Sightline Insight — DDoS": "netscout-ddos",
+      "DLP — Data Loss Prevention@GTB": "gtb",
+      "NAC — Network Access Control": "easynac"
+    },
+    "extraDocs": []
+  },
+
+  "synonyms": [
+    ["dlp", "chống thất thoát dữ liệu", "rò rỉ dữ liệu", "data loss prevention", "gtb", "safetica"],
+    ["nac", "kiểm soát truy cập mạng", "network access control", "easy nac", "infoexpress"],
+    ["pam", "quản trị đặc quyền", "privileged access", "secret server", "delinea"],
+    ["ddos", "tấn công từ chối dịch vụ", "sightline", "arbor", "tms"],
+    ["npm", "giám sát mạng", "network monitoring", "whatsup gold", "wug"],
+    ["adc", "cân bằng tải", "load balancer", "kemp", "loadmaster"],
+    ["siem", "soc", "xdr", "giám sát an ninh", "arcsight", "stellar"],
+    ["bom", "báo giá", "cấu hình", "bill of materials", "sizing"],
+    ["dealreg", "deal registration", "đăng ký cơ hội", "base"],
+    ["po", "đặt hàng", "đơn hàng", "purchase order"],
+    ["crm", "cơ hội", "pipeline", "khách hàng"],
+    ["kpi", "đánh giá", "hiệu suất", "nhân sự", "hr", "hcns"],
+    ["quiz", "bài kiểm tra", "trắc nghiệm", "test"],
+    ["appsec", "bảo mật ứng dụng", "sast", "dast", "fortify"],
+    ["lỗ hổng", "vulnerability", "vmdr", "qualys", "secpod", "sanernow"],
+    ["backup", "sao lưu", "phục hồi", "data protector"],
+    ["email", "thư điện tử", "phishing", "lừa đảo", "proofpoint"],
+    ["ot", "data diode", "công nghiệp", "opswat"],
+    ["cdr", "mã độc", "metadefender", "file"],
+    ["attt", "an toàn thông tin", "cấp độ", "nghị định 85", "thông tư 12", "tcvn 11930"],
+    ["bán hàng", "sales", "kỹ năng bán hàng", "b2b", "playbook", "cẩm nang"],
+    ["quản lý", "lãnh đạo", "quản lý cấp trung", "mmm"],
+    ["pentest", "kiểm thử xâm nhập", "pentera", "security validation"],
+    ["itm", "insider threat", "nội gián", "zenguide"]
+  ]
+}

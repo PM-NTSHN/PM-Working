@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy NAC - Sales Assessment Quiz</title>
+    <style>
+        :root {
+            --primary: #0056b3;
+            --secondary: #009688;
+            --accent: #ff9800;
+            --dark: #2c3e50;
+            --light: #f8f9fa;
+            --white: #ffffff;
+            --success: #28a745;
+            --danger: #dc3545;
+            --border: #dee2e6;
+            --text: #333333;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body { background-color: #e9ecef; color: var(--text); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        
+        .quiz-container { background: var(--white); width: 100%; max-width: 800px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; }
+        
+        .header { background: linear-gradient(135deg, var(--primary), var(--dark)); color: var(--white); padding: 25px; text-align: center; position: relative; }
+        .header h1 { font-size: 24px; margin-bottom: 5px; }
+        .header p { font-size: 14px; opacity: 0.9; }
+        
+        .progress-container { width: 100%; background: #rgba(255,255,255,0.2); height: 6px; position: absolute; bottom: 0; left: 0; }
+        .progress-bar { height: 100%; background: var(--accent); width: 0%; transition: width 0.3s ease; }
+
+        .content { padding: 30px; flex-grow: 1; }
+        
+        /* Intro Screen */
+        #intro-screen { text-align: center; }
+        #intro-screen h2 { color: var(--primary); margin-bottom: 15px; }
+        #intro-screen ul { text-align: left; background: var(--light); padding: 20px 40px; border-radius: 8px; margin-bottom: 25px; }
+        #intro-screen li { margin-bottom: 10px; }
+        .btn-start { background: var(--accent); color: white; border: none; padding: 12px 30px; font-size: 18px; font-weight: bold; border-radius: 30px; cursor: pointer; transition: 0.3s; }
+        .btn-start:hover { background: #e68a00; transform: translateY(-2px); }
+
+        /* Question Screen */
+        #quiz-screen { display: none; }
+        .question-header { display: flex; justify-content: space-between; margin-bottom: 20px; color: var(--text); font-weight: bold; border-bottom: 2px solid var(--light); padding-bottom: 10px;}
+        .question-text { font-size: 18px; margin-bottom: 20px; color: var(--dark); line-height: 1.4; }
+        
+        .options { display: flex; flex-direction: column; gap: 12px; }
+        .option { background: var(--light); border: 2px solid var(--border); padding: 15px 20px; border-radius: 8px; cursor: pointer; transition: 0.2s; font-size: 16px; display: flex; align-items: center; }
+        .option:hover { border-color: var(--primary); background: #f1f8ff; }
+        .option.selected { border-color: var(--primary); background: #e3f2fd; font-weight: 600; }
+        .option-prefix { display: inline-block; width: 30px; height: 30px; line-height: 26px; text-align: center; border: 2px solid var(--border); border-radius: 50%; margin-right: 15px; font-weight: bold; background: white;}
+        .option.selected .option-prefix { border-color: var(--primary); background: var(--primary); color: white; }
+
+        .footer { display: flex; justify-content: space-between; margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--border); }
+        .btn { padding: 10px 25px; font-size: 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        .btn-prev { background: #e9ecef; color: var(--dark); }
+        .btn-prev:hover:not(:disabled) { background: #dde2e6; }
+        .btn-prev:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-next { background: var(--primary); color: white; }
+        .btn-next:hover { background: #004494; }
+
+        /* Result Screen */
+        #result-screen { display: none; text-align: center; }
+        .score-circle { width: 150px; height: 150px; border-radius: 50%; display: flex; flex-direction: column; justify-content: center; align-items: center; margin: 0 auto 20px; border: 8px solid; }
+        .score-circle.pass { border-color: var(--success); color: var(--success); }
+        .score-circle.fail { border-color: var(--danger); color: var(--danger); }
+        .score-percent { font-size: 36px; font-weight: bold; }
+        .score-text { font-size: 14px; }
+        .result-msg { font-size: 20px; margin-bottom: 20px; font-weight: bold; }
+        
+        .review-list { text-align: left; margin-top: 30px; max-height: 400px; overflow-y: auto; padding-right: 10px; }
+        .review-item { background: var(--light); padding: 15px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid; }
+        .review-item.correct { border-left-color: var(--success); }
+        .review-item.incorrect { border-left-color: var(--danger); }
+        .review-item p { margin-bottom: 8px; }
+        .review-q { font-weight: bold; color: var(--dark); }
+        .review-ans { font-size: 14px; }
+        .review-exp { font-size: 14px; color: var(--secondary); font-style: italic; background: #e0f2f1; padding: 8px; border-radius: 4px; margin-top: 10px;}
+        
+        .btn-restart { background: var(--dark); color: white; margin-top: 20px; }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
+
+    </style>
+</head>
+<body>
+
+<div class="quiz-container">
+    <div class="header">
+        <h1>Sales Assessment: Easy NAC v3.2</h1>
+        <p>Kiểm tra mức độ nắm bắt giải pháp và kịch bản bán hàng</p>
+        <div class="progress-container"><div class="progress-bar" id="progress-bar"></div></div>
+    </div>
+
+    <div class="content">
+        <!-- Intro Screen -->
+        <div id="intro-screen">
+            <h2>Bài Đánh Giá Năng Lực Sale</h2>
+            <p>Bài trắc nghiệm này được thiết kế để giúp bạn ôn tập và nắm vững các Key Selling Points (KSP) của giải pháp Easy NAC.</p>
+            <ul>
+                <li><strong>Số lượng:</strong> 30 câu hỏi (Mix giữa tính năng, License và xử lý tình huống).</li>
+                <li><strong>Điều kiện Đạt (Pass):</strong> Đúng từ 75% trở lên (>= 23/30 câu).</li>
+                <li><strong>Thời gian:</strong> Không giới hạn.</li>
+            </ul>
+            <button class="btn-start" onclick="startQuiz()">Bắt đầu ngay</button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen">
+            <div class="question-header">
+                <span id="q-number">Câu hỏi 1/30</span>
+            </div>
+            <div class="question-text" id="q-text">Nội dung câu hỏi...</div>
+            <div class="options" id="options-container">
+                <!-- Options rendered via JS -->
+            </div>
+            <div class="footer">
+                <button class="btn btn-prev" id="btn-prev" onclick="prevQuestion()">Quay lại</button>
+                <button class="btn btn-next" id="btn-next" onclick="nextQuestion()">Tiếp theo</button>
+            </div>
+        </div>
+
+        <!-- Result Screen -->
+        <div id="result-screen">
+            <div id="score-circle" class="score-circle">
+                <div class="score-percent" id="score-percent">0%</div>
+                <div class="score-text" id="score-text">0/30</div>
+            </div>
+            <div class="result-msg" id="result-msg">Đang tính điểm...</div>
+            <p id="result-desc">Dưới đây là phần giải thích chi tiết cho các câu hỏi bạn đã làm.</p>
+            
+            <div class="review-list" id="review-list">
+                <!-- Review rendered via JS -->
+            </div>
+            
+            <button class="btn btn-restart" onclick="location.reload()">Làm lại bài Test</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            q: "Định vị quan trọng nhất (Elevator Pitch) của giải pháp Easy NAC dành cho Sale là gì?",
+            options: [
+                "Giải pháp NAC yêu cầu thay mới toàn bộ Switch của Cisco",
+                "Giải pháp NAC Agentless, cắm vào là chạy (Plug-and-Protect), không cần thay đổi kiến trúc mạng",
+                "Phần mềm diệt virus thay thế hoàn toàn cho EDR",
+                "Hệ thống tường lửa thế hệ mới (NGFW) cho mạng LAN"
+            ],
+            ans: 1,
+            exp: "Easy NAC được định vị là giải pháp cực kỳ dễ triển khai (Agentless, Plug-and-Protect), không đòi hỏi thay đổi hạ tầng như các giải pháp truyền thống."
+        },
+        {
+            q: "Thay vì sử dụng giao thức 802.1x phức tạp, Easy NAC chặn các thiết bị lạ bằng công nghệ lõi nào?",
+            options: [
+                "Cấu hình Port Security trên Switch",
+                "VLAN Steering",
+                "ARP Enforcement (Gửi bản tin ARP để đánh lừa thiết bị lạ)",
+                "BGP Routing"
+            ],
+            ans: 2,
+            exp: "Easy NAC sử dụng ARP Enforcement. Appliance CGX gửi bản tin ARP đánh lừa máy lạ rằng CGX là Gateway, qua đó điều hướng hoặc chặn traffic."
+        },
+        {
+            q: "Khi so sánh với đối thủ lớn như Cisco ISE, đâu RÕ RÀNG là điểm thắng (Win-point) của Easy NAC?",
+            options: [
+                "Cisco ISE không hỗ trợ 802.1x, còn Easy NAC thì có",
+                "Easy NAC rẻ hơn nhưng bắt buộc phải mua Switch của hãng",
+                "Easy NAC không cần cấu hình trên từng port của Switch và hoạt động tốt cả với Unmanaged Switch",
+                "Easy NAC chỉ quản lý được thiết bị có cài phần mềm (Agent)"
+            ],
+            ans: 2,
+            exp: "Điểm thắng lớn nhất là KHÔNG CẦN cấu hình lại Switch (kể cả Switch không quản trị cũ kỹ), giúp loại bỏ rủi ro rớt mạng toàn công ty."
+        },
+        {
+            q: "Nhóm khách hàng mục tiêu nào sau đây đặc biệt phù hợp để chào bán Easy NAC?",
+            options: [
+                "Khách hàng cá nhân cần bảo vệ Wi-Fi ở nhà",
+                "Nhà máy Sản xuất có nhiều Switch cũ/không quản trị và các thiết bị máy quét mã vạch không hỗ trợ 802.1x",
+                "Doanh nghiệp chỉ dùng 100% dịch vụ trên Cloud (AWS, Azure) không có mạng LAN vật lý",
+                "Các cửa hàng trà sữa nhỏ lẻ"
+            ],
+            ans: 1,
+            exp: "Các khu công nghiệp, bệnh viện, trường học là mỏ vàng vì họ có hạ tầng cũ, nhiều thiết bị IoT không hỗ trợ 802.1x."
+        },
+        {
+            q: "Nguyên tắc tính License của Easy NAC dựa trên yếu tố nào?",
+            options: [
+                "Tổng số cổng (ports) trên toàn bộ Switch của mạng",
+                "Số lượng phần mềm Agent được cài đặt trên máy trạm",
+                "Số lượng nhân viên IT quản trị hệ thống",
+                "Số lượng địa chỉ MAC duy nhất (Unique MAC) xuất hiện trên mạng trong vòng 24 giờ"
+            ],
+            ans: 3,
+            exp: "License tính theo số MAC Address xuất hiện trong vòng 24 giờ, rất minh bạch và tiết kiệm."
+        },
+        {
+            q: "Theo cách tính License của Easy NAC, các thiết bị 'Không tin cậy' (Untrusted/bị chặn) có bị trừ vào License đã mua không?",
+            options: [
+                "Có, mọi MAC address đều bị tính",
+                "Không, thiết bị Untrusted không tiêu tốn License",
+                "Chỉ tính 50% so với thiết bị hợp lệ",
+                "Bị tính gấp đôi để phạt"
+            ],
+            ans: 1,
+            exp: "Tuyệt vời nhất cho khách hàng: Họ CHỈ TRẢ TIỀN cho những thiết bị hợp lệ. Thiết bị lạ/kẻ tấn công bị chặn sẽ KHÔNG tốn license."
+        },
+        {
+            q: "Điều gì sẽ xảy ra nếu số lượng thiết bị thực tế vượt quá 12% so với số License khách hàng đã mua?",
+            options: [
+                "Hệ thống tự động sập và chặn toàn bộ mạng nội bộ",
+                "Không có gì thay đổi, hệ thống miễn phí phần dôi dư",
+                "Tính năng Enforcement (Chặn/bảo vệ) sẽ bị vô hiệu hóa cho các thiết bị mới muốn gia nhập mạng",
+                "Easy NAC tự động trừ tiền trong thẻ tín dụng của khách"
+            ],
+            ans: 2,
+            exp: "Easy NAC cho phép vượt ngưỡng 10%. Nếu vượt quá mức này (>10%), nó sẽ ngừng tính năng chặn (enforcement) đối với các máy mới để ép KH mua thêm license."
+        },
+        {
+            q: "Khách hàng có Tổng công ty (1000 users) và 3 chi nhánh (mỗi nơi 200 users). Để quản lý tập trung và CHIA SẺ LICENSE giữa các site, Sale cần đưa vào BOM thiết bị nào?",
+            options: [
+                "CGPM (CyberGatekeeper Policy Manager)",
+                "CVM (Central Visibility Manager)",
+                "Tường lửa Palo Alto",
+                "Không cần gì thêm, 4 con CGX tự đồng bộ được với nhau"
+            ],
+            ans: 1,
+            exp: "CVM (Central Visibility Manager) là giải pháp bắt buộc để quản lý nhiều CGX, cung cấp Distributed License (chia sẻ license) và báo cáo tập trung."
+        },
+        {
+            q: "Khách hàng thắc mắc: 'Tôi muốn kiểm tra xem máy nhân viên có bật phần mềm Diệt Virus chưa, có bắt buộc phải cài Agent của Easy NAC không?'",
+            options: [
+                "Bắt buộc 100% phải cài Agent lên từng máy",
+                "Không, Easy NAC có thể dùng Out-of-box API kết nối với các EDR/AD để kiểm tra (Agentless)",
+                "Easy NAC không có khả năng kiểm tra Diệt Virus",
+                "Chỉ cần cài Agent trên máy chủ server là đủ"
+            ],
+            ans: 1,
+            exp: "Tôn chỉ của Easy NAC là Agentless. Việc check AV/Patch có thể thực hiện dễ dàng qua tích hợp API với Palo Alto, Elastic XDR, WMI..."
+        },
+        {
+            q: "Để làm dịu nỗi lo 'Triển khai NAC gây rớt mạng' của IT, bạn tư vấn lộ trình triển khai gồm mấy giai đoạn chính?",
+            options: [
+                "1 giai đoạn: Bật chặn toàn bộ ngay ngày đầu tiên",
+                "3 giai đoạn: Thiết lập hạ tầng -> Chế độ giám sát (Monitor Mode) -> Bật bảo vệ cuốn chiếu",
+                "5 giai đoạn: Kéo dài 6 tháng để cấu hình từng Switch",
+                "Chỉ cần cắm điện là xong, không cần cấu hình gì"
+            ],
+            ans: 1,
+            exp: "Quy trình vàng để chốt sale: Cài đặt (chỉ nghe) -> Monitor (Giáo dục & tạo Whitelist) -> Enforcement (bật chặn từng Subnet). KHÔNG DOWNTIME."
+        },
+        {
+            q: "Trong phiên bản 3.2, Easy NAC ra mắt tính năng 'Deception Honeypot'. Mục đích của tính năng này là gì?",
+            options: [
+                "Phát kẹo ảo cho người dùng",
+                "Làm hệ thống chạy nhanh hơn 2 lần",
+                "Giăng bẫy mạng giả, khóa ngay lập tức thiết bị nào rà quét hoặc tấn công vào các IP ảo này",
+                "Chặn người dùng truy cập Facebook"
+            ],
+            ans: 2,
+            exp: "Honeypot tạo ra các IP bẫy. Bất kỳ máy nào trong mạng LAN chạm vào IP bẫy này (ví dụ do dính mã độc đang rà quét mạng) sẽ bị Easy NAC khóa ngay lập tức."
+        },
+        {
+            q: "Tính năng Layer-2 Security (mới trong bản 3.2) giúp bảo vệ mạng nội bộ khỏi các rủi ro nào?",
+            options: [
+                "ARP Spoofing, ARP Storm và Xung đột IP (IP Conflicts)",
+                "DDoS từ Internet",
+                "Phishing qua Email",
+                "SQL Injection vào Web Server"
+            ],
+            ans: 0,
+            exp: "Bảo vệ tầng 2 (Layer 2) là điểm mạnh của giải pháp dùng ARP. Nó chặn ngay các vụ tấn công giả mạo MAC/ARP hoặc bão mạng trong LAN."
+        },
+        {
+            q: "Khách (Guest) đến công ty cần dùng Wi-Fi. Easy NAC hỗ trợ tính năng nào để khách tự đăng ký mà không cần IT can thiệp?",
+            options: [
+                "802.1x EAP-TLS",
+                "Cấp cho khách mật khẩu Admin của mạng",
+                "Cổng Captive Portal (Khách tự nhập form, nhận OTP hoặc lễ tân duyệt)",
+                "Cài Agent lên điện thoại của khách"
+            ],
+            ans: 2,
+            exp: "Captive Portal cho phép quản lý vòng đời thiết bị khách/BYOD cực kỳ mượt mà. Đăng ký xong khách chỉ được ra Internet, bị chặn khỏi LAN nội bộ."
+        },
+        {
+            q: "Một nhân viên làm việc ở nhà (Remote Worker) kết nối VPN vào công ty. Easy NAC làm cách nào để kiểm soát máy tính này (VPN Protection)?",
+            options: [
+                "Gọi điện video call kiểm tra máy",
+                "Dùng tính năng Inline Enforcement (CGX đóng vai trò Bridge lọc traffic VPN)",
+                "Chặn hoàn toàn kết nối VPN",
+                "Gửi file cấu hình qua email"
+            ],
+            ans: 1,
+            exp: "Tính năng Inline Enforcement sử dụng CGX như một cầu nối (Bridge). Traffic từ dải IP VPN phải đi qua CGX để kiểm tra tuân thủ (Posture) trước khi vào LAN."
+        },
+        {
+            q: "Khi lên BOM cho khách hàng, thành phần BẮT BUỘC phải có là gì?",
+            options: [
+                "Appliance CGX Access (Hardware hoặc VM)",
+                "Switch Cisco Catalyst",
+                "Module CGPM (Policy Manager)",
+                "CVM (Central Visibility Manager)"
+            ],
+            ans: 0,
+            exp: "CGX Access là não bộ và tay chân của hệ thống, bắt buộc phải có để thu thập và chặn (Enforcement). Các thành phần khác như CVM hay CGPM là tùy chọn."
+        },
+        {
+            q: "Khi nào bạn cần bán thêm module CGPM (CyberGatekeeper Policy Manager)?",
+            options: [
+                "Luôn luôn phải bán kèm để tính phí cao hơn",
+                "Khi khách hàng yêu cầu kiểm tra tuân thủ cực kỳ SÂU tận bên trong hệ điều hành (file, registry) đòi hỏi cài phần mềm Agent",
+                "Khi khách hàng có nhiều chi nhánh",
+                "Khi cần xuất Report ra file PDF"
+            ],
+            ans: 1,
+            exp: "Đa số khách chuộng Agentless. Nhưng nếu KH có yêu cầu bảo mật khắt khe (phải check xem 1 file .exe cụ thể có chạy không) thì phải bán CGPM để dùng Agent."
+        },
+        {
+            q: "Một thiết bị máy trạm bị hệ thống EDR (Palo Alto Cortex XDR) phát hiện nhiễm Ransomware. Easy NAC phản ứng ra sao?",
+            options: [
+                "Gửi email cho IT và chờ IT rút dây mạng",
+                "Tự động gửi Syslog báo cáo EDR",
+                "Nhận tín hiệu từ EDR qua API và lập tức Cô lập (Quarantine) máy đó khỏi mạng LAN",
+                "Chỉ ghi log lại"
+            ],
+            ans: 2,
+            exp: "Easy NAC có khả năng Orchestration. Nó kết hợp với các giải pháp Endpoint để thực thi hành động chặt chẽ ở mức Network ngay khi Endpoint phát cảnh báo."
+        },
+        {
+            q: "Bản v3.2 nâng cấp khả năng nhận diện thiết bị (Profiling) bằng cách kết hợp Fingerprint với dữ liệu gì?",
+            options: [
+                "Dữ liệu GPS",
+                "Dữ liệu DHCP",
+                "Dữ liệu thẻ tín dụng",
+                "Dữ liệu khuôn mặt"
+            ],
+            ans: 1,
+            exp: "Phiên bản v3.2 phân tích kết hợp cả gói tin DHCP và Fingerprint để nhận diện chính xác đây là loại thiết bị gì (Windows, MacOS, Camera hãng X...)."
+        },
+        {
+            q: "Về dịch vụ hỗ trợ (Priority Support & Platinum Maintenance), nếu mua Box phần cứng (Appliance), khách hàng được bảo hành 1-đổi-1 trong vòng bao lâu?",
+            options: [
+                "1 tháng",
+                "3 ngày làm việc (nếu InfoExpress xác định lỗi phần cứng)",
+                "1 năm chờ gửi sang Mỹ",
+                "Không hỗ trợ bảo hành phần cứng"
+            ],
+            ans: 1,
+            exp: "Chính sách Advance Hardware Replacement cam kết gửi thiết bị thay thế trong 3 ngày làm việc sau khi xác nhận lỗi."
+        },
+        {
+            q: "Phiên bản v3.2 của Easy NAC hỗ trợ tích hợp gửi cảnh báo (Alert) trực tiếp qua các nền tảng chat nào?",
+            options: [
+                "Zalo và Viber",
+                "Facebook Messenger",
+                "Microsoft Teams và Slack (có kèm nút Approve)",
+                "Skype và Yahoo"
+            ],
+            ans: 2,
+            exp: "Giúp quy trình vận hành nhanh hơn: Quản trị viên có thể xem cảnh báo thiết bị lạ qua Teams/Slack và bấm nút Phê duyệt (Approve) ngay trên đoạn chat."
+        },
+        {
+            q: "Mô hình triển khai Out-of-band của Easy NAC có nghĩa là gì?",
+            options: [
+                "Thiết bị phải nằm chắn giữa đường ra Internet (Inline)",
+                "Thiết bị đứng ngoài đường truyền chính, chỉ cắm 1 port vào Core/Distribution Switch để monitor và gửi lệnh chặn",
+                "Thiết bị phải để ở ngoài công ty",
+                "Thiết bị không kết nối mạng"
+            ],
+            ans: 1,
+            exp: "Out-of-band giúp triển khai cực nhanh. CGX không cản trở traffic bình thường, chỉ khi phát hiện máy lạ mới dùng ARP điều hướng."
+        },
+        {
+            q: "Việc không yêu cầu 802.1x mang lại lợi ích gì lớn nhất cho hệ thống mạng nhà máy (Khu công nghiệp)?",
+            options: [
+                "Làm mạng chạy nhanh gấp 10 lần",
+                "Bảo vệ được cả các thiết bị IoT, OT, máy quét mã vạch đời cũ không có khả năng chứng thực 802.1x",
+                "Chống được sét đánh",
+                "Không cần dùng dây cáp mạng nữa"
+            ],
+            ans: 1,
+            exp: "Mạng nhà máy có rất nhiều thiết bị 'câm' (không thông minh). ISE dùng 802.1x sẽ khiến các thiết bị này tịt ngòi. Easy NAC quản lý chúng dễ dàng bằng MAC profiling."
+        },
+        {
+            q: "Máy ảo (VM) CGX Access hỗ trợ triển khai trên các nền tảng (Hypervisor) nào?",
+            options: [
+                "Chỉ hỗ trợ VirtualBox",
+                "Chỉ cài được trên PC cá nhân",
+                "VMware ESXi và Microsoft Hyper-V",
+                "Chỉ hỗ trợ AWS"
+            ],
+            ans: 2,
+            exp: "Khách hàng có thể tiết kiệm chi phí mua thiết bị cứng bằng cách cài bản phần mềm S500+ lên máy chủ ảo hóa ESXi hoặc Hyper-V có sẵn."
+        },
+        {
+            q: "Một nhân viên Sale mang laptop cá nhân (BYOD) cắm vào mạng nội bộ công ty. Quá trình xử lý của Easy NAC diễn ra thế nào?",
+            options: [
+                "Ngay lập tức format ổ cứng laptop",
+                "Phát hiện MAC mới -> Chuyển hướng ra Captive Portal bắt đăng ký -> Cấp quyền truy cập hạn chế (vd: chỉ ra Internet) sau khi duyệt",
+                "Cho phép vào thẳng Database của công ty",
+                "Bỏ qua vì là máy laptop"
+            ],
+            ans: 1,
+            exp: "BYOD Management rất thông minh: tự động đưa vào quy trình đăng ký, giảm tải cho nhân sự IT."
+        },
+        {
+            q: "Tính năng 'Transparent Device Roaming' của bộ quản lý trung tâm CVM có tác dụng gì?",
+            options: [
+                "Giúp sếp di chuyển không tốn tiền xăng",
+                "Cho phép thiết bị đã được tin cậy di chuyển giữa các chi nhánh mà không bị chặn lại để xác thực từ đầu",
+                "Đổi địa chỉ MAC liên tục để trốn theo dõi",
+                "Chặn người dùng di chuyển"
+            ],
+            ans: 1,
+            exp: "Dữ liệu thiết bị được đồng bộ giữa các node qua CVM. Khi sếp ôm laptop từ HN vào HCM, hệ thống HCM đã biết laptop này hợp lệ và cho vào mạng ngay."
+        },
+        {
+            q: "Trong quá trình 'POC' (Proof of Concept), việc để Easy NAC ở chế độ 'Monitor Mode' có ý nghĩa gì?",
+            options: [
+                "Thu thập dữ liệu, phân loại thiết bị, hiển thị trên Dashboard để KH thấy 'Wow' mà hoàn toàn không ảnh hưởng gì tới hoạt động mạng",
+                "Chặn tất cả mọi người để chứng minh thiết bị có hoạt động",
+                "Làm chậm mạng để khách hàng biết NAC đang chạy",
+                "Tắt hệ thống hoàn toàn"
+            ],
+            ans: 0,
+            exp: "Đây là cách chốt POC nhanh nhất. Khách hàng nhìn thấy Dashboard nhận diện đủ loại thiết bị rác trong mạng mà không ai bị rớt mạng."
+        },
+        {
+            q: "Khách hàng nói: 'Hệ thống này chặn bằng ARP, lỡ đâu làm tràn bảng MAC hay gây bão ARP làm sập Switch thì sao?'. Bạn trả lời:",
+            options: [
+                "Đúng rồi, chịu thôi",
+                "Easy NAC chỉ gửi bản tin ARP nhắm mục tiêu (Targeted) đến đúng thiết bị vi phạm, không phát Broadcast (Broadcast bão), rất nhẹ nhàng và an toàn.",
+                "Khuyên khách hàng mua Switch xịn hơn",
+                "Nó dùng 802.1x nên không sao"
+            ],
+            ans: 1,
+            exp: "ARP Enforcement của Easy NAC là 'có kiểm soát'. Nó chỉ tương tác unicast/targeted với IP của máy lạ, không sinh ra ARP Broadcast làm lụt mạng."
+        },
+        {
+            q: "Đối với yêu cầu bảo mật, Easy NAC có tuân thủ Zero-Trust không?",
+            options: [
+                "Không, nó là giải pháp cũ",
+                "Có, tuân thủ nguyên tắc 'Không tin cậy ai, kiểm tra mọi thứ' ngay khi cắm dây mạng/bắt Wi-Fi",
+                "Chỉ Zero-Trust với mạng VPN",
+                "Zero-Trust là tính năng phải mua riêng"
+            ],
+            ans: 1,
+            exp: "Bản chất của NAC chính là nền tảng của Zero-Trust Access. Bất kỳ máy nào vào mạng đều mặc định là Không tin cậy cho đến khi được phân tích."
+        },
+        {
+            q: "License Easy NAC cho phép vượt ngưỡng (Over-subscribe) bao nhiêu phần trăm trước khi ngừng chặn thiết bị mới?",
+            options: [
+                "0% (Ngừng ngay lập tức)",
+                "5%",
+                "10%",
+                "50%"
+            ],
+            ans: 2,
+            exp: "Ngưỡng 10% là khoảng đệm an toàn giúp doanh nghiệp không bị gián đoạn bảo mật nếu bất chợt có thêm một số lượng khách/thiết bị nhỏ vượt qua số license đã mua."
+        },
+        {
+            q: "Câu chốt hạ (Closing) nào sau đây mang tính thuyết phục nhất khi bán Easy NAC?",
+            options: [
+                "Anh/chị cứ mua đi, rẻ mà",
+                "Thay vì mất nửa năm cấu hình lại toàn bộ Switch với nguy cơ rớt mạng, anh/chị chỉ cần cắm Easy NAC vào là có 100% Visibility và Control trong 3 ngày.",
+                "Sản phẩm này có nhiều tính năng hơn mọi đối thủ",
+                "Nếu không mua sẽ bị phạt"
+            ],
+            ans: 1,
+            exp: "Đánh thẳng vào 'Nỗi đau' lớn nhất của dự án NAC: Thời gian triển khai lâu, phức tạp và rủi ro gián đoạn hoạt động doanh nghiệp."
+        }
+    ];
+
+    // Trộn ngẫu nhiên câu hỏi để quiz bớt nhàm chán
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+    shuffleArray(quizData);
+
+    let currentQ = 0;
+    let userAnswers = new Array(quizData.length).fill(null);
+
+    const introScreen = document.getElementById('intro-screen');
+    const quizScreen = document.getElementById('quiz-screen');
+    const resultScreen = document.getElementById('result-screen');
+    const qNumberEl = document.getElementById('q-number');
+    const qTextEl = document.getElementById('q-text');
+    const optionsContainer = document.getElementById('options-container');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    const progressBar = document.getElementById('progress-bar');
+
+    function startQuiz() {
+        introScreen.style.display = 'none';
+        quizScreen.style.display = 'block';
+        loadQuestion();
+    }
+
+    const alphabet = ['A', 'B', 'C', 'D'];
+
+    function loadQuestion() {
+        const q = quizData[currentQ];
+        qNumberEl.textContent = `Câu hỏi ${currentQ + 1} / ${quizData.length}`;
+        qTextEl.textContent = q.q;
+        optionsContainer.innerHTML = '';
+
+        q.options.forEach((opt, index) => {
+            const optDiv = document.createElement('div');
+            optDiv.className = `option ${userAnswers[currentQ] === index ? 'selected' : ''}`;
+            optDiv.onclick = () => selectOption(index);
+            
+            const prefix = document.createElement('span');
+            prefix.className = 'option-prefix';
+            prefix.textContent = alphabet[index];
+            
+            const text = document.createElement('span');
+            text.textContent = opt;
+
+            optDiv.appendChild(prefix);
+            optDiv.appendChild(text);
+            optionsContainer.appendChild(optDiv);
+        });
+
+        btnPrev.disabled = currentQ === 0;
+        
+        if (currentQ === quizData.length - 1) {
+            btnNext.textContent = 'Hoàn thành';
+            btnNext.style.background = 'var(--success)';
+        } else {
+            btnNext.textContent = 'Tiếp theo';
+            btnNext.style.background = 'var(--primary)';
+        }
+
+        updateProgress();
+    }
+
+    function selectOption(index) {
+        userAnswers[currentQ] = index;
+        loadQuestion(); // reload UI
+    }
+
+    function updateProgress() {
+        const answered = userAnswers.filter(a => a !== null).length;
+        const progress = (answered / quizData.length) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+
+    function prevQuestion() {
+        if (currentQ > 0) {
+            currentQ--;
+            loadQuestion();
+        }
+    }
+
+    function nextQuestion() {
+        if (userAnswers[currentQ] === null) {
+            alert("Vui lòng chọn 1 đáp án trước khi qua câu tiếp theo!");
+            return;
+        }
+
+        if (currentQ < quizData.length - 1) {
+            currentQ++;
+            loadQuestion();
+        } else {
+            showResult();
+        }
+    }
+
+    function showResult() {
+        quizScreen.style.display = 'none';
+        resultScreen.style.display = 'block';
+        
+        let correctCount = 0;
+        const reviewList = document.getElementById('review-list');
+        reviewList.innerHTML = '';
+
+        quizData.forEach((q, i) => {
+            const isCorrect = userAnswers[i] === q.ans;
+            if (isCorrect) correctCount++;
+
+            const item = document.createElement('div');
+            item.className = `review-item ${isCorrect ? 'correct' : 'incorrect'}`;
+            
+            item.innerHTML = `
+                <p class="review-q">Câu ${i+1}: ${q.q}</p>
+                <p class="review-ans"><strong>Bạn chọn:</strong> ${q.options[userAnswers[i]]}</p>
+                ${!isCorrect ? `<p class="review-ans" style="color:var(--success)"><strong>Đáp án đúng:</strong> ${q.options[q.ans]}</p>` : ''}
+                <p class="review-exp">💡 <strong>Giải thích:</strong> ${q.exp}</p>
+            `;
+            reviewList.appendChild(item);
+        });
+
+        const percent = Math.round((correctCount / quizData.length) * 100);
+        
+        document.getElementById('score-percent').textContent = `${percent}%`;
+        document.getElementById('score-text').textContent = `${correctCount}/${quizData.length}`;
+        
+        const circle = document.getElementById('score-circle');
+        const msg = document.getElementById('result-msg');
+        
+        if (percent >= 75) {
+            circle.classList.add('pass');
+            msg.innerHTML = '🏆 CHÚC MỪNG! Bạn đã ĐẠT (PASS) bài test.';
+            msg.style.color = 'var(--success)';
+        } else {
+            circle.classList.add('fail');
+            msg.innerHTML = '⚠️ CHƯA ĐẠT! Bạn cần ôn luyện thêm phần Sales Cheat Sheet.';
+            msg.style.color = 'var(--danger)';
+        }
+    }
+</script>
+
+</body>
+</html>

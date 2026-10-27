@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Easy NAC - Sales Cheat Sheet</title>
+    <style>
+        /* ================= CƠ BẢN & MÀU SẮC ================= */
+        :root {
+            --primary: #0056b3; /* Xanh dương đậm */
+            --secondary: #009688; /* Xanh ngọc */
+            --accent: #ff9800; /* Cam */
+            --dark: #2c3e50;
+            --light: #f4f7f6;
+            --white: #ffffff;
+            --text-main: #333333;
+            --text-muted: #666666;
+            --border: #e0e0e0;
+            --success: #28a745;
+            --danger: #dc3545;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--light);
+            color: var(--text-main);
+            line-height: 1.6;
+            display: flex;
+        }
+
+        /* ================= SIDEBAR (MENU TRÁI) ================= */
+        .sidebar {
+            width: 260px;
+            background-color: var(--dark);
+            color: var(--white);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .logo-area {
+            padding: 20px;
+            background-color: #1a252f;
+            text-align: center;
+            border-bottom: 1px solid #34495e;
+        }
+
+        .logo-area h1 {
+            font-size: 24px;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .logo-area p { font-size: 12px; color: #aaa; }
+
+        .nav-menu {
+            list-style: none;
+            padding: 15px 0;
+        }
+
+        .nav-menu li { margin-bottom: 5px; }
+
+        .nav-menu a {
+            display: flex;
+            align-items: center;
+            color: #bdc3c7;
+            text-decoration: none;
+            padding: 12px 20px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .nav-menu a:hover, .nav-menu a.active {
+            background-color: var(--primary);
+            color: var(--white);
+            border-left: 4px solid var(--accent);
+        }
+
+        .nav-icon {
+            width: 20px; height: 20px; margin-right: 12px; fill: currentColor;
+        }
+
+        /* ================= NỘI DUNG CHÍNH ================= */
+        .main-content {
+            margin-left: 260px;
+            padding: 30px 40px;
+            width: calc(100% - 260px);
+        }
+
+        .header-banner {
+            background: linear-gradient(135deg, var(--primary), #003d82);
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-banner h2 { font-size: 28px; margin-bottom: 10px; }
+        .header-banner p { font-size: 16px; opacity: 0.9; }
+        .badge {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        /* ================= THẺ CONTENT (CARDS) ================= */
+        section { margin-bottom: 40px; scroll-margin-top: 20px; }
+        
+        .sec-title {
+            font-size: 22px;
+            color: var(--primary);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid var(--border);
+            transition: transform 0.2s;
+        }
+
+        .card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .card h3 { color: var(--dark); font-size: 18px; margin-bottom: 15px; display: flex; align-items: center;}
+        .card h3 svg { margin-right: 10px; fill: var(--secondary); width: 24px; height: 24px;}
+        .card ul { padding-left: 20px; }
+        .card li { margin-bottom: 8px; color: var(--text-muted); }
+        .card strong { color: var(--text-main); }
+
+        /* ================= BẢNG BIỂU ================= */
+        table {
+            width: 100%; border-collapse: collapse; background: var(--white);
+            border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background-color: #e9ecef; color: var(--dark); font-weight: 600; }
+        tr:hover { background-color: #f8f9fa; }
+
+        /* ================= ACCORDION (FAQ) ================= */
+        .faq-item {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .faq-question {
+            padding: 15px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--white);
+            transition: background 0.3s;
+        }
+        .faq-question:hover { background-color: #f8f9fa; color: var(--primary); }
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+            background-color: #fafbfc;
+            color: var(--text-muted);
+        }
+        .faq-item.active .faq-answer {
+            padding: 15px 20px;
+            max-height: 500px;
+            border-top: 1px solid var(--border);
+        }
+        .faq-item.active .faq-question { color: var(--primary); }
+        .toggle-icon { transition: transform 0.3s; }
+        .faq-item.active .toggle-icon { transform: rotate(180deg); }
+
+        /* ================= CẢNH BÁO / LƯU Ý ================= */
+        .alert {
+            padding: 15px; border-left: 4px solid; border-radius: 4px; background: var(--white); margin-bottom: 20px;
+        }
+        .alert-info { border-color: var(--primary); background-color: #e3f2fd; }
+        .alert-warning { border-color: var(--accent); background-color: #fff3e0; }
+        .alert-success { border-color: var(--success); background-color: #e8f5e9; }
+
+        /* ================= ĐỊNH DẠNG TEXT ĐẶC BIỆT ================= */
+        .text-win { color: var(--success); font-weight: bold; }
+        .text-lose { color: var(--danger); font-weight: bold; }
+        .vs-box { display: flex; gap: 15px; margin-top: 10px; }
+        .vs-col { flex: 1; padding: 15px; border-radius: 6px; }
+        .vs-us { background: #e8f5e9; border: 1px solid #c8e6c9; }
+        .vs-them { background: #fbe9e7; border: 1px solid #ffccbc; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; position: relative; }
+            .main-content { margin-left: 0; width: 100%; padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR NAVIGATION -->
+    <nav class="sidebar">
+        <div class="logo-area">
+            <h1>Easy NAC</h1>
+            <p>Sales Cheat Sheet (Internal)</p>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="#overview" class="active">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                1. Tổng quan & Định vị
+            </a></li>
+            <li><a href="#painpoints">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M19.53 4.5c-1.39-1.39-3.41-2.09-5.53-2.09-2.12 0-4.14.7-5.53 2.09C5.35 7.62 5.35 12.63 8.47 15.75L12 19.28l3.53-3.53c3.12-3.12 3.12-8.13 0-11.25zM12 11.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                2. Nỗi đau & Khách hàng
+            </a></li>
+            <li><a href="#usp">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zm4.24 16L12 15.45 7.77 18l1.12-4.81-3.73-3.23 4.92-.42L12 5l1.92 4.53 4.92.42-3.73 3.23L16.23 18z"/></svg>
+                3. Key USP & Win-Loss
+            </a></li>
+            <li><a href="#features">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 6h18V4H4c-1.1 0-2 .9-2 2v11H0v3h14v-3H4V6zm19 2h-6c-.55 0-1 .45-1 1v10c0 .55.45 1 1 1h6c.55 0 1-.45 1-1V9c0-.55-.45-1-1-1zm-1 9h-4v-7h4v7z"/></svg>
+                4. Tính năng cốt lõi
+            </a></li>
+            <li><a href="#licensing">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+                5. License & Build BOM
+            </a></li>
+            <li><a href="#deployment">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
+                6. Lộ trình triển khai
+            </a></li>
+            <li><a href="#faq">
+                <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H8c0-2.21 1.79-4 4-4s4 1.79 4 4c0 .88-.36 1.68-.93 2.25z"/></svg>
+                7. Xử lý từ chối (FAQ)
+            </a></li>
+        </ul>
+    </nav>
+
+    <!-- NỘI DUNG CHÍNH -->
+    <main class="main-content">
+        
+        <div class="header-banner">
+            <h2>Giải pháp Easy NAC - Sales Cheat Sheet</h2>
+            <p>Trang bị kiến thức chốt sales nhanh: Plug & Protect - Kiểm soát truy cập mạng chưa bao giờ dễ dàng đến thế!</p>
+            <span class="badge">Version 3.2</span>
+        </div>
+
+        <!-- PHẦN 1: TỔNG QUAN -->
+        <section id="overview">
+            <h2 class="sec-title">1. Tổng quan Giải pháp (Elevator Pitch)</h2>
+            <div class="card" style="margin-bottom: 20px;">
+                <h3><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg> Easy NAC là gì?</h3>
+                <p><strong>Easy NAC</strong> là giải pháp Quản lý truy cập mạng (Network Access Control - NAC) theo kiến trúc <strong>Zero-Trust</strong>, giúp doanh nghiệp phát hiện (Visibility) và kiểm soát (Control) mọi thiết bị kết nối vào mạng LAN/Wi-Fi/VPN.</p>
+                <div class="alert alert-info mt-3">
+                    <strong>Định vị cho Sale (Key Message):</strong> "Các giải pháp NAC truyền thống (như Cisco ISE) rất phức tạp, đòi hỏi phải cấu hình lại toàn bộ Switch (802.1x). <strong>Easy NAC là giải pháp Agentless, cắm vào là chạy (Plug-and-Protect), không cần thay đổi kiến trúc mạng hiện tại.</strong>"
+                </div>
+            </div>
+            <div class="card-grid">
+                <div class="card">
+                    <h4><span style="color: var(--primary);">#1</span> Dễ triển khai nhất</h4>
+                    <p>Sử dụng cơ chế chặn bằng <strong>ARP (ARP Enforcement)</strong>. Hoạt động tốt với cả Switch không quản trị (Unmanaged), Switch cũ. Không cần 802.1x.</p>
+                </div>
+                <div class="card">
+                    <h4><span style="color: var(--primary);">#2</span> Không cần cài Agent (Agentless)</h4>
+                    <p>Phát hiện, lập hồ sơ (profiling) và chặn thiết bị lạ/BYOD/Guest ngay lập tức mà không cần cài phần mềm lên máy trạm.</p>
+                </div>
+                <div class="card">
+                    <h4><span style="color: var(--primary);">#3</span> Chi phí TCO cực thấp</h4>
+                    <p>License tính theo số lượng thiết bị (MAC) độc lập. Triển khai trong vài ngày thay vì vài tháng như các đối thủ.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PHẦN 2: NỖI ĐAU & KHÁCH HÀNG -->
+        <section id="painpoints">
+            <h2 class="sec-title">2. Nỗi đau Khách hàng & Target Customer</h2>
+            <div class="card-grid">
+                <div class="card" style="border-top: 4px solid var(--accent);">
+                    <h3>Nỗi đau (Pain Points) KH đang gặp</h3>
+                    <ul>
+                        <li><strong>Không biết "ai đang ở trong mạng":</strong> IT không biết có bao nhiêu thiết bị cá nhân, camera, máy in lạ đang cắm vào mạng.</li>
+                        <li><strong>Thiếu nhân sự IT:</strong> Quá tải khi phải cấu hình mạng thủ công, cấp IP, tạo VLAN cho khách.</li>
+                        <li><strong>Sợ triển khai NAC:</strong> Từng mua hoặc tìm hiểu Cisco ISE / Aruba nhưng bỏ cuộc vì quá khó, đòi hỏi đổi thiết bị Switch, downtime hệ thống.</li>
+                        <li><strong>Thiết bị không tuân thủ:</strong> Máy tính nhân viên tắt Diệt virus (AV) hoặc chưa cập nhật Patch vẫn được vào mạng lây lan Ransomware.</li>
+                    </ul>
+                </div>
+                <div class="card" style="border-top: 4px solid var(--secondary);">
+                    <h3>Khách hàng Mục tiêu (Target)</h3>
+                    <ul>
+                        <li><strong>Quy mô:</strong> Từ doanh nghiệp vừa (SMB) 300-500 user đến Enterprise (10,000+ user).</li>
+                        <li><strong>Ngành nghề lý tưởng:</strong>
+                            <br>- <em>Sản xuất / Khu công nghiệp:</em> (Mạng xưởng nhiều Switch non-manage, thiết bị OT, máy quét mã vạch không hỗ trợ 802.1x).
+                            <br>- <em>Y tế / Bệnh viện:</em> (Nhiều thiết bị IoT y tế, khách ra vào liên tục).
+                            <br>- <em>Giáo dục / Trường học:</em> (Sinh viên mang BYOD vào rất nhiều).
+                        </li>
+                        <li><strong>Dấu hiệu để chốt:</strong> Khách hàng đang có dự án "Zero Trust" nhưng ngân sách hạn hẹp.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- PHẦN 3: USP & ĐỐI THỦ -->
+        <section id="usp">
+            <h2 class="sec-title">3. Tại sao chọn Easy NAC? (Chiến lược Đánh bật đối thủ)</h2>
+            <div class="card">
+                <p>Đa số khách hàng khi nghe tới NAC sẽ nghĩ ngay tới <strong>Cisco ISE, Aruba ClearPass</strong> hoặc <strong>ForeScout</strong>. Đây là cách Sale xử lý:</p>
+                
+                <div class="vs-box">
+                    <div class="vs-col vs-them">
+                        <h4>❌ Đối thủ (Cisco ISE / 802.1x NAC)</h4>
+                        <ul>
+                            <li>Bắt buộc Switch phải hỗ trợ 802.1x.</li>
+                            <li>Phải cấu hình từng port trên từng con Switch (Rất rủi ro, dễ rớt mạng cả công ty).</li>
+                            <li>Triển khai mất vài tháng. Chi phí vận hành đắt đỏ (cần kỹ sư bằng CCIE).</li>
+                            <li>Thiết bị IoT (Camera, máy in cũ) không hỗ trợ 802.1x sẽ không hoạt động được.</li>
+                        </ul>
+                    </div>
+                    <div class="vs-col vs-us">
+                        <h4>✅ Giải pháp Easy NAC</h4>
+                        <ul>
+                            <li class="text-win">Triển khai Out-of-band: Dùng kỹ thuật ARP, Appliance CGX chỉ cần cắm vào 1 port Trunk là kiểm soát được cả mạng.</li>
+                            <li class="text-win">Không cần cấu hình lại Switch/Router (kể cả mạng dỏm vẫn chạy tốt).</li>
+                            <li class="text-win">Triển khai trong vài ngày. Bật chế độ "Monitor" không gây gián đoạn mạng.</li>
+                            <li class="text-win">Quản lý hoàn hảo IoT, BYOD, Guest bằng MAC/Fingerprint.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PHẦN 4: TÍNH NĂNG CHÍNH -->
+        <section id="features">
+            <h2 class="sec-title">4. Tính năng Cốt lõi (Giới thiệu tính năng v3.2 mới)</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>1. Visibility & Profiling (Không Agent)</h3>
+                    <p>Nhận diện ngay lập tức thiết bị mới gia nhập mạng. Dùng Fingerprint (+DHCP data ở bản v3.2) để phân loại tự động: Đây là PC Windows, điện thoại Apple, hay IP Camera.</p>
+                </div>
+                <div class="card">
+                    <h3>2. Posture Enforcement (Kiểm tra tuân thủ)</h3>
+                    <p>Tích hợp trực tiếp (Out-of-box API) với các phần mềm Diệt Virus (Palo Alto Cortex XDR, Elastic XDR...), AD, Patch Management. Máy tính không bật AV -> Bị chặn hoặc đưa vào vùng cách ly.</p>
+                </div>
+                <div class="card">
+                    <h3>3. Quản lý BYOD & Khách (Guest Access)</h3>
+                    <p>Cổng Captive Portal cho phép khách tự đăng ký (hoặc lễ tân cấp quyền). Giới hạn khách chỉ được ra Internet, không được vào LAN nội bộ.</p>
+                </div>
+                <div class="card">
+                    <h3>4. Layer-2 Security (Tính năng mới v3.2)</h3>
+                    <p>Chống giả mạo ARP (ARP Spoofing), chống ARP Storm, phát hiện xung đột IP (IP Conflicts). Bảo vệ mạng ở tầng thấp nhất.</p>
+                </div>
+                <div class="card">
+                    <h3>5. Bảo vệ VPN (Inline Enforcement)</h3>
+                    <p>Kiểm soát user làm việc từ xa kết nối VPN. CGX đóng vai trò như cầu nối (Bridge), user phải tuân thủ chính sách mới được vào mạng nội bộ.</p>
+                </div>
+                <div class="card">
+                    <h3>6. Deception Honeypot (Mới v3.2)</h3>
+                    <p>Hệ thống giăng bẫy mạng giả. Nếu có thiết bị rà quét hoặc tấn công vào các IP ảo này, hệ thống lập tức khóa thiết bị đó trên mạng.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PHẦN 5: LICENSING -->
+        <section id="licensing">
+            <h2 class="sec-title">5. Hướng dẫn tính License & Thành phần hệ thống</h2>
+            
+            <div class="alert alert-warning">
+                <strong>Quy tắc tính License cực quan trọng:</strong> 
+                Easy NAC đếm số <strong>MAC Address duy nhất (Unique MAC)</strong> xuất hiện trên mạng trong vòng 24 giờ. 
+                <br><em>Điểm hay:</em> Các thiết bị "Không tin cậy" (Untrusted) <strong>KHÔNG</strong> bị tính vào License. Khách hàng chỉ trả tiền cho thiết bị hợp lệ!
+            </div>
+
+            <div class="card" style="margin-bottom: 20px;">
+                <h3>Các Thành phần (Components) để lên BOM</h3>
+                <ul>
+                    <li><strong>CGX Access (Bắt buộc):</strong> Appliance chính làm nhiệm vụ kiểm soát (Chạy bằng thiết bị cứng hoặc Máy ảo VM).
+                        <ul>
+                            <li><em>Hardware Model:</em> CGXA-S10, CGXA-S100, CGXA-S200, CGXA-S500.</li>
+                            <li><em>VM/Software:</em> S500+ (Yêu cầu ESXi / Hyper-V).</li>
+                        </ul>
+                    </li>
+                    <li><strong>CVM - Central Visibility Manager (Tuỳ chọn):</strong> Quản lý tập trung nếu KH có nhiều chi nhánh (Nhiều con CGX). Giúp License dùng chung (Distributed License).</li>
+                    <li><strong>CGPM - CyberGatekeeper Policy Manager (Tuỳ chọn):</strong> Nếu KH muốn kiểm tra tuân thủ sâu tận thiết bị (cần cài Agent). Đa số KH không cần cái này vì chuộng Agentless.</li>
+                </ul>
+            </div>
+
+            <table>
+                <tr>
+                    <th>Mô hình Khách hàng</th>
+                    <th>Cách tư vấn BOM</th>
+                </tr>
+                <tr>
+                    <td>Công ty 1 trụ sở, 400 user + 100 thiết bị IoT</td>
+                    <td>Bán 1 License CGXA bản 500 thiết bị (Virtual hoặc Appliance cứng).</td>
+                </tr>
+                <tr>
+                    <td>Công ty có HQ (1000 user) + 3 chi nhánh (200 user/chi nhánh)</td>
+                    <td>Bán 1 hệ thống <strong>CVM</strong> quản lý chung + Tổng License 1600 thiết bị (chia sẻ License qua CVM). Bán 4 bản cài CGX cho 4 site.</td>
+                </tr>
+                <tr>
+                    <td>Mua thiếu License thì sao?</td>
+                    <td>Hệ thống cho phép vượt quá <strong>10%</strong>. Nếu vượt quá mức này, tính năng "Enforcement" (Chặn/bảo vệ) sẽ bị vô hiệu hóa cho các thiết bị mới join mạng. (Hiển thị cảnh báo trên UI).</td>
+                </tr>
+                <tr>
+                    <td>Dịch vụ bảo trì (Support)</td>
+                    <td><strong>Priority Support & Platinum Maintenance:</strong> Hỗ trợ 9AM-8PM, đổi trả phần cứng 1-đổi-1 trong 3 ngày làm việc (nếu mua Box). Cần mua cho toàn bộ License trong miền quản trị.</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- PHẦN 6: DEPLOYMENT -->
+        <section id="deployment">
+            <h2 class="sec-title">6. Lộ trình triển khai (Trấn an Khách hàng)</h2>
+            <div class="card">
+                <p>Khách hàng thường sợ triển khai NAC vì lo gây rớt mạng. Hãy đưa ra quy trình 3 bước này để chốt sale (Không downtime, không cần OT ban đêm):</p>
+                <div style="margin-top: 15px; border-left: 3px solid var(--primary); padding-left: 15px;">
+                    <h4 style="color: var(--primary);">Giai đoạn 1: Thiết lập Hạ tầng (1-10 ngày)</h4>
+                    <p>Cài đặt thiết bị CGX Access (hoặc VM). Kết nối với Active Directory, AV/Patch. Thiết lập rule (Guest, BYOD, Restricted). <em>-> Lúc này hệ thống chỉ nghe (Listening), chưa chặn ai.</em></p>
+                    
+                    <h4 style="color: var(--primary); margin-top: 10px;">Giai đoạn 2: Chế độ Giám sát - Monitor Mode (1-2 tuần)</h4>
+                    <p>Giáo dục nhân viên đăng ký thiết bị cá nhân. IT có thời gian xem xét Dashboard xem có thiết bị lạ nào không để tạo "Whitelist". <em>-> Tuyệt đối an toàn cho mạng.</em></p>
+                    
+                    <h4 style="color: var(--primary); margin-top: 10px;">Giai đoạn 3: Bật Bảo vệ - Protection Enabled (1-2 ngày)</h4>
+                    <p>Bật tính năng Enforcement (chặn bằng ARP). Triển khai cuốn chiếu từng Subnet/VLAN một để kiểm soát hoàn toàn.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PHẦN 7: FAQ -->
+        <section id="faq">
+            <h2 class="sec-title">7. Xử lý Từ chối (FAQ cho Sale)</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    1. Easy NAC chặn thiết bị bằng cách nào nếu không dùng 802.1x?
+                    <svg class="toggle-icon" width="20" height="20" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                </div>
+                <div class="faq-answer">
+                    <p>Sử dụng công nghệ <strong>ARP Enforcement (ARP Poisoning/Spoofing có kiểm soát)</strong>. Khi phát hiện MAC lạ, Appliance CGX sẽ gửi bản tin ARP để đánh lừa máy lạ rằng CGX là Gateway. Máy lạ đẩy traffic về CGX và bị CGX block hoặc redirect ra trang Captive Portal. Rất hiệu quả và hoàn toàn độc lập với cấu hình Switch.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    2. Có cần cài Agent lên máy nhân viên không?
+                    <svg class="toggle-icon" width="20" height="20" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                </div>
+                <div class="faq-answer">
+                    <p><strong>Không bắt buộc.</strong> Tôn chỉ của Easy NAC là Agentless. Các kiểm tra cơ bản (có cài AV chưa, máy có thuộc Domain không) đều có thể check qua tích hợp API (như Palo Alto XDR, WMI). Chỉ khi KH yêu cầu kiểm tra tuân thủ cực kỳ sâu (ví dụ check file/registry cụ thể) thì mới cần dùng module Agent.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    3. Giải pháp này có chống được Zero-day attack không?
+                    <svg class="toggle-icon" width="20" height="20" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                </div>
+                <div class="faq-answer">
+                    <p>Bản thân NAC không phải là Anti-virus sinh ra để diệt Zero-day. TUY NHIÊN, Easy NAC kết hợp (Orchestration) với các giải pháp Endpoint (EDR/XDR). Nếu hệ thống XDR báo có 1 máy bị nhiễm mã độc, Easy NAC sẽ nhận Syslog/API và <strong>lập tức cô lập (Quarantine)</strong> thiết bị đó khỏi mạng LAN để không lây lan. Ở bản 3.2, Easy NAC còn có <strong>Deception Honeypot</strong> để bẫy hacker.</p>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question">
+                    4. Khách hàng có nhiều chi nhánh, quản lý thế nào?
+                    <svg class="toggle-icon" width="20" height="20" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                </div>
+                <div class="faq-answer">
+                    <p>Tư vấn khách hàng mua thêm <strong>CVM (Central Visibility Manager)</strong>. CVM giúp đồng bộ cấu hình, update firmware tự động, xem Report tập trung và <strong>chia sẻ License</strong> giữa các điểm. Thiết bị khi di chuyển giữa các chi nhánh (Roaming) cũng sẽ được nhận diện xuyên suốt (Transparent).</p>
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">
+                    5. Tích hợp gửi cảnh báo qua đâu?
+                    <svg class="toggle-icon" width="20" height="20" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
+                </div>
+                <div class="faq-answer">
+                    <p>Ngoài Email/Syslog thông thường, từ bản v3.2 Easy NAC hỗ trợ tích hợp gửi cảnh báo thẳng qua <strong>Microsoft Teams</strong> và <strong>Slack</strong>. Quản trị viên có nút "Approve" (Phê duyệt) trực tiếp từ email cảnh báo rất tiện lợi.</p>
+                </div>
+            </div>
+
+        </section>
+        
+        <footer style="text-align: center; margin-top: 50px; padding-top: 20px; border-top: 1px solid var(--border); color: var(--text-muted); font-size: 14px;">
+            <p>Tài liệu lưu hành nội bộ cho Team Sales | Nguồn dữ liệu: Easy NAC v3.2 Documentation (InfoExpress)</p>
+        </footer>
+
+    </main>
+
+    <!-- JS ĐIỀU KHIỂN -->
+    <script>
+        // 1. Logic cho Accordion FAQ
+        const faqItems = document.querySelectorAll('.faq-question');
+        faqItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const parent = item.parentElement;
+                // Đóng tất cả các item khác nếu muốn (Tuỳ chọn)
+                document.querySelectorAll('.faq-item').forEach(child => {
+                    if (child !== parent) {
+                        child.classList.remove('active');
+                    }
+                });
+                // Bật/tắt item hiện tại
+                parent.classList.toggle('active');
+            });
+        });
+
+        // 2. Logic cho Sidebar Active Link khi Scroll
+        const sections = document.querySelectorAll('section');
+        const navLinks = document.querySelectorAll('.nav-menu a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= (sectionTop - 50)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').includes(current)) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Smooth Scroll (Hỗ trợ click vào menu)
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 20,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

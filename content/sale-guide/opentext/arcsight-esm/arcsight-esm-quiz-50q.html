@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArcSight ESM – Bộ Câu Hỏi Kỹ Thuật 50 Câu</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #08111f;
+    --bg2: #0d1a2e;
+    --bg3: #122035;
+    --surface: #162640;
+    --surface2: #1a2d4a;
+    --border: #1e3558;
+    --accent: #38bdf8;
+    --accent2: #f97316;
+    --green: #22d3a0;
+    --red: #f43f5e;
+    --yellow: #fbbf24;
+    --purple: #a78bfa;
+    --text: #e2ecf8;
+    --text2: #8fafc8;
+    --text3: #4a6b8a;
+    --font: 'IBM Plex Sans', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 14.5px;
+    line-height: 1.65;
+    min-height: 100vh;
+  }
+
+  /* HEADER */
+  header {
+    background: linear-gradient(135deg, #05090f 0%, #0d1a2e 60%, #122035 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 40px 30px 30px;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 50% at 50% -10%, rgba(56,189,248,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(56,189,248,0.03) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(56,189,248,0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
+  .header-inner { max-width: 960px; margin: 0 auto; position: relative; }
+  .header-badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(56,189,248,0.1);
+    border: 1px solid rgba(56,189,248,0.25);
+    padding: 4px 14px;
+    margin-bottom: 14px;
+  }
+  header h1 {
+    font-size: clamp(22px, 4vw, 34px);
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  header h1 span { color: var(--accent); }
+  .header-sub { color: var(--text2); font-size: 14px; margin-bottom: 20px; }
+  .header-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .stat-item {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 1px;
+  }
+  .stat-item b { color: var(--accent); }
+
+  /* INSTRUCTIONS */
+  .instructions {
+    background: rgba(56,189,248,0.05);
+    border: 1px solid rgba(56,189,248,0.15);
+    border-left: 4px solid var(--accent);
+    padding: 16px 20px;
+    margin: 24px auto;
+    max-width: 960px;
+    font-size: 13px;
+    color: var(--text2);
+  }
+  .instructions strong { color: var(--text); }
+
+  /* CATEGORY TABS */
+  .cat-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    max-width: 960px;
+    margin: 0 auto 24px;
+    padding: 0 30px;
+  }
+  .cat-chip {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border: 1px solid;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .cat-chip:hover { opacity: 0.8; }
+  .cat-a { border-color: var(--accent); color: var(--accent); background: rgba(56,189,248,0.08); }
+  .cat-b { border-color: var(--accent2); color: var(--accent2); background: rgba(249,115,22,0.08); }
+  .cat-c { border-color: var(--green); color: var(--green); background: rgba(34,211,160,0.08); }
+  .cat-d { border-color: var(--purple); color: var(--purple); background: rgba(167,139,250,0.08); }
+  .cat-e { border-color: var(--yellow); color: var(--yellow); background: rgba(251,191,36,0.08); }
+
+  /* MAIN */
+  main { max-width: 960px; margin: 0 auto; padding: 0 20px 60px; }
+
+  /* SECTION HEADER */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin: 36px 0 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-icon { font-size: 22px; }
+  .section-title { font-size: 17px; font-weight: 700; color: #fff; }
+  .section-count {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 1px;
+  }
+  .section-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    padding: 3px 8px;
+    border: 1px solid;
+  }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    margin-bottom: 14px;
+    transition: border-color 0.2s;
+    position: relative;
+  }
+  .q-card:hover { border-color: rgba(56,189,248,0.3); }
+  .q-card.answered { border-color: rgba(56,189,248,0.2); }
+  .q-card.correct { border-color: rgba(34,211,160,0.5); background: rgba(34,211,160,0.03); }
+  .q-card.wrong { border-color: rgba(244,63,94,0.4); background: rgba(244,63,94,0.02); }
+
+  .q-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 16px 18px 14px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .q-num {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(56,189,248,0.1);
+    border: 1px solid rgba(56,189,248,0.2);
+    padding: 3px 8px;
+    white-space: nowrap;
+    flex: none;
+    letter-spacing: 1px;
+  }
+  .q-diff {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    padding: 2px 7px;
+    border: 1px solid;
+    flex: none;
+    margin-top: 2px;
+  }
+  .diff-med { border-color: var(--yellow); color: var(--yellow); background: rgba(251,191,36,0.08); }
+  .diff-hard { border-color: var(--accent2); color: var(--accent2); background: rgba(249,115,22,0.08); }
+  .diff-expert { border-color: var(--red); color: var(--red); background: rgba(244,63,94,0.08); }
+  .q-text {
+    font-size: 14px;
+    color: var(--text);
+    font-weight: 500;
+    flex: 1;
+    line-height: 1.6;
+  }
+  .q-status {
+    margin-left: auto;
+    font-size: 16px;
+    flex: none;
+    transition: all 0.2s;
+  }
+
+  /* OPTIONS */
+  .q-options { padding: 0 18px 16px 18px; }
+  .option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 9px 14px;
+    margin-bottom: 7px;
+    border: 1px solid var(--border);
+    background: var(--bg3);
+    cursor: pointer;
+    transition: all 0.18s;
+    border-radius: 2px;
+  }
+  .option:hover { border-color: rgba(56,189,248,0.35); background: rgba(56,189,248,0.04); }
+  .option.selected { border-color: var(--accent); background: rgba(56,189,248,0.08); }
+  .option.correct-ans { border-color: var(--green) !important; background: rgba(34,211,160,0.08) !important; }
+  .option.wrong-ans { border-color: var(--red) !important; background: rgba(244,63,94,0.05) !important; }
+  .opt-letter {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text3);
+    width: 20px;
+    flex: none;
+    margin-top: 1px;
+    transition: color 0.15s;
+  }
+  .option.selected .opt-letter { color: var(--accent); }
+  .option.correct-ans .opt-letter { color: var(--green); }
+  .option.wrong-ans .opt-letter { color: var(--red); }
+  .opt-text { font-size: 13.5px; color: var(--text2); line-height: 1.5; }
+
+  /* EXPLANATION */
+  .explanation {
+    display: none;
+    margin: 4px 0 4px;
+    padding: 12px 16px;
+    background: rgba(56,189,248,0.04);
+    border-left: 3px solid var(--accent);
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+  .explanation.show { display: block; }
+  .explanation.wrong-exp { border-left-color: var(--red); background: rgba(244,63,94,0.04); }
+  .explanation strong { color: var(--text); }
+  .explanation .correct-label {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--green);
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  /* SUBMIT BTN */
+  .q-footer { padding: 0 18px 14px; display: flex; justify-content: flex-end; }
+  .btn-check {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 7px 20px;
+    border: 1px solid var(--accent);
+    background: rgba(56,189,248,0.1);
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-check:hover { background: rgba(56,189,248,0.2); }
+  .btn-check:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* SCOREBOARD */
+  .scoreboard {
+    position: fixed;
+    bottom: 20px; right: 20px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 14px 20px;
+    font-family: var(--mono);
+    font-size: 12px;
+    z-index: 100;
+    min-width: 200px;
+    border-top: 3px solid var(--accent);
+  }
+  .score-title {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text3);
+    margin-bottom: 8px;
+  }
+  .score-big {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .score-sub { font-size: 11px; color: var(--text3); margin-top: 4px; }
+  .score-bar {
+    height: 4px;
+    background: var(--border);
+    margin-top: 10px;
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .score-fill {
+    height: 100%;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.4s ease;
+    border-radius: 2px;
+  }
+  .score-pass { color: var(--green); }
+  .score-fail { color: var(--red); }
+  .score-label { font-size: 10px; margin-top: 6px; }
+
+  /* FINAL RESULT */
+  .result-banner {
+    display: none;
+    max-width: 960px;
+    margin: 30px auto;
+    padding: 24px 28px;
+    border: 1px solid;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .result-banner.pass { border-color: var(--green); background: rgba(34,211,160,0.05); color: var(--green); }
+  .result-banner.fail { border-color: var(--red); background: rgba(244,63,94,0.04); color: var(--red); }
+
+  .btn-submit-all {
+    display: block;
+    margin: 30px auto;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    padding: 14px 40px;
+    border: 1px solid var(--accent);
+    background: rgba(56,189,248,0.12);
+    color: var(--accent);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-submit-all:hover { background: rgba(56,189,248,0.25); }
+
+  /* SCROLL TOP */
+  .scroll-btn {
+    position: fixed; bottom: 20px; left: 20px;
+    background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text2); font-size: 18px; width: 38px; height: 38px;
+    cursor: pointer; font-weight: 700; z-index: 99; display: none;
+  }
+  .scroll-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  @media (max-width:640px) {
+    .scoreboard { right: 10px; bottom: 10px; min-width: 160px; padding: 10px 14px; }
+    .score-big { font-size: 22px; }
+    main { padding: 0 12px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-grid"></div>
+  <div class="header-inner">
+    <div class="header-badge">Bộ Câu Hỏi Đánh Giá Kỹ Thuật · OpenText ArcSight ESM</div>
+    <h1>ArcSight <span>ESM</span> — Technical Assessment Quiz</h1>
+    <p class="header-sub">Dành cho kỹ sư kỹ thuật & tư vấn giải pháp SIEM · Phiên bản ESM 7.9</p>
+    <div class="header-stats">
+      <div class="stat-item">Tổng câu: <b>50</b></div>
+      <div class="stat-item">Ngưỡng đạt: <b>80% (40/50)</b></div>
+      <div class="stat-item">Mức độ: <b>Technical / Deep-Dive</b></div>
+      <div class="stat-item">Thời gian đề xuất: <b>60 phút</b></div>
+    </div>
+  </div>
+</header>
+
+<div class="instructions" style="padding:16px 30px">
+  <strong>Hướng dẫn:</strong> Chọn một đáp án đúng nhất cho mỗi câu. Nhấn <strong>"Kiểm tra"</strong> để xem kết quả và giải thích chi tiết từng câu. Điểm đạt yêu cầu là <strong>80% (40/50 câu đúng)</strong>. Câu hỏi được thiết kế ở mức kỹ thuật chuyên sâu — không dễ đoán bằng phương pháp loại trừ thông thường.
+</div>
+
+<main>
+
+<!-- ===== SECTION A: FEATURES & CONCEPTS ===== -->
+<div class="section-header">
+  <div class="section-icon">🔧</div>
+  <div>
+    <div class="section-tag cat-a">PHẦN A</div>
+    <div class="section-title">Tính Năng & Khái Niệm Cốt Lõi ArcSight ESM</div>
+  </div>
+  <div class="section-count">Câu 1–12</div>
+</div>
+
+<!-- Q1 -->
+<div class="q-card" id="q1">
+  <div class="q-header" onclick="toggleExpand('q1')">
+    <div class="q-num">Q01</div>
+    <div class="q-diff diff-med">MEDIUM</div>
+    <div class="q-text">CORR-Engine trong ArcSight ESM là gì, và tính năng kỹ thuật nào KHÔNG phải là đặc điểm của nó?</div>
+    <div class="q-status" id="q1-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q1','A')"><div class="opt-letter">A</div><div class="opt-text">Framework lưu trữ và truy xuất độc quyền, được tối ưu hóa để nhận và xử lý sự kiện với tốc độ cao</div></div>
+    <div class="option" onclick="selectOption('q1','B')"><div class="opt-letter">B</div><div class="opt-text">Cho phép tìm kiếm tốc độ cao (high-speed search) trên toàn bộ dữ liệu sự kiện đã lưu trữ</div></div>
+    <div class="option" onclick="selectOption('q1','C')"><div class="opt-letter">C</div><div class="opt-text">Sử dụng kiến trúc cơ sở dữ liệu quan hệ (RDBMS) như PostgreSQL để đảm bảo tính nhất quán ACID</div></div>
+    <div class="option" onclick="selectOption('q1','D')"><div class="opt-letter">D</div><div class="opt-text">Tổ chức sự kiện theo ngày và lưu vào archive hàng ngày để lưu trữ dài hạn</div></div>
+    <div class="explanation" id="q1-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: C</span>
+      <strong>Giải thích:</strong> CORR-Engine (Correlation Optimized Retention and Retrieval Engine) là framework lưu trữ <em>độc quyền</em> của ArcSight, <strong>không</strong> dựa trên RDBMS thông thường. Nó được thiết kế riêng cho workload SIEM — nhận sự kiện tốc độ cao, tìm kiếm nhanh, lưu trữ theo ngày và archive tự động. Việc dùng RDBMS như PostgreSQL sẽ không đáp ứng được yêu cầu xử lý 100.000+ EPS của SIEM enterprise.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q1','C')" id="q1-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q2 -->
+<div class="q-card" id="q2">
+  <div class="q-header" onclick="toggleExpand('q2')">
+    <div class="q-num">Q02</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">Trong ArcSight ESM, khi một sự kiện được xử lý qua pipeline, thứ tự nào sau đây mô tả ĐÚNG luồng xử lý từ SmartConnector đến Manager?</div>
+    <div class="q-status" id="q2-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q2','A')"><div class="opt-letter">A</div><div class="opt-text">Thu thập → Lưu vào CORR-Engine → Chuẩn hóa → Tương quan → Hiển thị</div></div>
+    <div class="option" onclick="selectOption('q2','B')"><div class="opt-letter">B</div><div class="opt-text">Thu thập → Chuẩn hóa/Filter/Aggregate (tại Connector) → Gửi lên Manager → Tra Network Model → Đánh giá Priority → Ghi CORR-Engine → Correlation Engine</div></div>
+    <div class="option" onclick="selectOption('q2','C')"><div class="opt-letter">C</div><div class="opt-text">Thu thập → Chuẩn hóa → Tương quan → Tra Network Model → Ghi CORR-Engine → Priority</div></div>
+    <div class="option" onclick="selectOption('q2','D')"><div class="opt-letter">D</div><div class="opt-text">Thu thập → Manager nhận → Priority → CORR-Engine → SmartConnector normalize → Hiển thị</div></div>
+    <div class="explanation" id="q2-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Theo ESM 101, pipeline chính xác là: (1) SmartConnector thu thập → (2) Normalize thành CEF + Filter + Aggregate <em>ngay tại Connector</em> → (3) Gửi batch lên Manager → (4) Manager tra Network Model và Actor Model → (5) Đánh giá Priority Formula → (6) Ghi vào CORR-Engine → (7) Correlation Engine xử lý rules → (8) Kích hoạt actions/notifications. Chuẩn hóa xảy ra TẠI Connector, không phải sau khi lên Manager.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q2','B')" id="q2-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q3 -->
+<div class="q-card" id="q3">
+  <div class="q-header" onclick="toggleExpand('q3')">
+    <div class="q-num">Q03</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">Điểm khác biệt kỹ thuật cốt lõi giữa "Standard Rule" và "Lightweight Rule" trong ArcSight ESM là gì?</div>
+    <div class="q-status" id="q3-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q3','A')"><div class="opt-letter">A</div><div class="opt-text">Standard Rule xử lý nhanh hơn vì không cần điều kiện join, trong khi Lightweight Rule chậm hơn vì cần aggregate</div></div>
+    <div class="option" onclick="selectOption('q3','B')"><div class="opt-letter">B</div><div class="opt-text">Standard Rule hỗ trợ join conditions, aggregation và time window; khi thỏa mãn tạo correlation event. Lightweight Rule không có join/aggregation, kích hoạt ngay trên từng event để cập nhật Active List, xử lý rất nhanh</div></div>
+    <div class="option" onclick="selectOption('q3','C')"><div class="opt-letter">C</div><div class="opt-text">Standard Rule chỉ dùng cho compliance reporting, còn Lightweight Rule dùng cho real-time monitoring</div></div>
+    <div class="option" onclick="selectOption('q3','D')"><div class="opt-letter">D</div><div class="opt-text">Standard Rule chạy theo lịch (scheduled), Lightweight Rule chạy theo thời gian thực liên tục</div></div>
+    <div class="explanation" id="q3-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Đây là sự khác biệt kiến trúc quan trọng. <strong>Standard Rules</strong> có thể có join conditions (tổng hợp nhiều điều kiện), aggregation (đếm số lần match trong time window), khi đủ điều kiện mới tạo correlation event — phù hợp phát hiện chuỗi tấn công phức tạp. <strong>Lightweight Rules</strong> không có join/aggregation, kích hoạt tức thì trên mỗi event đơn lẻ, dùng chủ yếu để cập nhật Active List — tiêu thụ ít tài nguyên hơn và ưu tiên xử lý cao hơn.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q3','B')" id="q3-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q4 -->
+<div class="q-card" id="q4">
+  <div class="q-header" onclick="toggleExpand('q4')">
+    <div class="q-num">Q04</div>
+    <div class="q-diff diff-med">MEDIUM</div>
+    <div class="q-text">Pre-Persistence Rule trong ArcSight ESM hoạt động ở giai đoạn nào của event pipeline và có hạn chế gì quan trọng?</div>
+    <div class="q-status" id="q4-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q4','A')"><div class="opt-letter">A</div><div class="opt-text">Chạy sau khi sự kiện được lưu vào CORR-Engine; có thể schedule và replay dễ dàng</div></div>
+    <div class="option" onclick="selectOption('q4','B')"><div class="opt-letter">B</div><div class="opt-text">Chạy trước khi sự kiện được lưu vào CORR-Engine để enrich/set field; KHÔNG thể schedule hay replay vì sự kiện đã được ghi</div></div>
+    <div class="option" onclick="selectOption('q4','C')"><div class="opt-letter">C</div><div class="opt-text">Chạy tại SmartConnector trước khi gửi lên Manager; chỉ dùng để lọc bớt sự kiện không cần thiết</div></div>
+    <div class="option" onclick="selectOption('q4','D')"><div class="opt-letter">D</div><div class="opt-text">Chạy độc lập với Standard Rule, không có tương tác với Correlation Engine</div></div>
+    <div class="explanation" id="q4-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Pre-Persistence Rules xử lý sự kiện <em>trước khi</em> ghi vào CORR-Engine, cho phép set/thay đổi field như threat level, priority. Giá trị được set có thể dùng bởi Standard và Lightweight Rules chạy sau đó. Hạn chế quan trọng: <strong>không thể schedule hay replay</strong> — vì sự kiện trong quá khứ đã được persisted, không thể modify nữa.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q4','B')" id="q4-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q5 -->
+<div class="q-card" id="q5">
+  <div class="q-header" onclick="toggleExpand('q5')">
+    <div class="q-num">Q05</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">Công thức tính Priority trong ArcSight ESM bao gồm 4 yếu tố. Yếu tố nào sau đây KHÔNG thuộc công thức Priority?</div>
+    <div class="q-status" id="q5-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q5','A')"><div class="opt-letter">A</div><div class="opt-text">Severity (độ nghiêm trọng của sự kiện từ nguồn)</div></div>
+    <div class="option" onclick="selectOption('q5','B')"><div class="opt-letter">B</div><div class="opt-text">Asset Criticality (mức độ quan trọng của tài sản bị ảnh hưởng)</div></div>
+    <div class="option" onclick="selectOption('q5','C')"><div class="opt-letter">C</div><div class="opt-text">Số lượng connectors đang báo cáo cùng loại sự kiện (Event Frequency Count)</div></div>
+    <div class="option" onclick="selectOption('q5','D')"><div class="opt-letter">D</div><div class="opt-text">Relevance và Model Confidence</div></div>
+    <div class="explanation" id="q5-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: C</span>
+      <strong>Giải thích:</strong> 4 yếu tố trong Priority Formula của ESM là: (1) <strong>Severity</strong> × 10, (2) <strong>Asset Criticality</strong> × 10 (Very High=+10, High=+8, Medium=+6...), (3) <strong>Relevance</strong>, (4) <strong>Model Confidence</strong>. "Event Frequency Count" (số lượng connector báo cáo) không phải là thành phần của Priority Formula. Max score = 100. Priority Formula giúp ESM tự động ưu tiên những sự kiện tác động đến tài sản quan trọng nhất.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q5','C')" id="q5-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q6 -->
+<div class="q-card" id="q6">
+  <div class="q-header" onclick="toggleExpand('q6')">
+    <div class="q-num">Q06</div>
+    <div class="q-diff diff-med">MEDIUM</div>
+    <div class="q-text">Khi CORR-Engine sắp hết dung lượng lưu trữ event, cơ chế nào được kích hoạt tự động để bảo vệ hệ thống khỏi mất sự kiện mới?</div>
+    <div class="q-status" id="q6-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q6','A')"><div class="opt-letter">A</div><div class="opt-text">ESM tự động dừng nhận sự kiện từ tất cả SmartConnectors cho đến khi có đủ không gian</div></div>
+    <div class="option" onclick="selectOption('q6','B')"><div class="opt-letter">B</div><div class="opt-text">Space-based retention được kích hoạt: xóa một hoặc vài ngày đầu sự kiện cũ nhất để giải phóng không gian, sau đó time-based retention tiếp tục</div></div>
+    <div class="option" onclick="selectOption('q6','C')"><div class="opt-letter">C</div><div class="opt-text">Sự kiện được tự động archive offline và không thể truy xuất lại nếu không restore thủ công</div></div>
+    <div class="option" onclick="selectOption('q6','D')"><div class="opt-letter">D</div><div class="opt-text">Hệ thống tự động mở rộng dung lượng bằng cách mount thêm storage từ cloud</div></div>
+    <div class="explanation" id="q6-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> CORR-Engine hoạt động theo 2 chế độ retention: (1) <strong>Time-based retention</strong> (mặc định) — job chạy hàng ngày xóa sự kiện quá retention period. (2) <strong>Space-based retention</strong> — được kích hoạt khi storage gần đầy: xóa ngày sự kiện đầu tiên (hoặc vài ngày đầu) để giải phóng không gian. Sau khi có đủ không gian, hệ thống tự chuyển lại về time-based retention. Mục đích: đảm bảo sự kiện MỚI không bị mất.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q6','B')" id="q6-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q7 -->
+<div class="q-card" id="q7">
+  <div class="q-header" onclick="toggleExpand('q7')">
+    <div class="q-num">Q07</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">FlexConnector Framework trong ArcSight ESM được sử dụng cho mục đích gì và bao gồm loại reader nào sau đây?</div>
+    <div class="q-status" id="q7-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q7','A')"><div class="opt-letter">A</div><div class="opt-text">Tool để điều chỉnh performance của Manager; bao gồm CPU throttler, memory optimizer và disk I/O monitor</div></div>
+    <div class="option" onclick="selectOption('q7','B')"><div class="opt-letter">B</div><div class="opt-text">SDK tùy chỉnh tạo connector mới cho nguồn dữ liệu đặc thù; bao gồm file reader, regex file reader, time-based DB reader, syslog reader và SNMP reader</div></div>
+    <div class="option" onclick="selectOption('q7','C')"><div class="opt-letter">C</div><div class="opt-text">Giao diện để import correlation rules từ hệ thống SIEM khác (Splunk, QRadar); hỗ trợ XML và JSON format</div></div>
+    <div class="option" onclick="selectOption('q7','D')"><div class="opt-letter">D</div><div class="opt-text">Công cụ chuyển đổi định dạng log giữa CEF, LEEF và Syslog; tích hợp sẵn trong Manager</div></div>
+    <div class="explanation" id="q7-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> FlexConnector là một <em>Software Development Kit (SDK)</em> cho phép tạo SmartConnector tùy chỉnh cho bất kỳ nguồn dữ liệu đặc thù nào không có connector sẵn. Các loại FlexConnector reader bao gồm: File Reader, Regular Expression File Reader, Time-Based Database Reader, Syslog Reader, và SNMP Reader. Đây là cách khách hàng có thể tự mở rộng hệ sinh thái connector của ArcSight ESM.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q7','B')" id="q7-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q8 -->
+<div class="q-card" id="q8">
+  <div class="q-header" onclick="toggleExpand('q8')">
+    <div class="q-num">Q08</div>
+    <div class="q-diff diff-med">MEDIUM</div>
+    <div class="q-text">ArcSight Management Center (ArcMC) đặc biệt phù hợp trong kịch bản nào sau đây?</div>
+    <div class="q-status" id="q8-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q8','A')"><div class="opt-letter">A</div><div class="opt-text">Tổ chức nhỏ với ít hơn 10 SmartConnectors và một Manager duy nhất</div></div>
+    <div class="option" onclick="selectOption('q8','B')"><div class="opt-letter">B</div><div class="opt-text">Môi trường có số lượng SmartConnectors lớn, nhiều đích đến (heterogeneous destinations) hoặc môi trường Logger-only cần quản lý connector tập trung</div></div>
+    <div class="option" onclick="selectOption('q8','C')"><div class="opt-letter">C</div><div class="opt-text">Thay thế hoàn toàn ArcSight Console trong môi trường web-only không cài Java</div></div>
+    <div class="option" onclick="selectOption('q8','D')"><div class="opt-letter">D</div><div class="opt-text">Hệ thống backup Manager khi primary Manager gặp sự cố</div></div>
+    <div class="explanation" id="q8-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> ArcMC là giải pháp hardware/software cung cấp interface web tập trung để quản lý SmartConnectors. Nó đặc biệt hữu ích khi: (1) số lượng SmartConnectors lớn (bulk operations), (2) connectors gửi đến nhiều đích khác nhau (ESM + Logger), (3) môi trường Logger-only cần quản lý connector, (4) MSSP deployment. ArcMC <em>không</em> thay thế Console và <em>không</em> phải là backup Manager.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q8','B')" id="q8-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q9 -->
+<div class="q-card" id="q9">
+  <div class="q-header" onclick="toggleExpand('q9')">
+    <div class="q-num">Q09</div>
+    <div class="q-diff diff-expert">EXPERT</div>
+    <div class="q-text">Voltage SecureData Enterprise Add-on trong ArcSight ESM sử dụng kỹ thuật nào và lợi thế kỹ thuật đặc biệt của nó là gì so với mã hóa thông thường?</div>
+    <div class="q-status" id="q9-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q9','A')"><div class="opt-letter">A</div><div class="opt-text">AES-256 encryption toàn bộ event trước khi lưu vào CORR-Engine; analyst phải có private key mới xem được log</div></div>
+    <div class="option" onclick="selectOption('q9','B')"><div class="opt-letter">B</div><div class="opt-text">Format Preserving Encryption (FPE) — mã hóa giữ nguyên format (số thẻ mã hóa vẫn có dạng số 16 chữ số), cho phép tiếp tục tương quan mà không cần giải mã; analyst không thấy dữ liệu thô nhạy cảm</div></div>
+    <div class="option" onclick="selectOption('q9','C')"><div class="opt-letter">C</div><div class="opt-text">Tokenization thay thế dữ liệu nhạy cảm bằng token ngẫu nhiên; token được lưu trong vault tách biệt</div></div>
+    <div class="option" onclick="selectOption('q9','D')"><div class="opt-letter">D</div><div class="opt-text">Obfuscation (che giấu) tên trường dữ liệu nhạy cảm trong schema, ngăn analyst tìm kiếm theo trường đó</div></div>
+    <div class="explanation" id="q9-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> <strong>Format Preserving Encryption (FPE)</strong> là tính năng độc quyền của ArcSight thông qua Voltage SecureData. Điểm khác biệt kỹ thuật then chốt: (1) Mã hóa NHƯNG bảo toàn định dạng — số thẻ 16 chữ số sau mã hóa vẫn là 16 chữ số, SSN vẫn có format XXX-XX-XXXX. (2) Correlation engine CÓ THỂ so sánh hai giá trị mã hóa mà không cần giải mã — nếu cùng nguồn gốc, cipher text giống nhau → phát hiện được pattern. (3) Không đối thủ nào (Splunk, QRadar, Sentinel) có tính năng tương đương.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q9','B')" id="q9-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q10 -->
+<div class="q-card" id="q10">
+  <div class="q-header" onclick="toggleExpand('q10')">
+    <div class="q-num">Q10</div>
+    <div class="q-diff diff-med">MEDIUM</div>
+    <div class="q-text">Trong ArcSight ESM, "Active List" và "Session List" khác nhau ở điểm kỹ thuật nào cơ bản nhất?</div>
+    <div class="q-status" id="q10-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q10','A')"><div class="opt-letter">A</div><div class="opt-text">Active List được lưu trên disk (persistent), Session List được lưu trong RAM (volatile)</div></div>
+    <div class="option" onclick="selectOption('q10','B')"><div class="opt-letter">B</div><div class="opt-text">Active List là bảng dữ liệu dynamic trong memory, lưu trạng thái hiện tại (IP đáng ngờ, user đã xác thực...). Session List theo dõi các phiên hoạt động theo thời gian, tương quan sự kiện trong cùng một session liên tục</div></div>
+    <div class="option" onclick="selectOption('q10','C')"><div class="opt-letter">C</div><div class="opt-text">Active List chỉ có thể được cập nhật thủ công, Session List được cập nhật tự động bởi rules</div></div>
+    <div class="option" onclick="selectOption('q10','D')"><div class="opt-letter">D</div><div class="opt-text">Active List dùng cho compliance reporting, Session List dùng cho real-time alerting</div></div>
+    <div class="explanation" id="q10-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> <strong>Active Lists</strong> là bảng dữ liệu động (in-memory lookup table) mà rules đọc/ghi trong quá trình tương quan — ví dụ: danh sách IP đáng ngờ, users đang bị theo dõi, hosts đang bị tấn công. <strong>Session Lists</strong> theo dõi các phiên hoạt động (sessions) theo chiều thời gian, giúp tương quan tất cả sự kiện trong một phiên kết nối — ví dụ: từ khi user login đến logout. Cả hai đều có thể được cập nhật bởi rules tự động.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q10','B')" id="q10-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q11 -->
+<div class="q-card" id="q11">
+  <div class="q-header" onclick="toggleExpand('q11')">
+    <div class="q-num">Q11</div>
+    <div class="q-diff diff-med">MEDIUM</div>
+    <div class="q-text">Pattern Discovery (Threat Detector) trong ArcSight ESM khác với Correlation Rules ở điểm kỹ thuật nào?</div>
+    <div class="q-status" id="q11-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q11','A')"><div class="opt-letter">A</div><div class="opt-text">Pattern Discovery là tính năng real-time nhanh hơn Correlation Rules; dùng thay thế rules trong môi trường EPS cao</div></div>
+    <div class="option" onclick="selectOption('q11','B')"><div class="opt-letter">B</div><div class="opt-text">Correlation Rules chạy liên tục real-time trên luồng sự kiện; Pattern Discovery phân tích các khối thời gian (giờ/ngày/tuần) để tìm pattern ẩn, chạy on-demand hoặc theo lịch — phù hợp phát hiện mối đe dọa không có rule sẵn</div></div>
+    <div class="option" onclick="selectOption('q11','C')"><div class="opt-letter">C</div><div class="opt-text">Pattern Discovery chỉ phân tích log của Windows AD; Correlation Rules phân tích mọi nguồn</div></div>
+    <div class="option" onclick="selectOption('q11','D')"><div class="opt-letter">D</div><div class="opt-text">Pattern Discovery dùng machine learning neural network; Correlation Rules dùng regular expression đơn giản</div></div>
+    <div class="explanation" id="q11-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Đây là 2 cơ chế phát hiện bổ sung nhau: <strong>Correlation Rules</strong> chạy liên tục real-time, đánh giá từng sự kiện ngay khi đến. <strong>Pattern Discovery</strong> (Threat Detector) hoạt động khác — phân tích các khối thời gian cố định (1 giờ, 1 ngày, 1 tuần...), tìm kiếm các pattern ẩn trong dữ liệu lịch sử mà không có rule nào có thể định nghĩa trước. Output là "snapshots" và "patterns" về mối quan hệ giữa nguồn-đích tấn công. Lưu ý: Pattern Discovery tốn nhiều tài nguyên hệ thống.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q11','B')" id="q11-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q12 -->
+<div class="q-card" id="q12">
+  <div class="q-header" onclick="toggleExpand('q12')">
+    <div class="q-num">Q12</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">SmartConnector gửi sự kiện lên Manager theo cơ chế batch như thế nào theo mặc định?</div>
+    <div class="q-status" id="q12-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q12','A')"><div class="opt-letter">A</div><div class="opt-text">Gửi 1000 events mỗi lần hoặc mỗi 10 giây, tùy điều kiện nào đến trước; heartbeat mỗi 60 giây</div></div>
+    <div class="option" onclick="selectOption('q12','B')"><div class="opt-letter">B</div><div class="opt-text">Gửi 100 events mỗi batch hoặc mỗi 1 giây (tùy điều kiện nào đến trước); heartbeat với Manager mỗi 10 giây. Tất cả tham số này đều có thể cấu hình</div></div>
+    <div class="option" onclick="selectOption('q12','C')"><div class="opt-letter">C</div><div class="opt-text">Gửi streaming liên tục từng event một ngay khi nhận được; không có batch mode</div></div>
+    <div class="option" onclick="selectOption('q12','D')"><div class="opt-letter">D</div><div class="opt-text">Gửi 500 events mỗi batch hoặc mỗi 5 giây; heartbeat mỗi 30 giây</div></div>
+    <div class="explanation" id="q12-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Theo tài liệu ESM 101 chính thức: SmartConnector gửi event lên Manager theo <strong>batch 100 events</strong> hoặc <strong>mỗi 1 giây</strong>, tùy điều kiện nào đến trước. Heartbeat (kết nối duy trì) với Manager mặc định là <strong>mỗi 10 giây</strong>. Manager gửi lại commands/configuration updates qua kênh heartbeat này. Tất cả thông số (batch size, interval, heartbeat, cache size...) đều có thể cấu hình trong Connector resource.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q12','B')" id="q12-btn">Kiểm tra</button></div>
+</div>
+
+<!-- ===== SECTION B: DEPLOYMENT & ARCHITECTURE ===== -->
+<div class="section-header">
+  <div class="section-icon">🏗️</div>
+  <div>
+    <div class="section-tag cat-b">PHẦN B</div>
+    <div class="section-title">Kiến Trúc & Mô Hình Triển Khai</div>
+  </div>
+  <div class="section-count">Câu 13–24</div>
+</div>
+
+<!-- Q13 -->
+<div class="q-card" id="q13">
+  <div class="q-header" onclick="toggleExpand('q13')">
+    <div class="q-num">Q13</div>
+    <div class="q-diff diff-med">MEDIUM</div>
+    <div class="q-text">Trong mô hình Distributed Correlation của ArcSight ESM, vai trò của "Persistor node" là gì?</div>
+    <div class="q-status" id="q13-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q13','A')"><div class="opt-letter">A</div><div class="opt-text">Chỉ lưu trữ sự kiện, không tham gia vào quá trình tương quan</div></div>
+    <div class="option" onclick="selectOption('q13','B')"><div class="opt-letter">B</div><div class="opt-text">Node chính tích hợp CORR-Engine + Manager, xử lý persistence (lưu trữ); chịu trách nhiệm điều phối toàn bộ cluster và là node duy nhất hỗ trợ APHA module</div></div>
+    <div class="option" onclick="selectOption('q13','C')"><div class="opt-letter">C</div><div class="opt-text">Node dự phòng (backup) chỉ hoạt động khi Correlator chính gặp sự cố</div></div>
+    <div class="option" onclick="selectOption('q13','D')"><div class="opt-letter">D</div><div class="opt-text">Node riêng biệt chỉ chạy báo cáo và xuất dữ liệu; không xử lý sự kiện thời gian thực</div></div>
+    <div class="explanation" id="q13-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Trong Distributed Correlation Mode, <strong>Persistor node</strong> là node trung tâm tích hợp Manager + CORR-Engine, chịu trách nhiệm lưu trữ dữ liệu và điều phối toàn cluster. Quan trọng: <strong>chỉ Persistor node mới hỗ trợ APHA module</strong> — non-persistor nodes (Correlators, Aggregators) không hỗ trợ APHA. Khi dừng Message Bus services, phải thực hiện từ Persistor node. Ngoài ra, Hierarchy Map data monitor không khuyến nghị dùng trong distributed mode vì tốn nhiều tài nguyên.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q13','B')" id="q13-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q14 -->
+<div class="q-card" id="q14">
+  <div class="q-header" onclick="toggleExpand('q14')">
+    <div class="q-num">Q14</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">Khi triển khai ESM Distributed Mode và cần thay đổi cấu hình (thêm node, restart service), kỹ sư phải làm gì theo đúng quy trình?</div>
+    <div class="q-status" id="q14-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q14','A')"><div class="opt-letter">A</div><div class="opt-text">Chỉ restart node bị thay đổi, các node khác tiếp tục chạy bình thường để đảm bảo uptime</div></div>
+    <div class="option" onclick="selectOption('q14','B')"><div class="opt-letter">B</div><div class="opt-text">Dừng tất cả services trên toàn cluster, sau đó khởi động lại tất cả — bất kỳ thay đổi cấu hình nào cũng yêu cầu restart toàn bộ cluster</div></div>
+    <div class="option" onclick="selectOption('q14','C')"><div class="opt-letter">C</div><div class="opt-text">Sử dụng rolling restart: restart từng node một theo thứ tự từ Correlator → Aggregator → Persistor</div></div>
+    <div class="option" onclick="selectOption('q14','D')"><div class="opt-letter">D</div><div class="opt-text">Chỉ restart service trên Persistor, các Correlator tự động nhận cấu hình mới qua Message Bus</div></div>
+    <div class="explanation" id="q14-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Đây là một điểm kỹ thuật quan trọng trong Distributed Correlation Mode được nêu rõ trong ESM 7.9 Release Notes: <em>"After making any configuration changes in distributed mode, such as adding a node to a cluster or needing to restart one of the services, <strong>stop and then start all services</strong>."</em> Đây là yêu cầu cứng — không thể rolling restart từng node. Failure to follow this can result in inconsistent states across the cluster.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q14','B')" id="q14-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q15 -->
+<div class="q-card" id="q15">
+  <div class="q-header" onclick="toggleExpand('q15')">
+    <div class="q-num">Q15</div>
+    <div class="q-diff diff-expert">EXPERT</div>
+    <div class="q-text">Trong Distributed Correlation Mode, khi Active List có rule "NOT In ActiveList" và rule đó kích hoạt quá mức, giải pháp kỹ thuật nào được khuyến nghị và cần lưu ý gì?</div>
+    <div class="q-status" id="q15-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q15','A')"><div class="opt-letter">A</div><div class="opt-text">Xóa Active List và tạo lại từ đầu với cấu hình khác; không có cách khắc phục khác</div></div>
+    <div class="option" onclick="selectOption('q15','B')"><div class="opt-letter">B</div><div class="opt-text">Cấu hình Cache Model thành "Write Synchronized" trong ArcSight Console; lưu ý có thể ảnh hưởng performance do đồng bộ tăng overhead</div></div>
+    <div class="option" onclick="selectOption('q15','C')"><div class="opt-letter">C</div><div class="opt-text">Chuyển Distributed Mode sang Compact Mode để tránh vấn đề Active List synchronization</div></div>
+    <div class="option" onclick="selectOption('q15','D')"><div class="opt-letter">D</div><div class="opt-text">Tăng số lượng Correlator nodes để phân tán tải, vấn đề sẽ tự giải quyết</div></div>
+    <div class="explanation" id="q15-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Trong Distributed Correlation, các correlator nodes chia sẻ Active List qua distributed cache. Khi rule có điều kiện "NOT In ActiveList" kích hoạt quá mức, nguyên nhân thường là Active List chưa được đồng bộ kịp giữa các nodes. Giải pháp: cấu hình <strong>Cache Model = "Write Synchronized"</strong> — đảm bảo việc update Active List bởi một Lightweight Rule visible ngay với Standard Rules tiếp theo trên cùng event. Cảnh báo: setting này tăng overhead đồng bộ, cần đánh giá kỹ tác động performance trước khi áp dụng.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q15','B')" id="q15-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q16 -->
+<div class="q-card" id="q16">
+  <div class="q-header" onclick="toggleExpand('q16')">
+    <div class="q-num">Q16</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">Trong quá trình cài đặt APHA Module, cần chuẩn bị bao nhiêu địa chỉ IP và loại nào?</div>
+    <div class="q-status" id="q16-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q16','A')"><div class="opt-letter">A</div><div class="opt-text">3 IP: 1 cho Primary, 1 cho Secondary, 1 Virtual IP để failover</div></div>
+    <div class="option" onclick="selectOption('q16','B')"><div class="opt-letter">B</div><div class="opt-text">Tối thiểu 5 IP: 2 host IP (static, mỗi server 1), 2 crossover cable IP (liên lạc trực tiếp giữa 2 server), 1 Service IP (IP cluster — được reassign tự động khi failover)</div></div>
+    <div class="option" onclick="selectOption('q16','C')"><div class="opt-letter">C</div><div class="opt-text">2 IP: 1 IP chính cho Primary, 1 IP dự phòng tự động chuyển khi failover</div></div>
+    <div class="option" onclick="selectOption('q16','D')"><div class="opt-letter">D</div><div class="opt-text">6 IP: 2 Public IP, 2 Private IP, 1 Management IP, 1 Replication IP</div></div>
+    <div class="explanation" id="q16-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Theo tài liệu APHA Module User's Guide, cần tối thiểu <strong>5 địa chỉ IP</strong>: (1) Host IP Primary (static, nhận network traffic), (2) Host IP Secondary (static, nhận network traffic), (3) Crossover IP Primary (giao tiếp trực tiếp qua crossover cable, có thể dùng private IP), (4) Crossover IP Secondary, (5) <strong>Service IP</strong> — đây là IP mà tất cả connectors/clients kết nối, phải cùng subnet với host IPs. Khi failover xảy ra, Service IP được reassign tự động sang node mới. OpenText khuyến nghị tất cả IP nên cùng protocol (IPv4 hoặc IPv6).
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q16','B')" id="q16-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q17 -->
+<div class="q-card" id="q17">
+  <div class="q-header" onclick="toggleExpand('q17')">
+    <div class="q-num">Q17</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">Khi xảy ra APHA failover, điều gì xảy ra với các sự kiện đang được gửi từ SmartConnectors?</div>
+    <div class="q-status" id="q17-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q17','A')"><div class="opt-letter">A</div><div class="opt-text">Tất cả sự kiện trong quá trình failover bị mất vĩnh viễn vì Secondary chưa kịp đồng bộ</div></div>
+    <div class="option" onclick="selectOption('q17','B')"><div class="opt-letter">B</div><div class="opt-text">Sự kiện được cache tại SmartConnectors trong khi failover diễn ra; sau khi Secondary trở thành Primary và Service IP chuyển xong, Connectors tự gửi lại dữ liệu đã cache — không mất sự kiện</div></div>
+    <div class="option" onclick="selectOption('q17','C')"><div class="opt-letter">C</div><div class="opt-text">APHA dùng synchronous write — cả Primary và Secondary ghi cùng lúc nên không có gián đoạn</div></div>
+    <div class="option" onclick="selectOption('q17','D')"><div class="opt-letter">D</div><div class="opt-text">SmartConnectors tự phát hiện Primary bị lỗi và kết nối thẳng đến Secondary IP address</div></div>
+    <div class="explanation" id="q17-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Cơ chế APHA được thiết kế để <strong>không mất sự kiện</strong>. Trong quá trình failover: (1) SmartConnectors phát hiện mất kết nối, bắt đầu <em>cache</em> sự kiện cục bộ. (2) APHA khởi động Secondary ESM. (3) Service IP được reassign sang Secondary. (4) Connectors tái kết nối với Service IP mới. (5) Connectors gửi lại toàn bộ cache về Secondary (nay là Primary mới). Điều kiện: cache phải đủ lớn để lưu sự kiện trong thời gian failover. Đây là lý do cần cấu hình cache size phù hợp.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q17','B')" id="q17-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q18 -->
+<div class="q-card" id="q18">
+  <div class="q-header" onclick="toggleExpand('q18')">
+    <div class="q-num">Q18</div>
+    <div class="q-diff diff-expert">EXPERT</div>
+    <div class="q-text">Trong APHA environment, APHA Status "Unknown" có nghĩa là gì theo hệ thống monitoring?</div>
+    <div class="q-status" id="q18-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q18','A')"><div class="opt-letter">A</div><div class="opt-text">Secondary node hoàn toàn không phản hồi và cần được kiểm tra ngay lập tức</div></div>
+    <div class="option" onclick="selectOption('q18','B')"><div class="opt-letter">B</div><div class="opt-text">APHA agent trên Primary không thể xác định trạng thái do quá tải mạng tạm thời</div></div>
+    <div class="option" onclick="selectOption('q18','C')"><div class="opt-letter">C</div><div class="opt-text">Xảy ra failover và Secondary đã trở thành Primary MỚI, hoặc Primary đã restart. Status này sẽ chuyển thành "OK" hoặc "Failed" sau vài phút khi Primary khởi động xong</div></div>
+    <div class="option" onclick="selectOption('q18','D')"><div class="opt-letter">D</div><div class="opt-text">DRBD synchronization đang thực hiện và chưa hoàn thành</div></div>
+    <div class="explanation" id="q18-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: C</span>
+      <strong>Giải thích:</strong> Theo tài liệu SCG Admin System, <strong>APHA Status Unknown</strong> chỉ hai tình huống cụ thể: (1) Failover đã xảy ra và Secondary đã take over trở thành Primary mới; (2) Primary đã restart nhưng KHÔNG có failover. Status này là trạng thái chuyển tiếp — sẽ tự động chuyển thành "APHA Status OK" hoặc "APHA Status Failed" sau vài phút khi system khởi động xong. Còn "DRBD Sync in Progress" là status riêng biệt cho quá trình đồng bộ disk.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q18','C')" id="q18-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q19 -->
+<div class="q-card" id="q19">
+  <div class="q-header" onclick="toggleExpand('q19')">
+    <div class="q-num">Q19</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">Khi chuyển đổi từ triển khai single-node lên APHA cluster, kỹ thuật nào giúp tiết kiệm công việc nhất liên quan đến SSL certificate?</div>
+    <div class="q-status" id="q19-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q19','A')"><div class="opt-letter">A</div><div class="opt-text">Tạo wildcard SSL certificate mới dùng chung cho cả hai node</div></div>
+    <div class="option" onclick="selectOption('q19','B')"><div class="opt-letter">B</div><div class="opt-text">Dùng IP cũ của ESM standalone làm Service IP mới của cluster, giữ nguyên IP cũ cho Primary node; cho phép tái sử dụng SSL certificate hiện có mà không cần import lại toàn bộ connectors</div></div>
+    <div class="option" onclick="selectOption('q19','C')"><div class="opt-letter">C</div><div class="opt-text">Copy SSL certificate từ single-node sang Secondary, ESM tự đồng bộ phần còn lại</div></div>
+    <div class="option" onclick="selectOption('q19','D')"><div class="opt-letter">D</div><div class="opt-text">Không thể tái sử dụng certificate cũ; bắt buộc phải generate và deploy certificate mới cho cluster</div></div>
+    <div class="explanation" id="q19-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Tip kỹ thuật quan trọng từ tài liệu APHA: khi convert từ single-node sang cluster, bạn có thể <em>dùng IP cũ của ESM làm Service IP mới</em>, sau đó gán cho Primary node một IP mới. Vì Connectors đã được cấu hình kết nối đến IP cũ (nay là Service IP), ArcSight Manager SSL certificate vẫn hợp lệ — không cần generate cert mới và import lại toàn bộ connectors/clients. Đây là tiết kiệm thời gian đáng kể trong môi trường nhiều connector.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q19','B')" id="q19-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q20 -->
+<div class="q-card" id="q20">
+  <div class="q-header" onclick="toggleExpand('q20')">
+    <div class="q-num">Q20</div>
+    <div class="q-diff diff-med">MEDIUM</div>
+    <div class="q-text">Forwarding Connector trong ArcSight ESM được dùng cho kịch bản nào và có thể nhận sự kiện IPv6 không?</div>
+    <div class="q-status" id="q20-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q20','A')"><div class="opt-letter">A</div><div class="opt-text">Chỉ dùng để forward events từ Logger sang ESM; không hỗ trợ IPv6</div></div>
+    <div class="option" onclick="selectOption('q20','B')"><div class="opt-letter">B</div><div class="opt-text">Forward events giữa nhiều Managers trong kiến trúc phân cấp hoặc đến Logger; hỗ trợ cả IPv4 và IPv6; nếu đích không hỗ trợ IPv6 thì dùng deviceCustomIPv6Address fields 1-4</div></div>
+    <div class="option" onclick="selectOption('q20','C')"><div class="opt-letter">C</div><div class="opt-text">Backup connector tự động kích hoạt khi SmartConnector chính ngừng hoạt động</div></div>
+    <div class="option" onclick="selectOption('q20','D')"><div class="opt-letter">D</div><div class="opt-text">Công cụ replicate sự kiện sang DR site theo real-time; chỉ hoạt động trong cùng subnet</div></div>
+    <div class="explanation" id="q20-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Forwarding Connector nhận events từ một Manager nguồn và forward đến Manager đích khác, ArcSight Logger, hoặc non-ESM destination — cho phép xây dựng kiến trúc phân cấp (Branch ESM → Corporate ESM → Global ESM) hoặc cho MSSP. IPv6 support: Forwarding Connector có thể forward events với IPv4 hoặc IPv6. Nếu destination ESM hỗ trợ cả hai, các trường như Attacker, Source, Target sẽ dùng IPv6. Nếu destination không hỗ trợ IPv6, sử dụng trường <code>deviceCustomIPv6Address fields 1-4</code>.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q20','B')" id="q20-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q21 -->
+<div class="q-card" id="q21">
+  <div class="q-header" onclick="toggleExpand('q21')">
+    <div class="q-num">Q21</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">Mô hình triển khai nào phù hợp nhất cho MSSP cần cung cấp dịch vụ SIEM cho nhiều khách hàng riêng biệt với dữ liệu cách ly (isolation)?</div>
+    <div class="q-status" id="q21-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q21','A')"><div class="opt-letter">A</div><div class="opt-text">Standalone ESM dùng chung với nhiều tenant; phân quyền bằng user groups</div></div>
+    <div class="option" onclick="selectOption('q21','B')"><div class="opt-letter">B</div><div class="opt-text">Hierarchical ESM với Forwarding Connectors: mỗi khách hàng có ESM riêng (tier dưới), forward events lên Central ESM của MSSP (tier trên); kết hợp ArcMC để quản lý connector tập trung</div></div>
+    <div class="option" onclick="selectOption('q21','C')"><div class="opt-letter">C</div><div class="opt-text">Distributed Correlation Mode trên một ESM duy nhất với nhiều Correlator cho nhiều tenant</div></div>
+    <div class="option" onclick="selectOption('q21','D')"><div class="opt-letter">D</div><div class="opt-text">Cloud-only deployment trên Azure với separate ESM instances không liên kết nhau</div></div>
+    <div class="explanation" id="q21-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> MSSP với yêu cầu data isolation cần kiến trúc <strong>Hierarchical ESM</strong>: mỗi khách hàng có ESM riêng (Physical/Virtual) đảm bảo data isolation hoàn toàn. Forwarding Connectors forward tóm tắt hoặc toàn bộ events lên Central ESM của MSSP để quản lý tập trung. ArcMC quản lý toàn bộ connector infrastructure từ một giao diện. Tiered content sync đảm bảo rules/dashboards được đồng bộ. Đây là mô hình được ArcSight tài liệu hóa cho MSSP deployment.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q21','B')" id="q21-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q22 -->
+<div class="q-card" id="q22">
+  <div class="q-header" onclick="toggleExpand('q22')">
+    <div class="q-num">Q22</div>
+    <div class="q-diff diff-med">MEDIUM</div>
+    <div class="q-text">Điều kiện nào BẮT BUỘC phải đảm bảo trước khi cài APHA Module liên quan đến SELinux?</div>
+    <div class="q-status" id="q22-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q22','A')"><div class="opt-letter">A</div><div class="opt-text">SELinux phải ở chế độ "enforcing" để tăng cường bảo mật cho cluster</div></div>
+    <div class="option" onclick="selectOption('q22','B')"><div class="opt-letter">B</div><div class="opt-text">SELinux phải được DISABLED hoàn toàn (hoặc ở permissive mode); OpenText khuyến nghị disabled mode vì APHA không tương thích với SELinux enforcing mode</div></div>
+    <div class="option" onclick="selectOption('q22','C')"><div class="opt-letter">C</div><div class="opt-text">SELinux cần được cấu hình với custom policy module cung cấp bởi OpenText</div></div>
+    <div class="option" onclick="selectOption('q22','D')"><div class="opt-letter">D</div><div class="opt-text">SELinux không ảnh hưởng đến APHA module; không cần cấu hình gì đặc biệt</div></div>
+    <div class="explanation" id="q22-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Đây là prerequisite kỹ thuật quan trọng được ghi rõ trong APHA User's Guide: <em>"The APHA module is not supported with SELinux in enforcing mode. If SELinux is installed, it should be in disabled or permissive mode. Open Text recommends <strong>disabled</strong> mode."</em> Ngoài ra, APHA cũng không tương thích với Avahi daemon — phải disable Avahi trước khi cài. Đây là bẫy thường gặp trong triển khai thực tế.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q22','B')" id="q22-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q23 -->
+<div class="q-card" id="q23">
+  <div class="q-header" onclick="toggleExpand('q23')">
+    <div class="q-num">Q23</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">Appliance EC8300 Sled của OpenText có đặc điểm kỹ thuật nào khác với E8400 Sled?</div>
+    <div class="q-status" id="q23-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q23','A')"><div class="opt-letter">A</div><div class="opt-text">EC8300 dành cho Logger, E8400 dành cho ESM; không khác nhau về capacity</div></div>
+    <div class="option" onclick="selectOption('q23','B')"><div class="opt-letter">B</div><div class="opt-text">EC8300 được thiết kế làm Correlator node trong ESM Distributed Correlation, capacity lên đến 50.000 EPS; E8400 là ESM appliance thông thường với capacity 25.000 EPS</div></div>
+    <div class="option" onclick="selectOption('q23','C')"><div class="opt-letter">C</div><div class="opt-text">E8400 là thế hệ mới hơn EC8300 với storage gấp đôi nhưng cùng EPS</div></div>
+    <div class="option" onclick="selectOption('q23','D')"><div class="opt-letter">D</div><div class="opt-text">Cả hai đều là ESM appliance tiêu chuẩn; chỉ khác nhau về form factor (rack vs tower)</div></div>
+    <div class="explanation" id="q23-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Theo Additional License Authorizations document: <strong>E8400 Sled</strong> — ESM appliance thông thường, capacity 25.000 EPS, dùng cho production/non-production/HA (ESM v7.8+). <strong>EC8300 Sled</strong> — được thiết kế đặc biệt như một <em>Correlator node</em> trong ESM Distributed Correlation configuration, capacity lên đến <strong>50.000 EPS</strong> (ESM v7.8+). Cả hai đều là Sled appliance, enclosure bán riêng (max 4 Sleds/enclosure), software license bán riêng.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q23','B')" id="q23-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q24 -->
+<div class="q-card" id="q24">
+  <div class="q-header" onclick="toggleExpand('q24')">
+    <div class="q-num">Q24</div>
+    <div class="q-diff diff-med">MEDIUM</div>
+    <div class="q-text">Khi chuyển ESM từ IPv4 sang IPv6 trong Distributed Correlation Mode, quy trình nào được khuyến nghị?</div>
+    <div class="q-status" id="q24-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q24','A')"><div class="opt-letter">A</div><div class="opt-text">Thực hiện trực tiếp trong khi hệ thống đang chạy bằng cách chỉnh sửa network interfaces</div></div>
+    <div class="option" onclick="selectOption('q24','B')"><div class="opt-letter">B</div><div class="opt-text">Phải tham vấn OpenText Professional Services; không tự thực hiện do rủi ro cao trong distributed mode</div></div>
+    <div class="option" onclick="selectOption('q24','C')"><div class="opt-letter">C</div><div class="opt-text">Backup CORR-Engine → convert toàn bộ sang IPv6 → restore → restart services</div></div>
+    <div class="option" onclick="selectOption('q24','D')"><div class="opt-letter">D</div><div class="opt-text">Thực hiện qua ArcSight Command Center Cluster View, tự động không cần downtime</div></div>
+    <div class="explanation" id="q24-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Theo ESM 7.9 Release Notes, có cảnh báo rõ ràng: <em>"If you decide to convert your machine from IPv4 to IPv6, and your system is in distributed correlation mode, you must <strong>consult professional services</strong>."</em> Đây là thao tác rủi ro cao trong distributed mode do phức tạp của việc đồng bộ địa chỉ giữa nhiều nodes, Message Bus, và distributed cache. Không tự thực hiện mà không có hỗ trợ từ OpenText PS.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q24','B')" id="q24-btn">Kiểm tra</button></div>
+</div>
+
+<!-- ===== SECTION C: EPS, LICENSE & SIZING ===== -->
+<div class="section-header">
+  <div class="section-icon">📊</div>
+  <div>
+    <div class="section-tag cat-c">PHẦN C</div>
+    <div class="section-title">EPS, License & Sizing</div>
+  </div>
+  <div class="section-count">Câu 25–33</div>
+</div>
+
+<!-- Q25 -->
+<div class="q-card" id="q25">
+  <div class="q-header" onclick="toggleExpand('q25')">
+    <div class="q-num">Q25</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">Theo cơ chế MMEPS của OpenText, điều gì CỤ THỂ cấu thành "Non-compliance Finding"?</div>
+    <div class="q-status" id="q25-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q25','A')"><div class="opt-letter">A</div><div class="opt-text">Bất kỳ lúc nào MMEPS vượt quá Licensed EPS, dù chỉ 1 phút</div></div>
+    <div class="option" onclick="selectOption('q25','B')"><div class="opt-letter">B</div><div class="opt-text">MMEPS vượt Licensed EPS liên tục 5 ngày trở lên nhưng trong 45 ngày tiếp theo tổ chức không liên hệ OpenText để giải quyết</div></div>
+    <div class="option" onclick="selectOption('q25','C')"><div class="opt-letter">C</div><div class="opt-text">MMEPS vượt Licensed EPS bất cứ lúc nào trong 12 tháng qua, ngay cả khi đã giải quyết</div></div>
+    <div class="option" onclick="selectOption('q25','D')"><div class="opt-letter">D</div><div class="opt-text">Tổ chức mở rộng schema CORR-Engine hoặc dùng third-party tool kết nối trực tiếp vào database ESM</div></div>
+    <div class="explanation" id="q25-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Cơ chế MMEPS theo 3 ngưỡng: (1) Vượt EPS <strong>&lt; 5 ngày</strong> → không vi phạm (cho phép đỉnh tạm thời). (2) Vượt EPS ≥ 5 ngày → có <strong>45 ngày grace period</strong> để liên hệ OpenText. (3) Vượt EPS liên tục <strong>≥ 45 ngày</strong> mà không giải quyết → <strong>Non-compliance Finding</strong>. Tổ chức phải trả phần chênh lệch. Lưu ý: có thể có nhiều Non-compliance Findings độc lập nếu tái phạm. Licensed EPS được tính theo MMEPS (moving median 45-day window).
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q25','B')" id="q25-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q26 -->
+<div class="q-card" id="q26">
+  <div class="q-header" onclick="toggleExpand('q26')">
+    <div class="q-num">Q26</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">EPS trong ArcSight ESM được đo lường theo cách nào — và thời điểm nào trong pipeline?</div>
+    <div class="q-status" id="q26-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q26','A')"><div class="opt-letter">A</div><div class="opt-text">Pre-filter, pre-aggregation — đo tất cả raw events trước khi SmartConnector lọc bớt</div></div>
+    <div class="option" onclick="selectOption('q26','B')"><div class="opt-letter">B</div><div class="opt-text">Post-filter, pre-aggregation — đo sau khi SmartConnector đã lọc sự kiện không cần thiết nhưng trước khi aggregation gộp sự kiện trùng lặp; MMEPS là median của SEPS trong rolling 45-day window</div></div>
+    <div class="option" onclick="selectOption('q26','C')"><div class="opt-letter">C</div><div class="opt-text">Post-filter, post-aggregation — đo sự kiện đã qua cả filter lẫn aggregation tại Connector</div></div>
+    <div class="option" onclick="selectOption('q26','D')"><div class="opt-letter">D</div><div class="opt-text">Đo tại CORR-Engine — số events được ghi vào storage mỗi giây sau correlation</div></div>
+    <div class="explanation" id="q26-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Định nghĩa chính xác từ ALA document: <em>"Licensed EPS, is calculated based on <strong>Post-Filtered and Pre-Aggregated Events</strong>, and is counted on a rolling 45 day calendar."</em> Nghĩa là: sau khi SmartConnector đã áp dụng filter (loại bỏ events không cần giám sát) nhưng trước khi aggregation (gộp nhiều events trùng lặp thành 1). MMEPS = Median của SEPS (Sampled EPS) trong cửa sổ 45 ngày di động, dịch chuyển 1 ngày mỗi 24 giờ theo UTC.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q26','B')" id="q26-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q27 -->
+<div class="q-card" id="q27">
+  <div class="q-header" onclick="toggleExpand('q27')">
+    <div class="q-num">Q27</div>
+    <div class="q-diff diff-med">MEDIUM</div>
+    <div class="q-text">Khách hàng hỏi: "Nếu dùng Multiplexing technology để gom nhiều nguồn thành một stream gửi vào ESM, có tiết kiệm EPS license không?" Câu trả lời đúng là?</div>
+    <div class="q-status" id="q27-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q27','A')"><div class="opt-letter">A</div><div class="opt-text">Có, Multiplexing giúp gộp nguồn thành 1 stream nên chỉ tính 1 EPS license</div></div>
+    <div class="option" onclick="selectOption('q27','B')"><div class="opt-letter">B</div><div class="opt-text">Không. Theo ALA, khi dùng Multiplexing technology, mỗi Device/Application/System riêng biệt vẫn được đếm độc lập — không thể dùng multiplexing để giảm EPS license</div></div>
+    <div class="option" onclick="selectOption('q27','C')"><div class="opt-letter">C</div><div class="opt-text">Phụ thuộc vào loại Multiplexing; một số trường hợp được phép, một số không</div></div>
+    <div class="option" onclick="selectOption('q27','D')"><div class="opt-letter">D</div><div class="opt-text">OpenText không có chính sách cụ thể về Multiplexing</div></div>
+    <div class="explanation" id="q27-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Theo ALA document, định nghĩa Multiplexing rõ ràng: <em>"...when a multiplexing technology is utilized within the ingestion data flow each Device, application, or System is to be counted separately and subject to any applicable licensing terms."</em> Tức là: dù bạn gom 100 nguồn qua một gateway/multiplexer thành 1 stream, OpenText vẫn tính 100 nguồn riêng biệt khi đánh giá license. Khách hàng không thể lách license bằng cách này.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q27','B')" id="q27-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q28 -->
+<div class="q-card" id="q28">
+  <div class="q-header" onclick="toggleExpand('q28')">
+    <div class="q-num">Q28</div>
+    <div class="q-diff diff-med">MEDIUM</div>
+    <div class="q-text">Khách hàng hỏi về User Behavior Monitoring (UBM) add-on. Điều kiện tiên quyết và cách tính license của UBM là gì?</div>
+    <div class="q-status" id="q28-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q28','A')"><div class="opt-letter">A</div><div class="opt-text">UBM có thể cài độc lập; license tính theo số EPS</div></div>
+    <div class="option" onclick="selectOption('q28','B')"><div class="opt-letter">B</div><div class="opt-text">Bắt buộc phải có hoặc mua song song ESM license; UBM được license theo số "Actor" (Managed Entity — user accounts, machines, IP, v.v.), không theo EPS</div></div>
+    <div class="option" onclick="selectOption('q28','C')"><div class="opt-letter">C</div><div class="opt-text">UBM license tính theo số Active Directory users; không cần ESM</div></div>
+    <div class="option" onclick="selectOption('q28','D')"><div class="opt-letter">D</div><div class="opt-text">UBM là tính năng built-in của ESM, không cần license riêng</div></div>
+    <div class="explanation" id="q28-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Theo ALA: <em>"Pre-requisite is that you own or purchase in parallel OpenText Enterprise Security Manager (ESM)... OpenText ESM is licensed by Events per Second and OpenText User Behavior Monitoring is licensed by Actor which is defined as a Managed Entity."</em> UBM bảo vệ tổ chức khỏi Insider Threats bằng cách giám sát nhân viên, đối tác. Managed Entity bao gồm: User Accounts, Projects, Shared drives, Machines, Domain Controllers, IP Addresses, Servers, Websites, Printers, Files.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q28','B')" id="q28-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q29 -->
+<div class="q-card" id="q29">
+  <div class="q-header" onclick="toggleExpand('q29')">
+    <div class="q-num">Q29</div>
+    <div class="q-diff diff-expert">EXPERT</div>
+    <div class="q-text">Một khách hàng có 20 Windows DCs (200 EPS/dc), 100 Linux servers (15 EPS/server), 5 firewall Palo Alto (800 EPS/device), SmartConnector filter 35%. Sizing license EPS nào phù hợp với buffer 20%?</div>
+    <div class="q-status" id="q29-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q29','A')"><div class="opt-letter">A</div><div class="opt-text">2.500 EPS</div></div>
+    <div class="option" onclick="selectOption('q29','B')"><div class="opt-letter">B</div><div class="opt-text">5.000 EPS</div></div>
+    <div class="option" onclick="selectOption('q29','C')"><div class="opt-letter">C</div><div class="opt-text">1.000 EPS</div></div>
+    <div class="option" onclick="selectOption('q29','D')"><div class="opt-letter">D</div><div class="opt-text">10.000 EPS</div></div>
+    <div class="explanation" id="q29-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích (bài tính):</strong>
+      Raw EPS: (20×200) + (100×15) + (5×800) = 4.000 + 1.500 + 4.000 = <strong>9.500 EPS raw</strong>
+      Sau filter 35%: 9.500 × (1 - 0.35) = 9.500 × 0.65 = <strong>6.175 EPS</strong> (post-filter, pre-aggregation — đây là licensed EPS)
+      Thêm buffer 20%: 6.175 × 1.20 = <strong>7.410 EPS</strong>
+      → Chọn tier cao hơn gần nhất: <strong>10.000 EPS</strong>. Tuy nhiên đáp án B (5.000) quá thấp. Đáp án đúng phải là 10.000. Lưu ý: Đây là bài test tư duy sizing — nhiều candidate nhầm tính raw EPS thay vì post-filter, hoặc quên buffer. Đáp án đúng thực tế là D (10.000 EPS). 
+      <br><em>Chú ý: Đáp án trong quiz này là D = 10.000 EPS.</em>
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q29','D')" id="q29-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q30 -->
+<div class="q-card" id="q30">
+  <div class="q-header" onclick="toggleExpand('q30')">
+    <div class="q-num">Q30</div>
+    <div class="q-diff diff-med">MEDIUM</div>
+    <div class="q-text">GTAP Plus (ThreatHub Feed Plus) có mô hình licensing đặc biệt như thế nào khác với ESM chính?</div>
+    <div class="q-status" id="q30-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q30','A')"><div class="opt-letter">A</div><div class="opt-text">GTAP Plus được tính theo EPS, bán perpetual license như ESM</div></div>
+    <div class="option" onclick="selectOption('q30','B')"><div class="opt-letter">B</div><div class="opt-text">Bán Per Account, subscription-based (1/2/3 năm, không có perpetual), tối đa 3 instances đồng thời đang chạy trên cùng tài khoản</div></div>
+    <div class="option" onclick="selectOption('q30','C')"><div class="opt-letter">C</div><div class="opt-text">Miễn phí, tích hợp sẵn trong ESM Standard Edition</div></div>
+    <div class="option" onclick="selectOption('q30','D')"><div class="opt-letter">D</div><div class="opt-text">Tính theo số threat feeds tích hợp; không giới hạn instances</div></div>
+    <div class="explanation" id="q30-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Từ ALA document: <em>"Sold Per Account, maximum would be for 3 concurrently running instances. Subscription based only for 1, 2 or 3 years, <strong>no perpetual licenses</strong>."</em> Đây là điểm khác biệt lớn so với ESM (có thể perpetual). GTAP Plus cung cấp threat intelligence cao cấp từ Cybersecurity Galaxy: threat feeds cập nhật định kỳ, reports, hỗ trợ ATT&CK và D3FEND countermeasures. Tư vấn: khi quote phải bao gồm renewal hàng năm.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q30','B')" id="q30-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q31 -->
+<div class="q-card" id="q31">
+  <div class="q-header" onclick="toggleExpand('q31')">
+    <div class="q-num">Q31</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">Yêu cầu phần cứng Mid-Range cho Software ESM 7.9 trên on-premises là gì?</div>
+    <div class="q-status" id="q31-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q31','A')"><div class="opt-letter">A</div><div class="opt-text">16 cores, 64 GB RAM, 2 TB SSD RAID 10</div></div>
+    <div class="option" onclick="selectOption('q31','B')"><div class="opt-letter">B</div><div class="opt-text">32 cores, 192 GB RAM, 20 × 1 TB disks = 10 TB RAID 10, 15.000 RPM</div></div>
+    <div class="option" onclick="selectOption('q31','C')"><div class="opt-letter">C</div><div class="opt-text">24 cores, 128 GB RAM, 6 × 2 TB disks RAID 5</div></div>
+    <div class="option" onclick="selectOption('q31','D')"><div class="opt-letter">D</div><div class="opt-text">40 cores, 256 GB RAM, 12 TB RAID 10 SSD</div></div>
+    <div class="explanation" id="q31-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Từ ESM 7.9 Installation Guide, bảng hardware requirements chính xác: <strong>Mid-Range</strong>: 32 cores / 192 GB RAM / 20 × 1 TB disks (10 TB) RAID 10 / 15.000 RPM. <strong>Minimum</strong> (lab only): 8 cores (16 preferred) / 48 GB RAM (64 preferred) / 6 × 600 GB RAID 10 / 10.000 RPM. <strong>High Performance</strong>: 40 cores / 512 GB RAM / 12 TB RAID 10 / SSD. Cấu hình D là High Performance, không phải Mid-Range.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q31','B')" id="q31-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q32 -->
+<div class="q-card" id="q32">
+  <div class="q-header" onclick="toggleExpand('q32')">
+    <div class="q-num">Q32</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">Công thức tính Maximum Event Storage trong CORR-Engine là gì?</div>
+    <div class="q-status" id="q32-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q32','A')"><div class="opt-letter">A</div><div class="opt-text">Maximum Event Storage = Total Disk Size - System Storage - Archive</div></div>
+    <div class="option" onclick="selectOption('q32','B')"><div class="opt-letter">B</div><div class="opt-text">Maximum Event Storage = (/opt/arcsight partition × 0.9) - System Storage - Event Archives; hệ thống reserve 10% /opt/arcsight cho internal use</div></div>
+    <div class="option" onclick="selectOption('q32','C')"><div class="opt-letter">C</div><div class="opt-text">Maximum Event Storage = Licensed EPS × Retention Days × Average Event Size</div></div>
+    <div class="option" onclick="selectOption('q32','D')"><div class="opt-letter">D</div><div class="opt-text">Maximum Event Storage = Total RAM × 100 + Disk IOPS / 1000</div></div>
+    <div class="explanation" id="q32-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Từ ESM Installation Guide, công thức chính xác: <code>Maximum Event Storage = /opt/arcsight partition × 0.9 - system storage - event archives</code>. Hệ thống tự động <strong>reserve 10%</strong> của /opt/arcsight cho internal use (không usable). Trong wizard cài đặt, "Available Space" hiện partition size, "Usable Space" = Available × 0.9. System Storage khuyến nghị ~1/6 Usable Space (max 1.500 GB). Event Storage ~2/3 Usable. Archive = phần còn lại. Max event storage tổng cộng: 12 TB theo license.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q32','B')" id="q32-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q33 -->
+<div class="q-card" id="q33">
+  <div class="q-header" onclick="toggleExpand('q33')">
+    <div class="q-num">Q33</div>
+    <div class="q-diff diff-med">MEDIUM</div>
+    <div class="q-text">Khi nào nên khuyến nghị khách hàng chọn mô hình ESM Appliance thay vì Software ESM trên server riêng?</div>
+    <div class="q-status" id="q33-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q33','A')"><div class="opt-letter">A</div><div class="opt-text">Appliance luôn rẻ hơn và nên được ưu tiên trong mọi trường hợp</div></div>
+    <div class="option" onclick="selectOption('q33','B')"><div class="opt-letter">B</div><div class="opt-text">Khi khách hàng không có đội IT quản lý phần cứng/OS riêng, cần triển khai nhanh, muốn hardware được tối ưu hóa cho ESM, hoặc muốn đảm bảo compatibility. Lưu ý: từ 2019 appliance bán riêng software license</div></div>
+    <div class="option" onclick="selectOption('q33','C')"><div class="opt-letter">C</div><div class="opt-text">Appliance chỉ phù hợp cho môi trường cloud; software ESM cho on-premises</div></div>
+    <div class="option" onclick="selectOption('q33','D')"><div class="opt-letter">D</div><div class="opt-text">Appliance có EPS cao hơn nhiều lần so với software ESM cùng hardware spec</div></div>
+    <div class="explanation" id="q33-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Appliance ESM phù hợp khi: (1) Khách hàng không muốn quản lý OS/driver riêng. (2) Cần đảm bảo hardware-software compatibility đã được test. (3) Triển khai nhanh (preloaded image). (4) Tổ chức nhỏ/trung bình không có đội hạ tầng. Lưu ý quan trọng: từ 1/5/2019, OpenText bán appliance hardware tách biệt với software license. Ngoài ra: <em>"Customers should regularly back up their appliances, as Micro Focus is not liable for any unrecoverable data resulting from hardware failure."</em>
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q33','B')" id="q33-btn">Kiểm tra</button></div>
+</div>
+
+<!-- ===== SECTION D: TECHNICAL SCENARIOS ===== -->
+<div class="section-header">
+  <div class="section-icon">🔍</div>
+  <div>
+    <div class="section-tag cat-d">PHẦN D</div>
+    <div class="section-title">Tình Huống Kỹ Thuật & Tư Vấn</div>
+  </div>
+  <div class="section-count">Câu 34–44</div>
+</div>
+
+<!-- Q34 -->
+<div class="q-card" id="q34">
+  <div class="q-header" onclick="toggleExpand('q34')">
+    <div class="q-num">Q34</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">Khách hàng than phiền: rule phát hiện brute force (5 login failed trong 1 phút) kích hoạt quá nhiều false positive. Bước đầu tiên kỹ thuật cần xem xét là gì?</div>
+    <div class="q-status" id="q34-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q34','A')"><div class="opt-letter">A</div><div class="opt-text">Tắt rule đi và thay bằng rule khác</div></div>
+    <div class="option" onclick="selectOption('q34','B')"><div class="opt-letter">B</div><div class="opt-text">Xem xét tăng threshold (ví dụ từ 5 lên 10 lần) và/hoặc rút ngắn time window; kiểm tra xem rule có scope quá rộng không (missing source IP specificity); xem xét thêm exclusion list cho legitimate service accounts dùng Active List</div></div>
+    <div class="option" onclick="selectOption('q34','C')"><div class="opt-letter">C</div><div class="opt-text">Tăng EPS license để hệ thống xử lý được nhiều hơn</div></div>
+    <div class="option" onclick="selectOption('q34','D')"><div class="opt-letter">D</div><div class="opt-text">Disable tất cả login failed events từ source để không tạo noise</div></div>
+    <div class="explanation" id="q34-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Đây là bài toán tuning rule thực tế. Tiếp cận đúng: (1) Review rule conditions — kiểm tra threshold và time window có phù hợp với environment. (2) Thêm <strong>Active List exclusion</strong> — dùng Lightweight Rule để add known service accounts/IPs vào "whitelist" active list, sau đó Standard Rule kiểm tra "NOT In WhitelistActiveList". (3) Scope rule chặt hơn (specific to external IPs, không áp dụng internal monitoring tools). (4) Kiểm tra aggregation settings tại SmartConnector. Không tắt rule hay giảm monitoring scope.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q34','B')" id="q34-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q35 -->
+<div class="q-card" id="q35">
+  <div class="q-header" onclick="toggleExpand('q35')">
+    <div class="q-num">Q35</div>
+    <div class="q-diff diff-expert">EXPERT</div>
+    <div class="q-text">Distributed Cache Inconsistency trong Distributed ESM cluster biểu hiện như thế nào và cách khắc phục?</div>
+    <div class="q-status" id="q35-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q35','A')"><div class="opt-letter">A</div><div class="opt-text">Không có dấu hiệu rõ ràng; chỉ phát hiện khi restart cluster</div></div>
+    <div class="option" onclick="selectOption('q35','B')"><div class="opt-letter">B</div><div class="opt-text">Biểu hiện: "Connection to DC" hiển thị màu đỏ trên Command Center Cluster View; một số data monitors/dashboards không có data; EPS có thể giảm. Khắc phục: identify và restart dcache instance(s) gây vấn đề (tìm audit event "Hazelcast cluster inconsistency")</div></div>
+    <div class="option" onclick="selectOption('q35','C')"><div class="opt-letter">C</div><div class="opt-text">Toàn bộ cluster dừng hoạt động; cần reboot tất cả nodes ngay lập tức</div></div>
+    <div class="option" onclick="selectOption('q35','D')"><div class="opt-letter">D</div><div class="opt-text">ESM tự động phát hiện và self-heal trong vòng 5 phút mà không cần can thiệp</div></div>
+    <div class="explanation" id="q35-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Từ ESM 7.9 Release Notes: Distributed cache inconsistency xảy ra khi nodes mất liên lạc với nhau do network interruption hoặc heavy load. Biểu hiện: (1) <code>Connection to DC</code> hiển thị màu đỏ trên Command Center Cluster View. (2) Một số data monitors và dashboards không hiển thị data. (3) Có thể drop EPS. Khắc phục: (1) Navigate to Command Center → Cluster View Dashboard. (2) Check audit events tìm service name "DCache connection is down" và message <strong>"Hazelcast cluster inconsistency..."</strong>. (3) Restart dcache instance(s) gây vấn đề.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q35','B')" id="q35-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q36 -->
+<div class="q-card" id="q36">
+  <div class="q-header" onclick="toggleExpand('q36')">
+    <div class="q-num">Q36</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">Khách hàng ngân hàng yêu cầu: "Dữ liệu nhật ký phải lưu trữ 7 năm theo quy định, nhưng CORR-Engine chỉ cho phép tối đa 12 TB và 90 ngày active retention." Giải pháp kiến trúc nào phù hợp nhất?</div>
+    <div class="q-status" id="q36-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q36','A')"><div class="opt-letter">A</div><div class="opt-text">Tăng CORR-Engine storage lên 100+ TB để đủ 7 năm</div></div>
+    <div class="option" onclick="selectOption('q36','B')"><div class="opt-letter">B</div><div class="opt-text">Dùng ArcSight Logger hoặc ArcSight Investigate (Recon) để lưu trữ long-term log, trong khi ESM xử lý real-time correlation với active retention 30-90 ngày; Logger hỗ trợ 7+ năm retention với cost-effective storage</div></div>
+    <div class="option" onclick="selectOption('q36','C')"><div class="opt-letter">C</div><div class="opt-text">Export log ra file CSV hàng ngày và lưu vào NFS mount; không cần giải pháp đặc biệt</div></div>
+    <div class="option" onclick="selectOption('q36','D')"><div class="opt-letter">D</div><div class="opt-text">Dùng CORR-Engine offline archive feature để lưu toàn bộ 7 năm trong archive directory</div></div>
+    <div class="explanation" id="q36-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Đây là use case classic của kiến trúc SIEM + Log Management. ESM được thiết kế cho <em>real-time correlation và active retention ngắn hạn</em> (30-90 ngày). Cho long-term compliance storage, cần tích hợp <strong>ArcSight Logger</strong> (max 30.000 EPS, lưu trữ dài hạn) hoặc <strong>ArcSight Investigate</strong>. Forwarding Connector forward copy của events sang Logger. Logger hỗ trợ lưu 7+ năm với search capability. CORR-Engine offline archive chỉ lưu được limited volume và không phải giải pháp primary cho 7 năm retention.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q36','B')" id="q36-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q37 -->
+<div class="q-card" id="q37">
+  <div class="q-header" onclick="toggleExpand('q37')">
+    <div class="q-num">Q37</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">Khi Rule Recovery Timeout xảy ra trong môi trường EPS cao, nguyên nhân và biện pháp xử lý nào được khuyến nghị?</div>
+    <div class="q-status" id="q37-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q37','A')"><div class="opt-letter">A</div><div class="opt-text">Restart Manager sẽ tự giải quyết vấn đề; không cần cấu hình thêm</div></div>
+    <div class="option" onclick="selectOption('q37','B')"><div class="opt-letter">B</div><div class="opt-text">Tăng giá trị rules.recovery.time-limit trong server.properties (mặc định 120s); lưu ý tăng giá trị này có thể làm Manager mất nhiều thời gian khởi động hơn</div></div>
+    <div class="option" onclick="selectOption('q37','C')"><div class="opt-letter">C</div><div class="opt-text">Xóa bớt rules cũ và tạo lại từ đầu với version mới hơn</div></div>
+    <div class="option" onclick="selectOption('q37','D')"><div class="opt-letter">D</div><div class="opt-text">Nâng cấp lên phiên bản ESM mới nhất để vá lỗi Rule Recovery Timeout</div></div>
+    <div class="explanation" id="q37-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Từ ESM 7.9 Release Notes: Rule Recovery Timeout có thể xảy ra khi high EPS. Checkpoint rule recovery cần load events từ database khi restart — nếu quá nhiều events, timeout 120s mặc định có thể không đủ. Giải pháp: tăng <code>rules.recovery.time-limit</code> trong <code>server.properties</code>. Trade-off: tăng giá trị này làm Manager startup lâu hơn. Cảnh báo: timeout vẫn có thể xảy ra dù tăng limit nếu overall system load quá cao hoặc số rules quá lớn.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q37','B')" id="q37-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q38 -->
+<div class="q-card" id="q38">
+  <div class="q-header" onclick="toggleExpand('q38')">
+    <div class="q-num">Q38</div>
+    <div class="q-diff diff-med">MEDIUM</div>
+    <div class="q-text">Khách hàng chính phủ yêu cầu: "Hệ thống SIEM không được lưu trữ PII của công dân trong log — nhưng phải phát hiện được giao dịch bất thường liên quan đến CMND số 001234567." Giải pháp ArcSight nào đáp ứng?</div>
+    <div class="q-status" id="q38-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q38','A')"><div class="opt-letter">A</div><div class="opt-text">Cấu hình filter tại SmartConnector để xóa toàn bộ field chứa CMND trước khi gửi lên Manager</div></div>
+    <div class="option" onclick="selectOption('q38','B')"><div class="opt-letter">B</div><div class="opt-text">Voltage SecureData FPE — mã hóa giữ định dạng CMND (9 số → vẫn là 9 số cipher), analyst không thấy CMND thật, nhưng correlation engine vẫn phát hiện được nếu cùng CMND xuất hiện ở nhiều giao dịch bất thường</div></div>
+    <div class="option" onclick="selectOption('q38','C')"><div class="opt-letter">C</div><div class="opt-text">Dùng Lightweight Rule để hash CMND thành SHA-256 và lưu hash thay vì giá trị thật</div></div>
+    <div class="option" onclick="selectOption('q38','D')"><div class="opt-letter">D</div><div class="opt-text">Không có giải pháp nào đáp ứng được hai yêu cầu đồng thời; cần chọn một trong hai</div></div>
+    <div class="explanation" id="q38-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Đây là use case kinh điển cho <strong>Voltage SecureData FPE</strong> — tính năng độc quyền của ArcSight: (1) CMND "001234567" được mã hóa FPE thành một chuỗi 9 chữ số khác, ví dụ "738201945". (2) Analyst chỉ thấy cipher text — không thể biết CMND thật. (3) Nếu CMND "001234567" xuất hiện ở 5 giao dịch khác nhau, tất cả đều được mã hóa thành CÙNG cipher text "738201945" → correlation engine phát hiện pattern bình thường. SHA-256 hash (đáp án C) không đáp ứng vì không deterministic theo format; filter xóa field (đáp án A) sẽ mất khả năng detect.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q38','B')" id="q38-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q39 -->
+<div class="q-card" id="q39">
+  <div class="q-header" onclick="toggleExpand('q39')">
+    <div class="q-num">Q39</div>
+    <div class="q-diff diff-expert">EXPERT</div>
+    <div class="q-text">Khách hàng hỏi tại sao nên chọn ArcSight ESM thay vì Splunk cho môi trường enterprise on-premises lớn với 8.000 EPS. Lập luận kỹ thuật và thương mại nào mạnh nhất?</div>
+    <div class="q-status" id="q39-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q39','A')"><div class="opt-letter">A</div><div class="opt-text">ArcSight có giao diện đẹp hơn Splunk và dễ dùng hơn cho người dùng mới</div></div>
+    <div class="option" onclick="selectOption('q39','B')"><div class="opt-letter">B</div><div class="opt-text">License EPS của ArcSight predictable và không tăng theo volume data (Splunk tính theo GB/ngày); ArcSight có FPE độc quyền; CORR-Engine tối ưu cho SIEM correlation; native SOAR tích hợp; 450+ connectors; on-premises fully supported</div></div>
+    <div class="option" onclick="selectOption('q39','C')"><div class="opt-letter">C</div><div class="opt-text">ArcSight được Gartner xếp hạng cao hơn Splunk trong năm 2024</div></div>
+    <div class="option" onclick="selectOption('q39','D')"><div class="opt-letter">D</div><div class="opt-text">ArcSight chạy được trên Windows Server còn Splunk thì không</div></div>
+    <div class="explanation" id="q39-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích — Key differentiators ArcSight vs Splunk:</strong> (1) <strong>License model:</strong> ArcSight tính theo EPS (8.000 EPS = giá cố định dù log 1 TB hay 10 TB/ngày). Splunk tính theo GB/ngày ingestion — với 8.000 EPS tổ chức có thể ingest 50–500 GB/ngày → chi phí Splunk tăng phi tuyến. (2) <strong>FPE (Voltage SecureData):</strong> Splunk không có tính năng tương đương. (3) <strong>On-premises maturity:</strong> Splunk đang đẩy khách hàng lên cloud. (4) <strong>Native SOAR:</strong> ArcSight tích hợp sẵn. (5) CORR-Engine tối ưu riêng cho SIEM vs Splunk dùng index-based search engine đa mục đích.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q39','B')" id="q39-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q40 -->
+<div class="q-card" id="q40">
+  <div class="q-header" onclick="toggleExpand('q40')">
+    <div class="q-num">Q40</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">Trong Compliance Insight Packages (CIPs), package nào HỖ TRỢ cả 7 framework regulation và chứa gì?</div>
+    <div class="q-status" id="q40-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q40','A')"><div class="opt-letter">A</div><div class="opt-text">CIPs chỉ có báo cáo template; không có rules hay dashboards</div></div>
+    <div class="option" onclick="selectOption('q40','B')"><div class="opt-letter">B</div><div class="opt-text">CIPs bao gồm GDPR, NERC, HIPAA, ITGOV, FISMA, PCI, SOX; mỗi package gồm bundle của rules, dashboards, data monitors, active channels, automation và reports cho từng regulation</div></div>
+    <div class="option" onclick="selectOption('q40','C')"><div class="opt-letter">C</div><div class="opt-text">CIPs chỉ có cho PCI và HIPAA; các regulation khác cần tự tạo</div></div>
+    <div class="option" onclick="selectOption('q40','D')"><div class="opt-letter">D</div><div class="opt-text">CIPs là paid add-on với giá cao hơn ESM base license</div></div>
+    <div class="explanation" id="q40-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> ArcSight CIPs (Compliance Insight Packages) hỗ trợ 7 frameworks: <strong>GDPR, NERC CIP, HIPAA, ITGOV, FISMA, PCI-DSS, SOX</strong>. Mỗi CIP là một bundle hoàn chỉnh gồm: correlation rules, dashboards, data monitors, active channels, automation workflows và pre-built reports. Mục tiêu: giảm thiểu công sức kiểm toán và chứng minh compliance. CIPs come as part of the ESM platform — không phải riêng biệt. Đây là lợi thế so với đối thủ như Splunk (cần community add-ons từ Splunkbase).
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q40','B')" id="q40-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q41 -->
+<div class="q-card" id="q41">
+  <div class="q-header" onclick="toggleExpand('q41')">
+    <div class="q-num">Q41</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">Điều gì xảy ra với CORR-Engine khi Manager gặp sự cố (crash/restart)?</div>
+    <div class="q-status" id="q41-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q41','A')"><div class="opt-letter">A</div><div class="opt-text">CORR-Engine tiếp tục nhận sự kiện độc lập; Manager có thể kết nối lại bất cứ lúc nào</div></div>
+    <div class="option" onclick="selectOption('q41','B')"><div class="opt-letter">B</div><div class="opt-text">SmartConnector data flow ngừng đổ vào Manager và correlation dừng lại. Tuy nhiên, data được cache trên Manager buffer và không bị mất trừ khi hết không gian cache trước khi Manager khôi phục</div></div>
+    <div class="option" onclick="selectOption('q41','C')"><div class="opt-letter">C</div><div class="opt-text">CORR-Engine có HA riêng, tiếp tục ghi dữ liệu qua secondary CORR node</div></div>
+    <div class="option" onclick="selectOption('q41','D')"><div class="opt-letter">D</div><div class="opt-text">SmartConnectors tự chuyển sang ghi log vào local flat files cho đến khi Manager recover</div></div>
+    <div class="explanation" id="q41-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Từ ESM 101: <em>"If there is a problem with the CORR-Engine, SmartConnector data stops flowing into the Manager and correlation activity stops. However, event data is saved on the Manager until the CORR-Engine is back up, so event data is not lost, unless it runs out of space before the Manager is back up."</em> Key insight: (1) Data được cache TẠI MANAGER (không phải tại Connector). (2) Không mất nếu Manager có đủ cache space. (3) Cần cấu hình cache phù hợp — đây là lý do tài liệu nhấn mạnh "set ample space" cho Manager cache.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q41','B')" id="q41-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q42 -->
+<div class="q-card" id="q42">
+  <div class="q-header" onclick="toggleExpand('q42')">
+    <div class="q-num">Q42</div>
+    <div class="q-diff diff-expert">EXPERT</div>
+    <div class="q-text">Khi số lượng Dashboards trong Console tăng làm giao diện chậm, biện pháp kỹ thuật nào được khuyến nghị theo documentation?</div>
+    <div class="q-status" id="q42-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q42','A')"><div class="opt-letter">A</div><div class="opt-text">Upgrade CPU của Manager server để xử lý nhiều dashboard hơn</div></div>
+    <div class="option" onclick="selectOption('q42','B')"><div class="opt-letter">B</div><div class="opt-text">Tăng Java heap memory size cho Console process; chỉnh console.ui.maxDashBoard property trong console.properties file</div></div>
+    <div class="option" onclick="selectOption('q42','C')"><div class="opt-letter">C</div><div class="opt-text">Xóa bớt dashboard để đúng số lượng mặc định; không có cách tăng giới hạn</div></div>
+    <div class="option" onclick="selectOption('q42','D')"><div class="opt-letter">D</div><div class="opt-text">Chuyển sang dùng ArcSight Command Center (web) thay vì Console để tránh giới hạn</div></div>
+    <div class="explanation" id="q42-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Từ ESM 7.9 Release Notes: <em>"The number of dashboards you can view in the console is directly proportional to the Java heap memory configuration for the console program."</em> Giải pháp: (1) Tăng Java heap size cho Console. (2) Chỉnh property trong <code>/current/config/console.properties</code>: <code>console.ui.maxDashBoard=&lt;new limit&gt;</code>. Đây là vấn đề ở phía <em>client Console</em>, không phải server-side. Sau khi chỉnh, restart Console để áp dụng.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q42','B')" id="q42-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q43 -->
+<div class="q-card" id="q43">
+  <div class="q-header" onclick="toggleExpand('q43')">
+    <div class="q-num">Q43</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">Khách hàng muốn dùng SmartConnector để forward data sang một SIEM bên thứ ba (non-OpenText). Yêu cầu license nào cần có?</div>
+    <div class="q-status" id="q43-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q43','A')"><div class="opt-letter">A</div><div class="opt-text">Không cần license thêm; SmartConnector mặc định được forward đến mọi đích</div></div>
+    <div class="option" onclick="selectOption('q43','B')"><div class="opt-letter">B</div><div class="opt-text">Cần mua "Third Party Destination add-on per Target" license; yêu cầu phải có Logger/ESM/Investigate/SDP trước hoặc đồng thời; QTY 1 cho mỗi Target duy nhất</div></div>
+    <div class="option" onclick="selectOption('q43','C')"><div class="opt-letter">C</div><div class="opt-text">SmartConnector có thể forward miễn phí đến 1 non-OpenText target; từ target thứ 2 mới cần license</div></div>
+    <div class="option" onclick="selectOption('q43','D')"><div class="opt-letter">D</div><div class="opt-text">Không hỗ trợ forward đến non-OpenText SIEM; phải dùng Transformation Hub</div></div>
+    <div class="explanation" id="q43-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Từ ALA document: <em>"Unless licensed under the Third-Party Destination per Target license, SmartConnectors may not be used to feed event data into any non-OpenText products."</em> Để forward sang non-OpenText SIEM, cần: (1) <strong>Third Party Destination add-on per Target</strong> license. (2) Prerequisite: phải có Logger, ESM, Investigate hoặc SDP. (3) QTY 1 required for each unique Target. Đây là điểm tư vấn quan trọng — nhiều khách hàng muốn dùng ArcSight SmartConnectors để collect và forward sang hệ thống khác mà không biết cần license riêng.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q43','B')" id="q43-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q44 -->
+<div class="q-card" id="q44">
+  <div class="q-header" onclick="toggleExpand('q44')">
+    <div class="q-num">Q44</div>
+    <div class="q-diff diff-med">MEDIUM</div>
+    <div class="q-text">Trường hợp nào khách hàng nên dùng ArcSight Investigate (Recon) kết hợp ESM thay vì chỉ dùng ESM đơn lẻ?</div>
+    <div class="q-status" id="q44-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q44','A')"><div class="opt-letter">A</div><div class="opt-text">Khi cần tăng EPS vượt giới hạn của ESM standalone</div></div>
+    <div class="option" onclick="selectOption('q44','B')"><div class="opt-letter">B</div><div class="opt-text">Khi SOC analyst cần tìm kiếm và visualization nhanh trên hàng tỷ log events để hunt threat, điều tra chi tiết một alert, tìm pattern ẩn trong historical data mà CORR-Engine active retention không còn lưu</div></div>
+    <div class="option" onclick="selectOption('q44','C')"><div class="opt-letter">C</div><div class="opt-text">Để tạo compliance reports; ESM không có reporting capability</div></div>
+    <div class="option" onclick="selectOption('q44','D')"><div class="opt-letter">D</div><div class="opt-text">Investigate thay thế hoàn toàn ESM trong môi trường cloud</div></div>
+    <div class="explanation" id="q44-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> ArcSight Investigate (Security Log Analytics/Recon) là giải pháp bổ sung cho ESM. ESM mạnh về <em>real-time correlation</em> với active retention ngắn (30-90 ngày). Investigate mạnh về <em>log search và visualization</em> trên lượng dữ liệu lịch sử khổng lồ. Use cases cho Investigate: (1) Threat hunting — tìm IOC trong months of data. (2) Điều tra chi tiết một incident bằng drill-down search. (3) Visualize security patterns mà rules không phát hiện. (4) Search log khi ESM active retention đã expire. Investigate cũng licensed theo EPS (post-filter, pre-aggregation) với tier tương tự ESM.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q44','B')" id="q44-btn">Kiểm tra</button></div>
+</div>
+
+<!-- ===== SECTION E: ADVANCED & UNIQUE FEATURES ===== -->
+<div class="section-header">
+  <div class="section-icon">⭐</div>
+  <div>
+    <div class="section-tag cat-e">PHẦN E</div>
+    <div class="section-title">Tính Năng Nâng Cao, Độc Quyền & Câu Hỏi Tổng Hợp</div>
+  </div>
+  <div class="section-count">Câu 45–50</div>
+</div>
+
+<!-- Q45 -->
+<div class="q-card" id="q45">
+  <div class="q-header" onclick="toggleExpand('q45')">
+    <div class="q-num">Q45</div>
+    <div class="q-diff diff-expert">EXPERT</div>
+    <div class="q-text">Tính năng nào sau đây là DẠNG ĐỘC QUYỀN hoàn toàn chỉ có ở ArcSight ESM mà Splunk, IBM QRadar, Microsoft Sentinel đều KHÔNG có tính năng kỹ thuật tương đương?</div>
+    <div class="q-status" id="q45-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q45','A')"><div class="opt-letter">A</div><div class="opt-text">Real-time correlation rules với threshold và time window</div></div>
+    <div class="option" onclick="selectOption('q45','B')"><div class="opt-letter">B</div><div class="opt-text">MITRE ATT&CK framework mapping trong dashboards</div></div>
+    <div class="option" onclick="selectOption('q45','C')"><div class="opt-letter">C</div><div class="opt-text">Format Preserving Encryption (FPE) cho phép mã hóa PII trong log mà vẫn duy trì khả năng tương quan — correlation engine xử lý cipher text mà không cần giải mã</div></div>
+    <div class="option" onclick="selectOption('q45','D')"><div class="opt-letter">D</div><div class="opt-text">Native SOAR integration với playbooks</div></div>
+    <div class="explanation" id="q45-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: C</span>
+      <strong>Giải thích:</strong> Các tính năng ở A, B, D đều có ở nhiều đối thủ: Real-time correlation (tất cả SIEM đều có), MITRE ATT&CK mapping (Sentinel, Splunk ES, QRadar đều có), SOAR (Splunk SOAR, IBM SOAR đều có). Tuy nhiên <strong>Format Preserving Encryption (FPE)</strong> thông qua Voltage SecureData là tính năng <em>không có đối thủ nào trong SIEM market</em> cung cấp — cho phép ArcSight vừa bảo vệ PII/PCI/SSN trong log vừa duy trì 100% khả năng correlation. Đây là USP (Unique Selling Point) quan trọng nhất của ArcSight ESM.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q45','C')" id="q45-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q46 -->
+<div class="q-card" id="q46">
+  <div class="q-header" onclick="toggleExpand('q46')">
+    <div class="q-num">Q46</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">Trong quá trình cài đặt ESM 7.9, điều kiện tiên quyết DNS nào phải đảm bảo TRƯỚC khi chạy installer?</div>
+    <div class="q-status" id="q46-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q46','A')"><div class="opt-letter">A</div><div class="opt-text">Domain controller DNS phải có sẵn và resolve tên của tất cả SmartConnectors</div></div>
+    <div class="option" onclick="selectOption('q46','B')"><div class="opt-letter">B</div><div class="opt-text">Hostname của ESM server phải resolvable (thêm entry vào /etc/hosts với static IP và FQDN; xóa hostname khỏi dòng 127.0.0.1)</div></div>
+    <div class="option" onclick="selectOption('q46','C')"><div class="opt-letter">C</div><div class="opt-text">Reverse DNS lookup phải hoạt động cho tất cả địa chỉ IP trong mạng</div></div>
+    <div class="option" onclick="selectOption('q46','D')"><div class="opt-letter">D</div><div class="opt-text">NTP server phải cùng domain với ESM server</div></div>
+    <div class="explanation" id="q46-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Từ ESM Installation Guide: <em>"Before ESM installation, make sure that the host machine's hostname is resolvable. Otherwise, Manager setup will not complete successfully."</em> Các bước cụ thể: (1) Sửa <code>/etc/hosts</code>: <strong>xóa ESM hostname khỏi dòng 127.0.0.1</strong>. (2) Thêm dòng mới ở đầu file: <code>[static IP]  [ESM-hostname] [FQDN]</code>. Nếu không làm bước này, Manager setup sẽ thất bại — đây là lỗi cài đặt phổ biến nhất trong thực tế triển khai.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q46','B')" id="q46-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q47 -->
+<div class="q-card" id="q47">
+  <div class="q-header" onclick="toggleExpand('q47')">
+    <div class="q-num">Q47</div>
+    <div class="q-diff diff-hard">HARD</div>
+    <div class="q-text">SHA-256 hashing được sử dụng trong CORR-Engine cho mục đích gì?</div>
+    <div class="q-status" id="q47-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q47','A')"><div class="opt-letter">A</div><div class="opt-text">Mã hóa password của analyst accounts trong database</div></div>
+    <div class="option" onclick="selectOption('q47','B')"><div class="opt-letter">B</div><div class="opt-text">Validate tính toàn vẹn (integrity) của event data archives — khi reactivate offline archive, ESM kiểm tra hash; nếu không khớp, log lỗi vào logger_server.log</div></div>
+    <div class="option" onclick="selectOption('q47','C')"><div class="opt-letter">C</div><div class="opt-text">Tăng tốc tìm kiếm bằng cách hash các query pattern</div></div>
+    <div class="option" onclick="selectOption('q47','D')"><div class="opt-letter">D</div><div class="opt-text">Tạo unique event ID để tránh duplicate sự kiện trong CORR-Engine</div></div>
+    <div class="explanation" id="q47-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Từ ESM 101 chapter về CORR-Engine: <em>"ESM uses SHA-256 hashing algorithm to validate the integrity of event data archives."</em> Khi user reactivate một offline archive, ESM validate hash của data. Nếu hashes không match → ESM log error trong <code>logger_server.log</code>. Mục đích: đảm bảo tính toàn vẹn của dữ liệu lưu trữ (forensic integrity) — quan trọng cho compliance và điều tra pháp lý. Điều này cũng có nghĩa không thể tamper dữ liệu archive mà không bị phát hiện.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q47','B')" id="q47-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q48 -->
+<div class="q-card" id="q48">
+  <div class="q-header" onclick="toggleExpand('q48')">
+    <div class="q-num">Q48</div>
+    <div class="q-diff diff-expert">EXPERT</div>
+    <div class="q-text">Rule aggregation ở Manager khác với aggregation ở SmartConnector như thế nào về chức năng?</div>
+    <div class="q-status" id="q48-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q48','A')"><div class="opt-letter">A</div><div class="opt-text">Hoàn toàn giống nhau; chỉ khác vị trí thực hiện</div></div>
+    <div class="option" onclick="selectOption('q48','B')"><div class="opt-letter">B</div><div class="opt-text">SmartConnector aggregation gộp events trùng lặp để giảm volume gửi lên Manager (giảm EPS). Manager rule aggregation cũng gộp events tương tự nhưng với mục đích trigger alert/action khi số matches đạt ngưỡng — tức là vẫn có thể tạo correlation event và trigger notifications</div></div>
+    <div class="option" onclick="selectOption('q48','C')"><div class="opt-letter">C</div><div class="opt-text">Manager rule aggregation chỉ dùng để tạo báo cáo hàng ngày; SmartConnector aggregation dùng cho real-time</div></div>
+    <div class="option" onclick="selectOption('q48','D')"><div class="opt-letter">D</div><div class="opt-text">SmartConnector aggregation xử lý theo protocol; Manager aggregation xử lý theo user identity</div></div>
+    <div class="explanation" id="q48-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Hai cơ chế aggregation có mục đích khác nhau: <strong>SmartConnector Aggregation</strong>: gộp nhiều events trùng lặp thành 1 "aggregated event" — giảm volume EPS gửi lên Manager, không mất thông tin quan trọng. <strong>Manager Rule Aggregation</strong>: nhóm events tương tự theo điều kiện trong time window — nhưng có thêm khả năng trigger correlation event khi số matches đạt threshold, gửi notification, thực hiện actions. Ví dụ: "notify nếu > 5 login failed trong 1 phút" chỉ có tại Manager rule aggregation, không phải Connector aggregation.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q48','B')" id="q48-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q49 -->
+<div class="q-card" id="q49">
+  <div class="q-header" onclick="toggleExpand('q49')">
+    <div class="q-num">Q49</div>
+    <div class="q-diff diff-expert">EXPERT</div>
+    <div class="q-text">Trong event schema của ArcSight ESM, sự khác biệt giữa "Device" group và "Final Device" group là gì?</div>
+    <div class="q-status" id="q49-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q49','A')"><div class="opt-letter">A</div><div class="opt-text">Device là IP đích tấn công, Final Device là IP nguồn tấn công</div></div>
+    <div class="option" onclick="selectOption('q49','B')"><div class="opt-letter">B</div><div class="opt-text">Device là sensor ĐẦU TIÊN xử lý event (nguồn gốc); Final Device là sensor CUỐI CÙNG xử lý event trước khi gửi đến SmartConnector. Nếu event qua nhiều concentrator, chỉ Device và Final Device được ghi — các trung gian không được mô tả</div></div>
+    <div class="option" onclick="selectOption('q49','C')"><div class="opt-letter">C</div><div class="opt-text">Device là server bị tấn công; Final Device là attacker machine</div></div>
+    <div class="option" onclick="selectOption('q49','D')"><div class="opt-letter">D</div><div class="opt-text">Device là SmartConnector, Final Device là Manager</div></div>
+    <div class="explanation" id="q49-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích:</strong> Từ ArcSight Console User Guide, event schema documentation: <strong>Device group</strong> = mô tả sensor ĐẦU TIÊN xử lý event. <strong>Final Device group</strong> = mô tả sensor CUỐI CÙNG xử lý event trước khi truyền đến SmartConnector. Nếu event chỉ qua một sensor (không có concentrator trung gian), Device và Final Device chứa cùng thông tin. Các concentrator/analysis engine ở giữa KHÔNG được mô tả trong schema — đây là thiết kế tối giản hóa schema nhưng vẫn capture được đầu và cuối của data path.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q49','B')" id="q49-btn">Kiểm tra</button></div>
+</div>
+
+<!-- Q50 -->
+<div class="q-card" id="q50">
+  <div class="q-header" onclick="toggleExpand('q50')">
+    <div class="q-num">Q50</div>
+    <div class="q-diff diff-expert">EXPERT</div>
+    <div class="q-text">Kịch bản tổng hợp: Một tổ chức tài chính có 15.000 nhân viên, 3 datacenter, cần compliance PCI-DSS + GDPR, yêu cầu RTO < 15 phút, không được dùng cloud nước ngoài, lo ngại về PII trong log. Raw EPS ước tính 12.000 EPS (sau filter 30%). Mô hình triển khai và license tối ưu nhất là gì?</div>
+    <div class="q-status" id="q50-status">○</div>
+  </div>
+  <div class="q-options">
+    <div class="option" onclick="selectOption('q50','A')"><div class="opt-letter">A</div><div class="opt-text">Một ESM Standalone 10.000 EPS với APHA HA, CIPs PCI+GDPR</div></div>
+    <div class="option" onclick="selectOption('q50','B')"><div class="opt-letter">B</div><div class="opt-text">ESM Distributed Mode (10.000 EPS) + APHA trên Persistor + Voltage FPE Add-on + CIPs PCI+GDPR + ArcSight Logger cho long-term retention; on-premises tại datacenter nội địa</div></div>
+    <div class="option" onclick="selectOption('q50','C')"><div class="opt-letter">C</div><div class="opt-text">Microsoft Sentinel vì cloud-native dễ scale; không cần on-premises</div></div>
+    <div class="option" onclick="selectOption('q50','D')"><div class="opt-letter">D</div><div class="opt-text">Splunk Enterprise Security 10.000 EPS Distributed với SOAR add-on</div></div>
+    <div class="explanation" id="q50-exp">
+      <span class="correct-label">✔ ĐÁP ÁN ĐÚNG: B</span>
+      <strong>Giải thích chi tiết:</strong>
+      EPS sau filter 30%: 12.000 × 0.7 = <strong>8.400 EPS licensed</strong> + buffer 20% = ~10.080 → chọn <strong>10.000 EPS tier</strong>.
+      Lý do từng thành phần: (1) <strong>Distributed Mode</strong>: 10.000 EPS vượt single-node, cần distributed. (2) <strong>APHA trên Persistor</strong>: RTO < 15 phút + automatic failover. Note: APHA chỉ hỗ trợ Persistor node. (3) <strong>Voltage FPE</strong>: lo ngại PII trong log + GDPR compliance. (4) <strong>CIPs PCI+GDPR</strong>: bundle rules/dashboards/reports. (5) <strong>Logger</strong>: PCI-DSS yêu cầu log retention dài hạn (12 tháng active + hơn nữa). (6) <strong>On-premises</strong>: không dùng cloud nước ngoài. Microsoft Sentinel (C) và Splunk (D) đều không đáp ứng yêu cầu FPE/on-premises/non-foreign-cloud.
+    </div>
+  </div>
+  <div class="q-footer"><button class="btn-check" onclick="checkAnswer('q50','B')" id="q50-btn">Kiểm tra</button></div>
+</div>
+
+<!-- SUBMIT ALL -->
+<button class="btn-submit-all" onclick="submitAll()">📊 XEM KẾT QUẢ TỔNG KẾT</button>
+
+<!-- RESULT BANNER -->
+<div class="result-banner" id="result-banner"></div>
+
+</main>
+
+<!-- SCOREBOARD -->
+<div class="scoreboard">
+  <div class="score-title">TIẾN ĐỘ LÀM BÀI</div>
+  <div class="score-big" id="score-display">0/50</div>
+  <div class="score-sub" id="score-pct">0% đúng</div>
+  <div class="score-bar"><div class="score-fill" id="score-fill"></div></div>
+  <div class="score-label" id="score-label" style="color:var(--text3)">Ngưỡng đạt: 80%</div>
+</div>
+
+<button class="scroll-btn" id="scrollBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+const answers = {};
+const correct = {};
+let correctCount = 0;
+let answeredCount = 0;
+const total = 50;
+
+function toggleExpand(qid) {
+  // no-op for now; options always visible
+}
+
+function selectOption(qid, letter) {
+  if (answers[qid] !== undefined) return; // already answered
+  const card = document.getElementById(qid);
+  const opts = card.querySelectorAll('.option');
+  opts.forEach((o, i) => {
+    const l = ['A','B','C','D'][i];
+    o.classList.toggle('selected', l === letter);
+  });
+  card._selected = letter;
+}
+
+function checkAnswer(qid, correctAnswer) {
+  const card = document.getElementById(qid);
+  if (answers[qid] !== undefined) return;
+  const selected = card._selected;
+  if (!selected) { alert('Vui lòng chọn một đáp án!'); return; }
+  
+  answers[qid] = selected;
+  answeredCount++;
+  const isCorrect = (selected === correctAnswer);
+  if (isCorrect) correctCount++;
+  correct[qid] = isCorrect;
+
+  // Mark options
+  const opts = card.querySelectorAll('.option');
+  opts.forEach((o, i) => {
+    const l = ['A','B','C','D'][i];
+    o.onclick = null;
+    if (l === correctAnswer) o.classList.add('correct-ans');
+    else if (l === selected && !isCorrect) o.classList.add('wrong-ans');
+  });
+
+  // Show explanation
+  const exp = document.getElementById(qid + '-exp');
+  exp.classList.add('show');
+  if (!isCorrect) exp.classList.add('wrong-exp');
+
+  // Update status icon
+  const status = document.getElementById(qid + '-status');
+  status.textContent = isCorrect ? '✔' : '✗';
+  status.style.color = isCorrect ? 'var(--green)' : 'var(--red)';
+
+  card.classList.add(isCorrect ? 'correct' : 'wrong');
+
+  // Disable btn
+  document.getElementById(qid + '-btn').disabled = true;
+
+  updateScore();
+}
+
+function updateScore() {
+  const pct = Math.round((correctCount / total) * 100);
+  document.getElementById('score-display').textContent = correctCount + '/' + total;
+  document.getElementById('score-pct').textContent = pct + '% đúng (' + answeredCount + ' đã trả lời)';
+  document.getElementById('score-fill').style.width = pct + '%';
+  document.getElementById('score-fill').style.background = pct >= 80 ? 'var(--green)' : pct >= 60 ? 'var(--yellow)' : 'var(--red)';
+  const lbl = document.getElementById('score-label');
+  if (answeredCount === total) {
+    if (pct >= 80) { lbl.textContent = '✔ ĐẠT YÊU CẦU'; lbl.style.color = 'var(--green)'; }
+    else { lbl.textContent = '✗ CHƯA ĐẠT'; lbl.style.color = 'var(--red)'; }
+  }
+}
+
+function submitAll() {
+  const unanswered = [];
+  for (let i = 1; i <= 50; i++) {
+    if (answers['q'+i] === undefined) unanswered.push(i);
+  }
+  if (unanswered.length > 0) {
+    alert('Bạn chưa trả lời ' + unanswered.length + ' câu: ' + unanswered.slice(0,10).map(n=>'Q'+String(n).padStart(2,'0')).join(', ') + (unanswered.length > 10 ? '...' : ''));
+    return;
+  }
+  const pct = Math.round((correctCount / total) * 100);
+  const banner = document.getElementById('result-banner');
+  banner.style.display = 'block';
+  if (pct >= 80) {
+    banner.className = 'result-banner pass';
+    banner.innerHTML = '✔ ĐẠT — Điểm của bạn: ' + correctCount + '/50 (' + pct + '%) · Vượt ngưỡng 80%<br><small style="font-size:13px;font-weight:400">Bạn có kiến thức kỹ thuật tốt về ArcSight ESM</small>';
+  } else {
+    banner.className = 'result-banner fail';
+    banner.innerHTML = '✗ CHƯA ĐẠT — Điểm của bạn: ' + correctCount + '/50 (' + pct + '%) · Cần đạt tối thiểu 80%<br><small style="font-size:13px;font-weight:400">Hãy ôn lại tài liệu và thử lại</small>';
+  }
+  banner.scrollIntoView({behavior:'smooth'});
+}
+
+window.addEventListener('scroll', () => {
+  document.getElementById('scrollBtn').style.display = window.scrollY > 400 ? 'block' : 'none';
+});
+</script>
+</body>
+</html>

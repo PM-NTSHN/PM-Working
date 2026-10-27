@@ -1,0 +1,1840 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ArcSight ESM – Nghiên Cứu Toàn Diện | OpenText SIEM</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0e1a;
+    --bg2: #0f1629;
+    --bg3: #151d35;
+    --surface: #1a2340;
+    --surface2: #1e2a4a;
+    --border: #2a3a60;
+    --accent: #00d4ff;
+    --accent2: #ff6b35;
+    --accent3: #7c3aed;
+    --green: #00ff88;
+    --yellow: #ffd700;
+    --red: #ff4757;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --text3: #64748b;
+    --heading-font: 'Bebas Neue', sans-serif;
+    --body-font: 'IBM Plex Sans', sans-serif;
+    --mono-font: 'IBM Plex Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--body-font);
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* HERO */
+  .hero {
+    background: linear-gradient(135deg, #050810 0%, #0a0e1a 40%, #0f1629 100%);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    padding: 80px 40px 60px;
+    text-align: center;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,212,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(0,212,255,0.04) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0,212,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .hero-badge {
+    display: inline-block;
+    font-family: var(--mono-font);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(0,212,255,0.1);
+    border: 1px solid rgba(0,212,255,0.3);
+    padding: 5px 16px;
+    border-radius: 2px;
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-family: var(--heading-font);
+    font-size: clamp(48px, 8vw, 96px);
+    letter-spacing: 4px;
+    line-height: 1;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .hero h1 span { color: var(--accent); }
+  .hero-sub {
+    font-size: 18px;
+    color: var(--text2);
+    max-width: 700px;
+    margin: 20px auto 0;
+    font-weight: 300;
+  }
+  .hero-meta {
+    margin-top: 30px;
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .hero-meta-item {
+    font-family: var(--mono-font);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 1px;
+  }
+  .hero-meta-item span { color: var(--accent); }
+
+  /* NAV */
+  .toc-nav {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    overflow-x: auto;
+  }
+  .toc-nav ul {
+    display: flex;
+    list-style: none;
+    min-width: max-content;
+    padding: 0 20px;
+  }
+  .toc-nav a {
+    display: block;
+    color: var(--text2);
+    text-decoration: none;
+    font-family: var(--mono-font);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 14px 14px;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .toc-nav a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+
+  /* LAYOUT */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 30px;
+  }
+
+  /* SECTIONS */
+  .section {
+    padding: 70px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .section:last-child { border-bottom: none; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .section-num {
+    font-family: var(--mono-font);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    background: rgba(0,212,255,0.08);
+    border: 1px solid rgba(0,212,255,0.2);
+    padding: 4px 10px;
+    letter-spacing: 2px;
+  }
+  .section-title {
+    font-family: var(--heading-font);
+    font-size: clamp(28px, 4vw, 44px);
+    letter-spacing: 2px;
+    color: #fff;
+  }
+
+  h3 {
+    font-family: var(--body-font);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 32px 0 12px;
+    padding-left: 12px;
+    border-left: 3px solid var(--accent);
+  }
+  h4 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--yellow);
+    margin: 20px 0 8px;
+  }
+
+  p { margin-bottom: 14px; color: var(--text2); }
+  strong { color: var(--text); font-weight: 600; }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px;
+    position: relative;
+    transition: all 0.25s;
+  }
+  .card:hover {
+    border-color: var(--accent);
+    background: var(--surface2);
+    transform: translateY(-2px);
+  }
+  .card-icon {
+    font-size: 28px;
+    margin-bottom: 12px;
+  }
+  .card-title {
+    font-weight: 700;
+    font-size: 15px;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+  .card p { font-size: 13px; margin: 0; }
+
+  /* FEATURE TABLE */
+  .feature-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 13px; }
+  .feature-table th {
+    background: var(--surface2);
+    color: var(--accent);
+    font-family: var(--mono-font);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 12px 16px;
+    text-align: left;
+    border: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .feature-table td {
+    padding: 10px 16px;
+    border: 1px solid var(--border);
+    color: var(--text2);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .feature-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+  .feature-table tr:hover td { background: rgba(0,212,255,0.04); }
+  .check { color: var(--green); font-weight: 700; }
+  .cross { color: var(--red); }
+  .partial { color: var(--yellow); }
+  .td-label { color: var(--text); font-weight: 600; }
+
+  /* ARCH DIAGRAM */
+  .arch-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 28px;
+    margin: 20px 0;
+  }
+  .arch-layer {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .arch-layer-label {
+    font-family: var(--mono-font);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text3);
+    min-width: 120px;
+  }
+  .arch-component {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    padding: 8px 14px;
+    font-size: 12px;
+    font-family: var(--mono-font);
+    color: var(--text);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+  .arch-component.highlight { border-color: var(--accent); color: var(--accent); }
+  .arch-component.highlight2 { border-color: var(--accent2); color: var(--accent2); }
+  .arch-arrow {
+    color: var(--text3);
+    font-size: 18px;
+    flex: none;
+  }
+  .arch-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 12px 0;
+  }
+
+  /* DEPLOY MODELS */
+  .deploy-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    margin: 20px 0;
+  }
+  .deploy-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px;
+    position: relative;
+  }
+  .deploy-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+  .deploy-card.type-standalone::before { background: var(--accent); }
+  .deploy-card.type-distributed::before { background: var(--accent2); }
+  .deploy-card.type-ha::before { background: var(--green); }
+  .deploy-card.type-cloud::before { background: var(--accent3); }
+  .deploy-card.type-hierarchical::before { background: var(--yellow); }
+  .deploy-badge {
+    font-family: var(--mono-font);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin-bottom: 10px;
+    display: inline-block;
+  }
+  .deploy-badge.standalone { background: rgba(0,212,255,0.15); color: var(--accent); }
+  .deploy-badge.distributed { background: rgba(255,107,53,0.15); color: var(--accent2); }
+  .deploy-badge.ha { background: rgba(0,255,136,0.15); color: var(--green); }
+  .deploy-badge.cloud { background: rgba(124,58,237,0.15); color: #a78bfa; }
+  .deploy-badge.hierarchical { background: rgba(255,215,0,0.15); color: var(--yellow); }
+  .deploy-title {
+    font-weight: 700;
+    font-size: 16px;
+    color: #fff;
+    margin-bottom: 10px;
+  }
+  .deploy-card p { font-size: 13px; }
+  .deploy-card ul { padding-left: 20px; color: var(--text2); font-size: 13px; }
+  .deploy-card ul li { margin-bottom: 5px; }
+
+  /* EPS BOX */
+  .eps-box {
+    background: linear-gradient(135deg, rgba(0,212,255,0.05), rgba(124,58,237,0.05));
+    border: 1px solid rgba(0,212,255,0.2);
+    padding: 28px;
+    margin: 20px 0;
+  }
+  .eps-formula {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    font-family: var(--mono-font);
+    font-size: 14px;
+    padding: 16px 20px;
+    color: var(--green);
+    margin: 14px 0;
+    word-break: break-all;
+  }
+
+  /* SIZING TABLE */
+  .sizing-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 16px 0; }
+  .sizing-table th {
+    background: var(--bg3);
+    color: var(--accent);
+    font-family: var(--mono-font);
+    font-size: 11px;
+    letter-spacing: 1px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    text-align: left;
+  }
+  .sizing-table td {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    color: var(--text2);
+    vertical-align: top;
+  }
+  .sizing-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+  .tier-label { color: var(--accent2); font-weight: 700; }
+
+  /* COMPLIANCE GRID */
+  .badge-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .badge {
+    font-family: var(--mono-font);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 14px;
+    border: 1px solid;
+    letter-spacing: 1px;
+  }
+  .badge-blue { border-color: var(--accent); color: var(--accent); background: rgba(0,212,255,0.08); }
+  .badge-orange { border-color: var(--accent2); color: var(--accent2); background: rgba(255,107,53,0.08); }
+  .badge-green { border-color: var(--green); color: var(--green); background: rgba(0,255,136,0.08); }
+  .badge-yellow { border-color: var(--yellow); color: var(--yellow); background: rgba(255,215,0,0.08); }
+
+  /* PROS BOX */
+  .pros-list {
+    display: grid;
+    gap: 12px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+  .pro-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 14px 16px;
+    background: rgba(0,255,136,0.04);
+    border: 1px solid rgba(0,255,136,0.15);
+  }
+  .pro-icon { color: var(--green); font-size: 16px; flex: none; margin-top: 2px; }
+  .pro-text { font-size: 13px; color: var(--text2); }
+  .pro-text strong { color: var(--text); }
+
+  /* MARKET RATING */
+  .rating-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+  .rating-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px;
+    text-align: center;
+  }
+  .rating-num {
+    font-family: var(--heading-font);
+    font-size: 52px;
+    letter-spacing: 2px;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .rating-label {
+    font-family: var(--mono-font);
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--text3);
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+  .rating-desc { font-size: 12px; color: var(--text2); margin-top: 10px; }
+  .stars { color: var(--yellow); font-size: 18px; margin-top: 6px; }
+
+  /* CALLOUT */
+  .callout {
+    border-left: 4px solid var(--accent);
+    background: rgba(0,212,255,0.05);
+    padding: 16px 20px;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+  .callout.warn { border-left-color: var(--yellow); background: rgba(255,215,0,0.05); }
+  .callout.success { border-left-color: var(--green); background: rgba(0,255,136,0.04); }
+  .callout.danger { border-left-color: var(--red); background: rgba(255,71,87,0.05); }
+
+  /* REFERENCES */
+  .ref-list { list-style: none; padding: 0; }
+  .ref-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 13px;
+  }
+  .ref-list li:last-child { border-bottom: none; }
+  .ref-list a {
+    color: var(--accent);
+    text-decoration: none;
+    font-family: var(--mono-font);
+    font-size: 12px;
+  }
+  .ref-list a:hover { text-decoration: underline; }
+  .ref-title { color: var(--text); font-weight: 600; margin-bottom: 2px; }
+
+  /* QUOTE */
+  .quote-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent2);
+    padding: 20px 24px;
+    margin: 20px 0;
+    font-style: italic;
+    color: var(--text2);
+    font-size: 14px;
+  }
+  .quote-block cite {
+    display: block;
+    margin-top: 10px;
+    font-style: normal;
+    font-size: 12px;
+    color: var(--text3);
+    font-family: var(--mono-font);
+  }
+
+  /* SCROLL TOP */
+  .scroll-top {
+    position: fixed;
+    bottom: 30px; right: 30px;
+    background: var(--accent);
+    color: #000;
+    border: none;
+    width: 40px; height: 40px;
+    font-size: 18px;
+    cursor: pointer;
+    font-weight: 900;
+    z-index: 999;
+    display: none;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 30px;
+    text-align: center;
+    font-family: var(--mono-font);
+    font-size: 11px;
+    color: var(--text3);
+    letter-spacing: 1px;
+  }
+  footer span { color: var(--accent); }
+
+  /* UTILS */
+  .mt-20 { margin-top: 20px; }
+  .mt-30 { margin-top: 30px; }
+  ul.styled { padding-left: 20px; color: var(--text2); }
+  ul.styled li { margin-bottom: 7px; font-size: 14px; }
+  ol.styled { padding-left: 24px; color: var(--text2); }
+  ol.styled li { margin-bottom: 8px; font-size: 14px; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  @media (max-width: 700px) { .two-col { grid-template-columns: 1fr; } .hero { padding: 50px 20px 40px; } .container { padding: 0 16px; } }
+
+  .highlight-box {
+    background: linear-gradient(135deg, rgba(124,58,237,0.08), rgba(0,212,255,0.06));
+    border: 1px solid rgba(124,58,237,0.25);
+    padding: 24px;
+    margin: 20px 0;
+  }
+
+  /* COMPONENT DIAGRAM */
+  .comp-diagram {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin: 20px 0;
+    align-items: center;
+  }
+  .comp-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    width: 100%;
+    max-width: 860px;
+  }
+  .comp-box {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    text-align: center;
+    font-family: var(--mono-font);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .comp-box.blue { border-color: var(--accent); color: var(--accent); background: rgba(0,212,255,0.06); }
+  .comp-box.orange { border-color: var(--accent2); color: var(--accent2); background: rgba(255,107,53,0.06); }
+  .comp-box.green { border-color: var(--green); color: var(--green); background: rgba(0,255,136,0.06); }
+  .comp-box.purple { border-color: #a78bfa; color: #a78bfa; background: rgba(167,139,250,0.06); }
+  .comp-arrow-v {
+    text-align: center;
+    color: var(--text3);
+    font-size: 20px;
+    line-height: 1;
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-badge">Tài Liệu Nghiên Cứu Toàn Diện · 2026</div>
+  <h1>ArcSight <span>ESM</span></h1>
+  <div class="hero-sub">OpenText Enterprise Security Manager — Giải Pháp SIEM Hàng Đầu Thế Giới</div>
+  <div class="hero-meta">
+    <div class="hero-meta-item">Phiên bản: <span>7.9 (Nov 2025)</span></div>
+    <div class="hero-meta-item">Nhà sản xuất: <span>OpenText Corporation</span></div>
+    <div class="hero-meta-item">Hãng gốc: <span>ArcSight / Micro Focus / HP</span></div>
+    <div class="hero-meta-item">Loại: <span>SIEM + SOAR Enterprise</span></div>
+  </div>
+</div>
+
+<!-- STICKY NAV -->
+<nav class="toc-nav">
+  <ul>
+    <li><a href="#s1">01. Giới Thiệu</a></li>
+    <li><a href="#s2">02. Nhu Cầu & Thị Trường</a></li>
+    <li><a href="#s3">03. Tính Năng Chi Tiết</a></li>
+    <li><a href="#s4">04. Kiến Trúc & Triển Khai</a></li>
+    <li><a href="#s5">05. EPS & License</a></li>
+    <li><a href="#s6">06. Sizing</a></li>
+    <li><a href="#s7">07. Yêu Cầu Hệ Thống</a></li>
+    <li><a href="#s8">08. So Sánh Đối Thủ</a></li>
+    <li><a href="#s9">09. Điểm Mạnh</a></li>
+    <li><a href="#s10">10. Lợi Ích</a></li>
+    <li><a href="#s11">11. Xếp Hạng</a></li>
+    <li><a href="#s12">12. Tài Liệu Tham Chiếu</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- SECTION 1: INTRODUCTION -->
+<section class="section" id="s1">
+<div class="container">
+  <div class="section-header">
+    <div class="section-num">01</div>
+    <h2 class="section-title">Giới Thiệu OpenText & ArcSight ESM</h2>
+  </div>
+
+  <h3>1.1 Về OpenText Corporation</h3>
+  <p><strong>OpenText Corporation</strong> là công ty phần mềm doanh nghiệp hàng đầu thế giới, có trụ sở tại Waterloo, Ontario, Canada. OpenText chuyên cung cấp các giải pháp quản lý thông tin doanh nghiệp (Enterprise Information Management - EIM), bảo mật thông tin, và phân tích dữ liệu cho các tổ chức lớn toàn cầu. Thông qua việc mua lại Micro Focus vào năm 2023, OpenText đã tiếp quản toàn bộ dòng sản phẩm ArcSight, mở rộng mảng an ninh mạng của mình thành một trong những danh mục bảo mật doanh nghiệp lớn nhất thế giới.</p>
+  <p>OpenText phục vụ hơn <strong>100.000 khách hàng doanh nghiệp</strong> tại hơn 180 quốc gia, bao gồm 98% trong danh sách Fortune 500. Công ty này có hơn 25.000 nhân viên và doanh thu hàng năm vượt 5 tỷ USD.</p>
+
+  <div class="two-col mt-20">
+    <div>
+      <h3>1.2 Lịch Sử ArcSight</h3>
+      <ul class="styled">
+        <li><strong>2000:</strong> ArcSight Inc. được thành lập tại Cupertino, California</li>
+        <li><strong>2002:</strong> Ra mắt sản phẩm SIEM đầu tiên – ArcSight ESM</li>
+        <li><strong>2010:</strong> HP mua lại ArcSight với giá 1,5 tỷ USD</li>
+        <li><strong>2017:</strong> Micro Focus (HP Autonomy spin-off) tiếp quản ArcSight</li>
+        <li><strong>2023:</strong> OpenText mua lại Micro Focus, kế thừa ArcSight</li>
+        <li><strong>2025:</strong> Phát hành ESM 7.9 với nhiều cải tiến AI/SOAR</li>
+      </ul>
+    </div>
+    <div>
+      <h3>1.3 Portfolio An Ninh OpenText</h3>
+      <ul class="styled">
+        <li><strong>ArcSight ESM</strong> – SIEM thế hệ doanh nghiệp</li>
+        <li><strong>ArcSight Logger</strong> – Thu thập và lưu trữ log tập trung</li>
+        <li><strong>ArcSight Investigate (Recon)</strong> – Phân tích & tìm kiếm log</li>
+        <li><strong>ArcSight SOAR</strong> – Tự động hóa & phản ứng sự cố</li>
+        <li><strong>SIEM Data Platform (SDP)</strong> – Nền tảng dữ liệu mở</li>
+        <li><strong>User Behavior Monitoring (UBM)</strong> – Phân tích hành vi người dùng</li>
+        <li><strong>ArcSight Management Center (ArcMC)</strong> – Quản lý tập trung connector</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>1.4 ArcSight ESM là gì?</h3>
+  <p><strong>OpenText Enterprise Security Manager (ArcSight ESM)</strong> là giải pháp SIEM (Security Information and Event Management) toàn diện cấp doanh nghiệp, kết hợp giám sát sự kiện an ninh truyền thống với trí tuệ mạng, tương quan ngữ cảnh, phát hiện bất thường, phân tích lịch sử và khắc phục tự động. Đây là giải pháp đa tầng phục vụ các nhà phân tích bảo mật mạng, quản trị viên hệ thống và người dùng kinh doanh.</p>
+
+  <div class="highlight-box">
+    <strong style="color:var(--accent)">Định nghĩa cốt lõi:</strong>
+    <p style="margin-top:8px">ArcSight ESM thu thập, chuẩn hóa, tổng hợp và lọc hàng triệu sự kiện từ hàng nghìn tài sản trên mạng thành một luồng có mức độ ưu tiên theo rủi ro, lỗ hổng bảo mật và mức độ quan trọng của tài sản. Các sự kiện được ưu tiên có thể được tương quan, điều tra, phân tích và khắc phục bằng các công cụ ESM, cung cấp nhận thức tình huống và khả năng phản ứng sự cố theo thời gian thực.</p>
+  </div>
+</div>
+</section>
+
+<!-- SECTION 2: MARKET NEEDS -->
+<section class="section" id="s2">
+<div class="container">
+  <div class="section-header">
+    <div class="section-num">02</div>
+    <h2 class="section-title">Nhu Cầu Thị Trường & Pain Points</h2>
+  </div>
+
+  <h3>2.1 Bối Cảnh Thị Trường An Ninh Mạng</h3>
+  <p>Bức tranh an ninh mạng toàn cầu đang trở nên phức tạp hơn bao giờ hết. Tổ chức ngày nay phải đối mặt với số lượng và độ phức tạp của các mối đe dọa mạng ngày càng tăng, đòi hỏi đầu tư đáng kể vào công nghệ tiên tiến và nhân sự có kỹ năng chuyên sâu. Sự phát triển liên tục của các mối đe dọa mạng đòi hỏi cập nhật và đào tạo liên tục, ảnh hưởng đến vận hành và tăng nguy cơ vi phạm nếu không được quản lý hiệu quả.</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">📊</div>
+      <div class="card-title">Bùng nổ dữ liệu log</div>
+      <p>Mỗi thiết bị mạng, server, ứng dụng tạo ra hàng nghìn sự kiện/giây. Không có SIEM, SOC team không thể xử lý thủ công lượng log khổng lồ này.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🎯</div>
+      <div class="card-title">Tấn công ngày càng tinh vi</div>
+      <p>APT, ransomware, insider threats không để lại dấu vết rõ ràng. Cần tương quan nhiều sự kiện nhỏ để phát hiện chuỗi tấn công.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚖️</div>
+      <div class="card-title">Tuân thủ pháp lý</div>
+      <p>GDPR, HIPAA, PCI-DSS, ISO 27001, NERC CIP, SOX đều yêu cầu log tập trung, giám sát liên tục và báo cáo kiểm toán. Phạt vi phạm lên đến hàng triệu USD.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔍</div>
+      <div class="card-title">Thiếu tầm nhìn tổng thể</div>
+      <p>Dữ liệu bảo mật phân tán ở nhiều thiết bị, format khác nhau. Không có hệ thống thống nhất, khó phát hiện tấn công kéo dài hoặc phức tạp.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⏱️</div>
+      <div class="card-title">Thời gian phản ứng chậm</div>
+      <p>Trung bình mất 277 ngày để phát hiện và kiểm soát một vi phạm dữ liệu (IBM Cost of Data Breach Report). SIEM giúp giảm con số này xuống còn giờ hoặc phút.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">👥</div>
+      <div class="card-title">Thiếu hụt nhân lực bảo mật</div>
+      <p>Toàn cầu thiếu hơn 3,4 triệu chuyên gia an ninh mạng. SIEM giúp đội ngũ nhỏ làm được công việc của đội ngũ lớn thông qua tự động hóa.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🌐</div>
+      <div class="card-title">Hybrid/Cloud Infrastructure</div>
+      <p>Hạ tầng ngày nay gồm on-premises, cloud (AWS, Azure, GCP) và nhiều cloud. SIEM cần thu thập dữ liệu thống nhất từ tất cả môi trường này.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🚨</div>
+      <div class="card-title">Alert fatigue (mệt mỏi cảnh báo)</div>
+      <p>Không có tương quan thông minh, các công cụ bảo mật riêng lẻ tạo ra hàng nghìn cảnh báo/ngày. Nhà phân tích mất khả năng phân biệt thật/giả.</p>
+    </div>
+  </div>
+
+  <h3>2.2 Các Đối Tượng Khách Hàng Cần SIEM</h3>
+  <div class="badge-grid">
+    <span class="badge badge-blue">Ngân hàng / Tài chính</span>
+    <span class="badge badge-blue">Chính phủ / Bộ quốc phòng</span>
+    <span class="badge badge-orange">Viễn thông & ISP</span>
+    <span class="badge badge-orange">Năng lượng / Tiện ích</span>
+    <span class="badge badge-green">Y tế / Bệnh viện</span>
+    <span class="badge badge-green">Bán lẻ lớn / E-commerce</span>
+    <span class="badge badge-yellow">Giáo dục đại học</span>
+    <span class="badge badge-yellow">MSSP / SOC dịch vụ</span>
+  </div>
+</div>
+</section>
+
+<!-- SECTION 3: FEATURES -->
+<section class="section" id="s3">
+<div class="container">
+  <div class="section-header">
+    <div class="section-num">03</div>
+    <h2 class="section-title">Tính Năng Chi Tiết ArcSight ESM</h2>
+  </div>
+
+  <h3>3.1 Thu Thập & Chuẩn Hóa Dữ Liệu</h3>
+  <p><strong>SmartConnectors</strong> là thành phần giao diện với mọi thiết bị sinh sự kiện trên mạng. Hỗ trợ hơn <strong>450 loại nguồn dữ liệu</strong> khác nhau:</p>
+  <div class="badge-grid">
+    <span class="badge badge-blue">Native Windows Events</span>
+    <span class="badge badge-blue">Syslog / CEF / LEEF</span>
+    <span class="badge badge-blue">REST API</span>
+    <span class="badge badge-blue">JDBC / Database</span>
+    <span class="badge badge-blue">Netflow / IPFIX</span>
+    <span class="badge badge-orange">Firewall (Cisco, Palo Alto, Fortinet...)</span>
+    <span class="badge badge-orange">IDS/IPS (Snort, Suricata...)</span>
+    <span class="badge badge-orange">EDR (CrowdStrike, Carbon Black...)</span>
+    <span class="badge badge-green">Cloud: AWS, Azure, GCP, O365</span>
+    <span class="badge badge-green">Identity: AD, LDAP, RADIUS</span>
+    <span class="badge badge-yellow">SCADA / OT Systems</span>
+  </div>
+  <p class="mt-20"><strong>FlexConnector Framework</strong> – SDK cho phép tự tạo connector tùy chỉnh cho bất kỳ nguồn dữ liệu đặc thù nào. SmartConnectors chuẩn hóa tất cả log về định dạng CEF (Common Event Format) thống nhất trước khi gửi lên Manager.</p>
+
+  <h3>3.2 CORR-Engine – Lõi Lưu Trữ Độc Quyền</h3>
+  <p>The <strong>Correlation Optimized Retention and Retrieval (CORR) Engine</strong> là framework lưu trữ và truy xuất dữ liệu độc quyền của ArcSight. Đây là điểm khác biệt cốt lõi so với các SIEM khác:</p>
+  <ul class="styled">
+    <li>Nhận và xử lý sự kiện với tốc độ cao (100.000+ EPS)</li>
+    <li>Thực hiện tìm kiếm tốc độ cao (high-speed search)</li>
+    <li>Lưu trữ tối ưu hóa cho workload tương quan (khác với database quan hệ thông thường)</li>
+    <li>Hỗ trợ online archive và offline archive với giới hạn tối đa 12 TB storage</li>
+    <li>Tự động phân vùng lưu trữ: System Storage, Event Storage, Event Archive</li>
+  </ul>
+
+  <h3>3.3 Correlation Engine – Tương Quan Thời Gian Thực</h3>
+  <p>Đây là trái tim của ESM. Công cụ tương quan phân tích từng sự kiện đối chiếu với mô hình mạng, thông tin lỗ hổng bảo mật để xây dựng bản tóm tắt mối đe dọa theo thời gian thực. Có 3 loại rule chính:</p>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">📌 Standard Rules</div>
+      <p>Rule đầy đủ tính năng với điều kiện thập hợp (join conditions), điều kiện tổng hợp (aggregation) và ngưỡng thời gian. Khi tất cả điều kiện thỏa mãn, tạo ra <em>correlation event</em>. Ví dụ: 5 lần đăng nhập thất bại trong 1 phút → kích hoạt cảnh báo brute force.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">⚡ Lightweight Rules</div>
+      <p>Rule nhanh, ưu tiên cao, không có điều kiện join/aggregation. Dùng để cập nhật active list hoặc thực hiện hành động tức thì khi có một sự kiện phù hợp. Xử lý rất nhanh, tiêu thụ ít tài nguyên.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">🔄 Pre-Persistence Rules</div>
+      <p>Xử lý trước khi sự kiện được lưu vào database. Dùng để làm giàu dữ liệu sự kiện (enrich) – ví dụ: gán threat level dựa trên phân tích công thức priority. Không thể schedule hay replay.</p>
+    </div>
+  </div>
+
+  <h3>3.4 Active Lists & Session Lists</h3>
+  <p><strong>Active Lists</strong> là bảng dữ liệu động trong bộ nhớ (in-memory), được rules cập nhật và đọc trong quá trình tương quan. Ví dụ: danh sách IP đáng ngờ, user đã xác thực, hệ thống đang bị tấn công...</p>
+  <p><strong>Session Lists</strong> theo dõi các phiên hoạt động (sessions) theo thời gian, giúp tương quan các sự kiện trong cùng một phiên kết nối. Ví dụ: theo dõi toàn bộ hoạt động của một user session từ lúc đăng nhập đến đăng xuất.</p>
+
+  <h3>3.5 Network Model & Actor Model</h3>
+  <div class="two-col">
+    <div>
+      <h4>Network Model</h4>
+      <p>Mô tả đặc điểm mạng và ứng dụng kinh doanh của tài sản. Manager tra cứu phân loại Network Model để xác định đúng các endpoint liên quan đến sự kiện. Bao gồm: Zone, Asset, Asset Category, Vulnerability data.</p>
+    </div>
+    <div>
+      <h4>Actor Model (Actor Resource Framework)</h4>
+      <p>Chuẩn hóa thông tin người dùng được lưu ở nhiều định dạng, nhiều kho xác thực khác nhau tạo thành profile duy nhất. Ánh xạ người dùng/agent với hoạt động trong ứng dụng và mạng theo thời gian thực.</p>
+    </div>
+  </div>
+
+  <h3>3.6 Priority Formula – Tính Điểm Ưu Tiên</h3>
+  <p>Mỗi sự kiện được đánh giá theo công thức priority duy nhất gồm 4 yếu tố:</p>
+  <div class="eps-formula">
+Priority = (Severity × 10) + (Asset Criticality × 10) + (Relevance) + (Model Confidence)
+Max Score = 100 | Severity: 0-10 | Criticality: Very High(+10), High(+8), Medium(+6), Low(+4), Very Low(+2)</div>
+
+  <h3>3.7 Monitoring & Dashboards</h3>
+  <ul class="styled">
+    <li><strong>Active Channels:</strong> Kênh hiển thị sự kiện trực tiếp, lọc và sắp xếp theo điều kiện tùy chỉnh</li>
+    <li><strong>Dashboards:</strong> Bảng điều khiển tổng hợp với nhiều widget (chart, table, gauge)</li>
+    <li><strong>Data Monitors:</strong> Theo dõi dữ liệu real-time, phát hiện thay đổi bất thường</li>
+    <li><strong>MITRE ATT&CK Dashboards:</strong> View toàn bộ kỹ thuật tấn công ATT&CK đang xảy ra trong thời gian thực</li>
+    <li><strong>Trends:</strong> Phân tích xu hướng thống kê theo thời gian</li>
+  </ul>
+
+  <h3>3.8 Workflow & Case Management</h3>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-title">Annotations</div>
+      <p>Công cụ workflow nhẹ để đánh dấu và leo thang sự kiện đơn lẻ. Là trường trong schema sự kiện ESM, cho phép flag sự kiện hoặc nhóm sự kiện liên quan để theo dõi.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Cases</div>
+      <p>Quản lý một hoặc nhiều sự kiện liên quan. Có thể export data sang công cụ bên thứ ba. Hỗ trợ case timeline chi tiết, KPI reporting và phân công analyst.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">Stages & Escalation</div>
+      <p>Cấu trúc leo thang tùy chỉnh đảm bảo sự kiện được chuyển đến đúng người trong đúng khung thời gian. Notification Groups, Escalation Levels, multiple notification destinations.</p>
+    </div>
+  </div>
+
+  <h3>3.9 Reporting & Compliance</h3>
+  <p>ESM cung cấp framework báo cáo linh hoạt cho cả báo cáo kỹ thuật lẫn báo cáo điều hành:</p>
+  <ul class="styled">
+    <li>Báo cáo thủ công hoặc tự động theo lịch</li>
+    <li>Đa định dạng xuất: PDF, HTML, CSV, Excel</li>
+    <li><strong>Compliance Insight Packages (CIPs)</strong> cho: GDPR, HIPAA, PCI-DSS, SOX, FISMA, NERC CIP, ITGOV</li>
+    <li>Báo cáo audit trail cho kiểm toán viên</li>
+    <li>Trending reports phân tích xu hướng theo thời gian</li>
+  </ul>
+
+  <h3>3.10 Native SOAR – Tự Động Hóa Phản Ứng</h3>
+  <p>SOAR (Security Orchestration, Automation and Response) được tích hợp <strong>native</strong> vào ArcSight ESM, không phải add-on riêng:</p>
+  <ul class="styled">
+    <li>Visual workflow playbooks (drag-and-drop)</li>
+    <li>Out-of-the-box playbooks cho các tình huống tấn công phổ biến</li>
+    <li>Hơn <strong>120 integration plugins</strong> với các công cụ bảo mật khác</li>
+    <li>Tự động fetch artifacts, phân loại case, map MITRE ATT&CK, phân công analyst</li>
+    <li>Phối hợp điều tra, triage và phản ứng tự động</li>
+    <li>KPI reporting chi tiết về hiệu suất phản ứng</li>
+  </ul>
+
+  <h3>3.11 AI-Enabled Correlation</h3>
+  <ul class="styled">
+    <li>Sử dụng AI cho predictive prioritization và decision making theo chuẩn NIST</li>
+    <li>Giảm false positive thông qua proven AI correlation</li>
+    <li>Pattern Discovery / Threat Detector: phát hiện các pattern tấn công ẩn trong dữ liệu lịch sử</li>
+    <li>AI-powered anomaly detection cho User Behavior (qua UBM add-on)</li>
+  </ul>
+
+  <h3>3.12 Threat Intelligence (GTAP Plus)</h3>
+  <p><strong>GTAP Plus (ThreatHub Feed Plus)</strong> là giải pháp threat intelligence cao cấp:</p>
+  <ul class="styled">
+    <li>Tự động tích hợp nội dung threat monitoring vào ESM dựa trên dữ liệu threat intelligence nguồn mở</li>
+    <li>Tận dụng mạng lưới nghiên cứu mối đe dọa của Cybersecurity Galaxy</li>
+    <li>Tăng khả năng phát hiện các chiến dịch tấn công hiện đại</li>
+    <li>Hỗ trợ triển khai ATT&CK và D3FEND countermeasures nâng cao</li>
+    <li>Tích hợp với nhiều threat intel feed bên thứ ba và nguồn mở</li>
+  </ul>
+
+  <h3>3.13 Voltage SecureData (Format Preserving Encryption)</h3>
+  <p>Add-on đặc biệt chỉ có ở OpenText/ArcSight: sử dụng công nghệ <strong>Format Preserving Encryption (FPE)</strong> để mã hóa dữ liệu nhạy cảm (số thẻ tín dụng, SSN...) trong log TRONG KHI VẪN DUY TRÌ khả năng tương quan. Analyst không bao giờ thấy dữ liệu thô nhạy cảm nhưng vẫn có thể phân tích mối quan hệ giữa các sự kiện.</p>
+
+  <h3>3.14 ArcSight Marketplace</h3>
+  <p>Thị trường nội dung phong phú với hàng trăm content package từ đối tác, cộng đồng và chuyên gia bảo mật. Bao gồm content miễn phí và trả phí: ArcSight-verified apps, rulesets, dashboards, integrations, connectors.</p>
+
+  <h3>3.15 Distributed Correlation Mode</h3>
+  <p>Cho phép ESM phân tán tải tương quan ra nhiều node, xử lý lượng EPS rất lớn. Hỗ trợ kiến trúc cluster với Persistor + Correlator nodes.</p>
+</div>
+</section>
+
+<!-- SECTION 4: ARCHITECTURE -->
+<section class="section" id="s4">
+<div class="container">
+  <div class="section-header">
+    <div class="section-num">04</div>
+    <h2 class="section-title">Kiến Trúc & Mô Hình Triển Khai</h2>
+  </div>
+
+  <h3>4.1 Kiến Trúc Tổng Thể</h3>
+  <div class="comp-diagram">
+    <div class="comp-row">
+      <div class="comp-box blue">Firewall / Router / Switch</div>
+      <div class="comp-box blue">IDS/IPS / EDR</div>
+      <div class="comp-box blue">Server / Application Logs</div>
+      <div class="comp-box blue">Cloud (AWS/Azure/GCP)</div>
+    </div>
+    <div class="comp-arrow-v">↓ (raw events)</div>
+    <div class="comp-row">
+      <div class="comp-box orange" style="flex:2">SmartConnectors / FlexConnectors / Forwarding Connectors<br><small style="font-weight:400;color:var(--text2)">(Normalize → Filter → Aggregate → Send batches of 100 events / 1 second)</small></div>
+      <div class="comp-box orange">ArcSight Management Center (ArcMC)<br><small style="font-weight:400;color:var(--text2)">(Centralized connector management)</small></div>
+    </div>
+    <div class="comp-arrow-v">↓ (normalized CEF events via TLS)</div>
+    <div class="comp-row">
+      <div class="comp-box green" style="flex:3">ArcSight Manager (Java-based Server)<br><small style="font-weight:400;color:var(--text2)">(Network Model Lookup → Priority Evaluation → Correlation Engine → Rules Processing → Workflow)</small></div>
+    </div>
+    <div class="comp-arrow-v">↓ (write to storage)</div>
+    <div class="comp-row">
+      <div class="comp-box purple" style="flex:2">CORR-Engine Storage<br><small style="font-weight:400;color:var(--text2)">(System Storage | Event Storage | Event Archive — up to 12TB)</small></div>
+    </div>
+    <div class="comp-arrow-v">↓ (query / display)</div>
+    <div class="comp-row">
+      <div class="comp-box blue">ArcSight Command Center (Web UI)</div>
+      <div class="comp-box blue">ArcSight Console (Desktop Java Client)</div>
+      <div class="comp-box blue">ArcSight Logger / Investigate</div>
+    </div>
+  </div>
+
+  <div class="callout">
+    <strong>Giao tiếp SmartConnector → Manager:</strong> Connector gửi sự kiện theo batch 100 events hoặc mỗi giây một lần (tùy cài đặt). Heartbeat mặc định mỗi 10 giây. Kết nối qua TLS được mã hóa.
+  </div>
+
+  <h3>4.2 Các Mô Hình Triển Khai</h3>
+
+  <div class="deploy-grid">
+    <div class="deploy-card type-standalone">
+      <div class="deploy-badge standalone">MODEL 1</div>
+      <div class="deploy-title">Standalone / Compact (Single Node)</div>
+      <p>Toàn bộ Manager + CORR-Engine trên một server. Phù hợp cho môi trường nhỏ, lab hoặc POC.</p>
+      <ul>
+        <li>EPS tối đa: ~5.000–10.000 EPS</li>
+        <li>Ưu: Đơn giản, chi phí thấp, dễ quản lý</li>
+        <li>Nhược: Không scale, không HA</li>
+        <li>Phù hợp: Tổ chức &lt;500 nhân viên, lab test</li>
+      </ul>
+    </div>
+    <div class="deploy-card type-distributed">
+      <div class="deploy-badge distributed">MODEL 2</div>
+      <div class="deploy-title">Distributed Mode (Multi-Node Cluster)</div>
+      <p>Manager (Persistor) + nhiều Correlation Nodes riêng biệt. Phân tán tải tương quan.</p>
+      <ul>
+        <li>EPS: 25.000–100.000+ EPS</li>
+        <li>Cấu hình: 4-5 node cluster (Persistor + 3-4 Correlators)</li>
+        <li>Ưu: Xử lý EPS cao, scale theo chiều ngang</li>
+        <li>Nhược: Phức tạp hơn, cần nhiều server</li>
+        <li>Phù hợp: Enterprise lớn, MSSP</li>
+      </ul>
+    </div>
+    <div class="deploy-card type-ha">
+      <div class="deploy-badge ha">MODEL 3</div>
+      <div class="deploy-title">Active-Passive High Availability (APHA)</div>
+      <p>Module APHA cung cấp hệ thống ESM dự phòng với failover tự động. Mirror đĩa cứng thời gian thực.</p>
+      <ul>
+        <li>Hai server kết nối qua Ethernet crossover cable</li>
+        <li>Service IP duy nhất tự động chuyển khi failover</li>
+        <li>Events được cache tại connectors khi failover → không mất dữ liệu</li>
+        <li>Cần license riêng: ESM license + APHA module license</li>
+        <li>OS: RHEL, CentOS, hoặc SLES (cùng version trên cả hai node)</li>
+        <li>Lưu ý: APHA không hỗ trợ cùng với Avahi software</li>
+      </ul>
+    </div>
+    <div class="deploy-card type-cloud">
+      <div class="deploy-badge cloud">MODEL 4</div>
+      <div class="deploy-title">Cloud Deployment (AWS / Azure)</div>
+      <p>ESM cài đặt trên cloud infrastructure. Hỗ trợ Compact Mode và Distributed Mode trên cloud.</p>
+      <ul>
+        <li>AWS: m5.4xlarge (Low-End) đến m5.16xlarge (High-End)</li>
+        <li>Azure: E16s v3 đến D64s v3</li>
+        <li>Hỗ trợ IPv4 và IPv6 dual-stack</li>
+        <li>Phù hợp: Tổ chức đã migrate lên cloud</li>
+      </ul>
+    </div>
+    <div class="deploy-card type-hierarchical">
+      <div class="deploy-badge hierarchical">MODEL 5</div>
+      <div class="deploy-title">Hierarchical ESM (Multi-Tier)</div>
+      <p>Nhiều ESM instance theo tầng, dùng Forwarding Connector để chuyển sự kiện từ tier thấp lên tier cao. Dùng cho MSSP hoặc tổ chức đa chi nhánh.</p>
+      <ul>
+        <li>Branch ESM → Corporate ESM → Global ESM</li>
+        <li>Tiered content sync: ESM instances tự đồng bộ nội dung</li>
+        <li>Forwarding Connector hỗ trợ IPv4 và IPv6</li>
+        <li>Phù hợp: Tập đoàn đa quốc gia, MSSP cung cấp dịch vụ cho nhiều khách hàng</li>
+      </ul>
+    </div>
+    <div class="deploy-card type-standalone">
+      <div class="deploy-badge standalone">MODEL 6</div>
+      <div class="deploy-title">Appliance Deployment</div>
+      <p>ESM cài sẵn trên phần cứng OpenText được tối ưu hóa (appliance). Plug-and-play, giảm thiểu công việc cài đặt OS/driver.</p>
+      <ul>
+        <li>E7700 Appliance: max 25.000 EPS (ESM 7.2+)</li>
+        <li>E8400 Sled Appliance: max 25.000 EPS (ESM 7.8+)</li>
+        <li>EC8300 Sled Appliance: max 50.000 EPS (Correlator role)</li>
+        <li>Phần cứng bán riêng, software license riêng</li>
+        <li>Enclosure chứa tối đa 4 Sled</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>4.3 Các Bước Triển Khai Cơ Bản (Software ESM)</h3>
+  <ol class="styled">
+    <li>Chuẩn bị server (RHEL/CentOS/SLES), cài đặt các RPM packages cần thiết (zip, unzip, libaio, libncurses5)</li>
+    <li>Cấu hình hostname resolution (sửa /etc/hosts, đảm bảo FQDN), timezone, font packages</li>
+    <li>Tải file cài đặt ESM từ portal OpenText; chạy wizard cài đặt</li>
+    <li>Cấu hình CORR-Engine: phân vùng System Storage (~1/6 disk), Event Storage (~2/3 disk), Event Archive (phần còn lại)</li>
+    <li>Nhập license file; cấu hình mạng, SSL certificate</li>
+    <li>Cài đặt SmartConnectors trên các server hoặc thiết bị nguồn dữ liệu</li>
+    <li>Đăng ký SmartConnectors với Manager; cấu hình filtering/aggregation</li>
+    <li>Cấu hình Network Model, Asset Model, Zone</li>
+    <li>Deploy Default Content và Compliance Insight Packages (CIPs)</li>
+    <li>Tuning rules, active lists, dashboards; thiết lập thông báo và workflow</li>
+  </ol>
+
+  <h3>4.4 Lưu Ý Quan Trọng Khi Chọn Mô Hình</h3>
+  <div class="callout warn">
+    <strong>⚠️ Với APHA HA:</strong> Cần Ethernet crossover cable vật lý giữa hai server. Không dùng chung một server cho cả primary và secondary. OS và version phải hoàn toàn giống nhau. Không hỗ trợ Avahi daemon – phải disable trước khi cài đặt.
+  </div>
+  <div class="callout">
+    <strong>💡 Với Distributed Mode:</strong> Sau bất kỳ thay đổi cấu hình nào (thêm node, restart service), phải dừng và khởi động lại tất cả services. Active List trong Distributed Correlation cần cấu hình "Write Synchronized" để đảm bảo tính nhất quán dữ liệu.
+  </div>
+  <div class="callout success">
+    <strong>✅ Khuyến nghị Production:</strong> Sử dụng cấu hình Mid-Range hoặc High Performance. Cấu hình Minimum chỉ phù hợp cho lab/test với EPS thấp. Với tổ chức lớn cần HA, chọn APHA; cần scale EPS cao chọn Distributed Mode.
+  </div>
+</div>
+</section>
+
+<!-- SECTION 5: EPS & LICENSE -->
+<section class="section" id="s5">
+<div class="container">
+  <div class="section-header">
+    <div class="section-num">05</div>
+    <h2 class="section-title">EPS & Cơ Chế Tính License</h2>
+  </div>
+
+  <h3>5.1 EPS là gì?</h3>
+  <div class="eps-box">
+    <p><strong style="color:var(--accent); font-size:18px">EPS = Events Per Second</strong></p>
+    <p><strong>EPS (Events Per Second)</strong> là đơn vị đo lường tốc độ luồng sự kiện mà hệ thống SIEM nhận và xử lý. Một "event" là bất kỳ mục nhật ký có thể nhận dạng nào có ý nghĩa với phần cứng, phần mềm, dữ liệu hoặc vận hành môi trường.</p>
+    <p>Trong ArcSight ESM, EPS được tính <strong>post-filter, pre-aggregation</strong> – tức là sau khi SmartConnector đã lọc bớt sự kiện không cần thiết nhưng trước khi aggregation gộp các sự kiện trùng lặp.</p>
+    <div class="eps-formula">Licensed EPS = Tốc độ sự kiện tối đa mà hệ thống được phép nhận và xử lý liên tục (tính theo giây)</div>
+  </div>
+
+  <h3>5.2 Cơ Chế Tính License</h3>
+  <p>ArcSight ESM được cấp phép theo <strong>Licensed Capacity EPS</strong> – mức EPS tối đa được phép xử lý. License bao gồm:</p>
+  <ul class="styled">
+    <li><strong>ESM Software License:</strong> Theo EPS tier – 100, 250, 500, 1.000, 2.500, 5.000, 10.000, 25.000, 50.000 EPS</li>
+    <li><strong>APHA Module License:</strong> Riêng biệt, cần có nếu triển khai HA</li>
+    <li><strong>CIP Packages:</strong> Compliance Insight Packages (GDPR, HIPAA, PCI, v.v.) - bổ sung</li>
+    <li><strong>GTAP Plus:</strong> Threat intelligence premium – bán Per Account, dạng subscription 1/2/3 năm, tối đa 3 instances song song</li>
+    <li><strong>UBM (User Behavior Monitoring):</strong> Add-on, licensed by Actor (Managed Entity), yêu cầu có ESM trước</li>
+    <li><strong>Voltage SecureData Enterprise:</strong> Add-on FPE encryption</li>
+  </ul>
+
+  <h3>5.3 MMEPS – Cơ Chế Đo Lường Compliance</h3>
+  <p>Kể từ 1/5/2019, OpenText sử dụng <strong>MMEPS (Moving Median Events Per Second)</strong> để đánh giá tuân thủ license. Đây là cơ chế công bằng cho khách hàng:</p>
+  <div class="eps-box">
+    <h4 style="margin:0 0 12px">Cơ chế hoạt động của MMEPS:</h4>
+    <ul class="styled" style="font-size:14px">
+      <li>Hệ thống tính MMEPS dựa trên median (trung vị) của EPS trong cửa sổ thời gian di động</li>
+      <li>MMEPS được so sánh với Licensed Capacity để đánh giá compliance</li>
+      <li>Nếu MMEPS vượt quá Licensed Capacity <strong>dưới 5 ngày</strong> → KHÔNG vi phạm (cho phép các đỉnh tạm thời như: tấn công từ bên ngoài, onboarding thiết bị mới, tuning)</li>
+      <li>Nếu vượt quá từ 5 ngày trở lên → có <strong>45 ngày</strong> để liên hệ OpenText và xử lý</li>
+      <li>Nếu không xử lý sau 45 ngày liên tiếp → coi là <strong>Non-compliance Finding</strong>, phải thanh toán phần dư</li>
+    </ul>
+  </div>
+
+  <h3>5.4 Ví Dụ Thực Tế Tính EPS</h3>
+  <table class="feature-table">
+    <tr>
+      <th>Nguồn dữ liệu</th>
+      <th>Thiết bị</th>
+      <th>EPS ước tính/thiết bị</th>
+      <th>Tổng EPS</th>
+    </tr>
+    <tr>
+      <td class="td-label">Firewall Palo Alto</td>
+      <td>2 thiết bị</td>
+      <td>500 EPS</td>
+      <td>1.000 EPS</td>
+    </tr>
+    <tr>
+      <td class="td-label">Windows Domain Controllers</td>
+      <td>10 servers</td>
+      <td>200 EPS</td>
+      <td>2.000 EPS</td>
+    </tr>
+    <tr>
+      <td class="td-label">Linux Servers</td>
+      <td>50 servers</td>
+      <td>20 EPS</td>
+      <td>1.000 EPS</td>
+    </tr>
+    <tr>
+      <td class="td-label">IDS/IPS (Snort)</td>
+      <td>3 sensors</td>
+      <td>300 EPS</td>
+      <td>900 EPS</td>
+    </tr>
+    <tr>
+      <td class="td-label">Antivirus (McAfee)</td>
+      <td>1.000 endpoints</td>
+      <td>0.5 EPS</td>
+      <td>500 EPS</td>
+    </tr>
+    <tr style="background:rgba(0,212,255,0.06)">
+      <td class="td-label" colspan="3"><strong>TỔNG (raw) trước filter</strong></td>
+      <td><strong style="color:var(--accent)">5.400 EPS raw</strong></td>
+    </tr>
+    <tr style="background:rgba(0,255,136,0.04)">
+      <td class="td-label" colspan="3"><strong>Sau filter 30% (SmartConnector)</strong></td>
+      <td><strong style="color:var(--green)">→ ~3.800 EPS licensed</strong></td>
+    </tr>
+    <tr style="background:rgba(255,215,0,0.04)">
+      <td class="td-label" colspan="3"><strong>Khuyến nghị license (buffer 20%)</strong></td>
+      <td><strong style="color:var(--yellow)">→ 5.000 EPS tier</strong></td>
+    </tr>
+  </table>
+</div>
+</section>
+
+<!-- SECTION 6: SIZING -->
+<section class="section" id="s6">
+<div class="container">
+  <div class="section-header">
+    <div class="section-num">06</div>
+    <h2 class="section-title">Sizing – Cách Chọn EPS Phù Hợp</h2>
+  </div>
+
+  <h3>6.1 Phương Pháp Sizing EPS</h3>
+  <ol class="styled">
+    <li><strong>Kiểm kê toàn bộ nguồn dữ liệu:</strong> Lập danh sách tất cả thiết bị, server, ứng dụng sẽ gửi log vào ESM</li>
+    <li><strong>Ước tính EPS từng nguồn:</strong> Dựa trên tài liệu kỹ thuật hoặc đo thực tế (công cụ: tcpdump, syslog counters)</li>
+    <li><strong>Tính tổng raw EPS:</strong> Cộng tất cả EPS từ mọi nguồn</li>
+    <li><strong>Áp dụng tỷ lệ filter:</strong> SmartConnector thường lọc 20–40% sự kiện lặp lại/không cần thiết. Nhân raw EPS × (1 - filter rate)</li>
+    <li><strong>Cộng buffer 20%:</strong> Cho đỉnh tải tương lai và growth</li>
+    <li><strong>Chọn tier license cao hơn:</strong> Chọn tier EPS cao hơn gần nhất so với con số tính được</li>
+  </ol>
+
+  <div class="callout warn">
+    <strong>Lưu ý quan trọng:</strong> Nếu dự kiến có Active Lists lớn, nhiều tài sản/actor, hoặc dùng Pattern Discovery (Threat Detector), tải hệ thống tăng đáng kể và có thể ảnh hưởng performance search/event processing. Cần tính thêm tài nguyên phần cứng.
+  </div>
+
+  <h3>6.2 Các Tier EPS & Phù Hợp Với Quy Mô Tổ Chức</h3>
+  <table class="sizing-table">
+    <tr>
+      <th>Tier EPS</th>
+      <th>Phù hợp quy mô</th>
+      <th>Ví dụ tổ chức</th>
+      <th>Hardware khuyến nghị</th>
+    </tr>
+    <tr>
+      <td class="tier-label">100 – 500 EPS</td>
+      <td>Nhỏ (SMB)</td>
+      <td>&lt;200 nhân viên, &lt;50 servers</td>
+      <td>Minimum spec (8 cores, 48 GB RAM)</td>
+    </tr>
+    <tr>
+      <td class="tier-label">500 – 2.500 EPS</td>
+      <td>Vừa</td>
+      <td>200–2.000 nhân viên</td>
+      <td>Mid-Range (32 cores, 192 GB RAM)</td>
+    </tr>
+    <tr>
+      <td class="tier-label">2.500 – 10.000 EPS</td>
+      <td>Lớn</td>
+      <td>2.000–10.000 nhân viên, nhiều chi nhánh</td>
+      <td>High Performance (40 cores, 512 GB RAM, SSD)</td>
+    </tr>
+    <tr>
+      <td class="tier-label">10.000 – 25.000 EPS</td>
+      <td>Rất lớn / Distributed</td>
+      <td>Enterprise lớn, ngân hàng, telco</td>
+      <td>Distributed Mode hoặc Appliance E8400</td>
+    </tr>
+    <tr>
+      <td class="tier-label">25.000 – 50.000+ EPS</td>
+      <td>Cực lớn / MSSP</td>
+      <td>MSSP, đơn vị chính phủ lớn, tập đoàn đa quốc gia</td>
+      <td>EC8300 Sled (50.000 EPS), Distributed cluster nhiều node</td>
+    </tr>
+  </table>
+</div>
+</section>
+
+<!-- SECTION 7: SYSTEM REQUIREMENTS -->
+<section class="section" id="s7">
+<div class="container">
+  <div class="section-header">
+    <div class="section-num">07</div>
+    <h2 class="section-title">Yêu Cầu Tài Nguyên Hệ Thống</h2>
+  </div>
+
+  <h3>7.1 Hardware Requirements (On-Premises)</h3>
+  <table class="feature-table">
+    <tr>
+      <th>Thông số</th>
+      <th>Minimum (Lab/Low EPS)</th>
+      <th>Mid-Range (Production)</th>
+      <th>High Performance (Heavy Load)</th>
+    </tr>
+    <tr>
+      <td class="td-label">CPU Cores</td>
+      <td>8 cores (16 preferred)</td>
+      <td>32 cores</td>
+      <td>40 cores</td>
+    </tr>
+    <tr>
+      <td class="td-label">RAM</td>
+      <td>48 GB (64 GB preferred)</td>
+      <td>192 GB</td>
+      <td>512 GB</td>
+    </tr>
+    <tr>
+      <td class="td-label">Disk</td>
+      <td>6 × 600 GB = 1.5 TB (RAID 10)</td>
+      <td>20 × 1 TB = 10 TB (RAID 10)</td>
+      <td>12 TB (RAID 10)</td>
+    </tr>
+    <tr>
+      <td class="td-label">Disk Speed</td>
+      <td>10.000 RPM</td>
+      <td>15.000 RPM</td>
+      <td>Solid State Drive (SSD)</td>
+    </tr>
+    <tr>
+      <td class="td-label">OS</td>
+      <td colspan="3">RHEL, CentOS, SUSE Linux Enterprise Server (SLES)</td>
+    </tr>
+    <tr>
+      <td class="td-label">TCP Ports</td>
+      <td colspan="3">8443 (Manager/Console), 9000 (Command Center), 7789 (APHA cross-cable), v.v.</td>
+    </tr>
+  </table>
+  <div class="callout danger">⚠️ Cấu hình Minimum KHÔNG dùng cho production với EPS cao, nhiều custom rules, hoặc lượng Assets/Actors lớn.</div>
+
+  <h3>7.2 CORR-Engine Storage Sizing</h3>
+  <table class="sizing-table">
+    <tr>
+      <th>Loại Storage</th>
+      <th>Mô tả</th>
+      <th>Minimum</th>
+      <th>Maximum</th>
+      <th>Khuyến nghị</th>
+    </tr>
+    <tr>
+      <td class="tier-label">System Storage</td>
+      <td>Resources, trends, lists, non-event data</td>
+      <td>3 GB</td>
+      <td>1.500 GB</td>
+      <td>~1/6 Usable Space (tối đa 1.500 GB)</td>
+    </tr>
+    <tr>
+      <td class="tier-label">Event Storage</td>
+      <td>Lưu trữ sự kiện trực tiếp</td>
+      <td>10 GB</td>
+      <td>12 TB</td>
+      <td>~2/3 Usable Space</td>
+    </tr>
+    <tr>
+      <td class="tier-label">Event Archive</td>
+      <td>Archive dữ liệu sự kiện cũ</td>
+      <td>1 GB</td>
+      <td>File system limit</td>
+      <td>Phần còn lại sau System + Event</td>
+    </tr>
+  </table>
+  <div class="eps-formula">Maximum Event Storage = (/opt/arcsight partition × 0.9) - System Storage - Event Archives
+System reserves 10% of /opt/arcsight for its own use.</div>
+
+  <h3>7.3 AWS Cloud Requirements (ESM 7.9)</h3>
+  <table class="sizing-table">
+    <tr>
+      <th>Loại</th>
+      <th>Low-End Compact</th>
+      <th>Medium Distributed (4-node)</th>
+      <th>High-End Distributed (5-node)</th>
+    </tr>
+    <tr>
+      <td class="tier-label">Persistor VM</td>
+      <td>m5.4xlarge (16 CPU, 64 GB, 3TB gp2)</td>
+      <td>m5a.12xlarge (48 CPU, 192 GB, 3×3TB io1)</td>
+      <td>m5.16xlarge (64 CPU, 256 GB, 4×3TB io1)</td>
+    </tr>
+    <tr>
+      <td class="tier-label">Correlator Nodes</td>
+      <td>m5.4xlarge (16 CPU, 64 GB)</td>
+      <td>m5a.8xlarge (32 CPU, 128 GB)</td>
+      <td>m5.16xlarge (48 CPU, 192 GB)</td>
+    </tr>
+  </table>
+
+  <h3>7.4 Yêu Cầu Phần Mềm</h3>
+  <ul class="styled">
+    <li>OS: RHEL 7.x/8.x, CentOS 7.x/8.x, SUSE Linux Enterprise Server (SLES)</li>
+    <li>RPM packages bắt buộc: zip, unzip, libaio, libncurses5 (SLES only)</li>
+    <li>Java: JDK 21.0.9 (included, cập nhật trong ESM 7.9)</li>
+    <li>HTTPD: Apache 2.4.65 (included)</li>
+    <li>Font packages cho Reports: cần cài đặt trước khi cài ESM</li>
+    <li>DNS resolution: hostname phải resolvable trước khi cài đặt</li>
+    <li>NTP: đồng bộ thời gian bắt buộc</li>
+    <li>Time Zone Update Package phải cài đặt trước</li>
+  </ul>
+</div>
+</section>
+
+<!-- SECTION 8: COMPARISON -->
+<section class="section" id="s8">
+<div class="container">
+  <div class="section-header">
+    <div class="section-num">08</div>
+    <h2 class="section-title">So Sánh Với Đối Thủ Cạnh Tranh</h2>
+  </div>
+
+  <p style="margin-bottom:20px">Bảng so sánh chi tiết ArcSight ESM với các đối thủ chính trên thị trường SIEM toàn cầu:</p>
+
+  <div style="overflow-x:auto">
+  <table class="feature-table">
+    <tr>
+      <th style="min-width:200px">Tiêu chí</th>
+      <th style="min-width:150px">ArcSight ESM<br><small style="color:var(--text3)">(OpenText)</small></th>
+      <th style="min-width:150px">Splunk ES<br><small style="color:var(--text3)">(Cisco)</small></th>
+      <th style="min-width:150px">IBM QRadar<br><small style="color:var(--text3)">(IBM)</small></th>
+      <th style="min-width:150px">Microsoft Sentinel<br><small style="color:var(--text3)">(Microsoft)</small></th>
+      <th style="min-width:150px">Stellar Cyber<br><small style="color:var(--text3)">(Open XDR)</small></th>
+      <th style="min-width:150px">Kaspersky SIEM<br><small style="color:var(--text3)">(Kaspersky)</small></th>
+    </tr>
+    <tr>
+      <td class="td-label">Loại giải pháp</td>
+      <td>SIEM + SOAR Native</td>
+      <td>SIEM + SOAR (SODA)</td>
+      <td>SIEM + AI/ML</td>
+      <td>Cloud-native SIEM</td>
+      <td>Open XDR + SIEM</td>
+      <td>SIEM On-Premises</td>
+    </tr>
+    <tr>
+      <td class="td-label">Cơ chế tính license</td>
+      <td><span class="check">EPS (post-filter)</span><br>Tiers: 100→50.000</td>
+      <td><span class="cross">Data Ingestion (GB/ngày)</span><br>Rất đắt khi data lớn</td>
+      <td><span class="partial">EPS + Flows Per Minute (FPM)</span><br>Phức tạp</td>
+      <td><span class="cross">Data ingestion (GB/ngày)</span><br>Pay-as-you-go</td>
+      <td><span class="partial">Per Asset/User</span></td>
+      <td><span class="partial">EPS hoặc Node-based</span></td>
+    </tr>
+    <tr>
+      <td class="td-label">Tốc độ xử lý EPS</td>
+      <td><span class="check">100.000+ EPS</span><br>CORR-Engine độc quyền</td>
+      <td><span class="check">Rất cao</span><br>Index-based search</td>
+      <td><span class="check">Cao</span></td>
+      <td><span class="check">Cao (cloud-scale)</span></td>
+      <td><span class="partial">Vừa</span></td>
+      <td><span class="partial">Vừa (~25.000 EPS)</span></td>
+    </tr>
+    <tr>
+      <td class="td-label">Native SOAR</td>
+      <td><span class="check">✔ Built-in, 120+ plugins</span></td>
+      <td><span class="partial">SOAR riêng (Splunk SOAR)</span></td>
+      <td><span class="partial">IBM SOAR riêng (add-on)</span></td>
+      <td><span class="check">✔ Logic Apps/Sentinel automation</span></td>
+      <td><span class="check">✔ Built-in</span></td>
+      <td><span class="cross">✗ Không có native</span></td>
+    </tr>
+    <tr>
+      <td class="td-label">Correlation Engine</td>
+      <td><span class="check">Real-time, rule-based + AI<br>Standard/Lightweight/Pre-persistence rules</span></td>
+      <td><span class="check">SPL-based correlation</span></td>
+      <td><span class="check">QRadar rules + AI</span></td>
+      <td><span class="check">KQL-based analytics rules</span></td>
+      <td><span class="check">ML-based</span></td>
+      <td><span class="partial">Rule-based</span></td>
+    </tr>
+    <tr>
+      <td class="td-label">Số connector/nguồn</td>
+      <td><span class="check">450+ loại nguồn</span></td>
+      <td><span class="check">Nhiều (Splunkbase)</span></td>
+      <td><span class="check">Nhiều (QRadar DSM)</span></td>
+      <td><span class="check">Nhiều (Azure Marketplace)</span></td>
+      <td><span class="partial">Vừa</span></td>
+      <td><span class="partial">~400+</span></td>
+    </tr>
+    <tr>
+      <td class="td-label">MITRE ATT&CK Support</td>
+      <td><span class="check">✔ Full dashboards + mapping</span></td>
+      <td><span class="check">✔ Tích hợp tốt</span></td>
+      <td><span class="check">✔ Tích hợp</span></td>
+      <td><span class="check">✔ Mặc định trong rules</span></td>
+      <td><span class="check">✔ Native</span></td>
+      <td><span class="partial">Hạn chế</span></td>
+    </tr>
+    <tr>
+      <td class="td-label">Triển khai On-Premises</td>
+      <td><span class="check">✔ Đầy đủ, phong phú</span></td>
+      <td><span class="partial">Hạn chế (đẩy sang cloud)</span></td>
+      <td><span class="check">✔ On-prem + Cloud</span></td>
+      <td><span class="cross">✗ Cloud-only (Azure)</span></td>
+      <td><span class="partial">On-prem + Cloud</span></td>
+      <td><span class="check">✔ On-premises tốt</span></td>
+    </tr>
+    <tr>
+      <td class="td-label">High Availability</td>
+      <td><span class="check">✔ APHA Module (Active-Passive)</span></td>
+      <td><span class="check">✔ Search Head Clustering</span></td>
+      <td><span class="check">✔ HA support</span></td>
+      <td><span class="check">✔ Azure native HA</span></td>
+      <td><span class="partial">Hạn chế</span></td>
+      <td><span class="partial">Basic HA</span></td>
+    </tr>
+    <tr>
+      <td class="td-label">FPE Encryption (Data Privacy)</td>
+      <td><span class="check">✔ Voltage SecureData FPE</span><br><strong>Độc quyền</strong></td>
+      <td><span class="cross">✗</span></td>
+      <td><span class="cross">✗</span></td>
+      <td><span class="cross">✗</span></td>
+      <td><span class="cross">✗</span></td>
+      <td><span class="cross">✗</span></td>
+    </tr>
+    <tr>
+      <td class="td-label">Compliance Packages (CIPs)</td>
+      <td><span class="check">✔ GDPR, HIPAA, PCI, SOX, NERC, FISMA, ITGOV</span></td>
+      <td><span class="partial">Splunkbase (add-on)</span></td>
+      <td><span class="check">✔ Compliance modules</span></td>
+      <td><span class="partial">Community rules</span></td>
+      <td><span class="partial">Hạn chế</span></td>
+      <td><span class="partial">Một số CIS</span></td>
+    </tr>
+    <tr>
+      <td class="td-label">Hierarchical / Multi-tier</td>
+      <td><span class="check">✔ Forwarding Connector, tiered sync</span></td>
+      <td><span class="partial">Hạn chế</span></td>
+      <td><span class="partial">Data gateway</span></td>
+      <td><span class="cross">✗</span></td>
+      <td><span class="cross">✗</span></td>
+      <td><span class="partial">Hạn chế</span></td>
+    </tr>
+    <tr>
+      <td class="td-label">UEBA</td>
+      <td><span class="partial">Qua UBM add-on (per Actor)</span></td>
+      <td><span class="check">✔ Tích hợp trong ES</span></td>
+      <td><span class="cross">Yếu (theo Gartner)</span></td>
+      <td><span class="check">✔ Microsoft Sentinel UEBA</span></td>
+      <td><span class="check">✔ Native XDR UEBA</span></td>
+      <td><span class="partial">Hạn chế</span></td>
+    </tr>
+    <tr>
+      <td class="td-label">Appliance Option</td>
+      <td><span class="check">✔ E7700, E8400, EC8300 Sled</span></td>
+      <td><span class="cross">✗</span></td>
+      <td><span class="check">✔ QRadar appliances</span></td>
+      <td><span class="cross">✗ (cloud-only)</span></td>
+      <td><span class="cross">✗</span></td>
+      <td><span class="partial">Một số model</span></td>
+    </tr>
+    <tr>
+      <td class="td-label">Custom Connector SDK</td>
+      <td><span class="check">✔ FlexConnector Framework</span></td>
+      <td><span class="check">✔ Splunk Add-on Builder</span></td>
+      <td><span class="check">✔ DSM Editor</span></td>
+      <td><span class="check">✔ Custom connectors</span></td>
+      <td><span class="partial">Hạn chế</span></td>
+      <td><span class="partial">Hạn chế</span></td>
+    </tr>
+    <tr>
+      <td class="td-label">Mô hình triển khai</td>
+      <td>On-prem, Cloud (AWS/Azure), Appliance, Hybrid</td>
+      <td>On-prem (hạn chế), SaaS, Hybrid</td>
+      <td>On-prem, Cloud, SaaS</td>
+      <td>Azure cloud-only</td>
+      <td>On-prem, Cloud, SaaS</td>
+      <td>On-prem chính</td>
+    </tr>
+    <tr>
+      <td class="td-label">Chi phí tổng thể (TCO)</td>
+      <td><span class="check">Trung bình</span> (predictable EPS-based)</td>
+      <td><span class="cross">Cao</span> (data ingestion tăng theo lượng log)</td>
+      <td><span class="cross">Cao + phức tạp</span></td>
+      <td><span class="partial">Vừa-cao</span> (pay-as-you-go)</td>
+      <td><span class="check">Trung bình</span></td>
+      <td><span class="check">Thấp-trung bình</span></td>
+    </tr>
+  </table>
+  </div>
+
+  <div class="callout success">
+    <strong>Chú thích:</strong> <span class="check">✔ Xanh</span> = Hỗ trợ tốt | <span class="partial">⚡ Vàng</span> = Hỗ trợ có hạn | <span class="cross">✗ Đỏ</span> = Không hỗ trợ hoặc yếu
+  </div>
+</div>
+</section>
+
+<!-- SECTION 9: STRENGTHS -->
+<section class="section" id="s9">
+<div class="container">
+  <div class="section-header">
+    <div class="section-num">09</div>
+    <h2 class="section-title">Điểm Mạnh & Tính Năng Độc Quyền</h2>
+  </div>
+
+  <h3>9.1 Thế Mạnh Tổng Thể của ArcSight ESM</h3>
+  <div class="pros-list">
+    <div class="pro-item">
+      <div class="pro-icon">✦</div>
+      <div class="pro-text"><strong>CORR-Engine độc quyền:</strong> Framework lưu trữ và tương quan được tối ưu hóa riêng cho workload SIEM. Xử lý 100.000+ EPS với độ trễ thấp, không thể có với DB quan hệ thông thường.</div>
+    </div>
+    <div class="pro-item">
+      <div class="pro-icon">✦</div>
+      <div class="pro-text"><strong>Voltage FPE Encryption:</strong> Mã hóa bảo toàn định dạng (Format Preserving Encryption) – tính năng duy nhất trên thị trường cho phép bảo vệ PII/PCI trong log TRONG KHI vẫn tương quan được. Đối thủ không có.</div>
+    </div>
+    <div class="pro-item">
+      <div class="pro-icon">✦</div>
+      <div class="pro-text"><strong>License EPS predictable:</strong> Chi phí có thể dự báo, không tăng theo lượng data như Splunk. Đặc biệt quan trọng cho tổ chức cần ngân sách ổn định.</div>
+    </div>
+    <div class="pro-item">
+      <div class="pro-icon">✦</div>
+      <div class="pro-text"><strong>Hierarchical/Multi-tier ESM:</strong> Hỗ trợ kiến trúc phân cấp nhiều tầng với Forwarding Connector và tự đồng bộ nội dung giữa các instance. Rất phù hợp MSSP và tập đoàn đa chi nhánh.</div>
+    </div>
+    <div class="pro-item">
+      <div class="pro-icon">✦</div>
+      <div class="pro-text"><strong>450+ Connector types:</strong> Hệ sinh thái connector phong phú nhất, hỗ trợ mọi format (CEF, LEEF, Syslog, JDBC, Netflow, v.v.) và FlexConnector SDK để tự mở rộng.</div>
+    </div>
+    <div class="pro-item">
+      <div class="pro-icon">✦</div>
+      <div class="pro-text"><strong>APHA Active-Passive HA:</strong> Module HA chính thống với disk mirroring thời gian thực, automatic failover, không mất dữ liệu (cache tại connector khi failover).</div>
+    </div>
+    <div class="pro-item">
+      <div class="pro-icon">✦</div>
+      <div class="pro-text"><strong>CIP Compliance Packages đầy đủ:</strong> Gói tuân thủ cho 7 framework pháp lý (GDPR, HIPAA, PCI, SOX, FISMA, NERC, ITGOV) sẵn có ngay khi cài đặt.</div>
+    </div>
+    <div class="pro-item">
+      <div class="pro-icon">✦</div>
+      <div class="pro-text"><strong>GTAP Plus Threat Intelligence:</strong> Giải pháp threat intelligence cao cấp tích hợp trực tiếp vào ESM, hỗ trợ ATT&CK và D3FEND countermeasures, phòng thủ proactive.</div>
+    </div>
+    <div class="pro-item">
+      <div class="pro-icon">✦</div>
+      <div class="pro-text"><strong>Distributed Correlation Mode:</strong> Scale correlation theo chiều ngang với nhiều correlator node, xử lý EPS cực cao mà không giới hạn bởi một server.</div>
+    </div>
+    <div class="pro-item">
+      <div class="pro-icon">✦</div>
+      <div class="pro-text"><strong>Appliance ecosystem:</strong> Phần cứng appliance được tối ưu hoàn toàn cho ESM (E7700, E8400, EC8300 với 25.000-50.000 EPS), đặc biệt phù hợp khách hàng không muốn lo phần cứng.</div>
+    </div>
+    <div class="pro-item">
+      <div class="pro-icon">✦</div>
+      <div class="pro-text"><strong>MMEPS fairness mechanism:</strong> Cơ chế license công bằng cho phép vượt EPS tạm thời (tấn công, onboarding) mà không bị phạt ngay lập tức (buffer 5 ngày + 45 ngày grace period).</div>
+    </div>
+    <div class="pro-item">
+      <div class="pro-icon">✦</div>
+      <div class="pro-text"><strong>Mature, 20+ years proven:</strong> Hơn 20 năm phát triển và triển khai trong môi trường enterprise phức tạp nhất. Độ tin cậy và ổn định đã được chứng minh.</div>
+    </div>
+  </div>
+
+  <h3>9.2 Tính Năng Chỉ ArcSight ESM Có – Đối Thủ Không Làm Được</h3>
+
+  <div class="highlight-box">
+    <h4 style="color:var(--accent); margin:0 0 16px">🔐 Voltage SecureData FPE – Độc quyền tuyệt đối</h4>
+    <p>Format Preserving Encryption cho phép mã hóa PII/PCI/SSN trong log event <strong>mà vẫn bảo toàn khả năng tương quan</strong>. Hệ thống có thể tương quan hai số thẻ ngân hàng đã mã hóa mà không cần giải mã. Không một đối thủ nào (Splunk, QRadar, Sentinel, Stellar, Kaspersky) có tính năng tương đương.</p>
+  </div>
+
+  <div class="highlight-box" style="border-color:rgba(255,215,0,0.25); background:linear-gradient(135deg,rgba(255,215,0,0.04),rgba(255,107,53,0.04))">
+    <h4 style="color:var(--yellow); margin:0 0 16px">🏗️ Hierarchical ESM với Dynamic Content Sync</h4>
+    <p>Kiến trúc ESM đa tầng với Forwarding Connector và tự đồng bộ content (rules, dashboards, active lists) giữa các instance cấp dưới lên cấp trên theo thời gian thực. IBM QRadar và Splunk thiếu native support cho kiến trúc phân cấp như vậy.</p>
+  </div>
+
+  <div class="highlight-box" style="border-color:rgba(0,255,136,0.2); background:linear-gradient(135deg,rgba(0,255,136,0.03),rgba(0,212,255,0.03))">
+    <h4 style="color:var(--green); margin:0 0 16px">⚙️ Pre-Persistence Rules – Làm giàu sự kiện trước khi lưu</h4>
+    <p>Loại rule đặc biệt xử lý sự kiện <strong>trước khi ghi vào CORR-Engine</strong>, cho phép gán/thay đổi giá trị priority, threat level, hoặc các trường enrichment. Kết quả enrichment có sẵn cho tất cả Standard và Lightweight rules. Đây là khả năng kiến trúc pipeline chưa thấy ở đối thủ cùng mức độ chi tiết.</p>
+  </div>
+</div>
+</section>
+
+<!-- SECTION 10: BENEFITS -->
+<section class="section" id="s10">
+<div class="container">
+  <div class="section-header">
+    <div class="section-num">10</div>
+    <h2 class="section-title">Lợi Ích Mang Lại Cho Tổ Chức</h2>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🎯</div>
+      <div class="card-title">Nâng cao hiệu quả SOC</div>
+      <p>Tự động hóa phát hiện, phân loại và phân công sự kiện giúp team SOC tập trung vào mối đe dọa thực sự thay vì xử lý thủ công hàng nghìn cảnh báo.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🚫</div>
+      <div class="card-title">Giảm false positives</div>
+      <p>AI correlation và multi-stage correlation engine chỉ leo thang các mối đe dọa có ý nghĩa thực sự. Giảm đáng kể "alert fatigue" cho analyst.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">👁️</div>
+      <div class="card-title">Tầm nhìn 360° toàn doanh nghiệp</div>
+      <p>Thu thập log từ 450+ loại nguồn – on-premises, cloud, OT/SCADA – tạo bức tranh bảo mật toàn diện không bỏ sót điểm mù nào.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">⚡</div>
+      <div class="card-title">Giảm thời gian phơi nhiễm</div>
+      <p>SOAR native tự động hóa và phối hợp triage, điều tra, phản ứng – giảm MTTR (Mean Time To Respond) từ giờ xuống phút.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <div class="card-title">Tuân thủ pháp lý</div>
+      <p>CIPs cho GDPR, HIPAA, PCI-DSS, SOX, NERC CIP, FISMA giảm gánh nặng kiểm toán. Báo cáo compliance tự động, audit trail đầy đủ.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">💰</div>
+      <div class="card-title">Tối đa hóa ROI</div>
+      <p>Tích hợp với hàng trăm công cụ bảo mật hiện có (EDR, ticketing, IAM) qua ArcSight Marketplace. Không cần thay thế toàn bộ hạ tầng.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">🔐</div>
+      <div class="card-title">Bảo vệ dữ liệu nhạy cảm</div>
+      <p>Voltage FPE đảm bảo analyst không bao giờ tiếp xúc với PII/PCI/SSN thô trong quá trình điều tra – vừa bảo mật vừa tuân thủ quy định.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📈</div>
+      <div class="card-title">Scale linh hoạt</div>
+      <p>Từ 100 EPS (SMB) đến 100.000+ EPS (tập đoàn lớn) với cùng platform. Distributed Mode, appliances và cloud cho phép scale theo nhu cầu thực tế.</p>
+    </div>
+  </div>
+
+  <div class="quote-block">
+    "Every day we would spend up to three hours to manually identify and block malicious IP addresses. OpenText Enterprise Security Manager (ArcSight) has automated this process and reports back to us every 12 hours with a list of blocked IP addresses."
+    <cite>— Khách hàng thực tế, trích từ OpenText product documentation</cite>
+  </div>
+
+  <div class="quote-block">
+    "With ArcSight, we don't just detect real attacks quickly, but we also automate orchestrated responses in near-real time. The flexibility of ArcSight helps us intelligently adapt for the future."
+    <cite>— Dmitriy Ryzhkov, Senior Information Security Analyst, NPC Ukrenergo</cite>
+  </div>
+</div>
+</section>
+
+<!-- SECTION 11: MARKET RATING -->
+<section class="section" id="s11">
+<div class="container">
+  <div class="section-header">
+    <div class="section-num">11</div>
+    <h2 class="section-title">Đánh Giá & Xếp Hạng Thị Trường</h2>
+  </div>
+
+  <h3>11.1 Vị Thế Trong Gartner Magic Quadrant SIEM</h3>
+  <p>ArcSight ESM (OpenText) đã được Gartner công nhận trong nhiều năm liên tiếp trong Magic Quadrant for Security Information and Event Management. Tuy nhiên, trong các báo cáo gần nhất (2024-2025), sự cạnh tranh đã thay đổi đáng kể:</p>
+
+  <table class="sizing-table">
+    <tr>
+      <th>Vendor</th>
+      <th>Vị trí Gartner MQ (2024-2025)</th>
+      <th>Điểm nổi bật</th>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--accent2)">Splunk (Cisco)</strong></td>
+      <td><span class="check">Leader – Năm thứ 11 liên tiếp (2025)</span><br>Market share ~46.78%</td>
+      <td>Highest in Ability to Execute; UI/visualization mạnh; đắt nhất thị trường</td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--accent2)">IBM QRadar</strong></td>
+      <td><span class="check">Leader – Năm thứ 14 liên tiếp (2024)</span></td>
+      <td>Enterprise AI; Unified Analyst Experience; UEBA yếu</td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--accent2)">Microsoft Sentinel</strong></td>
+      <td><span class="check">Leader</span></td>
+      <td>Cloud-native; Azure integration xuất sắc; giới hạn ở Azure ecosystem</td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--accent)">ArcSight ESM (OpenText)</strong></td>
+      <td><span class="partial">Challenger / Visionary</span><br>Đã được công nhận nhiều năm liên tiếp</td>
+      <td>Mạnh về on-premises enterprise; correlation engine proven; đang phát triển cloud</td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--accent2)">Stellar Cyber</strong></td>
+      <td><span class="partial">Niche Player / Challenger</span></td>
+      <td>Open XDR approach; AI-native; phù hợp SMB/Mid-market</td>
+    </tr>
+    <tr>
+      <td><strong style="color:var(--text3)">Kaspersky SIEM</strong></td>
+      <td><span class="cross">Không có trong Gartner MQ SIEM toàn cầu</span></td>
+      <td>Chủ yếu thị trường CIS/Eastern Europe; hạn chế về địa lý và hệ sinh thái</td>
+    </tr>
+  </table>
+
+  <h3>11.2 Điểm Đánh Giá Từ Cộng Đồng (Gartner Peer Insights)</h3>
+  <div class="rating-grid">
+    <div class="rating-card">
+      <div class="rating-num">4.2</div>
+      <div class="stars">★★★★☆</div>
+      <div class="rating-label">Gartner Peer Insights</div>
+      <div class="rating-desc">Đánh giá tổng hợp từ khách hàng thực tế doanh nghiệp lớn</div>
+    </div>
+    <div class="rating-card">
+      <div class="rating-num">20+</div>
+      <div class="stars">🏆🏆🏆</div>
+      <div class="rating-label">Năm trên thị trường</div>
+      <div class="rating-desc">Một trong những SIEM lâu đời và trưởng thành nhất</div>
+    </div>
+    <div class="rating-card">
+      <div class="rating-num">450+</div>
+      <div class="stars" style="color:var(--accent)">🔌🔌🔌</div>
+      <div class="rating-label">Loại nguồn dữ liệu</div>
+      <div class="rating-desc">Hệ sinh thái connector phong phú nhất trong nhóm enterprise</div>
+    </div>
+    <div class="rating-card">
+      <div class="rating-num">100K</div>
+      <div class="stars" style="color:var(--green)">⚡⚡⚡</div>
+      <div class="rating-label">EPS tối đa</div>
+      <div class="rating-desc">Xử lý 100.000+ events/giây với CORR-Engine</div>
+    </div>
+  </div>
+
+  <h3>11.3 Phân Tích Định Vị Thị Trường</h3>
+  <div class="callout">
+    <p><strong>Thị trường mục tiêu chính:</strong> ArcSight ESM định vị mạnh nhất ở phân khúc <strong>enterprise on-premises lớn</strong>, đặc biệt là các tổ chức trong ngành tài chính, chính phủ, năng lượng, quốc phòng và viễn thông với yêu cầu bảo mật cao, quy định nghiêm ngặt và không thể đưa dữ liệu lên cloud.</p>
+    <p style="margin-top:8px"><strong>Điểm phân biệt so với Splunk:</strong> Giá license predictable theo EPS (không theo volume data) là lợi thế cạnh tranh cực lớn khi tổ chức cần giám sát khối lượng log lớn với ngân sách kiểm soát được.</p>
+    <p style="margin-top:8px"><strong>Điểm phân biệt so với Microsoft Sentinel:</strong> ArcSight ESM hỗ trợ on-premises đầy đủ, không bị lock-in Azure, phù hợp tổ chức đa-cloud hoặc chính phủ không được dùng cloud nước ngoài.</p>
+  </div>
+</div>
+</section>
+
+<!-- SECTION 12: REFERENCES -->
+<section class="section" id="s12">
+<div class="container">
+  <div class="section-header">
+    <div class="section-num">12</div>
+    <h2 class="section-title">Tài Liệu Tham Chiếu</h2>
+  </div>
+
+  <h3>12.1 Tài Liệu Chính Thức OpenText / ArcSight</h3>
+  <ul class="ref-list">
+    <li>
+      <div class="ref-title">ArcSight ESM 101 – Hướng dẫn cơ bản (v7.9)</div>
+      <a href="https://www.microfocus.com/documentation/arcsight/arcsight-esm-7.9/ESM_101/" target="_blank">https://www.microfocus.com/documentation/arcsight/arcsight-esm-7.9/ESM_101/</a>
+    </li>
+    <li>
+      <div class="ref-title">ArcSight ESM Installation Guide v7.9</div>
+      <a href="https://www.microfocus.com/documentation/arcsight/arcsight-esm-7.9/ESM_InstallGuide/" target="_blank">https://www.microfocus.com/documentation/arcsight/arcsight-esm-7.9/ESM_InstallGuide/</a>
+    </li>
+    <li>
+      <div class="ref-title">ArcSight ESM Administrator Guide v7.9</div>
+      <a href="https://www.microfocus.com/documentation/arcsight/arcsight-esm-7.9/ESM_AdminGuide/" target="_blank">https://www.microfocus.com/documentation/arcsight/arcsight-esm-7.9/ESM_AdminGuide/</a>
+    </li>
+    <li>
+      <div class="ref-title">ArcSight Console User Guide v7.9</div>
+      <a href="https://www.microfocus.com/documentation/arcsight/arcsight-esm-7.9/ESM_ArcSightConsole_UserGuide/" target="_blank">https://www.microfocus.com/documentation/arcsight/arcsight-esm-7.9/ESM_ArcSightConsole_UserGuide/</a>
+    </li>
+    <li>
+      <div class="ref-title">ESM Active-Passive High Availability Module User's Guide</div>
+      <a href="https://www.microfocus.com/documentation/arcsight/arcsight-esm-7.9/Active_Passive_HA_UserGuide/" target="_blank">https://www.microfocus.com/documentation/arcsight/arcsight-esm-7.9/Active_Passive_HA_UserGuide/</a>
+    </li>
+    <li>
+      <div class="ref-title">ArcSight ESM Technical Requirements / Support Matrix (v7.9 – Nov 2025)</div>
+      <a href="https://www.microfocus.com/documentation/arcsight/arcsight-esm-7.9/ESM_Support_Matrix/" target="_blank">https://www.microfocus.com/documentation/arcsight/arcsight-esm-7.9/ESM_Support_Matrix/</a>
+    </li>
+    <li>
+      <div class="ref-title">ArcSight ESM 7.9 Release Notes</div>
+      <a href="https://www.microfocus.com/documentation/arcsight/arcsight-esm-7.9/arcsightesmreleasenotes/" target="_blank">https://www.microfocus.com/documentation/arcsight/arcsight-esm-7.9/arcsightesmreleasenotes/</a>
+    </li>
+    <li>
+      <div class="ref-title">OpenText Enterprise Security Manager – Product Overview (2026)</div>
+      <a href="https://www.opentext.com/products/arcsight-enterprise-security-manager" target="_blank">https://www.opentext.com/products/arcsight-enterprise-security-manager</a>
+    </li>
+    <li>
+      <div class="ref-title">Additional License Authorizations for Security Analytics Products – Standard Edition Model</div>
+      <a href="https://www.opentext.com/file_source/OpenText/en_US/PDF/opentext-additional-license-authorizations-security-analytics-en.pdf" target="_blank">https://www.opentext.com/file_source/OpenText/en_US/PDF/opentext-additional-license-authorizations-security-analytics-en.pdf</a>
+    </li>
+    <li>
+      <div class="ref-title">ArcSight ESM SCG Admin System Content Guide</div>
+      <a href="https://www.microfocus.com/documentation/arcsight/" target="_blank">https://www.microfocus.com/documentation/arcsight/</a>
+    </li>
+    <li>
+      <div class="ref-title">ArcSight Documentation Portal (All versions)</div>
+      <a href="https://www.microfocus.com/documentation/arcsight/" target="_blank">https://www.microfocus.com/documentation/arcsight/</a>
+    </li>
+    <li>
+      <div class="ref-title">OpenText Security Support Portal</div>
+      <a href="https://softwaresupport.softwaregrp.com/" target="_blank">https://softwaresupport.softwaregrp.com/</a>
+    </li>
+    <li>
+      <div class="ref-title">OpenText Marketplace (ArcSight)</div>
+      <a href="https://marketplace.microfocus.com/arcsight" target="_blank">https://marketplace.microfocus.com/arcsight</a>
+    </li>
+  </ul>
+
+  <h3>12.2 Tài Liệu Phân Tích & So Sánh</h3>
+  <ul class="ref-list">
+    <li>
+      <div class="ref-title">Gartner Magic Quadrant for SIEM (2024)</div>
+      <a href="https://www.gartner.com/reviews/market/security-information-event-management" target="_blank">https://www.gartner.com/reviews/market/security-information-event-management</a>
+    </li>
+    <li>
+      <div class="ref-title">Gartner Critical Capabilities for SIEM</div>
+      <a href="https://www.gartner.com/en/documents/critical-capabilities-siem" target="_blank">https://www.gartner.com/en/documents/critical-capabilities-siem</a>
+    </li>
+    <li>
+      <div class="ref-title">IBM Security QRadar SIEM – Product Information</div>
+      <a href="https://www.ibm.com/products/qradar-siem" target="_blank">https://www.ibm.com/products/qradar-siem</a>
+    </li>
+    <li>
+      <div class="ref-title">Splunk Enterprise Security – Product Overview</div>
+      <a href="https://www.splunk.com/en_us/products/enterprise-security.html" target="_blank">https://www.splunk.com/en_us/products/enterprise-security.html</a>
+    </li>
+    <li>
+      <div class="ref-title">Microsoft Sentinel Documentation</div>
+      <a href="https://docs.microsoft.com/en-us/azure/sentinel/" target="_blank">https://docs.microsoft.com/en-us/azure/sentinel/</a>
+    </li>
+    <li>
+      <div class="ref-title">Exabeam – Best SIEM Solutions Comparison 2025</div>
+      <a href="https://www.exabeam.com/explainers/siem-tools/siem-solutions/" target="_blank">https://www.exabeam.com/explainers/siem-tools/siem-solutions/</a>
+    </li>
+    <li>
+      <div class="ref-title">OpenText ArcSight ESM – microfocus.com</div>
+      <a href="https://www.microfocus.com/arcsightesm" target="_blank">https://www.microfocus.com/arcsightesm</a>
+    </li>
+  </ul>
+</div>
+</section>
+
+</main>
+
+<footer>
+  <div>Nghiên cứu tổng hợp về <span>OpenText ArcSight ESM</span> · Phiên bản tham chiếu ESM 7.9 (Nov 2025) · Tài liệu cập nhật <span>2026</span></div>
+  <div style="margin-top:6px">Copyright © OpenText Corporation · 275 Frank Tompa Drive, Waterloo, Ontario, Canada, N2L 0A1</div>
+</footer>
+
+<button class="scroll-top" id="scrollBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+  window.addEventListener('scroll', function() {
+    document.getElementById('scrollBtn').style.display = window.scrollY > 400 ? 'block' : 'none';
+  });
+</script>
+</body>
+</html>

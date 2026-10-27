@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proofpoint Email Security — Sales Guide 2025</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #050d1a;
+  --dark: #0a1628;
+  --card: #0f1e33;
+  --border: rgba(255,255,255,0.08);
+  --blue: #0066cc;
+  --cyan: #00b4d8;
+  --amber: #f59e0b;
+  --green: #10b981;
+  --red: #ef4444;
+  --purple: #8b5cf6;
+  --text: rgba(255,255,255,0.82);
+  --muted: rgba(255,255,255,0.45);
+  --sidebar: 260px;
+  --r: 10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 15px; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--navy);
+  color: var(--text);
+  line-height: 1.65;
+}
+
+/* ── PROGRESS BAR ── */
+#prog {
+  position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 999;
+  background: linear-gradient(90deg, var(--cyan), var(--blue));
+  transform-origin: left; transform: scaleX(0);
+  transition: transform 0.1s linear;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  position: fixed; top: 0; left: 0; width: var(--sidebar);
+  height: 100vh; overflow-y: auto; overflow-x: hidden;
+  background: #060e1b;
+  border-right: 1px solid var(--border);
+  z-index: 100;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,102,204,0.3) transparent;
+}
+
+.sb-brand {
+  padding: 22px 20px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 10px;
+}
+
+.sb-brand .logo-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--green);
+  animation: blink 2s infinite;
+  flex-shrink: 0;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+.sb-brand span {
+  font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 700;
+  color: var(--cyan); letter-spacing: 0.3px;
+}
+
+.sb-title {
+  padding: 16px 20px 6px;
+  font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--muted);
+}
+
+.sb-link {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px 16px; margin: 1px 8px;
+  border-radius: 7px; cursor: pointer;
+  text-decoration: none;
+  color: rgba(255,255,255,0.55);
+  font-size: 12.5px; font-weight: 400;
+  transition: all 0.18s;
+  border: none; background: none; width: calc(100% - 16px); text-align: left;
+}
+
+.sb-link .ic {
+  font-size: 13px; width: 20px; text-align: center; flex-shrink: 0;
+}
+
+.sb-link:hover, .sb-link.on {
+  background: rgba(0,102,204,0.12);
+  color: #fff;
+}
+
+.sb-link.on { color: var(--cyan); font-weight: 500; }
+
+/* ── MAIN ── */
+.wrap {
+  margin-left: var(--sidebar);
+  padding: 0 60px 80px 60px;
+  max-width: calc(900px + var(--sidebar));
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative; overflow: hidden;
+  padding: 64px 0 56px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 56px;
+}
+
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 50% 80% at 90% 50%, rgba(0,102,204,0.12) 0%, transparent 100%),
+    radial-gradient(ellipse 40% 60% at 10% 80%, rgba(0,180,216,0.07) 0%, transparent 100%);
+}
+
+.hero-tag {
+  display: inline-flex; align-items: center; gap: 7px;
+  border: 1px solid rgba(0,180,216,0.3);
+  border-radius: 100px;
+  padding: 5px 14px;
+  font-size: 11px; font-weight: 600;
+  color: var(--cyan); letter-spacing: 0.8px;
+  text-transform: uppercase; margin-bottom: 22px;
+  position: relative;
+}
+
+.hero h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  font-weight: 800; line-height: 1.08;
+  color: #fff; position: relative;
+  margin-bottom: 16px;
+}
+
+.hero h1 em { font-style: normal; color: var(--cyan); }
+
+.hero-sub {
+  font-size: 15px; color: var(--muted);
+  max-width: 560px; line-height: 1.6;
+  position: relative; margin-bottom: 36px;
+}
+
+.hero-pills {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  position: relative;
+}
+
+.pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 14px; border-radius: 100px;
+  font-size: 12px; font-weight: 500;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.pill.green { background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.3); color: var(--green); }
+.pill.blue  { background: rgba(0,102,204,0.1);  border-color: rgba(0,102,204,0.3);  color: #60a5fa; }
+.pill.amber { background: rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.3); color: var(--amber); }
+
+/* ── SECTION ── */
+.sec {
+  margin-bottom: 72px;
+  scroll-margin-top: 32px;
+}
+
+.sec-label {
+  display: inline-block;
+  font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 1.8px;
+  color: var(--cyan); margin-bottom: 10px;
+}
+
+.sec-title {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(1.4rem, 2.5vw, 2rem);
+  font-weight: 700; color: #fff;
+  line-height: 1.2; margin-bottom: 6px;
+}
+
+.sec-lead {
+  color: var(--muted); font-size: 14px;
+  max-width: 680px; line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+hr.div { border: none; border-top: 1px solid var(--border); margin: 64px 0; }
+
+h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem; font-weight: 700;
+  color: #fff; margin: 28px 0 12px;
+}
+
+p { color: var(--text); margin-bottom: 14px; font-size: 14px; }
+
+/* ── CARDS ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0; }
+.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin: 16px 0; }
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; margin: 16px 0; }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 20px;
+  transition: border-color 0.2s;
+}
+.card:hover { border-color: rgba(0,102,204,0.35); }
+
+.card .ci {
+  font-size: 22px; margin-bottom: 12px;
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px;
+}
+.ci.b { background: rgba(0,102,204,0.15); }
+.ci.c { background: rgba(0,180,216,0.15); }
+.ci.a { background: rgba(245,158,11,0.15); }
+.ci.r { background: rgba(239,68,68,0.15); }
+.ci.g { background: rgba(16,185,129,0.15); }
+.ci.p { background: rgba(139,92,246,0.15); }
+
+.card h4 {
+  font-size: 13px; font-weight: 700;
+  color: var(--cyan); text-transform: uppercase;
+  letter-spacing: 0.4px; margin-bottom: 7px;
+}
+
+.card p { font-size: 13px; margin: 0; }
+
+/* ── PAIN LIST ── */
+.pains { list-style: none; }
+
+.pain {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.pain:last-child { border-bottom: none; }
+
+.pain-n {
+  width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--red), #c0392b);
+  color: #fff; font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 1px;
+}
+
+.pain strong { display: block; color: #fff; font-size: 14px; margin-bottom: 3px; }
+.pain p { margin: 0; font-size: 13px; }
+
+/* ── TABLE ── */
+.tbl-wrap { overflow-x: auto; margin: 16px 0; border-radius: var(--r); }
+
+table { width: 100%; border-collapse: collapse; background: var(--card); }
+thead tr { background: rgba(0,102,204,0.18); }
+th {
+  padding: 11px 14px; text-align: left;
+  font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.8px;
+  color: var(--cyan); white-space: nowrap;
+}
+td {
+  padding: 10px 14px; font-size: 13px;
+  color: var(--text); border-bottom: 1px solid rgba(255,255,255,0.04);
+  vertical-align: top;
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(0,102,204,0.04); }
+td.good { color: var(--green); }
+td.bad  { color: rgba(255,255,255,0.28); }
+td.warn { color: var(--amber); }
+td.hl   { color: var(--cyan); font-weight: 600; }
+
+/* ── CALLOUT / INFO ── */
+.callout {
+  border-left: 3px solid var(--amber);
+  background: rgba(245,158,11,0.07);
+  border-radius: 0 var(--r) var(--r) 0;
+  padding: 14px 18px; margin: 16px 0;
+}
+.callout p { font-size: 13.5px; margin: 0; color: rgba(255,255,255,0.85); }
+.callout strong { color: var(--amber); }
+
+.infobox {
+  border-left: 3px solid var(--blue);
+  background: rgba(0,102,204,0.07);
+  border-radius: 0 var(--r) var(--r) 0;
+  padding: 14px 18px; margin: 16px 0;
+}
+.infobox p { font-size: 13.5px; margin: 0; color: rgba(255,255,255,0.85); }
+
+.greenbox {
+  border-left: 3px solid var(--green);
+  background: rgba(16,185,129,0.07);
+  border-radius: 0 var(--r) var(--r) 0;
+  padding: 14px 18px; margin: 16px 0;
+}
+.greenbox p { font-size: 13.5px; margin: 0; color: rgba(255,255,255,0.85); }
+
+/* ── STEPS ── */
+.steps { list-style: none; }
+.step { display: flex; gap: 16px; margin-bottom: 16px; }
+.step-n {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  color: #fff; font-size: 12px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-top: 1px;
+}
+.step strong { display: block; color: #fff; font-size: 14px; margin-bottom: 2px; }
+.step p { margin: 0; font-size: 13px; }
+
+/* ── STRENGTH LIST ── */
+.strs { list-style: none; }
+.str-item {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.str-item:last-child { border-bottom: none; }
+.str-ic {
+  width: 28px; height: 28px; border-radius: 7px;
+  background: rgba(16,185,129,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; flex-shrink: 0; margin-top: 1px;
+}
+.str-item strong { display: block; color: var(--green); font-size: 13.5px; margin-bottom: 2px; }
+.str-item p { margin: 0; font-size: 13px; }
+
+/* ── LICENSE TIERS ── */
+.tiers { display: grid; grid-template-columns: repeat(5,1fr); gap: 8px; margin: 20px 0; }
+
+.tier {
+  border-radius: var(--r); padding: 16px 12px;
+  border: 1px solid rgba(255,255,255,0.1); text-align: center;
+  transition: transform 0.2s;
+}
+.tier:hover { transform: translateY(-3px); }
+.tier .t-name { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; margin-bottom: 3px; }
+.tier .t-price { font-size: 10px; color: var(--muted); margin-bottom: 10px; }
+.tier ul { list-style: none; text-align: left; }
+.tier li { font-size: 10.5px; padding: 2px 0; color: rgba(255,255,255,0.6); }
+.tier li::before { content: '✓ '; color: var(--green); font-weight: 700; }
+
+.t-px { background: rgba(100,100,100,0.12); }
+.t-p0 { background: rgba(0,102,204,0.12); .t-name { color: #60a5fa; } }
+.t-p1 { background: rgba(0,180,216,0.1); }
+.t-p2 { background: rgba(245,158,11,0.1); }
+.t-p3 { background: rgba(16,185,129,0.1); }
+
+/* ── FAQ ACCORDION ── */
+.faqs { margin: 16px 0; }
+
+.faq-item {
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  margin-bottom: 8px;
+  overflow: hidden;
+}
+
+.faq-q {
+  width: 100%; padding: 14px 18px;
+  background: var(--card);
+  display: flex; justify-content: space-between; align-items: center;
+  cursor: pointer; border: none; text-align: left;
+  color: #fff; font-size: 13.5px; font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  transition: background 0.18s;
+}
+
+.faq-q:hover { background: rgba(0,102,204,0.1); }
+
+.faq-q .arr {
+  font-size: 16px; color: var(--cyan);
+  transition: transform 0.25s; flex-shrink: 0; margin-left: 12px;
+}
+
+.faq-item.open .arr { transform: rotate(180deg); }
+
+.faq-a {
+  display: none;
+  padding: 0 18px 18px;
+  background: rgba(0,0,0,0.15);
+}
+.faq-item.open .faq-a { display: block; }
+.faq-a p { font-size: 13px; margin-bottom: 8px; color: var(--text); }
+.faq-a p:last-child { margin-bottom: 0; }
+.faq-a ul, .faq-a ol { padding-left: 18px; }
+.faq-a li { font-size: 13px; color: var(--text); margin-bottom: 5px; }
+.faq-a strong { color: var(--cyan); }
+
+/* ── SWOT ── */
+.swot { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0; }
+
+.swot-q {
+  border-radius: var(--r); padding: 18px;
+}
+.swot-q h4 { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+.swot-q ul { list-style: none; }
+.swot-q li { font-size: 12.5px; padding: 3px 0; }
+.swot-q li::before { margin-right: 6px; }
+
+.sw-s { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2); }
+.sw-s h4 { color: var(--green); }
+.sw-s li::before { content: '✓'; color: var(--green); }
+
+.sw-w { background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.2); }
+.sw-w h4 { color: var(--amber); }
+.sw-w li::before { content: '△'; color: var(--amber); }
+
+.sw-o { background: rgba(0,180,216,0.07); border: 1px solid rgba(0,180,216,0.2); }
+.sw-o h4 { color: var(--cyan); }
+.sw-o li::before { content: '+'; color: var(--cyan); }
+
+.sw-t { background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.2); }
+.sw-t h4 { color: var(--red); }
+.sw-t li::before { content: '!'; color: var(--red); }
+
+/* ── RANKING ── */
+.rank-hero {
+  background: linear-gradient(135deg, rgba(0,102,204,0.15), rgba(0,60,120,0.1));
+  border: 1px solid rgba(0,102,204,0.3);
+  border-radius: var(--r); padding: 32px;
+  text-align: center; margin: 20px 0;
+}
+.rank-hero .num {
+  font-family: 'Syne', sans-serif;
+  font-size: 5rem; font-weight: 800;
+  color: var(--cyan); line-height: 1;
+}
+.rank-hero .lbl { color: var(--muted); font-size: 14px; margin-top: 6px; }
+
+/* ── MODULE BLOCKS ── */
+.mod {
+  border-left: 3px solid var(--blue);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--blue);
+  border-radius: 0 var(--r) var(--r) 0;
+  padding: 16px 18px; margin-bottom: 10px;
+}
+.mod.c { border-left-color: var(--cyan); }
+.mod.a { border-left-color: var(--amber); }
+.mod.g { border-left-color: var(--green); }
+.mod.r { border-left-color: var(--red); }
+.mod.p { border-left-color: var(--purple); }
+
+.mod-hd { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.mod-name { font-weight: 700; color: #fff; font-size: 14px; }
+.badge {
+  display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: 0.5px;
+  padding: 2px 7px; border-radius: 4px;
+}
+.badge-core { background: rgba(0,102,204,0.25); color: #60a5fa; }
+.badge-adv  { background: rgba(245,158,11,0.2); color: var(--amber); }
+.badge-prem { background: rgba(16,185,129,0.2); color: var(--green); }
+.mod p { font-size: 13px; margin: 0; }
+
+/* ── MINI TAG ── */
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+.tag {
+  font-size: 11px; padding: 3px 9px;
+  border-radius: 5px; font-weight: 500;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  color: var(--muted);
+}
+
+/* ── COMPETING ── */
+.comp-list { list-style: none; }
+.comp-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 13px;
+}
+.comp-item:last-child { border-bottom: none; }
+.comp-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── TALK SCRIPTS ── */
+.script {
+  background: rgba(16,185,129,0.06);
+  border: 1px solid rgba(16,185,129,0.18);
+  border-radius: var(--r); padding: 16px 18px; margin: 10px 0;
+}
+.script .script-lbl { font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.2px; color: var(--green); margin-bottom: 8px; }
+.script p { font-size: 13px; margin: 0; font-style: italic; color: rgba(255,255,255,0.85); line-height: 1.6; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  :root { --sidebar: 0px; }
+  .sidebar { display: none; }
+  .wrap { padding: 0 20px 60px; margin-left: 0; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .tiers { grid-template-columns: repeat(2,1fr); }
+  .swot { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div id="prog"></div>
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sb-brand">
+    <div class="logo-dot"></div>
+    <span>Proofpoint · Sales Guide 2025</span>
+  </div>
+
+  <div class="sb-title">Tổng Quan</div>
+  <a class="sb-link" href="#s0"><span class="ic">🏛️</span> Khung Pháp Lý VN</a>
+  <a class="sb-link" href="#s1"><span class="ic">🔥</span> Pain Points KH</a>
+  <a class="sb-link" href="#s2"><span class="ic">🌐</span> Thị Trường</a>
+  <a class="sb-link" href="#s3"><span class="ic">🔧</span> Tính Năng Cơ Bản</a>
+
+  <div class="sb-title">Proofpoint</div>
+  <a class="sb-link" href="#s4"><span class="ic">🏢</span> Giới Thiệu Hãng</a>
+  <a class="sb-link" href="#s5"><span class="ic">⚙️</span> Tính Năng Chi Tiết</a>
+  <a class="sb-link" href="#s6"><span class="ic">🧠</span> Công Nghệ Nexus AI</a>
+  <a class="sb-link" href="#s7"><span class="ic">🏗️</span> Kiến Trúc & Triển Khai</a>
+  <a class="sb-link" href="#s8"><span class="ic">🔑</span> License & Sizing</a>
+
+  <div class="sb-title">Phân Tích Bán Hàng</div>
+  <a class="sb-link" href="#s9"><span class="ic">🏆</span> Điểm Mạnh Độc Quyền</a>
+  <a class="sb-link" href="#s10"><span class="ic">🎯</span> Khách Hàng Mục Tiêu VN</a>
+  <a class="sb-link" href="#s11"><span class="ic">📊</span> SWOT & Phân Khúc</a>
+  <a class="sb-link" href="#s12"><span class="ic">📈</span> Lợi Ích & Xếp Hạng</a>
+
+  <div class="sb-title">Hỗ Trợ Bán Hàng</div>
+  <a class="sb-link" href="#s13"><span class="ic">💬</span> Tình Huống Thường Gặp</a>
+  <a class="sb-link" href="#s14"><span class="ic">🗺️</span> Cách Tìm Khách Hàng</a>
+  <a class="sb-link" href="#s15"><span class="ic">⚔️</span> Đối Thủ Cạnh Tranh</a>
+  <a class="sb-link" href="#s16"><span class="ic">🌟</span> Portfolio Proofpoint</a>
+</nav>
+
+<!-- MAIN -->
+<div class="wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-tag">
+      <span>●</span> Sales Guide · Dành cho Sales & Pre-sales
+    </div>
+    <h1>Proofpoint<br><em>Email Security</em></h1>
+    <p class="hero-sub">Tài liệu cô đọng dành cho đội ngũ kinh doanh — nắm bắt nhanh, tự tin tư vấn khách hàng với giải pháp bảo vệ email hàng đầu thế giới.</p>
+    <div class="hero-pills">
+      <div class="pill green">🏆 Gartner MQ Leader 2025</div>
+      <div class="pill blue">🌐 3,4 nghìn tỷ email/năm</div>
+      <div class="pill amber">📊 85% Fortune 100 tin dùng</div>
+    </div>
+  </div>
+
+  <!-- S0: KHUNG PHÁP LÝ -->
+  <section class="sec" id="s0">
+    <div class="sec-label">Phần 01 — Nền Tảng Pháp Lý</div>
+    <h2 class="sec-title">Khung Pháp Lý & Yêu Cầu Tuân Thủ tại Việt Nam</h2>
+    <p class="sec-lead">Sử dụng các luật và nghị định này để tạo sự cấp thiết với khách hàng — đây là căn cứ pháp lý yêu cầu tổ chức phải bảo vệ email.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="ci r">🔒</div>
+        <h4>Luật An ninh mạng 2018</h4>
+        <p>Yêu cầu tổ chức nhà nước, hạ tầng thông tin quan trọng phải bảo vệ hệ thống thông tin trước tấn công mạng. Email là bề mặt tấn công chính. Vi phạm có thể bị xử phạt hành chính hoặc truy cứu hình sự.</p>
+      </div>
+      <div class="card">
+        <div class="ci b">📜</div>
+        <h4>Luật An toàn thông tin mạng 2015</h4>
+        <p>Quy định bảo đảm ATTT cho hệ thống thông tin. Email được phân loại là hệ thống thông tin cần bảo vệ theo cấp độ. Tổ chức cần thực hiện các biện pháp kỹ thuật phù hợp với cấp độ được phân loại.</p>
+      </div>
+      <div class="card">
+        <div class="ci a">🏦</div>
+        <h4>Nghị định 13/2023/NĐ-CP — Bảo vệ DLCN</h4>
+        <p>Bảo vệ dữ liệu cá nhân — email là kênh xử lý DLCN chủ yếu. Rò rỉ dữ liệu qua email (phishing, BEC) vi phạm quy định này. Cần triển khai biện pháp kỹ thuật ngăn rò rỉ dữ liệu qua email (DLP).</p>
+      </div>
+      <div class="card">
+        <div class="ci c">🏛️</div>
+        <h4>Nghị định 85/2016/NĐ-CP — Cấp độ ATTT</h4>
+        <p>Phân loại hệ thống thông tin từ cấp độ 1–5. Cấp độ 3+ bắt buộc có giải pháp bảo vệ chuyên biệt. Hệ thống email cơ quan nhà nước thường từ cấp độ 3 trở lên — bắt buộc phải có email security.</p>
+      </div>
+      <div class="card">
+        <div class="ci g">💳</div>
+        <h4>Thông tư 09/2020/TT-NHNN — An toàn Ngân hàng</h4>
+        <p>Quy định ATTT cho hệ thống ngân hàng bao gồm email. Yêu cầu kiểm soát truy cập, chống giả mạo, mã hóa dữ liệu nhạy cảm. Áp dụng trực tiếp cho ngân hàng, công ty tài chính, tổ chức tín dụng.</p>
+      </div>
+      <div class="card">
+        <div class="ci p">📋</div>
+        <h4>Thông tư 12/2022/TT-BTTTT & Tiêu chuẩn ISO 27001</h4>
+        <p>Yêu cầu bảo mật email trong quản lý ATTT tổ chức. ISO 27001 kiểm soát A.13 (An toàn truyền thông) yêu cầu bảo vệ email. Nhiều khách hàng lớn đang tiến tới chứng nhận ISO 27001 — email security là điều kiện cần.</p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>💡 Tip bán hàng:</strong> Hỏi khách hàng: "Hệ thống email của quý vị đang được phân loại ở cấp độ ATTT mấy?" — Nếu họ đang triển khai hệ thống đáp ứng cấp độ an toàn hoặc bảo vệ DLCN, email security là yêu cầu bắt buộc, không tùy chọn.</p>
+    </div>
+  </section>
+
+  <hr class="div">
+
+  <!-- S1: PAIN POINTS -->
+  <section class="sec" id="s1">
+    <div class="sec-label">Phần 02 — Nhu Cầu Thực Tế</div>
+    <h2 class="sec-title">Pain Points Dẫn Đến Nhu Cầu Email Security</h2>
+    <p class="sec-lead">Đây là những vấn đề thực tế khách hàng đang đối mặt — hãy dùng để mở màn cuộc trò chuyện và tạo sự đồng cảm trước khi giới thiệu giải pháp.</p>
+
+    <ul class="pains">
+      <li class="pain">
+        <div class="pain-n">1</div>
+        <div>
+          <strong>Tấn công BEC (Business Email Compromise) ngày càng tinh vi</strong>
+          <p>Kẻ tấn công giả mạo CEO/CFO yêu cầu chuyển tiền. Chi phí trung bình 1 vụ BEC = <strong>4,88 triệu USD (IBM 2024)</strong>. Việt Nam: nhiều DN bị lừa hàng tỷ đồng qua email giả mạo đối tác. Không có file độc hại, chỉ có văn bản — AV truyền thống không phát hiện được.</p>
+        </div>
+      </li>
+      <li class="pain">
+        <div class="pain-n">2</div>
+        <div>
+          <strong>Phishing & Ransomware qua email gia tăng mạnh</strong>
+          <p><strong>&gt;80% sự cố an ninh mạng</strong> bắt nguồn từ email. Email phishing ngày càng tinh vi với AI-generated content không có lỗi chính tả. Ransomware vào qua link/file đính kèm email — có thể tê liệt toàn bộ hệ thống. Đặc biệt nguy hiểm với ngân hàng, y tế, sản xuất.</p>
+        </div>
+      </li>
+      <li class="pain">
+        <div class="pain-n">3</div>
+        <div>
+          <strong>Microsoft 365 / Google Workspace bảo vệ chưa đủ</strong>
+          <p>Khách hàng hay nói "đã có M365 Defender rồi" — nhưng M365 bỏ sót ~13,5% các mối đe dọa mà giải pháp chuyên biệt phát hiện được. M365 không có: Sandbox 3 lớp, Browser Isolation, DMARC management, phân tích VAP chi tiết, tự động thu hồi email sau khi giao.</p>
+        </div>
+      </li>
+      <li class="pain">
+        <div class="pain-n">4</div>
+        <div>
+          <strong>Rò rỉ dữ liệu nội bộ qua email (DLP)</strong>
+          <p>Nhân viên gửi dữ liệu nhạy cảm (hợp đồng, CCCD, tài liệu nội bộ) ra ngoài qua email — cố ý hoặc vô ý. Không có kiểm soát → vi phạm ND 13/2023, mất uy tín với đối tác. Đặc biệt nguy hiểm với ngành tài chính, y tế, pháp lý.</p>
+        </div>
+      </li>
+      <li class="pain">
+        <div class="pain-n">5</div>
+        <div>
+          <strong>Tấn công giả mạo tên miền (Domain Spoofing)</strong>
+          <p>Kẻ tấn công gửi email giả danh tên miền của tổ chức để lừa khách hàng/đối tác. Ảnh hưởng nghiêm trọng đến uy tín thương hiệu. Cần DMARC/DKIM/SPF — nhưng tự triển khai rất phức tạp và thiếu visibility.</p>
+        </div>
+      </li>
+      <li class="pain">
+        <div class="pain-n">6</div>
+        <div>
+          <strong>Đội SOC quá tải với alert, xử lý chậm</strong>
+          <p>Sau khi phát hiện email độc hại, nhân viên SOC phải tìm và xóa thủ công trong hàng trăm mailbox — mất hàng giờ. Không có khả năng tự động thu hồi email đã giao → window of exposure dài, thiệt hại gia tăng.</p>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <hr class="div">
+
+  <!-- S2: THỊ TRƯỜNG -->
+  <section class="sec" id="s2">
+    <div class="sec-label">Phần 03 — Cảnh Quan Thị Trường</div>
+    <h2 class="sec-title">Hiện Trạng Thị Trường Email Security</h2>
+    <p class="sec-lead">3 trường phái giải pháp chính trên thị trường — Proofpoint là hãng duy nhất có thể làm cả 3.</p>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="ci b">🏰</div>
+        <h4>SEG — Secure Email Gateway</h4>
+        <p>Cổng lọc thư trước khi vào mail server. Cách tiếp cận truyền thống, chặn tại cửa ngõ. <br><br><strong>Đại diện:</strong> Proofpoint PPS, Cisco SEG (IronPort), Mimecast, Barracuda, Symantec</p>
+      </div>
+      <div class="card">
+        <div class="ci a">☁️</div>
+        <h4>Native Platform Security</h4>
+        <p>Bảo mật tích hợp sẵn trong nền tảng email cloud. Tiện lợi nhưng thiếu chuyên sâu, không độc lập.<br><br><strong>Đại diện:</strong> Microsoft Defender for Office 365, Google Workspace Security</p>
+      </div>
+      <div class="card">
+        <div class="ci g">🤖</div>
+        <h4>ICES — API-based AI Security</h4>
+        <p>Giải pháp AI thuần, tích hợp qua API, phân tích sau khi nhận. Không chặn được tại cửa ngõ.<br><br><strong>Đại diện:</strong> Abnormal Security, Tessian, Avanan (Check Point), Material Security</p>
+      </div>
+    </div>
+
+    <h3>Vị Trí Các Nhà Cung Cấp Chính</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Hãng</th><th>Phân Khúc</th><th>Thế Mạnh Chính</th><th>Điểm Yếu</th></tr></thead>
+        <tbody>
+          <tr><td class="hl">🏆 Proofpoint</td><td>Enterprise/Gov</td><td>Toàn diện nhất — SEG + API + AI + SAT</td><td>Giá cao, cần tinh chỉnh</td></tr>
+          <tr><td>Microsoft Defender</td><td>SMB–Enterprise</td><td>Tích hợp M365, đơn giản</td><td>Bỏ sót 13.5% threats, thiếu sandbox chuyên sâu</td></tr>
+          <tr><td>Abnormal Security</td><td>Enterprise (M365)</td><td>AI phát hiện BEC rất tốt, dễ dùng</td><td>API-only, thiếu gateway, không có SAT/DLP</td></tr>
+          <tr><td>Mimecast</td><td>Mid-market</td><td>SEG + Archiving mạnh</td><td>Yếu hơn về AI, ít đổi mới</td></tr>
+          <tr><td>Cisco SEG (IronPort)</td><td>Enterprise/Gov</td><td>Gateway mạnh, on-prem tốt</td><td>Rất yếu về BEC, không có SAT</td></tr>
+          <tr><td>Barracuda</td><td>SMB</td><td>Giá rẻ, đơn giản</td><td>Thiếu tính năng enterprise</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr class="div">
+
+  <!-- S3: TÍNH NĂNG CƠ BẢN -->
+  <section class="sec" id="s3">
+    <div class="sec-label">Phần 04 — Tính Năng Nền Tảng</div>
+    <h2 class="sec-title">Các Tính Năng Cơ Bản của Email Security</h2>
+    <p class="sec-lead">Bất kỳ giải pháp email security nào cũng cần có các tính năng nền này — đây là "ngưỡng tối thiểu" để so sánh với đối thủ.</p>
+
+    <div class="grid-2">
+      <div class="card"><div class="ci r">🚫</div><h4>Chống Spam & Phishing</h4><p>Lọc email rác và email lừa đảo bằng reputation engine, ML model, danh sách đen IP/domain.</p></div>
+      <div class="card"><div class="ci b">🦠</div><h4>Chống Malware & Virus</h4><p>Quét file đính kèm bằng antivirus engine + sandbox phân tích hành vi file chưa biết.</p></div>
+      <div class="card"><div class="ci a">🔗</div><h4>URL Filtering</h4><p>Kiểm tra link trong email. Viết lại URL để kiểm tra tại thời điểm click (Time-of-Click).</p></div>
+      <div class="card"><div class="ci g">🔐</div><h4>SPF / DKIM / DMARC</h4><p>Xác thực email gốc gửi. DMARC giúp chặn email giả mạo tên miền của tổ chức.</p></div>
+      <div class="card"><div class="ci c">🔒</div><h4>Mã hóa Email</h4><p>Mã hóa email nhạy cảm khi gửi ra ngoài. TLS transport-level và message-level encryption.</p></div>
+      <div class="card"><div class="ci p">📁</div><h4>Quarantine & Reporting</h4><p>Cách ly email đáng ngờ để quản trị viên xem xét. Dashboard báo cáo mối đe dọa.</p></div>
+    </div>
+  </section>
+
+  <hr class="div">
+
+  <!-- S4: GIỚI THIỆU PROOFPOINT -->
+  <section class="sec" id="s4">
+    <div class="sec-label">Phần 05 — Về Proofpoint</div>
+    <h2 class="sec-title">Giới Thiệu Proofpoint Inc.</h2>
+
+    <div class="grid-4">
+      <div class="card" style="text-align:center;"><div style="font-size:2rem;margin-bottom:8px;">💰</div><div style="font-size:1.4rem;font-family:'Syne',sans-serif;font-weight:800;color:var(--cyan);">$2,03B</div><div style="font-size:11px;color:var(--muted);">Doanh thu 2025</div></div>
+      <div class="card" style="text-align:center;"><div style="font-size:2rem;margin-bottom:8px;">🏢</div><div style="font-size:1.4rem;font-family:'Syne',sans-serif;font-weight:800;color:var(--cyan);">85%</div><div style="font-size:11px;color:var(--muted);">Fortune 100</div></div>
+      <div class="card" style="text-align:center;"><div style="font-size:2rem;margin-bottom:8px;">🌍</div><div style="font-size:1.4rem;font-family:'Syne',sans-serif;font-weight:800;color:var(--cyan);">2M+</div><div style="font-size:11px;color:var(--muted);">Tổ chức bảo vệ</div></div>
+      <div class="card" style="text-align:center;"><div style="font-size:2rem;margin-bottom:8px;">📧</div><div style="font-size:1.4rem;font-family:'Syne',sans-serif;font-weight:800;color:var(--cyan);">3,4T</div><div style="font-size:11px;color:var(--muted);">Email quét/năm</div></div>
+    </div>
+
+    <p>Proofpoint được thành lập năm 2002, trụ sở tại Sunnyvale, California. Hãng tập trung <strong>100%</strong> vào cybersecurity cho con người và dữ liệu — không phải network hay endpoint. Đây là điểm khác biệt chiến lược: <strong>"People-Centric Security"</strong> — bảo vệ con người, không chỉ hệ thống.</p>
+
+    <div class="infobox">
+      <p><strong>Triết lý cốt lõi:</strong> Con người mới là mục tiêu cuối cùng của tấn công — không phải phần mềm hay máy móc. 99% các cuộc tấn công thành công đều cần sự tương tác của con người (click link, mở file, chuyển tiền). Proofpoint bảo vệ <em>con người</em> trước khi bảo vệ hệ thống.</p>
+    </div>
+
+    <h3>Hệ Sinh Thái Giải Pháp</h3>
+    <div class="grid-3">
+      <div class="card"><div class="ci b">📧</div><h4>Email Security</h4><p>Bảo vệ toàn diện cho email — cốt lõi của platform, mạnh nhất thị trường.</p></div>
+      <div class="card"><div class="ci a">🎓</div><h4>Security Awareness Training</h4><p>Đào tạo và kiểm thử nhân viên chống phishing, nâng cao nhận thức bảo mật.</p></div>
+      <div class="card"><div class="ci g">☁️</div><h4>Cloud Security & CASB</h4><p>Bảo vệ ứng dụng cloud, phát hiện tài khoản bị xâm phạm trên M365/Google.</p></div>
+      <div class="card"><div class="ci r">🕵️</div><h4>Insider Threat Management</h4><p>Phát hiện nhân viên rò rỉ dữ liệu có chủ ý hoặc do sơ suất.</p></div>
+      <div class="card"><div class="ci c">📊</div><h4>Digital Risk Protection</h4><p>Bảo vệ thương hiệu trên internet, phát hiện giả mạo domain, social media.</p></div>
+      <div class="card"><div class="ci p">🔐</div><h4>Data Loss Prevention (DLP)</h4><p>Ngăn rò rỉ dữ liệu nhạy cảm qua email và endpoint.</p></div>
+    </div>
+  </section>
+
+  <hr class="div">
+
+  <!-- S5: TÍNH NĂNG PROOFPOINT -->
+  <section class="sec" id="s5">
+    <div class="sec-label">Phần 06 — Giải Pháp Chi Tiết</div>
+    <h2 class="sec-title">Các Module Email Security của Proofpoint</h2>
+    <p class="sec-lead">Đây là các thành phần trong hệ thống — sale cần nắm tên và chức năng ngắn gọn của từng module.</p>
+
+    <div class="mod">
+      <div class="mod-hd"><div class="mod-name">Email Protection (Core)</div><span class="badge badge-core">CORE</span></div>
+      <p>Cổng bảo mật email chính (SEG). Lọc spam, phishing, malware tại cửa ngõ. Anti-spoofing (SPF/DKIM), chống giả mạo header. Kiểm soát outbound để bảo vệ uy tín tên miền. <strong>Đây là nền tảng của mọi gói cước.</strong></p>
+    </div>
+
+    <div class="mod c">
+      <div class="mod-hd"><div class="mod-name">TAP — Targeted Attack Protection</div><span class="badge badge-adv">ADVANCED</span></div>
+      <p>Bảo vệ chống tấn công có chủ đích. URL Defense: viết lại & kiểm tra link tại thời điểm click. Attachment Defense: sandbox phân tích file 3 lớp (tĩnh → động → bare metal). Phát hiện VAP (Very Attacked People) — nhận diện những nhân viên bị nhắm tấn công nhiều nhất.</p>
+    </div>
+
+    <div class="mod a">
+      <div class="mod-hd"><div class="mod-name">TRAP — Threat Response Auto-Pull</div><span class="badge badge-adv">ADVANCED</span></div>
+      <p>Tự động thu hồi email độc hại đã giao. Khi TAP phát hiện URL trong email trở thành độc hại sau khi đã giao, TRAP tự động tìm và xóa email đó khỏi tất cả mailbox trong tổ chức — không cần can thiệp thủ công. Giảm 90%+ thời gian xử lý sự cố cho đội SOC.</p>
+    </div>
+
+    <div class="mod g">
+      <div class="mod-hd"><div class="mod-name">EFD — Email Fraud Defense (DMARC)</div><span class="badge badge-adv">ADVANCED</span></div>
+      <p>Quản lý triển khai DMARC. Theo dõi tất cả nguồn gửi email dưới tên miền của tổ chức (kể cả bên thứ 3 như Salesforce, CRM). Dashboard visibility đầy đủ. Hướng dẫn từng bước đạt DMARC p=reject — bảo vệ thương hiệu khỏi email giả mạo.</p>
+    </div>
+
+    <div class="mod r">
+      <div class="mod-hd"><div class="mod-name">STP — Supplier Threat Protection</div><span class="badge badge-adv">ADVANCED</span></div>
+      <p>Đánh giá rủi ro từ email của nhà cung cấp/đối tác. Phát hiện tài khoản nhà cung cấp bị xâm phạm (Account Takeover) trước khi họ gửi email lừa đảo đến tổ chức bạn. <strong>Tính năng độc quyền — đối thủ không có.</strong></p>
+    </div>
+
+    <div class="mod p">
+      <div class="mod-hd"><div class="mod-name">CLEAR — Closed-Loop Email Analysis</div><span class="badge badge-prem">PREMIUM</span></div>
+      <p>Tự động phân loại email được user báo cáo là đáng ngờ (qua Outlook Add-in). AI tự động phân loại: spam, phishing thực sự, hay false alarm — giúp SOC tự động hóa phân tích email do người dùng báo cáo. Giảm 95% thời gian xử lý manual.</p>
+    </div>
+
+    <div class="mod">
+      <div class="mod-hd"><div class="mod-name">SER — Secure Email Relay</div><span class="badge badge-core">CORE</span></div>
+      <p>Chuyển tiếp email an toàn cho các ứng dụng gửi email (CRM, ERP, hệ thống thông báo). Đảm bảo email đến từ ứng dụng nội bộ không bị block bởi các gateway bên ngoài.</p>
+    </div>
+
+    <div class="mod c">
+      <div class="mod-hd"><div class="mod-name">Email DLP & Encryption</div><span class="badge badge-adv">ADVANCED</span></div>
+      <p>Ngăn rò rỉ dữ liệu qua email outbound. Smart IDs nhận diện số CCCD, số tài khoản ngân hàng, mã nguồn, v.v. Tự động mã hóa email nhạy cảm. Ghi log đầy đủ cho điều tra pháp y kỹ thuật số.</p>
+    </div>
+
+    <div class="mod g">
+      <div class="mod-hd"><div class="mod-name">Archiving & Continuity</div><span class="badge badge-prem">PREMIUM</span></div>
+      <p>Lưu trữ email lâu dài (10+ năm) cho compliance và eDiscovery. Email Continuity: dự phòng email khi mail server chính gặp sự cố — người dùng vẫn gửi/nhận được email qua emergency inbox.</p>
+    </div>
+  </section>
+
+  <hr class="div">
+
+  <!-- S6: NEXUS AI -->
+  <section class="sec" id="s6">
+    <div class="sec-label">Phần 07 — Lợi Thế Công Nghệ</div>
+    <h2 class="sec-title">Nền Tảng Nexus AI — Động Cơ Trí Tuệ của Proofpoint</h2>
+    <p class="sec-lead">Nexus là lý do tại sao Proofpoint đứng đầu — đây là điều sale nên nhấn mạnh khi khách hỏi về công nghệ.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="ci b">🧠</div>
+        <h4>Nexus ML — Machine Learning Engine</h4>
+        <p>Phân tích hành vi email, phát hiện BEC thuần văn bản không có link hay file đính kèm. Model "Supernova" dùng NLP hiểu ngữ cảnh yêu cầu chuyển tiền, thay đổi tài khoản ngân hàng. <strong>Điểm khác biệt lớn so với giải pháp truyền thống.</strong></p>
+      </div>
+      <div class="card">
+        <div class="ci a">👁️</div>
+        <h4>Nexus CV — Computer Vision</h4>
+        <p>Phân tích hình ảnh để phát hiện trang đăng nhập giả mạo, mã QR độc hại (Quishing). Nhìn trang web <em>như con người nhìn</em> — phát hiện giả mạo thương hiệu bằng logo recognition. Không hãng nào khác có tính năng này đầy đủ như vậy.</p>
+      </div>
+      <div class="card">
+        <div class="ci g">🕸️</div>
+        <h4>Nexus RG — Relationship Graph</h4>
+        <p>Xây dựng biểu đồ quan hệ giao tiếp giữa người gửi và nhận. Email từ người lạ với nội dung khẩn cấp = cảnh báo cao. Phát hiện chính xác BEC giả mạo quan hệ thân quen, email từ tài khoản nhà cung cấp bị chiếm quyền.</p>
+      </div>
+      <div class="card">
+        <div class="ci c">🌐</div>
+        <h4>Nexus TI — Threat Intelligence</h4>
+        <p>Dữ liệu từ 3,4 nghìn tỷ email/năm, 2,7 triệu khách hàng toàn cầu. Khi 1 tổ chức bị tấn công, tất cả khách hàng đều được bảo vệ ngay lập tức. IOC cập nhật real-time 24/7 bởi đội Threat Research chuyên sâu.</p>
+      </div>
+    </div>
+
+    <h3>Sandbox 3 Lớp — Lợi Thế Kỹ Thuật Quan Trọng</h3>
+    <div class="grid-3">
+      <div class="card">
+        <div class="ci b">📄</div>
+        <h4>Lớp 1: Static Analysis</h4>
+        <p>Kiểm tra cấu trúc file, tìm mẫu mã độc đã biết. Nhanh và hiệu quả với các mối đe dọa phổ biến.</p>
+      </div>
+      <div class="card">
+        <div class="ci a">⚡</div>
+        <h4>Lớp 2: Dynamic Analysis</h4>
+        <p>Chạy file trong máy ảo để quan sát hành động thực thi. Phát hiện mã độc ẩn trong macro, script.</p>
+      </div>
+      <div class="card">
+        <div class="ci r">🖥️</div>
+        <h4>Lớp 3: Bare Metal Analysis</h4>
+        <p>Chạy trên phần cứng thật. Đánh lừa malware "anti-VM". <strong>Proofpoint là một trong ít hãng có công nghệ này — đây là lợi thế cạnh tranh lớn.</strong></p>
+      </div>
+    </div>
+
+    <div class="callout">
+      <p><strong>Điểm bán hàng quan trọng:</strong> Browser Isolation — Khi URL không xác định được độ an toàn, trang web được render trên cloud Proofpoint, chỉ gửi "hình ảnh" về máy user. <strong>User không thể nhập mật khẩu vào trang giả mạo</strong> — chặn 100% Credential Theft kể cả khi user không nhận ra đây là trang phishing.</p>
+    </div>
+  </section>
+
+  <hr class="div">
+
+  <!-- S7: KIẾN TRÚC -->
+  <section class="sec" id="s7">
+    <div class="sec-label">Phần 08 — Triển Khai</div>
+    <h2 class="sec-title">Kiến Trúc & Mô Hình Triển Khai</h2>
+
+    <h3>Các Thành Phần Hệ Thống</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Thành Phần</th><th>Vai Trò</th><th>Ghi Chú</th></tr></thead>
+        <tbody>
+          <tr><td class="hl">Master Node</td><td>Trung tâm quản trị. Lưu cấu hình, quản lý user (sync AD), quarantine, báo cáo. Web console cho admin.</td><td>1 node hoặc HA pair</td></tr>
+          <tr><td class="hl">Filter Node(s)</td><td>Thực thi lọc thư: quét spam/virus/sandbox, thực thi DLP policy. Xử lý lưu lượng email thực tế.</td><td>Cluster tùy ý, không tốn thêm license</td></tr>
+          <tr><td class="hl">TAP Cloud Service</td><td>Sandbox trên cloud Proofpoint. Nhận file đính kèm/URL đáng ngờ từ Filter, trả kết quả trong vài phút.</td><td>Hoàn toàn trên cloud Proofpoint</td></tr>
+          <tr><td class="hl">Proofpoint Updates</td><td>Đẩy cập nhật mẫu mã độc, quy tắc spam, danh mục URL mới xuống hệ thống KH liên tục qua HTTPS 443.</td><td>Cần outbound port 443</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>3 Mô Hình Triển Khai</h3>
+    <div class="grid-3">
+      <div class="card">
+        <div class="ci c">☁️</div>
+        <h4>Cloud / PoD (Proofpoint on Demand)</h4>
+        <p>Master + Filter trên hạ tầng Proofpoint. KH chỉ cần chuyển hướng MX record. Không cần phần cứng, scale linh hoạt, update tự động. <strong>Khuyến nghị cho tổ chức dùng M365/Google Workspace.</strong></p>
+      </div>
+      <div class="card">
+        <div class="ci b">🏢</div>
+        <h4>On-Premises / PPS</h4>
+        <p>Cài đặt trên VM hoặc server vật lý trong data center của KH. <strong>Phù hợp với yêu cầu Data Residency</strong> (tài chính, chính phủ, quốc phòng). TAP vẫn là cloud service — đây là mô hình phổ biến nhất tại VN.</p>
+      </div>
+      <div class="card">
+        <div class="ci g">🔀</div>
+        <h4>Hybrid</h4>
+        <p>Filter node tại chỗ cho mail nội bộ + Filter node cloud cho internet mail. Tối ưu băng thông cho tập đoàn đa chi nhánh. Linh hoạt nhất — nhưng phức tạp hơn.</p>
+      </div>
+    </div>
+
+    <h3>Luồng Triển Khai Thực Tế (6 bước)</h3>
+    <ul class="steps">
+      <li class="step"><div class="step-n">1</div><div><strong>Chuẩn bị hạ tầng & mạng</strong><p>Mở port SMTP (25), HTTPS (443), LDAP (389/636). Cấp IP/VM cho Master + Filter nodes.</p></div></li>
+      <li class="step"><div class="step-n">2</div><div><strong>Cấu hình DNS</strong><p>Trỏ MX Record về Filter node. Cập nhật SPF record, thiết lập DKIM signing key.</p></div></li>
+      <li class="step"><div class="step-n">3</div><div><strong>Tích hợp Mail Server (M365/Exchange)</strong><p>Cấu hình Inbound Connector để chỉ nhận mail từ IP Proofpoint (tránh bypass).</p></div></li>
+      <li class="step"><div class="step-n">4</div><div><strong>Đồng bộ người dùng & Chính sách</strong><p>Kết nối LDAP/Azure AD để sync user/group. Thiết lập policy theo phòng ban.</p></div></li>
+      <li class="step"><div class="step-n">5</div><div><strong>Kiểm thử & Tinh chỉnh (2–4 tuần)</strong><p>Chạy dual delivery song song với hệ thống hiện có. Tinh chỉnh ngưỡng phát hiện, giảm false positive.</p></div></li>
+      <li class="step"><div class="step-n">6</div><div><strong>Go-live & Đào tạo admin</strong><p>Chuyển toàn bộ luồng thư qua Proofpoint. Cài Outlook Add-in. Kết nối TRAP với M365/Exchange.</p></div></li>
+    </ul>
+  </section>
+
+  <hr class="div">
+
+  <!-- S8: LICENSE -->
+  <section class="sec" id="s8">
+    <div class="sec-label">Phần 09 — Giá Cước & Sizing</div>
+    <h2 class="sec-title">Cơ Chế License & Cách Sizing</h2>
+
+    <div class="infobox">
+      <p><strong>License là Subscription (thuê bao):</strong> Tính theo số mailbox (user) đang hoạt động mỗi năm. Không có perpetual license. Bao gồm tất cả: cập nhật, cloud service (TAP), technical support. Triển khai On-prem: không tính thêm phí cho số node Master/Filter — có thể triển khai bao nhiêu tùy ý.</p>
+    </div>
+
+    <h3>Các Gói Bundle 2025</h3>
+    <div class="tiers">
+      <div class="tier t-px">
+        <div class="t-name" style="color:#aaa;">PX</div>
+        <div class="t-price">~$20–35/user/năm</div>
+        <ul><li>Bảo vệ AI cơ bản (API)</li><li>Dành cho SMB</li><li>Không có SEG/Gateway</li></ul>
+      </div>
+      <div class="tier t-p0">
+        <div class="t-name" style="color:#60a5fa;">P0</div>
+        <div class="t-price">~$40–70/user/năm</div>
+        <ul><li>Email Protection (SEG)</li><li>TAP (URL + Sandbox)</li><li>TRAP (Auto Pull)</li><li>People Risk Explorer</li></ul>
+      </div>
+      <div class="tier t-p1">
+        <div class="t-name" style="color:#00b4d8;">P1</div>
+        <div class="t-price">Giá tùy chỉnh</div>
+        <ul><li>Tất cả P0</li><li>Security Awareness Training</li><li>Phishing Simulation</li><li>Đào tạo hành vi</li></ul>
+      </div>
+      <div class="tier t-p2">
+        <div class="t-name" style="color:#f59e0b;">P2</div>
+        <div class="t-price">Enterprise pricing</div>
+        <ul><li>Tất cả P1</li><li>Email Fraud Defense</li><li>Internal Mail Defense</li><li>Cloud Account Defense</li></ul>
+      </div>
+      <div class="tier t-p3">
+        <div class="t-name" style="color:#10b981;">P3</div>
+        <div class="t-price">Enterprise pricing</div>
+        <ul><li>Tất cả P2</li><li>Browser Isolation</li><li>Threat Research Services</li><li>Full Platform</li></ul>
+      </div>
+    </div>
+
+    <h3>Gợi Ý Gói Theo Khách Hàng</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Khách Hàng</th><th>Gói Phù Hợp</th><th>Chi Phí Ước Tính</th><th>Lý Do</th></tr></thead>
+        <tbody>
+          <tr><td>DN vừa &lt;500 user, dùng M365</td><td class="hl">PX / P0</td><td>$20–70/user/năm</td><td>Bảo vệ cơ bản, hiệu quả chi phí</td></tr>
+          <tr><td>DN lớn 500–5000 user</td><td class="hl">P0 / P1</td><td>$40–70/user/năm</td><td>Cần SAT + sandbox đầy đủ</td></tr>
+          <tr><td>Ngân hàng / Tài chính &gt;2000 user</td><td class="hl">P2 / P3</td><td>Enterprise deal</td><td>Cần DMARC, DLP, Internal Mail Defense</td></tr>
+          <tr><td>Chính phủ / Quốc phòng (on-prem)</td><td class="hl">P0 / P2 + PPS</td><td>Negotiate</td><td>Yêu cầu data residency, on-prem</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Cách Sizing — Thông Tin Cần Thu Thập Từ KH</h3>
+    <div class="grid-2">
+      <div class="card"><div class="ci b">👥</div><h4>Người Dùng</h4><p>Tổng số mailbox cần bảo vệ (user + shared + distribution lists). Lưu lượng email đỉnh/giờ. Kích thước email trung bình.</p></div>
+      <div class="card"><div class="ci g">🖥️</div><h4>Hạ Tầng</h4><p>Mail server hiện tại (M365, Exchange On-prem, Zimbra...). Số data center / chi nhánh. Yêu cầu về Data Residency.</p></div>
+      <div class="card"><div class="ci a">⚙️</div><h4>Yêu Cầu Kỹ Năng</h4><p>Tích hợp SIEM? Yêu cầu Archiving? Cần DMARC p=reject? Yêu cầu đào tạo nhân viên?</p></div>
+      <div class="card"><div class="ci r">💰</div><h4>Budget & Timeline</h4><p>Ngân sách hàng năm cho email security. Timeline triển khai. Hợp đồng 1 năm hay 3 năm? (3 năm discount tốt hơn)</p></div>
+    </div>
+  </section>
+
+  <hr class="div">
+
+  <!-- S9: ĐIỂM MẠNH ĐỘC QUYỀN -->
+  <section class="sec" id="s9">
+    <div class="sec-label">Phần 10 — Lợi Thế Cạnh Tranh</div>
+    <h2 class="sec-title">Điểm Mạnh Độc Quyền — Tính Năng Đối Thủ Không Có</h2>
+    <p class="sec-lead">Đây là "vũ khí" để win competitive deal — nhấn mạnh những điểm này khi khách hàng so sánh với đối thủ.</p>
+
+    <ul class="strs">
+      <li class="str-item"><div class="str-ic">🦾</div><div><strong>Sandbox Bare Metal Analysis — Độc quyền trên thị trường</strong><p>Phân tích file trên phần cứng thật (không phải VM) — đánh lừa các loại malware biết né máy ảo. Proofpoint là 1 trong 2-3 hãng trên thế giới có công nghệ này tích hợp trong email security.</p></div></li>
+      <li class="str-item"><div class="str-ic">🔍</div><div><strong>STP (Supplier Threat Protection) — Không đối thủ nào có</strong><p>Đánh giá rủi ro từ email nhà cung cấp bị compromise TRƯỚC khi họ gửi cho bạn. Cực kỳ quan trọng cho ngân hàng, tập đoàn lớn với hàng nghìn nhà cung cấp trong chuỗi cung ứng.</p></div></li>
+      <li class="str-item"><div class="str-ic">🌐</div><div><strong>Browser Isolation tích hợp sẵn trong platform</strong><p>Render trang web nghi ngờ trên cloud, gửi "ảnh" về máy user — không hãng email security nào khác có tính năng này tích hợp native. Chặn tuyệt đối Credential Theft từ trang phishing.</p></div></li>
+      <li class="str-item"><div class="str-ic">👁️</div><div><strong>Computer Vision cho QR Code Phishing (Quishing)</strong><p>Giải mã và phân tích URL ẩn trong mã QR trong ảnh đính kèm email. Xu hướng tấn công mới nhất năm 2024-2025 mà hầu hết đối thủ chưa xử lý được.</p></div></li>
+      <li class="str-item"><div class="str-ic">🏗️</div><div><strong>Hybrid SEG + API Architecture — Linh hoạt nhất thị trường</strong><p>Chặn tại cửa ngõ (SEG) VÀ phân tích sau nhận (API) — không phải chọn một. Abnormal chỉ có API (không chặn được trước), Cisco chỉ có SEG (yếu về BEC/AI). Proofpoint làm cả hai tốt nhất.</p></div></li>
+      <li class="str-item"><div class="str-ic">🔁</div><div><strong>TRAP Auto-Pull tốc độ cao</strong><p>Thu hồi email độc hại tự động trong toàn bộ mailbox chỉ trong vài chục giây sau khi phát hiện. SOC không cần làm gì. Số liệu thực tế: giảm Mean Time to Respond (MTTR) từ 4+ giờ xuống còn &lt;1 phút.</p></div></li>
+      <li class="str-item"><div class="str-ic">📊</div><div><strong>VAP (Very Attacked People) — Insight độc đáo về rủi ro con người</strong><p>Xác định chính xác những nhân viên bị tấn công nhiều nhất → CISO có thể ưu tiên bảo vệ và đào tạo đúng người. Không chỉ là thông tin email — còn là People Risk Intelligence.</p></div></li>
+      <li class="str-item"><div class="str-ic">🔧</div><div><strong>Triển khai On-Premises đầy đủ (PPS) — Hiếm trên thị trường</strong><p>Trong thời đại "cloud-only", Proofpoint vẫn hỗ trợ on-prem hoàn toàn. Đây là lợi thế quyết định với khách hàng Chính phủ, Quốc phòng, Ngân hàng VN yêu cầu data residency.</p></div></li>
+    </ul>
+  </section>
+
+  <hr class="div">
+
+  <!-- S10: KHÁCH HÀNG MỤC TIÊU -->
+  <section class="sec" id="s10">
+    <div class="sec-label">Phần 11 — Target Market</div>
+    <h2 class="sec-title">Nhóm Khách Hàng Phù Hợp tại Việt Nam</h2>
+
+    <div class="greenbox">
+      <p><strong>Tiêu chí chọn target:</strong> Tổ chức có &gt;200 mailbox, xử lý dữ liệu nhạy cảm (tài chính, pháp lý, y tế, cá nhân), đã dùng M365/Exchange và có ngân sách IT security từ $30K+/năm trở lên.</p>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="ci b">🏦</div>
+        <h4>Ngân Hàng & Tổ Chức Tài Chính — Ưu Tiên Cao Nhất</h4>
+        <p><strong>Tại sao phù hợp:</strong> Tuân thủ TT09/2020/TT-NHNN, mục tiêu BEC cao giá trị, xử lý DLCN khối lượng lớn. DMARC là yêu cầu gần như bắt buộc.<br><br><strong>Pain point chính:</strong> Email giả mạo lãnh đạo chuyển tiền, giả mạo domain gửi cho khách hàng, rò rỉ tài liệu hợp đồng.<br><br><strong>Target:</strong> 49 ngân hàng VN, công ty chứng khoán, bảo hiểm, fintech lớn.</p>
+      </div>
+      <div class="card">
+        <div class="ci a">🏛️</div>
+        <h4>Cơ Quan Nhà Nước & Bộ Ban Ngành — Ưu Tiên Cao</h4>
+        <p><strong>Tại sao phù hợp:</strong> Luật ATTT + An ninh mạng bắt buộc có giải pháp bảo vệ. Yêu cầu on-premises mạnh (Proofpoint PPS). Ngân sách từ ngân sách nhà nước.<br><br><strong>Pain point:</strong> Email giả mạo cơ quan nhà nước, tấn công APT vào hệ thống trọng yếu.<br><br><strong>Target:</strong> Bộ, UBND tỉnh/thành, các cục/vụ có hệ thống thông tin cấp độ 3+.</p>
+      </div>
+      <div class="card">
+        <div class="ci g">📊</div>
+        <h4>Chứng Khoán & Quản Lý Tài Sản</h4>
+        <p><strong>Tại sao phù hợp:</strong> Dữ liệu giao dịch siêu nhạy cảm, mục tiêu tấn công tài chính cao. Yêu cầu Archiving cho kiểm toán/pháp lý. BEC nhắm vào giao dịch lớn.<br><br><strong>Target:</strong> 80+ công ty chứng khoán, quỹ đầu tư, asset management.</p>
+      </div>
+      <div class="card">
+        <div class="ci r">🏥</div>
+        <h4>Y Tế & Bệnh Viện Lớn</h4>
+        <p><strong>Tại sao phù hợp:</strong> Dữ liệu hồ sơ bệnh nhân là DLCN đặc biệt nhạy cảm (ND13/2023). Ransomware qua email có thể tê liệt hệ thống ICU/điều trị. Thiếu giải pháp bảo mật email chuyên biệt.<br><br><strong>Target:</strong> Bệnh viện T.Ư, bệnh viện tư nhân lớn (Vinmec, FV, Hoan My).</p>
+      </div>
+      <div class="card">
+        <div class="ci c">🏭</div>
+        <h4>Tập Đoàn & DN FDI Lớn</h4>
+        <p><strong>Tại sao phù hợp:</strong> Thường phải tuân thủ theo chuẩn security của công ty mẹ nước ngoài (ISO 27001, SOC2). Chuỗi cung ứng phức tạp → Supply Chain Attack risk cao. Email là kênh chính trao đổi tài liệu nhạy cảm.<br><br><strong>Target:</strong> VinGroup, FPT, Thaco, Samsung, Intel, các KCN lớn.</p>
+      </div>
+      <div class="card">
+        <div class="ci p">✈️</div>
+        <h4>Hàng Không, Logistics & Năng Lượng</h4>
+        <p><strong>Tại sao phù hợp:</strong> Hạ tầng quan trọng quốc gia. Email là kênh giao tiếp với đối tác nước ngoài, nhà cung cấp nhiên liệu, dịch vụ kỹ thuật. Rủi ro chuỗi cung ứng cao.<br><br><strong>Target:</strong> Vietnam Airlines, VinFast, Petrovietnam, EVN, Viettel.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="div">
+
+  <!-- S11: SWOT -->
+  <section class="sec" id="s11">
+    <div class="sec-label">Phần 12 — Phân Tích Chiến Lược</div>
+    <h2 class="sec-title">Phân Tích SWOT theo Phân Khúc Khách Hàng VN</h2>
+
+    <div class="swot">
+      <div class="swot-q sw-s">
+        <h4>Strengths — Điểm Mạnh</h4>
+        <ul>
+          <li>Leader Gartner MQ 2025 — uy tín bán hàng cao nhất</li>
+          <li>Hỗ trợ On-prem đầy đủ — phù hợp yêu cầu VN</li>
+          <li>Sandbox Bare Metal — phát hiện zero-day tốt nhất</li>
+          <li>STP — bảo vệ chuỗi cung ứng, độc quyền</li>
+          <li>Tích hợp sâu M365/Exchange (phổ biến nhất VN)</li>
+          <li>Browser Isolation native — tính năng không ai có</li>
+        </ul>
+      </div>
+      <div class="swot-q sw-w">
+        <h4>Weaknesses — Điểm Yếu</h4>
+        <ul>
+          <li>Giá cao — khó cạnh tranh với SMB ít ngân sách</li>
+          <li>Giao diện admin phức tạp — cần training admin</li>
+          <li>Không có văn phòng đại diện tại VN</li>
+          <li>Thời gian triển khai & tuning lâu hơn Abnormal</li>
+          <li>Tài liệu tiếng Việt hạn chế</li>
+        </ul>
+      </div>
+      <div class="swot-q sw-o">
+        <h4>Opportunities — Cơ Hội</h4>
+        <ul>
+          <li>ND 13/2023 tạo nhu cầu DLP cho tất cả tổ chức</li>
+          <li>Yêu cầu cấp độ ATTT ngày càng nhiều đơn vị nhà nước</li>
+          <li>BEC ngày càng phổ biến tại VN — nhu cầu tăng cao</li>
+          <li>Xu hướng chuyển M365 tạo nhu cầu email security layer</li>
+          <li>Khách hàng FDI mang yêu cầu security từ công ty mẹ</li>
+          <li>Chứng khoán & fintech tăng trưởng mạnh 2025</li>
+        </ul>
+      </div>
+      <div class="swot-q sw-t">
+        <h4>Threats — Thách Thức</h4>
+        <ul>
+          <li>Microsoft "native + cheap" cho KH đã có M365 E5</li>
+          <li>Abnormal Security tiếp cận thị trường aggressively</li>
+          <li>Budget bị cạnh tranh bởi các hạng mục khác (firewall, endpoint)</li>
+          <li>Cisco SEG có quan hệ sẵn với nhiều KH tài chính/Gov VN</li>
+          <li>Quy trình đấu thầu chậm ở khu vực nhà nước</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <hr class="div">
+
+  <!-- S12: LỢI ÍCH & XẾP HẠNG -->
+  <section class="sec" id="s12">
+    <div class="sec-label">Phần 13 — Giá Trị Giải Pháp</div>
+    <h2 class="sec-title">Lợi Ích & Xếp Hạng Thị Trường</h2>
+
+    <div class="rank-hero">
+      <div class="num">#1</div>
+      <div class="lbl">Email Security Leader toàn cầu<br><small style="font-size:11px;">Gartner MQ 2025 · Forrester Wave · SE Labs AAA Rating</small></div>
+    </div>
+
+    <div class="grid-3">
+      <div class="card"><div class="ci b">🛡️</div><h4>Giảm Thiểu Rủi Ro</h4><p>Ngăn chặn 99.99% spam/phishing tại cửa ngõ. Phát hiện BEC, ransomware, zero-day không bộ lọc nào khác bắt được. Giảm thiểu chi phí sự cố (trung bình $4.88M/vụ BEC).</p></div>
+      <div class="card"><div class="ci g">⏱️</div><h4>Hiệu Quả Vận Hành SOC</h4><p>TRAP giảm MTTR từ giờ xuống phút. CLEAR tự động phân loại 95% email user báo cáo. SOC tập trung vào real threats thay vì xử lý thủ công.</p></div>
+      <div class="card"><div class="ci a">✅</div><h4>Tuân Thủ & Pháp Lý</h4><p>Đáp ứng ND 13/2023, TT09, Luật ATTT. DMARC chứng minh bảo vệ thương hiệu. Email archiving cho eDiscovery, kiểm toán, tranh chấp pháp lý.</p></div>
+      <div class="card"><div class="ci r">🎓</div><h4>Giảm Rủi Ro Con Người</h4><p>Security Awareness Training tích hợp giảm 90% click rate trên phishing simulation. VAP insights cho phép ưu tiên bảo vệ đúng nhân sự quan trọng.</p></div>
+      <div class="card"><div class="ci c">♾️</div><h4>Tính Liên Tục Kinh Doanh</h4><p>Email Continuity đảm bảo hoạt động khi mail server gặp sự cố. Archiving bảo toàn dữ liệu email cho pháp lý và nghiệp vụ lâu dài.</p></div>
+      <div class="card"><div class="ci p">📈</div><h4>ROI Đo Lường Được</h4><p>Tránh 1 vụ BEC = tiết kiệm $4.88M. Giảm 70% thời gian xử lý alert của SOC. Compliance avoidance: tránh phạt vi phạm dữ liệu cá nhân (tối đa 5% doanh thu).</p></div>
+    </div>
+
+    <div class="callout">
+      <p><strong>Xếp hạng phân tích độc lập:</strong> Gartner Magic Quadrant 2025 — <strong>Leader</strong> (nhiều năm liên tiếp, vị trí #1). Forrester Wave Email Security — <strong>Leader</strong> (điểm cao nhất về Current Offering). SE Labs Enterprise Email Security — <strong>AAA Rating</strong> (mức cao nhất). Proofpoint là hãng DUY NHẤT đáp ứng 9/9 yêu cầu bắt buộc trong báo cáo Gartner 2024/2025.</p>
+    </div>
+  </section>
+
+  <hr class="div">
+
+  <!-- S13: FAQ / TÌNH HUỐNG -->
+  <section class="sec" id="s13">
+    <div class="sec-label">Phần 14 — Tình Huống Bán Hàng</div>
+    <h2 class="sec-title">Câu Hỏi & Tình Huống Thường Gặp</h2>
+    <p class="sec-lead">Các tình huống thực tế sale gặp — cùng script trả lời gợi ý.</p>
+
+    <div class="faqs">
+
+      <div class="faq-item">
+        <button class="faq-q">
+          Khi tiếp cận C-Level (CEO, CIO, CISO) — nói gì?
+          <span class="arr">▼</span>
+        </button>
+        <div class="faq-a">
+          <p>C-Level quan tâm đến: <strong>Rủi ro kinh doanh, Tuân thủ pháp lý, ROI và chi phí tổng thể</strong>. Không nói về tính năng kỹ thuật.</p>
+          <div class="script">
+            <div class="script-lbl">Script gợi ý cho CEO/CIO</div>
+            <p>"Trong năm nay, trung bình mỗi vụ tấn công email kinh doanh (BEC) gây thiệt hại 4,88 triệu USD. Tại Việt Nam, chúng tôi đã ghi nhận nhiều trường hợp doanh nghiệp bị lừa hàng chục tỷ đồng qua email giả mạo đối tác/lãnh đạo. Proofpoint giúp quý vị có một lớp kiểm soát chuyên biệt để ngăn chặn điều đó — đồng thời đáp ứng các yêu cầu Nghị định 13/2023 về bảo vệ dữ liệu cá nhân mà tổ chức của quý vị đang xử lý qua email hàng ngày."</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">
+          Khi tiếp cận Decision Maker (IT Director, Giám đốc Công nghệ) — nói gì?
+          <span class="arr">▼</span>
+        </button>
+        <div class="faq-a">
+          <p>Decision maker quan tâm: <strong>Giải pháp có thực sự giải quyết được bài toán không, chi phí triển khai và vận hành, tích hợp với hạ tầng hiện có.</strong></p>
+          <div class="script">
+            <div class="script-lbl">Script gợi ý</div>
+            <p>"Hiện tại tổ chức anh/chị đang dùng M365 — Microsoft Defender đã làm tốt bước lọc cơ bản. Nhưng các tấn công BEC — email giả mạo không có link, không có file — Defender không phát hiện được vì không có AI hành vi. Proofpoint bổ sung đúng lỗ hổng đó, với kiến trúc hybrid vừa chặn tại cửa ngõ vừa phân tích sau nhận. Triển khai on-premises, không cần chuyển dữ liệu ra ngoài. Thời gian POC khoảng 4 tuần."</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">
+          Khi tiếp cận Security Manager / SOC Lead — nói gì?
+          <span class="arr">▼</span>
+        </button>
+        <div class="faq-a">
+          <p>Security Manager quan tâm: <strong>Chất lượng phát hiện, tự động hóa, tích hợp SIEM, workflow SOC, false positive rate.</strong></p>
+          <div class="script">
+            <div class="script-lbl">Script gợi ý</div>
+            <p>"Bài toán của anh/chị là đội SOC đang bị ngập trong alert và xử lý manual. Proofpoint giải quyết điều đó ở 3 điểm: Một là TRAP tự động thu hồi email độc hại khỏi tất cả mailbox trong vài chục giây mà không cần can thiệp. Hai là CLEAR tự động phân loại 95% email user báo cáo. Ba là Nexus AI của chúng tôi có false positive rate thấp nhất thị trường — giảm noise đáng kể. Chúng tôi có thể tích hợp với Splunk/QRadar hiện có của anh/chị."</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">
+          KH đang xây dựng hệ thống cấp độ ATTT / bảo vệ DLCN, có cần email security không?
+          <span class="arr">▼</span>
+        </button>
+        <div class="faq-a">
+          <p><strong>Tình huống này rất thuận lợi — đây là hook pháp lý mạnh nhất.</strong></p>
+          <ul>
+            <li><strong>Nghị định 85/2016/NĐ-CP:</strong> Hệ thống email thường được phân loại cấp độ 3 trở lên → bắt buộc có biện pháp kỹ thuật bảo vệ chuyên biệt, không thể dùng built-in platform.</li>
+            <li><strong>Nghị định 13/2023/NĐ-CP:</strong> Email là kênh xử lý DLCN chính. Nếu bị rò rỉ qua phishing/BEC → vi phạm trực tiếp nghĩa vụ bảo vệ DLCN. Cần có DLP email.</li>
+          </ul>
+          <div class="script">
+            <div class="script-lbl">Script gợi ý</div>
+            <p>"Thực ra email security là một phần không thể thiếu trong hệ thống đáp ứng cấp độ ATTT. Theo Nghị định 85/2016, hệ thống email của quý vị nếu phân loại cấp độ 3+ thì phải có biện pháp kiểm soát truy cập và bảo vệ chuyên biệt — không thể dùng mặc định của M365. Đồng thời ND 13/2023 yêu cầu biện pháp kỹ thuật ngăn rò rỉ DLCN — email DLP là yêu cầu trực tiếp. Proofpoint giải quyết cả hai yêu cầu trong một giải pháp."</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">
+          KH nói "Hệ thống đã có nhiều security rồi, email security ưu tiên thấp"
+          <span class="arr">▼</span>
+        </button>
+        <div class="faq-a">
+          <p>Đây là objection phổ biến nhất. Cách tiếp cận: <strong>Dẫn số liệu → Chứng minh gap → Tạo urgency.</strong></p>
+          <div class="script">
+            <div class="script-lbl">Script gợi ý</div>
+            <p>"Tôi hiểu, và thực ra đó chính xác là lý do tại sao email security quan trọng. Hơn 80% sự cố an ninh mạng bắt đầu từ email — firewall và endpoint không bảo vệ được kênh tấn công này. Quý vị đã có firewall để bảo vệ mạng, EDR để bảo vệ endpoint — nhưng nếu nhân viên bị dụ click một link phishing tinh vi, hoặc CEO bị giả mạo gửi lệnh chuyển tiền, thì tất cả những giải pháp kia đều không phát huy tác dụng. Email security là lớp bảo vệ bổ sung không thể thay thế bằng bất kỳ giải pháp nào khác."</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">
+          License của giải pháp là loại gì? Triển khai thế nào?
+          <span class="arr">▼</span>
+        </button>
+        <div class="faq-a">
+          <ul>
+            <li><strong>Loại license:</strong> Subscription (thuê bao hàng năm), không có perpetual. Tính theo số mailbox (user). Bao gồm: updates, cloud service (TAP), technical support trong thời gian hiệu lực.</li>
+            <li><strong>Thời hạn:</strong> 1 năm hoặc 3 năm (3 năm discount tốt hơn, phổ biến ở enterprise deal).</li>
+            <li><strong>Mô hình triển khai:</strong> Cloud (PoD), On-Premises (PPS), hoặc Hybrid. Khách hàng VN thường chọn On-Premises (PPS) do yêu cầu data residency. TAP vẫn là cloud service dù hệ thống on-prem.</li>
+            <li><strong>POC:</strong> Proofpoint hỗ trợ POC 30 ngày. Triển khai chính thức mất 4–8 tuần tùy quy mô.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q">
+          Khách hàng nói "Đã có Microsoft Defender, tại sao cần thêm Proofpoint?"
+          <span class="arr">▼</span>
+        </button>
+        <div class="faq-a">
+          <p>Đây là objection thứ hai phổ biến nhất — đặc biệt với KH đã có M365 E3/E5.</p>
+          <ul>
+            <li>Microsoft Defender bỏ sót ~13,5% các mối đe dọa mà Proofpoint phát hiện được (nghiên cứu độc lập).</li>
+            <li>Defender <strong>không có</strong>: Sandbox 3 lớp (kể cả Bare Metal), Browser Isolation, DMARC management đầy đủ (EFD), Supplier Threat Protection, phân tích VAP chi tiết, TRAP thu hồi email tự động.</li>
+            <li>Defender không phát hiện BEC thuần văn bản hiệu quả — đây là loại tấn công nguy hiểm nhất tài chính.</li>
+          </ul>
+          <div class="script">
+            <div class="script-lbl">Script gợi ý</div>
+            <p>"Microsoft Defender tốt cho 80–85% email rác thông thường — đó là công việc của nó. Nhưng 15–20% còn lại là các tấn công tinh vi nhắm vào tổ chức quý vị — BEC, supply chain attack, QR phishing — Defender không có đủ công nghệ chuyên biệt để xử lý. Không khác gì dùng khóa cửa thông thường cho ngân hàng — đủ cho nhà dân, nhưng không đủ cho vault."</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="div">
+
+  <!-- S14: TÌM KHÁCH HÀNG -->
+  <section class="sec" id="s14">
+    <div class="sec-label">Phần 15 — Prospecting</div>
+    <h2 class="sec-title">Cách Tìm Khách Hàng Mục Tiêu</h2>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="ci b">🔍</div>
+        <h4>Dấu Hiệu "Mua Ngay" (Hot Signals)</h4>
+        <p>Tổ chức vừa bị tấn công phishing/BEC được báo chí đưa tin. Tổ chức đang triển khai M365 mới hoặc nâng cấp Exchange. Tổ chức đang thực hiện đánh giá/phân loại cấp độ ATTT. Tổ chức đang chuẩn bị chứng nhận ISO 27001.</p>
+      </div>
+      <div class="card">
+        <div class="ci g">📋</div>
+        <h4>Kênh Tìm Kiếm Hiệu Quả</h4>
+        <p>LinkedIn: tìm "CISO", "Head of IT Security", "Security Manager" tại target industry. Đấu thầu công khai (muasamcong.mpi.gov.vn): tìm gói thầu "email security", "bảo mật email". Báo cáo vi phạm dữ liệu tại VN. Hội thảo an ninh mạng (VNISA, ISACA Vietnam).</p>
+      </div>
+      <div class="card">
+        <div class="ci a">🏦</div>
+        <h4>Danh Sách Target Ngân Hàng VN</h4>
+        <p>49 ngân hàng thương mại (Vietcombank, VietinBank, BIDV, Agribank, MB, Techcombank, VPBank, TPBank...). Ưu tiên: ngân hàng chưa có giải pháp email security chuyên biệt hoặc đang dùng Mimecast/Cisco cũ. Kênh vào: qua CISO hoặc IT Security team.</p>
+      </div>
+      <div class="card">
+        <div class="ci r">🤝</div>
+        <h4>Phát Triển Qua Ecosystem</h4>
+        <p>Hợp tác với SI/Reseller đang bán M365 — đề xuất "bundle" email security layer. Khai thác quan hệ của security partner (Palo Alto, CrowdStrike partner) — họ có cùng target KH. Referral từ KH hiện có của Proofpoint (toàn cầu: JPMorgan, HSBC branch VN).</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="div">
+
+  <!-- S15: ĐỐI THỦ -->
+  <section class="sec" id="s15">
+    <div class="sec-label">Phần 16 — Competitive Intel</div>
+    <h2 class="sec-title">Đối Thủ Cạnh Tranh trong Email Security</h2>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Đối Thủ</th><th>Kiến Trúc</th><th>Thế Mạnh</th><th>Cách Thắng</th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="hl">Microsoft Defender (M365)</td>
+            <td>Native platform</td>
+            <td>Tích hợp sẵn M365, đơn giản, không tốn thêm (E5)</td>
+            <td>Nhấn 13.5% miss rate, thiếu bare metal sandbox, không có Browser Isolation, không có TRAP auto-pull, yếu về BEC detection</td>
+          </tr>
+          <tr>
+            <td class="hl">Abnormal Security</td>
+            <td>API-only AI</td>
+            <td>BEC detection rất tốt, dễ dùng, ít cần admin</td>
+            <td>Không chặn được tại cửa ngõ (API-only), không có SAT, DLP, Browser Isolation, DMARC management, không hỗ trợ on-prem — không phù hợp với yêu cầu VN</td>
+          </tr>
+          <tr>
+            <td class="hl">Mimecast</td>
+            <td>SEG + API</td>
+            <td>Archiving mạnh, giá vừa phải</td>
+            <td>Nhấn ít đổi mới (acquired, chậm cập nhật), không có Browser Isolation, STP yếu, không có bare metal sandbox, xếp hạng Gartner thấp hơn</td>
+          </tr>
+          <tr>
+            <td class="hl">Cisco SEG (IronPort)</td>
+            <td>SEG truyền thống</td>
+            <td>Gateway mạnh, quan hệ tốt với gov/telco VN</td>
+            <td>Cực yếu về BEC (không có AI behavior), không có SAT, không có auto-pull, kiến trúc cũ, thiếu cloud-native features. Proofpoint đứng trên Cisco Gartner MQ 2025.</td>
+          </tr>
+          <tr>
+            <td class="hl">Barracuda / Sophos / Fortinet</td>
+            <td>SMB SEG</td>
+            <td>Giá rẻ, đơn giản</td>
+            <td>Không phải enterprise-grade. Thiếu hầu hết advanced features. Dễ thắng ở enterprise deal.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <hr class="div">
+
+  <!-- S16: PORTFOLIO -->
+  <section class="sec" id="s16">
+    <div class="sec-label">Phần 17 — Portfolio</div>
+    <h2 class="sec-title">Ngoài Email Security — Proofpoint Còn Có Gì?</h2>
+    <p class="sec-lead">Proofpoint là platform bảo mật toàn diện lấy con người làm trung tâm. Đây là cơ hội cross-sell sau khi win email security deal.</p>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="ci a">🎓</div>
+        <h4>Security Awareness Training (SAT)</h4>
+        <p>Phishing simulation + đào tạo thay đổi hành vi nhân viên. Nội dung đào tạo hàng nghìn module, đa ngôn ngữ. Báo cáo click rate, nhận thức theo phòng ban. <strong>Có thể bán riêng hoặc bundle với P1+.</strong></p>
+      </div>
+      <div class="card">
+        <div class="ci g">☁️</div>
+        <h4>Cloud Account Defense (CAD)</h4>
+        <p>Phát hiện tài khoản M365/Google Workspace bị xâm phạm (Account Takeover). Phân tích hành vi đăng nhập bất thường, lateral movement trong cloud. Cross-sell mạnh cho KH đã có email security.</p>
+      </div>
+      <div class="card">
+        <div class="ci r">🕵️</div>
+        <h4>Insider Threat Management (ITM)</h4>
+        <p>Phát hiện và điều tra hành vi rò rỉ dữ liệu từ bên trong. Nhân viên nghỉ việc copy dữ liệu, upload lên cloud cá nhân, gửi qua email. Phù hợp với KH tài chính, công nghệ có IP cao.</p>
+      </div>
+      <div class="card">
+        <div class="ci c">🌐</div>
+        <h4>Digital Risk Protection (DRP)</h4>
+        <p>Giám sát và bảo vệ thương hiệu trên internet. Phát hiện domain giả mạo, tài khoản mạng xã hội giả mạo, data leakage trên dark web. Phù hợp ngân hàng, thương hiệu B2C lớn.</p>
+      </div>
+      <div class="card">
+        <div class="ci p">🔐</div>
+        <h4>Data Loss Prevention (DLP) — Nexus Platform</h4>
+        <p>DLP tích hợp giữa email, endpoint và cloud. Chính sách thống nhất qua tất cả kênh. Smart IDs phát hiện DLCN (CCCD, tài khoản NH) chính xác cao.</p>
+      </div>
+      <div class="card">
+        <div class="ci b">🔍</div>
+        <h4>Threat Intelligence Feeds</h4>
+        <p>Chia sẻ IOC, threat actor intelligence từ dataset 3,4T email/năm. Tích hợp vào SIEM, SOAR, firewall. Phù hợp SOC team cần Threat Intelligence chất lượng cao.</p>
+      </div>
+    </div>
+
+    <div class="infobox">
+      <p><strong>💡 Cross-sell strategy:</strong> Email Security thường là deal đầu tiên → sau 6–12 tháng triển khai thành công, tiếp cận SAT (đào tạo) và CAD (cloud defense) là các deal tiếp theo dễ win nhất vì KH đã tin tưởng Proofpoint platform.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div style="margin-top:60px; padding:24px; background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:var(--r); text-align:center;">
+    <p style="font-size:11px; color:var(--muted); margin:0;">
+      Proofpoint Email Security — Sales Guide · Tổng hợp từ tài liệu kỹ thuật Proofpoint, báo cáo Gartner/Forrester/SE Labs, và thông tin thị trường VN · Cập nhật 2025
+      <br>Chỉ sử dụng nội bộ cho mục đích tư vấn và bán hàng.
+    </p>
+  </div>
+
+</div><!-- /wrap -->
+
+<script>
+// Progress bar
+const prog = document.getElementById('prog');
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop || document.body.scrollTop) / (h.scrollHeight - h.clientHeight);
+  prog.style.transform = `scaleX(${pct})`;
+}, { passive: true });
+
+// Active nav
+const sections = document.querySelectorAll('.sec[id]');
+const navLinks = document.querySelectorAll('.sb-link');
+
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('on'));
+      const a = document.querySelector(`.sb-link[href="#${e.target.id}"]`);
+      if (a) a.classList.add('on');
+    }
+  });
+}, { threshold: 0.15, rootMargin: '-80px 0px -60% 0px' });
+
+sections.forEach(s => obs.observe(s));
+
+// Smooth scroll
+navLinks.forEach(link => {
+  link.addEventListener('click', e => {
+    const href = link.getAttribute('href');
+    if (href && href.startsWith('#')) {
+      e.preventDefault();
+      document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
+
+// FAQ accordion
+document.querySelectorAll('.faq-q').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const item = btn.parentElement;
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!wasOpen) item.classList.add('open');
+  });
+});
+</script>
+
+</body>
+</html>
