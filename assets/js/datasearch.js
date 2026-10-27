@@ -95,6 +95,7 @@ function bomStrings(html) {
 export class DataIndex {
   constructor() {
     this.sources = new Map(); // id -> { item, sig, records }
+    this.errors = new Map();  // id -> thông báo lỗi khi đọc file
     this.pending = null;
   }
 
@@ -113,7 +114,7 @@ export class DataIndex {
     if (this.pending) return this.pending;
     this.pending = (async () => {
       for (const { item, rec } of tools) {
-        if (!rec?.files?.length) { this.sources.delete(item.id); continue; }
+        if (!rec?.files?.length) { this.sources.delete(item.id); this.errors.delete(item.id); continue; }
         const sig = `${rec.savedAt}:${rec.files.map((f) => f.name + f.size).join('|')}`;
         if (this.sources.get(item.id)?.sig === sig) continue;
         try {
@@ -127,8 +128,10 @@ export class DataIndex {
             }
           }
           this.sources.set(item.id, { item, sig, records });
+          this.errors.delete(item.id);
         } catch (e) {
           console.warn('Không đọc được dữ liệu', item.id, e);
+          this.errors.set(item.id, e.message || String(e));
         }
       }
       for (const { item, load } of boms) {
@@ -142,6 +145,11 @@ export class DataIndex {
       }
     })().finally(() => { this.pending = null; });
     return this.pending;
+  }
+
+  /** Số dòng đã đọc của từng tool (không tính BOM). */
+  counts() {
+    return [...this.sources.values()].filter((s) => s.item.kind !== 'bom').map((s) => ({ item: s.item, rows: s.records.length }));
   }
 
   get size() {

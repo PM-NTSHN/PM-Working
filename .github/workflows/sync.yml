@@ -39,6 +39,7 @@ jobs:
         run: |
           mkdir _site
           cp -r index.html assets content data tools _site/
+          node tools/stamp.mjs _site "${GITHUB_SHA::8}"
           rm -f _site/tools/*.mjs
           touch _site/.nojekyll
 

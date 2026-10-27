@@ -549,7 +549,8 @@ async function syncSaved() {
   if (!n) return;
   const when = new Date(rec.savedAt).toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' });
   chip.innerHTML = `${icon('database')}<span>Đã lưu ${n} file</span>${icon('close', 'x')}`;
-  chip.title = `Dữ liệu đã nạp được lưu trên trình duyệt này (cập nhật ${when}):\n${rec.files.map((x) => '• ' + x.name).join('\n')}\n\nBấm để xóa dữ liệu đã lưu.`;
+  const read = dataIx.counts().find((c) => c.item.id === it.id);
+  chip.title = `${read ? `Ô tìm kiếm đã đọc ${read.rows} dòng dữ liệu của tool này.\n` : ''}Dữ liệu đã nạp được lưu trên trình duyệt này (cập nhật ${when}):\n${rec.files.map((x) => '• ' + x.name).join('\n')}\n\nBấm để xóa dữ liệu đã lưu.`;
 }
 
 async function clearSaved() {
@@ -1099,6 +1100,9 @@ function renderPalette() {
     const rows = data.reduce((n, d) => n + d.total, 0);
     const hints = [];
     if (dataIx.building) hints.push('đang đọc dữ liệu…');
+    const read = dataIx.counts().map((c) => `${c.item.short || c.item.title.replace(/^Tổng hợp /, '')} ${c.rows}`);
+    if (read.length) hints.push(`đã đọc: ${read.join(', ')} dòng`);
+    for (const [id, msg] of dataIx.errors) hints.push(`⚠ không đọc được file ${ITEM[id]?.title || id}: ${msg}`);
     if (!isBomUnlocked() && CAT.items.some((i) => i.kind === 'bom' && i.src)) hints.push('mở khóa BOM để tìm cả trong BOM');
     $('#palStat').textContent = `${results.length} mục · ${rows} dòng dữ liệu${hints.length ? ' · ' + hints.join(' · ') : ''}`;
   }
