@@ -2,7 +2,7 @@ name: Đồng bộ & triển khai PM Hub
 
 on:
   push:
-    branches: [main]
+    branches: [main, claude/dazzling-ritchie-f99mv9]
   schedule:
     - cron: '17 23 * * *' # 06:17 giờ Việt Nam hằng ngày
   workflow_dispatch:
