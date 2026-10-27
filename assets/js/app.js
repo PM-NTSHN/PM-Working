@@ -1,6 +1,7 @@
 import { icon, rawIcon } from './icons.js';
 import { verify, exportKey, importKey, decryptFile } from './crypto.js';
 import { SearchEngine, related, highlight, norm, normMap } from './search.js';
+import { DataIndex } from './datasearch.js';
 
 // ---------------------------------------------------------------- tiện ích
 const $ = (s, el = document) => el.querySelector(s);
@@ -138,6 +139,7 @@ function bindLogin() {
 function logout() {
   store.del(K.auth);
   store.del(K.bom);
+  dataIx.dropBom();
   for (const id of [...frames.keys()]) dropFrame(id);
   location.hash = '#/';
   showLogin();
@@ -318,7 +320,7 @@ function route() {
     }
     return renderCollection(s);
   }
-  if (parts[0] === 'v' && ITEM[parts[1]]) return openItem(ITEM[parts[1]], params.get('q'));
+  if (parts[0] === 'v' && ITEM[parts[1]]) return openItem(ITEM[parts[1]], params.get('q'), params.get('find'));
   showPage(`<div class="page"><div class="empty">${icon('info')}<div>Không tìm thấy trang. <a class="muted" href="#/"><u>Về trang chủ</u></a></div></div></div>`, [{ label: 'Không tìm thấy' }], '');
 }
 
@@ -337,7 +339,7 @@ function showPage(html, crumbs, activeKey, parentSec) {
 }
 
 // ---------------------------------------------------------------- mở nội dung (iframe được giữ lại)
-async function openItem(it, q) {
+async function openItem(it, q, find) {
   const sec = SEC[it.section];
   const crumbs = [];
   if (sec.kind !== 'app') crumbs.push({ label: sec.title, href: secHref(sec) });
@@ -353,7 +355,7 @@ async function openItem(it, q) {
   }
   if (it.kind === 'bom' && !isBomUnlocked()) {
     showPage(lockScreen(it), crumbs, `item:${it.id}`, sec.id);
-    return bindUnlock(() => openItem(it, q));
+    return bindUnlock(() => openItem(it, q, find));
   }
 
   current = it;
@@ -405,6 +407,10 @@ async function openItem(it, q) {
   $('#frameLoading')?.remove();
   if (!f.loaded) $('#frameHost').insertAdjacentHTML('beforeend', `<div class="frame-loading" id="frameLoading"><span class="spinner"></span>Đang tải ${esc(it.title)}…</div>`);
   if (q) f.loaded ? highlightIn(f.el, q) : (f.q = q);
+  if (find && it.persist?.search) {
+    f.find = find;
+    if (f.ready) applyFind(it, f);
+  }
 
   // Giữ lại các tool Tổng hợp (không bao giờ đóng); chỉ đóng bớt tài liệu cũ nhất.
   while (frames.size > MAX_FRAMES) {
@@ -468,6 +474,7 @@ async function saveImport(it, list) {
     toast('Trình duyệt không cho lưu dữ liệu (chế độ ẩn danh?)');
   }
   if (current?.id === it.id) syncSaved();
+  syncData();
 }
 
 async function hookPersist(it, f) {
@@ -484,13 +491,13 @@ async function hookPersist(it, f) {
   const confirm0 = win.confirm.bind(win);
   win.confirm = (msg) => {
     const ok = confirm0(msg);
-    if (ok && /xo[áa]/i.test(msg) && /d[ữu] li[ệe]u|file/i.test(msg)) idb.del(it.id).then(syncSaved);
+    if (ok && /xo[áa]/i.test(msg) && /d[ữu] li[ệe]u|file/i.test(msg)) idb.del(it.id).then(() => { syncSaved(); syncData(); });
     return ok;
   };
 
   const rec = await idb.get(it.id);
   const input = doc.querySelector(it.persist.input);
-  if (!rec?.files?.length || !input) return;
+  if (!rec?.files?.length || !input) return markReady(it, f, 0);
   await new Promise((r) => setTimeout(r, 60));
   // Tạo lại File trong realm của iframe để thư viện Excel của tool nhận đúng kiểu dữ liệu.
   const dt = new win.DataTransfer();
@@ -506,6 +513,28 @@ async function hookPersist(it, f) {
     f.replaying = false;
   }
   toast(`Đã tự nạp lại ${rec.files.length} file cho ${it.short || it.title}`);
+  markReady(it, f, 1200);
+}
+
+/** Tool đã nạp xong dữ liệu -> áp dụng từ khóa tìm kiếm đang chờ (mở từ kết quả "Dữ liệu"). */
+function markReady(it, f, delay) {
+  setTimeout(() => {
+    f.ready = true;
+    if (f.find) applyFind(it, f);
+  }, delay);
+}
+
+function applyFind(it, f) {
+  const q = f.find;
+  f.find = null;
+  try {
+    const inp = f.el.contentDocument.querySelector(it.persist.search);
+    if (!inp) return;
+    inp.value = q;
+    inp.dispatchEvent(new Event('input', { bubbles: true }));
+    inp.dispatchEvent(new Event('change', { bubbles: true }));
+    toast(`Đã lọc ${it.short || it.title} theo “${q}”`);
+  } catch { /* khác origin */ }
 }
 
 /** Nút "đã lưu N file" trên topbar của tool đang mở. */
@@ -527,16 +556,37 @@ async function clearSaved() {
   const it = current;
   if (!it?.persist || !confirm(`Xóa dữ liệu đã lưu của ${it.title}? Tool sẽ được tải lại trống.`)) return;
   await idb.del(it.id);
+  syncData();
   dropFrame(it.id);
   openItem(it);
 }
 
-async function decryptBom(it) {
+async function decryptBomHtml(it) {
   const res = await fetch(it.src, { cache: 'no-cache' });
   if (!res.ok) throw new Error(`không tải được file (${res.status})`);
   const key = await importKey(store.get(K.bom, null, sessionStorage));
-  const html = await decryptFile(key, await res.arrayBuffer());
+  return decryptFile(key, await res.arrayBuffer());
+}
+
+async function decryptBom(it) {
+  const html = await decryptBomHtml(it);
   return URL.createObjectURL(new Blob([html], { type: 'text/html;charset=utf-8' }));
+}
+
+// ---------------------------------------------------------------- chỉ mục dữ liệu trong tool (file đã nạp + BOM)
+const dataIx = new DataIndex();
+let dataDirty = false;
+async function syncData() {
+  if (dataIx.building) { dataDirty = true; return; }
+  dataDirty = false;
+  const tools = await Promise.all(CAT.items.filter((i) => i.persist).map(async (item) => ({ item, rec: await idb.get(item.id) })));
+  let boms = [];
+  if (isBomUnlocked()) boms = CAT.items.filter((i) => i.kind === 'bom' && i.src).map((item) => ({ item, load: () => decryptBomHtml(item) }));
+  else dataIx.dropBom();
+  if (!$('#palette').hidden) renderPalette();
+  await dataIx.sync(tools, boms);
+  if (!$('#palette').hidden) renderPalette();
+  if (dataDirty) syncData();
 }
 
 /** Cuộn tới và tô sáng từ khóa tìm kiếm trong tài liệu (cùng origin). */
@@ -595,6 +645,7 @@ function bindUnlock(after) {
     submitCredentials(form, $('#ulUser'), $('#ulPass'), $('#ulErr'), async (key) => {
       store.set(K.bom, await exportKey(key), sessionStorage);
       toast('Đã mở khóa Tool chạy BOM cho phiên này');
+      syncData();
       renderNav();
       after();
     });
@@ -603,6 +654,7 @@ function bindUnlock(after) {
 
 function lockBom() {
   store.del(K.bom);
+  dataIx.dropBom();
   for (const [id] of [...frames]) if (ITEM[id]?.kind === 'bom') dropFrame(id);
   toast('Đã khóa lại Tool chạy BOM');
   route();
@@ -866,6 +918,7 @@ function placePalette() {
 
 function openPalette(input) {
   pal.input = input;
+  syncData();
   $('#palette').hidden = false;
   pal.sel = 0;
   placePalette();
@@ -960,6 +1013,36 @@ function markSel(scroll) {
   });
 }
 
+/** Nhóm kết quả tìm trong dữ liệu tool (mỗi tool / BOM một nhóm). */
+function dataGroups(q, terms) {
+  const enc = encodeURIComponent;
+  return dataIx.search(q, 5).map(({ item, total, best, hits }) => {
+    const isBom = item.kind === 'bom';
+    const tag = `<span class="badge" style="--c:${colorOf(item)}">${icon(isBom ? 'calculator' : 'database')}${esc(item.short || item.title.replace(/^BOM /, 'BOM '))}</span>`;
+    const list = hits.map((r) => {
+      const cell = isBom ? null : DataIndex.matchedCell(r, q);
+      return {
+        href: isBom ? `#/v/${item.id}?q=${enc(r.title)}` : `#/v/${item.id}?find=${enc(r.id || r.title)}`,
+        color: colorOf(item),
+        icon: icon(isBom ? 'calculator' : item.icon || 'database'),
+        title: highlight(`${r.id ? r.id + ' · ' : ''}${r.title}`, terms),
+        meta: `${tag}<span>${highlight(r.meta.join(' · '), terms)}</span>`,
+        snip: cell ? `<b>${esc(cell[0])}:</b> ${highlight(cell[1], terms)}` : '',
+      };
+    });
+    if (total > hits.length) {
+      list.push({
+        href: isBom ? `#/v/${item.id}?q=${enc(q)}` : `#/v/${item.id}?find=${enc(q)}`,
+        color: colorOf(item), icon: icon('arrowRight'),
+        title: `Xem tất cả ${total} kết quả trong ${esc(item.short || item.title)}`,
+        meta: `<span>${isBom ? 'Mở tool BOM và tô sáng từ khóa' : 'Mở tool và lọc sẵn theo từ khóa'}</span>`,
+      });
+    }
+    const label = isBom ? `Trong ${esc(item.title)}` : `Dữ liệu đã nạp · ${esc(item.short || item.title)}`;
+    return { best, total, group: [`${label} — ${total} dòng`, list] };
+  });
+}
+
 function palItem(en, i) {
   return `<div class="pal-item${i === pal.sel ? ' sel' : ''}" data-i="${i}" style="--c:${en.color}">
     <span class="r-icon">${en.icon}</span>
@@ -1008,8 +1091,16 @@ function renderPalette() {
     const tg = tools.length && ['Công cụ', tools.map((r) => fromItem(r.item, terms))];
     const dg = docs.length && ['Tài liệu & khóa học', docs.map((r) => fromItem(r.item, terms, r.doc))];
     // Nhóm có kết quả tốt nhất lên trước.
-    groups.push(...((tools[0]?.score || 0) >= (docs[0]?.score || 0) ? [tg, dg] : [dg, tg]).filter(Boolean));
-    $('#palStat').textContent = `${results.length} kết quả`;
+    const main = ((tools[0]?.score || 0) >= (docs[0]?.score || 0) ? [tg, dg] : [dg, tg]).filter(Boolean);
+    const data = dataGroups(q, terms);
+    // Khớp đúng mã / tên trong dữ liệu -> đưa nhóm dữ liệu lên trên.
+    const dataFirst = data.length && data[0].best >= 20;
+    groups.push(...(dataFirst ? [...data.map((d) => d.group), ...main] : [...main, ...data.map((d) => d.group)]));
+    const rows = data.reduce((n, d) => n + d.total, 0);
+    const hints = [];
+    if (dataIx.building) hints.push('đang đọc dữ liệu…');
+    if (!isBomUnlocked() && CAT.items.some((i) => i.kind === 'bom' && i.src)) hints.push('mở khóa BOM để tìm cả trong BOM');
+    $('#palStat').textContent = `${results.length} mục · ${rows} dòng dữ liệu${hints.length ? ' · ' + hints.join(' · ') : ''}`;
   }
 
   let i = 0;

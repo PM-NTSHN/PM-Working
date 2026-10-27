@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-27T18:01:39.878Z",
+ "generatedAt": "2026-10-27T18:16:48.921Z",
  "sections": [
   {
    "id": "bom",
@@ -14,7 +14,8 @@
    "id": "dealreg",
    "persist": {
     "input": "#file-input",
-    "mode": "append"
+    "mode": "append",
+    "search": "#q"
    },
    "group": "Tổng hợp & Báo cáo",
    "title": "Tổng hợp Dealreg",
@@ -33,7 +34,8 @@
    "id": "po",
    "persist": {
     "input": "#fileInput",
-    "mode": "replace"
+    "mode": "replace",
+    "search": "#q"
    },
    "group": "Tổng hợp & Báo cáo",
    "title": "Tổng hợp yêu cầu đặt hàng",
@@ -52,7 +54,8 @@
    "id": "crm",
    "persist": {
     "input": "#fileInput",
-    "mode": "replace"
+    "mode": "replace",
+    "search": "#q"
    },
    "group": "Tổng hợp & Báo cáo",
    "title": "Tổng hợp CRM",
@@ -278,7 +281,8 @@
    "app": true,
    "persist": {
     "input": "#file-input",
-    "mode": "append"
+    "mode": "append",
+    "search": "#q"
    }
   },
   {
@@ -299,7 +303,8 @@
    "app": true,
    "persist": {
     "input": "#fileInput",
-    "mode": "replace"
+    "mode": "replace",
+    "search": "#q"
    }
   },
   {
@@ -321,7 +326,8 @@
    "app": true,
    "persist": {
     "input": "#fileInput",
-    "mode": "replace"
+    "mode": "replace",
+    "search": "#q"
    }
   },
   {

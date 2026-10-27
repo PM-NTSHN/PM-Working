@@ -65,6 +65,14 @@ Build thử trên máy: `node tools/build.mjs` (Node 22+), rồi chạy một we
 
 Khi nạp file Excel (bấm chọn hoặc kéo-thả) vào Dealreg / PO / CRM / KPI bên trong PM Hub, Hub lưu file vào IndexedDB của trình duyệt và tự nạp lại khi mở lại tool hoặc F5 — không cần sửa code của từng tool (cấu hình ở mục `persist` trong `config/hub.json`). Dealreg & KPI cộng dồn nhiều file (file trùng tên thì thay bản mới), PO & CRM giữ file mới nhất. Nút **"Đã lưu N file ✕"** trên thanh trên cùng để xem / xóa dữ liệu đã lưu; nút "Xoá dữ liệu" trong tool Dealreg cũng xóa luôn bản lưu. Dữ liệu chỉ nằm trên máy đang dùng.
 
+## Tìm kiếm trong dữ liệu của tool
+
+Ô tìm kiếm tìm cả trong:
+- **Dữ liệu đã nạp** vào Dealreg / PO / CRM / KPI: Hub đọc các file Excel đã lưu (thư viện `assets/vendor/xlsx.min.js`), mỗi dòng là một kết quả, tìm trên mọi cột (mã, tên, khách hàng, sale, hãng, giai đoạn…). Chọn kết quả → mở tool và tự điền từ khóa vào ô tìm kiếm của tool (cấu hình `persist.search`).
+- **Nội dung các tool BOM** (model, SKU, mô tả) khi BOM đã mở khóa trong phiên. Chọn kết quả → mở BOM và tô sáng từ khóa.
+
+Mọi xử lý đều trên trình duyệt, dữ liệu không gửi đi đâu.
+
 ## Phím tắt
 
 `Ctrl/⌘ K` hoặc `/`: đưa con trỏ vào ô tìm kiếm (gõ trực tiếp, kết quả hiện ngay bên dưới) · `↑ ↓ Enter`: chọn kết quả · `Tab`: nhận gợi ý · `Esc`: đóng.

@@ -5,17 +5,17 @@
     { "id": "bom", "title": "Tool chạy BOM", "short": "BOM", "icon": "calculator", "kind": "collection", "locked": true,
       "desc": "Bộ công cụ lên cấu hình & báo giá cho từng giải pháp. Nội dung được mã hóa AES-256, cần mở khóa bằng tài khoản PM." },
 
-    { "id": "dealreg", "persist": { "input": "#file-input", "mode": "append" }, "group": "Tổng hợp & Báo cáo", "title": "Tổng hợp Dealreg", "short": "Dealreg", "icon": "handshake", "kind": "app",
+    { "id": "dealreg", "persist": { "input": "#file-input", "mode": "append", "search": "#q" }, "group": "Tổng hợp & Báo cáo", "title": "Tổng hợp Dealreg", "short": "Dealreg", "icon": "handshake", "kind": "app",
       "src": "https://pm-ntshn.github.io/Tools-Dealreg/", "repo": "Tools-Dealreg",
       "desc": "Tổng hợp & phân tích Deal Registration (Base service) từ file Excel export.",
       "tags": ["Dealreg", "Deal registration", "Base", "Đăng ký cơ hội"] },
 
-    { "id": "po", "persist": { "input": "#fileInput", "mode": "replace" }, "group": "Tổng hợp & Báo cáo", "title": "Tổng hợp yêu cầu đặt hàng", "short": "Đặt hàng (PO)", "icon": "cart", "kind": "app",
+    { "id": "po", "persist": { "input": "#fileInput", "mode": "replace", "search": "#q" }, "group": "Tổng hợp & Báo cáo", "title": "Tổng hợp yêu cầu đặt hàng", "short": "Đặt hàng (PO)", "icon": "cart", "kind": "app",
       "src": "https://pm-ntshn.github.io/Tool_tonghop_PO/", "repo": "Tool_tonghop_PO",
       "desc": "Tổng hợp yêu cầu đặt hàng / PO, theo dõi trạng thái và xuất báo cáo Excel.",
       "tags": ["PO", "Đặt hàng", "Purchase order", "Đơn hàng"] },
 
-    { "id": "crm", "persist": { "input": "#fileInput", "mode": "replace" }, "group": "Tổng hợp & Báo cáo", "title": "Tổng hợp CRM", "short": "CRM", "icon": "chart", "kind": "app",
+    { "id": "crm", "persist": { "input": "#fileInput", "mode": "replace", "search": "#q" }, "group": "Tổng hợp & Báo cáo", "title": "Tổng hợp CRM", "short": "CRM", "icon": "chart", "kind": "app",
       "src": "https://pm-ntshn.github.io/Tool_CRM_v2/", "repo": "Tool_CRM_v2",
       "desc": "Tổng hợp cơ hội kinh doanh từ CRM: pipeline, dashboard và báo cáo.",
       "tags": ["CRM", "Pipeline", "Cơ hội", "Deal", "Khách hàng"] },
