@@ -79,7 +79,11 @@
       "DLP — Data Loss Prevention@GTB": "gtb",
       "NAC — Network Access Control": "easynac"
     },
-    "extraDocs": []
+    "_extraDocs": "Tài liệu sale guide bổ sung ngoài PM-Knowledge-Hub; file đặt trong content/sale-guide-extra/",
+    "extraDocs": [
+      {"vendor": "Proofpoint", "solution": "Data Security_Proofpoint", "cat": "data", "type": "Cẩm nang bán hàng", "title": "Cẩm nang Proofpoint Data Security", "tags": ["Data Security", "DSPM", "DLP"], "file": "content/sale-guide-extra/proofpoint/data-security/cam-nang-proofpoint-data-security.html"},
+      {"vendor": "Proofpoint", "solution": "Data Security_Proofpoint", "cat": "data", "type": "Bài kiểm tra", "title": "Trắc nghiệm Proofpoint Data Security", "tags": ["Data Security", "Quiz"], "file": "content/sale-guide-extra/proofpoint/data-security/trac-nghiem-proofpoint-data-security.html"}
+    ]
   },
 
   "synonyms": [

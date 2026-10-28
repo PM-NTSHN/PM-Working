@@ -854,24 +854,74 @@ function docRow(d, showVendor, q) {
     <span class="go">${icon('arrowRight')}</span></a>`;
 }
 
+function docCard(d) {
+  const t = TYPE[d.type] || { c: '#64748b', ic: 'file' };
+  return `<a class="doc-card" href="${itemHref(d)}" style="--t:${t.c}">
+    <div class="dc-top"><span class="dc-ic">${icon(t.ic)}</span><span class="dc-type">${esc(d.type || 'Tài liệu')}</span><span class="go">${icon('arrowRight')}</span></div>
+    <b>${esc(d.title)}</b>
+    <div class="tags">${(d.tags || []).slice(0, 3).map((x) => `<span class="tag">${esc(x)}</span>`).join('')}</div></a>`;
+}
+
 function renderVendor(v) {
   const docs = CAT.items.filter((d) => d.section === 'sale-guide' && d.vendor === v.name);
   const products = new Set(docs.map((d) => d.product).filter(Boolean));
   const tools = CAT.items.filter((i) => i.section === 'bom' && (products.has(i.product) || i.vendor === v.name));
   const order = (t) => { const i = CAT.types.indexOf(t); return i < 0 ? 99 : i; };
-  const blocks = v.solutions.map((sol) => {
+  const num = (i) => String(i + 1).padStart(2, '0');
+  const typeBadges = (list) => {
+    const n = {};
+    for (const d of list) n[d.type] = (n[d.type] || 0) + 1;
+    return Object.entries(n).sort((a, b) => order(a[0]) - order(b[0]))
+      .map(([t, k]) => `<span class="badge" style="--c:${TYPE[t]?.c || '#64748b'}">${icon(TYPE[t]?.ic || 'file')}${k} ${esc(t)}</span>`).join('');
+  };
+  const sols = v.solutions.map((sol, i) => {
     const sd = docs.filter((d) => d.solution === sol).sort((a, b) => order(a.type) - order(b.type));
-    const c = CAT.cats[sd[0].cat] || { color: '#0b5cad', icon: '', label: '' };
-    return `<div class="card sol-block" style="--c:${c.color}">
-      <div class="sol-head"><span class="t-icon">${rawIcon(c.icon)}</span><div><h3>${esc(sol)}</h3><span>${esc(c.label)} · ${sd.length} tài liệu</span></div></div>
-      ${sd.map((d) => docRow(d, false)).join('')}</div>`;
-  }).join('');
+    return { sol, sd, i, c: CAT.cats[sd[0].cat] || { color: '#0b5cad', icon: '', label: '' } };
+  });
+  const nav = sols.length > 1 ? `<nav class="sol-nav" id="solNav">${sols.map(({ sol, sd, i, c }) => `
+    <button data-jump="sol-${i}" style="--c:${c.color}"><span class="num">${num(i)}</span>
+      <span class="sn-txt"><b>${esc(sol)}</b><small>${sd.length} tài liệu</small></span></button>`).join('')}</nav>` : '';
+  const sections = sols.map(({ sol, sd, i, c }) => `
+    <section class="sol-sec" id="sol-${i}" style="--c:${c.color}">
+      <header class="sol-sec-head">
+        <span class="num">${num(i)}</span>
+        <span class="t-icon">${rawIcon(c.icon)}</span>
+        <div class="grow"><div class="over">Dòng giải pháp · ${esc(c.label)}</div><h2>${esc(sol)}</h2></div>
+        <div class="sol-types">${typeBadges(sd)}</div>
+      </header>
+      <div class="doc-grid">${sd.map(docCard).join('')}</div>
+    </section>`).join('');
   showPage(`<div class="page">
     <div class="page-head" style="--c:${vendorColor(v)}"><span class="v-avatar" style="width:54px;height:54px;font-size:18px;border-radius:15px">${esc(initials(v.name))}</span>
-      <div class="grow"><h1>${esc(v.name)}</h1><p>${v.solutions.length} dòng giải pháp · ${docs.length} tài liệu sale guide</p></div></div>
+      <div class="grow"><h1>${esc(v.name)}</h1><p>${v.solutions.length} dòng giải pháp · ${docs.length} tài liệu sale guide</p>
+      <div class="tags" style="margin-top:10px">${typeBadges(docs)}</div></div></div>
     ${tools.length ? `<div class="related-tools">${tools.map((t) => `<a class="btn${t.status === 'soon' ? '' : ' accent'}" href="${t.status === 'soon' ? 'javascript:void 0' : itemHref(t)}">${icon('calculator')}${esc(t.title)}${t.status === 'soon' ? ' <span class="pill">Sắp có</span>' : ''}</a>`).join('')}</div>` : ''}
-    ${blocks}</div>`,
+    ${nav}${sections}</div>`,
   [{ label: 'Sale Guide', href: '#/s/sale-guide' }, { label: v.name }], `vendor:${v.id}`, 'sale-guide');
+  bindSolNav();
+}
+
+/** Thanh chọn dòng giải pháp: bấm để cuộn tới, tự đánh dấu mục đang xem. */
+function bindSolNav() {
+  const nav = $('#solNav');
+  if (!nav) return;
+  const view = $('#view');
+  const secs = [...view.querySelectorAll('.sol-sec')];
+  nav.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-jump]');
+    if (b) document.getElementById(b.dataset.jump)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+  const spy = () => {
+    if (!nav.isConnected) return view.removeEventListener('scroll', spy);
+    const top = nav.getBoundingClientRect().bottom + 24;
+    let cur = secs[0];
+    for (const s of secs) if (s.getBoundingClientRect().top <= top) cur = s;
+    // Cuộn tới cuối trang thì đánh dấu mục cuối cùng.
+    if (view.scrollTop + view.clientHeight >= view.scrollHeight - 4) cur = secs[secs.length - 1];
+    nav.querySelectorAll('button').forEach((b) => b.classList.toggle('on', b.dataset.jump === cur?.id));
+  };
+  view.addEventListener('scroll', spy, { passive: true });
+  spy();
 }
 
 // ---------------------------------------------------------------- nội dung liên quan

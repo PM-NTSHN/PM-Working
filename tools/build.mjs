@@ -95,7 +95,7 @@ const kb = readKnowledgeHub(kbDir);
 copyDir(path.join(kbDir, 'docs'), path.join(ROOT, 'content/sale-guide'));
 
 const saleDocs = [...kb.docs, ...(sg.extraDocs || [])].map((d) => {
-  const rel = d.file.replace(/^docs\//, '');
+  const rel = d.file.replace(/^(docs|content\/sale-guide-extra)\//, '');
   const vendor = sg.vendorRename[d.vendor] || d.vendor;
   return {
     id: 'sg-' + slug(rel.replace(/\.html?$/, '')),

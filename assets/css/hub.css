@@ -500,3 +500,41 @@ a.card:hover, button.card:hover { transform: translateY(-2px); box-shadow: var(-
   .saved-chip span { display: none; }
 }
 @media (max-width: 560px) { .pal-foot span:not(.right) { display: none; } }
+
+/* ============ Trang hãng: dòng giải pháp & tài liệu ============ */
+.sol-nav { position: sticky; top: 0; z-index: 6; display: flex; gap: 10px; overflow-x: auto; padding: 12px 2px 14px; margin: 4px 0 18px;
+  background: linear-gradient(var(--bg) 82%, transparent); scrollbar-width: thin; }
+.sol-nav button { display: flex; align-items: center; gap: 10px; padding: 9px 14px 9px 12px; border-radius: 12px; flex: none; text-align: left;
+  background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow-sm); transition: .15s; }
+.sol-nav button:hover { border-color: var(--c); }
+.sol-nav button.on { border-color: var(--c); background: color-mix(in srgb, var(--c) 10%, var(--surface)); box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 18%, transparent); }
+.sol-nav .num { font-weight: 800; font-size: 13px; color: var(--c); }
+.sn-txt b { display: block; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.sn-txt small { font-size: 11.5px; color: var(--muted); }
+.sol-sec { margin-bottom: 34px; scroll-margin-top: 92px; }
+.sol-sec-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; padding: 16px 20px; margin-bottom: 14px; border-radius: 16px;
+  background: linear-gradient(100deg, color-mix(in srgb, var(--c) 16%, var(--surface)), var(--surface) 70%);
+  border: 1px solid color-mix(in srgb, var(--c) 32%, transparent); border-left: 6px solid var(--c); box-shadow: var(--shadow-sm); }
+.sol-sec-head .num { font-size: 28px; font-weight: 800; color: var(--c); letter-spacing: -.03em; min-width: 40px; }
+.sol-sec-head .t-icon { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; color: var(--c); background: color-mix(in srgb, var(--c) 16%, transparent); flex: none; }
+.sol-sec-head .t-icon .ic { width: 22px; height: 22px; }
+.sol-sec-head .over { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--c); }
+.sol-sec-head h2 { margin: 2px 0 0; font-size: 20px; letter-spacing: -.01em; }
+.sol-types { display: flex; gap: 6px; flex-wrap: wrap; }
+.doc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 12px; margin-left: 26px; padding-left: 22px;
+  border-left: 2px dashed color-mix(in srgb, var(--c) 40%, transparent); }
+.doc-card { display: flex; flex-direction: column; gap: 10px; padding: 14px 16px 16px; border-radius: 12px; background: var(--surface);
+  border: 1px solid var(--border); border-top: 3px solid var(--t); box-shadow: var(--shadow-sm); transition: transform .18s, box-shadow .18s; }
+.doc-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.dc-top { display: flex; align-items: center; gap: 8px; }
+.dc-ic { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; color: var(--t); background: color-mix(in srgb, var(--t) 13%, transparent); }
+.dc-ic .ic { width: 16px; height: 16px; }
+.dc-type { flex: 1; font-size: 11.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: var(--t); }
+.doc-card .go { color: var(--faint); }
+.doc-card:hover .go { color: var(--t); }
+.doc-card b { font-size: 14.5px; line-height: 1.45; }
+@media (max-width: 560px) {
+  .doc-grid { margin-left: 8px; padding-left: 12px; }
+  .sol-sec-head { padding: 14px; }
+  .sol-sec-head .num { font-size: 22px; min-width: 30px; }
+}

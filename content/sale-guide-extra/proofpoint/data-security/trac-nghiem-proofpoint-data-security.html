@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Trắc nghiệm Proofpoint Data Security</title>
+<style>
+:root{
+  --bg:#f6f7f9;--panel:#fff;--ink:#1b2430;--muted:#5b6675;--line:#dfe3ea;
+  --brand:#0b6e4f;--brand-soft:#e3f4ec;--accent:#1f5fbf;--accent-soft:#e6eefb;
+  --warn:#b45309;--warn-soft:#fdf1e2;--bad:#b42318;--bad-soft:#fde8e6;--ok:#067647;--ok-soft:#e3f6ea;
+  --shadow:0 1px 2px rgba(16,24,40,.06),0 1px 3px rgba(16,24,40,.08);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1419;--panel:#161d25;--ink:#e6ebf1;--muted:#9aa6b4;--line:#2a3440;
+    --brand:#3fcf95;--brand-soft:#11291f;--accent:#6aa3ff;--accent-soft:#14233b;
+    --warn:#f5a524;--warn-soft:#2c2112;--bad:#ff7a6e;--bad-soft:#2d1614;--ok:#4ad08a;--ok-soft:#10261a;--shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1419;--panel:#161d25;--ink:#e6ebf1;--muted:#9aa6b4;--line:#2a3440;
+  --brand:#3fcf95;--brand-soft:#11291f;--accent:#6aa3ff;--accent-soft:#14233b;
+  --warn:#f5a524;--warn-soft:#2c2112;--bad:#ff7a6e;--bad-soft:#2d1614;--ok:#4ad08a;--ok-soft:#10261a;--shadow:none;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 "Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif}
+header.top{position:sticky;top:0;z-index:10;background:var(--panel);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 16px}
+header.top .logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--brand),var(--accent));flex:none}
+header.top h1{font-size:16px;margin:0;line-height:1.25;flex:1}
+header.top h1 small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.btn{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:8px;padding:8px 14px;cursor:pointer;font:inherit;font-size:14px}
+.btn:hover:not(:disabled){border-color:var(--brand)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.pri{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+:root[data-theme="dark"] .btn.pri{color:#0f1419}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn.pri{color:#0f1419}}
+main{max-width:860px;margin:0 auto;padding:20px 16px 80px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px;box-shadow:var(--shadow);margin-bottom:16px}
+h2{margin:0 0 6px;font-size:20px}
+.lead{color:var(--muted);margin:0 0 14px}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.kpi{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--bg)}
+.kpi b{display:block;font-size:22px;color:var(--brand)}
+.kpi span{color:var(--muted);font-size:12.5px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 14px}
+.chip{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:999px;padding:5px 12px;cursor:pointer;font:inherit;font-size:13px}
+.chip.on{background:var(--brand-soft);border-color:var(--brand);color:var(--brand);font-weight:600}
+.chip small{color:var(--muted);margin-left:4px}
+.row{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin:10px 0}
+.row label{display:flex;gap:6px;align-items:center;cursor:pointer}
+input[type=checkbox]{width:16px;height:16px;accent-color:var(--brand)}
+.prog{display:flex;align-items:center;gap:12px;margin-bottom:12px;color:var(--muted);font-size:13px}
+.bar{flex:1;height:8px;border-radius:4px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--brand);transition:width .25s}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.tag{display:inline-block;font-size:12px;padding:2px 9px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.tag.seg{background:var(--warn-soft);color:var(--warn)}
+h2.q{font-size:18px;line-height:1.5;margin:0 0 14px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;gap:12px;text-align:left;align-items:flex-start;border:1.5px solid var(--line);background:var(--panel);color:var(--ink);border-radius:10px;padding:11px 13px;cursor:pointer;font:inherit;font-size:14.5px;line-height:1.5}
+.opt b{flex:none;width:24px;height:24px;border-radius:50%;background:var(--bg);border:1px solid var(--line);display:grid;place-items:center;font-size:12.5px}
+.opt:hover:not(:disabled){border-color:var(--brand)}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.bad{border-color:var(--bad);background:var(--bad-soft)}
+.opt:disabled{cursor:default}
+.fb{border-left:4px solid;border-radius:8px;padding:10px 12px;margin:14px 0 4px;font-size:14px}
+.fb.ok{background:var(--ok-soft);border-color:var(--ok)}
+.fb.bad{background:var(--bad-soft);border-color:var(--bad)}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:16px}
+.score{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.big{font-size:48px;font-weight:700;color:var(--brand);line-height:1}
+.big small{font-size:20px;color:var(--muted);font-weight:400}
+.tb{margin:8px 0}
+.tb .l{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:3px}
+.tb .bar{height:10px}
+.tb .bar i.lo{background:var(--bad)}.tb .bar i.mid{background:var(--warn)}
+.rev{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0;background:var(--panel)}
+.rev.w{border-left:4px solid var(--bad)}.rev.r{border-left:4px solid var(--ok)}
+.rev p{margin:4px 0}
+.rev .a{font-size:13.5px}
+.ya{color:var(--ok);font-weight:600}.yb{color:var(--bad);font-weight:600}
+.note{background:var(--accent-soft);border-left:4px solid var(--accent);border-radius:8px;padding:10px 12px;font-size:13.5px;margin:12px 0}
+@media (max-width:620px){.kpis{grid-template-columns:repeat(2,1fr)}.card{padding:16px}h2.q{font-size:16.5px}.big{font-size:40px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="logo" aria-hidden="true"></div>
+  <h1>Trắc nghiệm Proofpoint Data Security<small>50 câu · 11 chủ đề · bám theo Cẩm nang cập nhật 19/10/2026</small></h1>
+  <button class="btn" id="themeBtn">Sáng/Tối</button>
+</header>
+<main id="app"></main>
+
+<script>
+/* Quy ước: o[0] luôn là đáp án ĐÚNG; thứ tự đáp án được xáo ngẫu nhiên mỗi lượt làm bài. */
+var Q=[
+ {
+  "t": "Khái niệm",
+  "q": "Câu hỏi cốt lõi mà DSPM (Data Security Posture Management) trả lời là gì?",
+  "o": [
+   "Dữ liệu nhạy cảm của tôi nằm ở đâu, ai truy cập được và đang bị phơi nhiễm đến mức nào?",
+   "Dữ liệu nhạy cảm đang rời khỏi tổ chức qua kênh nào và cần chặn ngay lúc nào?",
+   "Nhân viên nào đang có ý đồ xấu hoặc bất cẩn với dữ liệu và hành vi đó diễn ra ra sao?",
+   "Dữ liệu nào đang chảy vào ChatGPT, Copilot và các AI agent?"
+  ],
+  "e": "Đó là câu hỏi của DSPM (dữ liệu lưu trữ). Phương án 2 là của DLP, phương án 3 là của ITM, phương án 4 là của Data Security for AI. Cẩm nang mục 1.3."
+ },
+ {
+  "t": "Khái niệm",
+  "q": "Trong mô hình ba trạng thái dữ liệu, DSPM tập trung chủ yếu vào trạng thái nào?",
+  "o": [
+   "Data at rest: dữ liệu đang lưu trữ ở cloud, SaaS, CSDL, file server",
+   "Data in motion: dữ liệu đang truyền qua email, web, upload",
+   "Data in use: dữ liệu đang được thao tác copy/paste, in ấn trên máy trạm",
+   "Cả ba trạng thái như nhau, nên DSPM có thể thay thế hoàn toàn DLP"
+  ],
+  "e": "DSPM quét dữ liệu at rest; DLP mạnh ở in motion và in use. DSPM giúp viết chính sách DLP chính xác hơn chứ không thay thế DLP (mục 1.3, 3.4)."
+ },
+ {
+  "t": "Khái niệm",
+  "q": "Điểm khác biệt cốt lõi giữa ITM (Insider Threat Management) và Enterprise DLP là gì?",
+  "o": [
+   "ITM lấy người dùng làm trung tâm (hành vi, ý định, timeline); DLP lấy nội dung và kênh rời đi làm trung tâm",
+   "ITM chỉ chạy được trên bản SaaS và chỉ phục vụ phòng nhân sự, còn DLP chỉ chạy được on-prem",
+   "ITM bắt buộc dùng agent riêng hoàn toàn tách biệt, không thể dùng chung agent với Endpoint DLP",
+   "ITM chỉ ghi log lưu lượng mạng ở tầng gateway, không ghi hoạt động file, USB hay in ấn"
+  ],
+  "e": "ITM trả lời 'ai, ý định gì'; DLP trả lời 'dữ liệu gì, rời đi bằng đường nào'. Ở bản SaaS, ITM và Endpoint DLP dùng chung một agent user-mode (mục 1.3, 7)."
+ },
+ {
+  "t": "Khái niệm",
+  "q": "Adaptive Email DLP của Proofpoint có nguồn gốc từ thương vụ mua lại nào?",
+  "o": [
+   "Tessian (2023)",
+   "ObserveIT (2019)",
+   "Normalyze (ký 10/2024)",
+   "Acuvity (hoàn tất 02/2026)"
+  ],
+  "e": "Tessian → Adaptive Email DLP; ObserveIT → ITM; Normalyze → DSPM; Acuvity → AI Security (mục 1.2)."
+ },
+ {
+  "t": "Khái niệm",
+  "q": "Data Security for AI khác AI Security (từ Acuvity) như thế nào?",
+  "o": [
+   "Data Security for AI tập trung dữ liệu chảy vào AI (prompt, upload, response); AI Security rộng hơn: người/agent dùng AI, MCP, ý định agent",
+   "Data Security for AI rộng hơn AI Security vì bao gồm cả quản trị MCP server, agent và chuỗi cung ứng AI",
+   "Hai tên gọi thương mại của cùng một SKU, không có khác biệt nào về phạm vi hay điểm kiểm soát",
+   "Data Security for AI chỉ dành cho Microsoft Copilot, còn AI Security chỉ dành cho ChatGPT và Gemini"
+  ],
+  "e": "Hai mảng bổ trợ nhau: một bên bảo vệ dữ liệu, một bên kiểm soát người/agent/MCP (mục 19 FAQ, 7)."
+ },
+ {
+  "t": "Khái niệm",
+  "q": "Nhận định nào đúng về cấu trúc sản phẩm trong nhóm Data Security & Governance của Proofpoint?",
+  "o": [
+   "Các module (SKU) mua riêng được, nhưng dùng chung bộ phân loại, console hợp nhất và (bản SaaS) một agent cho DLP + ITM",
+   "Bắt buộc mua trọn gói Data Security & Governance, không bán lẻ từng module cho khách hàng",
+   "Mỗi module có bộ phân loại và console riêng, hoàn toàn không liên thông dữ liệu hay chính sách",
+   "Toàn bộ nhóm sản phẩm chỉ bán dưới dạng appliance phần cứng đặt tại data center khách"
+  ],
+  "e": "Mục 1.4: khách có thể bắt đầu từ một module (thường Email DLP hoặc DSPM) rồi mở rộng."
+ },
+ {
+  "t": "Use case chọn giải pháp",
+  "seg": "Ngân hàng",
+  "q": "Ngân hàng 8.000 nhân sự, chịu thanh tra NHNN. DLP cũ báo sai rất nhiều khi gặp dãy 12 chữ số. Ngân hàng muốn chỉ cảnh báo khi đúng là dữ liệu khách hàng thật (CIF, số tài khoản, CCCD). Kỹ thuật nhận diện phù hợp nhất?",
+  "o": [
+   "EDM: băm các trường từ CSDL khách hàng rồi so khớp bản ghi thật",
+   "Từ điển keyword có trọng số, đặt ngưỡng điểm cao hơn",
+   "Regex kèm checksum, từ khóa đứng gần và kiểm tra thuật toán Luhn",
+   "OCR toàn bộ file đính kèm rồi áp bộ từ điển mặc định của hãng"
+  ],
+  "e": "EDM khớp chính xác bản ghi thật, độ chính xác rất cao, hợp với ngân hàng, bảo hiểm, bệnh viện (mục 10.3, 17)."
+ },
+ {
+  "t": "Use case chọn giải pháp",
+  "seg": "Doanh nghiệp M365",
+  "q": "Tập đoàn 3.000 nhân sự dùng M365, sắp mua 500 license Copilot; SharePoint đang chia sẻ rất rộng. Bước đầu tiên hợp lý nhất là gì?",
+  "o": [
+   "Dùng DSPM quét SharePoint/OneDrive để tìm và xử lý oversharing trước khi bật Copilot",
+   "Bật Copilot trước, sau đó dùng Email DLP chặn kết quả mà Copilot trả về cho người dùng",
+   "Triển khai ITM cho toàn bộ 3.000 người dùng để giám sát cách họ dùng Copilot",
+   "Chỉ cần Adaptive Email DLP vì Copilot sinh nội dung và gửi qua email"
+  ],
+  "e": "Copilot truy cập được mọi thứ người dùng có quyền; phải thu hẹp quyền thừa trước khi bật (mục 4, 17, 11)."
+ },
+ {
+  "t": "Use case chọn giải pháp",
+  "seg": "Công an / quốc phòng",
+  "q": "Công an tỉnh: mạng nghiệp vụ tách biệt, có thể chứa bí mật nhà nước, cần giám sát việc sao chép USB, in ấn tài liệu mật và truy cập CSDL. Phương án nào phù hợp nhất?",
+  "o": [
+   "Chỉ ITM On-Prem (toàn bộ nằm trong mạng nội bộ); không chào các module SaaS cho mạng nghiệp vụ",
+   "Bộ đầy đủ SaaS (Endpoint DLP, DSPM, AI Security) vì chỉ gửi metadata nên không sao",
+   "Adaptive Email DLP vì học được hành vi gửi email của cán bộ",
+   "Không module nào của Proofpoint dùng được vì hãng không có bản on-prem"
+  ],
+  "e": "ITM On-Prem (ObserveIT) là module on-prem duy nhất; khối công an/BMNN nên tránh SaaS (mục 9.1, 17)."
+ },
+ {
+  "t": "Use case chọn giải pháp",
+  "seg": "Chứng khoán",
+  "q": "Công ty chứng khoán 600 nhân sự: lo lộ báo cáo phân tích chưa công bố, môi giới nghỉ việc mang danh sách khách, đồng thời phải lưu trữ và giám sát giao tiếp. Tổ hợp phù hợp nhất?",
+  "o": [
+   "ITM cho môi giới/phân tích + DLP với fingerprint IDM + Digital Communications Governance",
+   "DSPM cho kho dữ liệu cloud kết hợp AI Security để kiểm soát việc dùng ChatGPT của môi giới",
+   "Chỉ Adaptive Email DLP cho toàn bộ nhân viên, không cần thêm module nào khác",
+   "ITM On-Prem cho core banking kết hợp DSPM quét file server của bộ phận lưu ký"
+  ],
+  "e": "IDM bảo vệ tài liệu mẫu chưa công bố, ITM tạo bằng chứng với người sắp nghỉ, DCG đáp ứng lưu trữ và giám sát giao tiếp (mục 17)."
+ },
+ {
+  "t": "Use case chọn giải pháp",
+  "seg": "Fintech",
+  "q": "Fintech 100% trên AWS: bản sao CSDL production có DLCN nằm ở môi trường test, có secret trong file cấu hình, chatbot RAG dùng dữ liệu khách hàng, agent gọi MCP không kiểm soát. Module dẫn dắt phù hợp nhất?",
+  "o": [
+   "DSPM quét S3/RDS/DynamoDB, tìm shadow data, secret và dữ liệu cho RAG, kết hợp AI/MCP Security",
+   "Email DLP qua gateway kết hợp mã hóa email tự động cho toàn bộ nhân viên trong công ty",
+   "ITM On-Prem ghi phiên làm việc trên các máy chủ production của công ty fintech",
+   "Endpoint DLP chặn USB và in ấn trên máy trạm của toàn bộ đội phát triển"
+  ],
+  "e": "Rủi ro nằm ở dữ liệu cloud và AI agent, nên DSPM + AI Security là trọng tâm (mục 17)."
+ },
+ {
+  "t": "Use case chọn giải pháp",
+  "seg": "Sản xuất",
+  "q": "Nhà máy FDI có phòng R&D với bản vẽ CAD. Cần nhận diện bản vẽ/tài liệu mẫu ngay cả khi người dùng chỉ trích một phần hoặc đổi định dạng. Kỹ thuật nào phù hợp?",
+  "o": [
+   "IDM (fingerprint tài liệu)",
+   "EDM khớp bản ghi CSDL khách hàng",
+   "Regex kèm checksum",
+   "Từ điển keyword"
+  ],
+  "e": "IDM lấy dấu vân tay từ tài liệu mẫu (chia đoạn, băm); kết hợp Endpoint DLP chặn USB/cloud cá nhân và ITM cho kỹ sư sắp nghỉ (mục 10.3, 17)."
+ },
+ {
+  "t": "Use case chọn giải pháp",
+  "seg": "Bệnh viện",
+  "q": "Bệnh viện tư: bác sĩ trao đổi ca bệnh, ảnh kết quả xét nghiệm qua Zalo trên điện thoại cá nhân. Nhận định nào đúng?",
+  "o": [
+   "Zalo trên điện thoại cá nhân nằm ngoài phạm vi agent; cần chính sách/MDM bổ sung, DLP vẫn xử lý email, USB, OCR trên máy tính",
+   "Agent Endpoint DLP chặn được tin nhắn Zalo trên điện thoại cá nhân của bác sĩ nếu bật chế độ nghiêm ngặt",
+   "Email DLP qua gateway kiểm tra được cả tin nhắn Zalo vì chúng đi qua cùng mạng của bệnh viện",
+   "ITM On-Prem ghi lại được toàn bộ tin nhắn Zalo trên điện thoại của bác sĩ kèm ảnh chụp màn hình"
+  ],
+  "e": "Agent chỉ chạy trên Windows/macOS/Linux; ứng dụng trên điện thoại cá nhân ngoài phạm vi (mục 17, FAQ)."
+ },
+ {
+  "t": "Use case chọn giải pháp",
+  "seg": "Doanh nghiệp (đã có E5)",
+  "q": "Khách đã trả M365 E5 (có Purview) và phản đối 'đã có DLP miễn phí rồi'. Chiến lược chào hợp lý nhất?",
+  "o": [
+   "Bổ sung chứ không thay: PoC 30 ngày Adaptive Email DLP hoặc ITM, Proofpoint đọc được nhãn MIP của Purview",
+   "Đề nghị gỡ Purview và thay thế toàn bộ bằng Proofpoint ngay trong đợt triển khai đầu",
+   "Bỏ qua khách vì Purview đã có sẵn trong E5 nên không thể cạnh tranh về giá",
+   "Chỉ chào DSPM on-prem cho file server vì Purview không hỗ trợ quét dữ liệu"
+  ],
+  "e": "Battlecard vs Purview (mục 15.2): nếu khách chỉ dùng Microsoft và đã trả E5, bắt đầu từ Adaptive Email DLP/ITM thay vì thay thế toàn bộ."
+ },
+ {
+  "t": "Loại license",
+  "q": "ITM SaaS thường được tính license và sizing như thế nào?",
+  "o": [
+   "Theo user được giám sát, thường 5–20% tổng user (admin, DBA, nhà thầu, người sắp nghỉ); còn lại dùng Endpoint DLP",
+   "Theo dung lượng log ghi nhận mỗi ngày tính bằng GB, cộng thêm phí lưu trữ ảnh chụp màn hình",
+   "Theo số máy chủ và số CSDL được giám sát, bất kể bao nhiêu người dùng truy cập các hệ thống đó",
+   "Bắt buộc bằng 100% tổng số user có email, bất kể nhóm rủi ro hay vai trò công việc"
+  ],
+  "e": "Mục 12.1 và FAQ sizing: ITM chỉ tính nhóm rủi ro cao; Endpoint DLP dùng chung agent cho phần còn lại."
+ },
+ {
+  "t": "Loại license",
+  "q": "Khi lập dự toán cho DSPM, điều nào sau đây đúng?",
+  "o": [
+   "Tính theo user; chi phí compute/storage của scanner trong tài khoản cloud do khách trả nhà cung cấp cloud, cần đưa vào dự toán",
+   "Tính theo TB dữ liệu quét, Proofpoint chịu toàn bộ chi phí compute và lưu trữ của scanner",
+   "Miễn phí compute vì scanner chạy hoàn toàn trên hạ tầng Proofpoint cloud, khách không trả gì thêm",
+   "Tính theo số rule DLP đã bật và số lần quét mỗi tháng, compute do hãng trả"
+  ],
+  "e": "Mục 12.1, 13.3. Nên xác nhận với hãng có giới hạn số kho/dung lượng hay không."
+ },
+ {
+  "t": "Loại license",
+  "q": "Proofpoint có công bố bảng giá chính thức cho dòng Enterprise DLP/ITM không?",
+  "o": [
+   "Không; giá lấy từ Partner Portal/channel team, các con số công khai (~$35–60 /user/năm) chỉ là ước tính bên thứ ba chưa xác minh",
+   "Có, niêm yết công khai trên website của hãng ở mức khoảng $35–60 /user/năm cho mọi loại khách hàng",
+   "Có, bảng giá đầy đủ cho mọi module công bố trên AWS Marketplace và áp dụng như báo giá chính thức",
+   "Có, giá cố định toàn cầu theo từng module và không cho phép đàm phán chiết khấu theo dự án"
+  ],
+  "e": "Mục 12 cảnh báo giá chỉ là tham khảo, không dùng làm báo giá."
+ },
+ {
+  "t": "Loại license",
+  "q": "Ngoài license, BOM của ITM On-Prem phát sinh những hạng mục hạ tầng nào?",
+  "o": [
+   "VM Application Server + Console, SQL Server Standard/Enterprise, license Windows Server, lưu trữ và backup",
+   "Không phát sinh gì thêm vì ITM On-Prem do Proofpoint vận hành hoàn toàn trên cloud của hãng",
+   "Bắt buộc mua appliance phần cứng chuyên dụng do Proofpoint cung cấp kèm theo license",
+   "SQL Server Express là đủ cho môi trường production, chỉ cần thêm một VM Linux cho Console"
+  ],
+  "e": "Mục 12.3, 13.1: không dùng Express cho production; hãng không bán appliance chuyên dụng cho DLP/DSPM."
+ },
+ {
+  "t": "Cơ chế & luồng làm việc",
+  "q": "Công thức quyết định của chính sách Proofpoint được mô tả là gì?",
+  "o": [
+   "Quyết định = Nội dung × Ngữ cảnh (ai, gửi đâu, kênh nào) × Hành vi (có bất thường so với thường ngày không)",
+   "Quyết định = số lượng từ khóa khớp nhân với trọng số từ điển, càng nhiều từ khóa càng chặn",
+   "Quyết định = kênh gửi nhân với kích thước file và thời điểm gửi trong ngày",
+   "Quyết định = nhãn MIP của file nhân với quyền admin của người gửi trên hệ thống"
+  ],
+  "e": "DLP truyền thống chỉ nhìn nội dung nên nhiều cảnh báo giả; Proofpoint thêm ngữ cảnh và hành vi (mục 10.3)."
+ },
+ {
+  "t": "Cơ chế & luồng làm việc",
+  "q": "Nguyên lý hoạt động của EDM (Exact Data Match) là gì?",
+  "o": [
+   "Băm các trường từ CSDL gốc rồi nạp vào (không lưu dữ liệu gốc); khi quét băm token và so khớp, thường cần nhiều trường cùng bản ghi",
+   "Lấy dấu vân tay từ tài liệu mẫu bằng cách chia đoạn rồi băm, phát hiện cả khi người dùng chỉ trích một phần nội dung",
+   "Dùng mô hình học máy nhận dạng loại tài liệu theo ngữ nghĩa, không cần dữ liệu mẫu hay danh sách bản ghi",
+   "Đọc nhãn phân loại gắn trong metadata của file rồi áp chính sách tương ứng với từng nhãn, không đọc nội dung"
+  ],
+  "e": "Phương án 2 là IDM, phương án 3 là AI classifier, phương án 4 là nhãn MIP (bảng kỹ thuật nhận diện, mục 10.3)."
+ },
+ {
+  "t": "Cơ chế & luồng làm việc",
+  "q": "Luồng xử lý đúng của Email DLP (chặn inline) là gì?",
+  "o": [
+   "Outbound connector/smarthost chuyển mail qua Proofpoint MTA → tách, giải nén, OCR → detector + policy → giao/mã hóa/cách ly/chặn",
+   "Add-in Outlook học baseline 12 tháng qua API rồi cảnh báo ngay trong Outlook khi người dùng bấm Gửi",
+   "Kết nối OAuth quét file đã chia sẻ trên SharePoint/OneDrive rồi gỡ link công khai sau khi sự kiện xảy ra",
+   "Agent endpoint đọc clipboard và chặn thao tác copy/paste hoặc upload file sang ứng dụng bên ngoài"
+  ],
+  "e": "Phương án 2 là Adaptive Email DLP, phương án 3 là Cloud DLP, phương án 4 là Endpoint DLP. Email DLP chỉ thấy mail đi qua gateway (mục 10.3)."
+ },
+ {
+  "t": "Cơ chế & luồng làm việc",
+  "q": "Adaptive Email DLP phát hiện gửi nhầm người nhận/đính kèm nhầm bằng cơ chế nào?",
+  "o": [
+   "Học qua API 12+ tháng lịch sử email, dựng Relationship Graph/baseline từng người, đối chiếu khi bấm Gửi và cảnh báo trong Outlook",
+   "Quản trị viên viết rule thủ công theo danh sách domain được phép, domain bị cấm và danh sách người nhận VIP",
+   "Chuyển toàn bộ mail qua MTA rồi chặn cứng theo từ điển và regex do quản trị viên đặt trước cho từng phòng ban",
+   "Chụp ảnh màn hình mỗi lần soạn thư rồi so khớp với tài liệu mẫu đã fingerprint bằng IDM"
+  ],
+  "e": "Không cần viết rule; người dùng tự sửa trước khi mail đi (mục 7, 10.3)."
+ },
+ {
+  "t": "Cơ chế & luồng làm việc",
+  "q": "Phát biểu nào đúng về agent endpoint của Endpoint DLP và ITM bản SaaS?",
+  "o": [
+   "User-mode, không kernel driver; Endpoint DLP chỉ gửi metadata, ITM thu sâu hơn (thêm ảnh chụp màn hình khi có sự kiện)",
+   "Dùng kernel driver để chặn ở mức thấp nên đôi khi xung đột với EDR và các agent bảo mật khác",
+   "Endpoint DLP gửi toàn bộ nội dung file lên cloud để phân tích, còn ITM chỉ gửi log hoạt động",
+   "Cần hai agent riêng cho DLP và ITM, mỗi agent có console quản trị và bộ phân loại tách biệt"
+  ],
+  "e": "Một agent cho cả hai, hai mức thu thập (mục 7, 10.3)."
+ },
+ {
+  "t": "Cơ chế & luồng làm việc",
+  "q": "Cơ chế quét của DSPM trên cloud (AWS/Azure/GCP) hoạt động ra sao?",
+  "o": [
+   "Scanner chạy trong tài khoản cloud của khách, đọc dữ liệu tại chỗ; chỉ metadata và kết quả phân loại đi ra qua HTTPS",
+   "Sao chép toàn bộ dữ liệu về data center Proofpoint rồi mới phân loại và chấm điểm rủi ro cho từng kho",
+   "Cài agent trên từng máy chủ lưu trữ và đẩy toàn bộ nội dung file lên nền tảng SaaS để phân tích",
+   "Chỉ quét được khi dữ liệu nằm on-prem, vì môi trường cloud không cho phép đọc nội dung tại chỗ"
+  ],
+  "e": "In-account scanning: nội dung dữ liệu không rời môi trường khách (mục 7, 10.3)."
+ },
+ {
+  "t": "Cơ chế & luồng làm việc",
+  "q": "Hạn chế cơ bản của Cloud DLP quét qua API (M365, Google, Box) là gì?",
+  "o": [
+   "Out-of-band nên xử lý sau sự kiện (gỡ link công khai, cách ly), không chặn trước; muốn chặn lúc upload cần agent/extension",
+   "Bắt buộc cài agent trên từng máy trạm thì mới đọc được trạng thái chia sẻ file trên cloud",
+   "Chỉ đọc được tên file và quyền chia sẻ, không đọc được nội dung file để phân loại dữ liệu nhạy cảm",
+   "Chỉ hoạt động với email, không áp dụng được cho SharePoint, OneDrive, Google Drive hay Box"
+  ],
+  "e": "Bảng inline vs out-of-band (mục 10.3)."
+ },
+ {
+  "t": "Cơ chế & luồng làm việc",
+  "q": "Vì sao browser extension/agent của Data Security for AI kiểm tra được prompt gửi tới ChatGPT dù đường truyền dùng HTTPS?",
+  "o": [
+   "Vì chặn bắt tại trình duyệt/máy trước khi dữ liệu rời trình duyệt, tức trước lớp mã hóa HTTPS",
+   "Vì giải mã HTTPS bằng chứng chỉ do nhà cung cấp AI cấp riêng cho Proofpoint",
+   "Vì đọc log phía nhà cung cấp AI sau khi dữ liệu đã được gửi đi và xử lý",
+   "Vì chỉ chặn theo danh sách domain, không cần kiểm tra nội dung prompt hay file"
+  ],
+  "e": "Cơ chế A (inline) của Data Security for AI; cơ chế B dùng API tuân thủ cho AI doanh nghiệp, cơ chế C dùng DSPM xử lý dữ liệu AI có thể đọc (mục 10.3)."
+ },
+ {
+  "t": "Vendor & đối thủ",
+  "q": "Trong phân tích SWOT, đối thủ được xem là mối đe dọa lớn nhất về giá và mindshare trong mảng DLP là ai?",
+  "o": [
+   "Microsoft Purview (có sẵn trong M365 E5)",
+   "Forcepoint (DLP và Data Security Cloud)",
+   "Cyera (DSPM chuyên biệt thế hệ mới)",
+   "GTB Technologies (DLP on-prem giá thấp)"
+  ],
+  "e": "Purview 'miễn phí' trong E5; PeerSpot ghi mindshare DLP của Purview 5,6% so với Proofpoint 1,4% (mục 9, 15.1)."
+ },
+ {
+  "t": "Vendor & đối thủ",
+  "q": "Khách nhà nước/SMB cần giải pháp on-prem, giá thấp, hỗ trợ tại chỗ. Nhóm đối thủ thường gặp là?",
+  "o": [
+   "GTB Technologies, Safetica, Endpoint Protector, ManageEngine",
+   "Cyera, BigID, Sentra, Securiti, Concentric AI, Cyberhaven",
+   "Netskope, Zscaler, Palo Alto Networks, Cloudflare One",
+   "Prompt Security, Lasso, Harmonic, Nightfall, dope.security"
+  ],
+  "e": "Nhóm khu vực/giá rẻ/on-prem (mục 14). Nhóm 2 là DSPM chuyên biệt, nhóm 3 là SASE/SSE, nhóm 4 là AI Security."
+ },
+ {
+  "t": "Vendor & đối thủ",
+  "q": "Khách hỏi 'Proofpoint xếp hạng thế nào trong Gartner Magic Quadrant DLP'. Câu trả lời đúng là?",
+  "o": [
+   "Gartner không có MQ riêng cho Enterprise DLP; dùng Peer Insights (Customers' Choice 2025) và GigaOm Leader cho DSPM/DSP",
+   "Proofpoint là Leader trong Gartner MQ DLP suốt năm năm liên tiếp, vượt Microsoft và Forcepoint",
+   "Proofpoint là Challenger trong Gartner MQ DLP do thiếu bản on-prem đầy đủ",
+   "Proofpoint là Leader trong Forrester Wave DLP quý 2 năm 2025, vượt Microsoft Purview"
+  ],
+  "e": "Mục 15.1: không nên viện dẫn một MQ không tồn tại."
+ },
+ {
+  "t": "Vendor & đối thủ",
+  "q": "Khách đang cân nhắc DSPM hỏi thương vụ mua Varonis ảnh hưởng gì. Thông tin nào đúng?",
+  "o": [
+   "Công bố 15/10/2026, $6,3 tỷ, dự kiến đóng H1/2027; tới khi đóng hai công ty độc lập, chưa có lộ trình hợp nhất nên không hứa tích hợp",
+   "Đã hoàn tất từ đầu 2026 và Varonis DSPM đã được tích hợp sẵn vào console của Proofpoint cho khách hiện hữu",
+   "Proofpoint DSPM sẽ bị ngừng bán ngay sau thương vụ để thay hoàn toàn bằng sản phẩm của Varonis",
+   "Thương vụ giá khoảng $2 tỷ, dự kiến đóng ngay Q4/2026 và hợp đồng hỗ trợ sẽ được điều chỉnh"
+  ],
+  "e": "Mục 5, 16.1; Forrester khuyên đánh giá theo những gì Proofpoint thực sự giao."
+ },
+ {
+  "t": "Key selling point",
+  "q": "Số liệu nào từ 2025 Data Security Landscape dùng để dẫn dắt thông điệp 'bảo vệ dữ liệu theo con người'?",
+  "o": [
+   "1% người dùng gây ra 76% sự cố mất dữ liệu",
+   "76% người dùng gây ra 1% sự cố mất dữ liệu",
+   "85% tổ chức chưa từng mất dữ liệu trong 12 tháng",
+   "Nhân viên nghỉ việc gây ra 76% sự cố"
+  ],
+  "e": "Tập trung vào nhóm nhỏ rủi ro cao giúp giảm ồn, tăng hiệu quả; 85% tổ chức đã từng mất dữ liệu (mục 0, 4, 16)."
+ },
+ {
+  "t": "Key selling point",
+  "q": "Điểm khác biệt nền tảng của Proofpoint so với DSPM thuần (Cyera, BigID) là gì?",
+  "o": [
+   "Đi từ phát hiện đến ngăn chặn trong một hãng, cùng bộ phân loại: DSPM tìm dữ liệu → chính sách DLP vài click → AI Security",
+   "Tốc độ quét dữ liệu nhanh hơn mọi đối thủ DSPM khác trên cùng một khối lượng dữ liệu cloud",
+   "Là hãng duy nhất trên thị trường có AI classifier để phân loại dữ liệu phi cấu trúc",
+   "Giá license thấp nhất thị trường nên phù hợp với mọi quy mô khách hàng, kể cả dưới 200 user"
+  ],
+  "e": "Battlecard vs Cyera/BigID (mục 15.2) và selling point số 3 (mục 16)."
+ },
+ {
+  "t": "Key selling point",
+  "q": "Khách đang dùng Proofpoint Email Protection. Module nào dễ demo và dễ thấy giá trị nhất để chào trước?",
+  "o": [
+   "Adaptive Email DLP (chống gửi nhầm, hãng nói triển khai ~48 giờ, không cần viết rule)",
+   "ITM On-Prem với bộ máy chủ Application Server và SQL Server riêng",
+   "DSPM quét file server on-prem với connector và scanner đặt tại chỗ",
+   "AI MCP Security cho các agent nội bộ đang trong giai đoạn thử nghiệm"
+  ],
+  "e": "Mẹo bán ở mục 7: Adaptive Email DLP nên chào trước cho khách đã dùng Proofpoint Email."
+ },
+ {
+  "t": "Tính năng Proofpoint",
+  "q": "Tính năng nào đặc trưng của DSPM mà DLP không có?",
+  "o": [
+   "Data Risk Map và định giá thiệt hại bằng tiền cho từng kho",
+   "Cách ly email chờ quản lý duyệt trước khi gửi ra ngoài",
+   "Ghi và phát lại phiên làm việc của từng người dùng",
+   "Che (redact) prompt trước khi gửi vào ChatGPT"
+  ],
+  "e": "DSPM: Data Risk Map, data valuator, quyền thừa, attack path (mục 7)."
+ },
+ {
+  "t": "Tính năng Proofpoint",
+  "q": "Tích hợp Claude Compliance API (GA 05/2026) cung cấp dữ liệu gì?",
+  "o": [
+   "Claude Enterprise: log + nội dung hội thoại; Claude Platform: chỉ activity log; đưa vào DLP, ITM, DCG, eDiscovery",
+   "Claude Platform có cả nội dung hội thoại, còn Claude Enterprise chỉ có activity log",
+   "Cả hai loại đều lấy được toàn bộ nội dung hội thoại cùng với tệp đính kèm của người dùng",
+   "Chưa GA, vẫn là roadmap dự kiến phát hành trước cuối 2026 cùng Knowledge Graph"
+  ],
+  "e": "Mục 7 (Data Security for AI) và mục 1.2."
+ },
+ {
+  "t": "Tính năng Proofpoint",
+  "q": "Để nhân viên vẫn dùng GenAI nhưng không lộ dữ liệu nhạy cảm, Data Security for AI hỗ trợ các hành động nào?",
+  "o": [
+   "Cho phép / cảnh báo / che (redact) / chặn, theo ứng dụng, nhóm người dùng và loại dữ liệu",
+   "Chỉ chặn hoặc cho phép, không có mức trung gian như che dữ liệu hay nhắc nhở",
+   "Chỉ ghi log sau khi dữ liệu đã gửi tới nhà cung cấp AI, không can thiệp được",
+   "Chỉ hoạt động với AI đã được công ty phê duyệt, không thấy được shadow AI"
+  ],
+  "e": "Hãng theo dõi 600+ trang GenAI, cả AI được duyệt lẫn shadow AI (mục 6, 7)."
+ },
+ {
+  "t": "Tính năng Proofpoint",
+  "q": "Tính năng nào sau đây vẫn là roadmap (chưa GA) và không nên cam kết trong hồ sơ thầu?",
+  "o": [
+   "Knowledge Graph người–dữ liệu–AI và 3 agent Detection/Investigation/Remediation (dự kiến trước cuối 2026)",
+   "Tích hợp Claude Compliance API, đã GA từ tháng 05/2026 cho khách dùng Claude Enterprise",
+   "Adaptive Email DLP gốc Tessian, đã bán rộng rãi và triển khai cho nhiều khách hàng doanh nghiệp",
+   "AI Security gồm AI Access, Agentic AI và MCP Security, GA từ tháng 03/2026 trên toàn cầu"
+  ],
+  "e": "Mục 1.2, 5.1 và 7: tag Roadmap = đã công bố, chưa phát hành."
+ },
+ {
+  "t": "Yêu cầu phần cứng",
+  "q": "Ngân hàng có máy chủ AIX và HP-UX cần ghi phiên làm việc. Điều nào đúng về ITM On-Prem?",
+  "o": [
+   "Hỗ trợ Linux (x86-64), HP-UX Itanium, AIX PowerPC, cùng Windows, Mac và Citrix/Terminal Server",
+   "Chỉ hỗ trợ agent Windows desktop và server; máy chủ Unix phải giám sát bằng công cụ khác",
+   "Chỉ bản SaaS mới hỗ trợ Unix; bản On-Prem chỉ chạy được trên Windows Server",
+   "Chỉ hỗ trợ Linux x86-64, không hỗ trợ HP-UX, AIX và cả Citrix/Terminal Server"
+  ],
+  "e": "Mục 10.2, 13.1. Application Server cần Windows Server 2016/2019/2022, IIS 8.0+."
+ },
+ {
+  "t": "Yêu cầu phần cứng",
+  "q": "Khách hỏi DSPM cho môi trường cloud cần mua phần cứng gì tại chỗ?",
+  "o": [
+   "Không cần phần cứng: scanner là stack (EC2/Docker) trong tài khoản cloud khách, mở outbound HTTPS; on-prem xin sizing",
+   "Cần appliance Proofpoint 2U đặt tại data center và kết nối trực tiếp tới các kho dữ liệu cần quét",
+   "Cần cluster Hadoop riêng tại chỗ để phân loại dữ liệu, ngoài việc mua license theo user",
+   "Cần mở inbound 443 từ Internet vào scanner để nền tảng Proofpoint đẩy lệnh quét xuống"
+  ],
+  "e": "Mục 13.3: Proofpoint không bán appliance phần cứng cho DLP/DSPM; chi phí compute do khách chịu."
+ },
+ {
+  "t": "Yêu cầu phần cứng",
+  "q": "Về endpoint Linux của Endpoint DLP/ITM bản SaaS, nhận định nào đúng?",
+  "o": [
+   "Hỗ trợ một phần: metadata, ảnh chụp màn hình, mã hóa cấu hình, upload log; chưa chặn theo nội dung",
+   "Đầy đủ tính năng như Windows, gồm cả chặn USB và chặn upload theo nội dung file",
+   "Hoàn toàn không hỗ trợ Linux; chỉ giám sát được máy Windows và macOS trong tổ chức",
+   "Chỉ hỗ trợ Linux server, không hỗ trợ máy trạm Windows và macOS của người dùng"
+  ],
+  "e": "Mục 13.2 và phần giới hạn của Endpoint DLP & ITM (mục 10.3)."
+ },
+ {
+  "t": "Triển khai giải pháp",
+  "q": "Nguyên tắc và trình tự triển khai tư vấn trong cẩm nang là gì?",
+  "o": [
+   "Thấy → Hiểu → Sửa → Chặn → Tự động hóa; đừng bật chặn ngày đầu (DSPM → DLP giám sát → chặn → AI)",
+   "Chặn toàn bộ các kênh ngay từ ngày đầu để dữ liệu rõ ràng rồi rà soát sau",
+   "Triển khai AI Security trước, DSPM và DLP làm cuối khi đã có ngân sách",
+   "Triển khai ITM cho toàn bộ user trước, sau đó mới tới DSPM và các module khác"
+  ],
+  "e": "Mục 11: chạy chế độ giám sát, thông báo người dùng, tinh chỉnh dương tính giả rồi mới chặn."
+ },
+ {
+  "t": "Triển khai giải pháp",
+  "q": "Thiết kế PoC được đề xuất trong cẩm nang là gì?",
+  "o": [
+   "30 ngày, 50–100 user, 2–3 kịch bản (gửi nhầm, USB, dán vào ChatGPT, quét 1 tài khoản cloud), tiêu chí thành công viết trước",
+   "Toàn bộ 5.000 user trong 12 tháng với đầy đủ các module để đánh giá chi phí vận hành thực tế",
+   "Chỉ demo slide và video của hãng, không cần dùng môi trường thật hay dữ liệu thật của khách hàng",
+   "Bật chặn tất cả các kênh ngay từ tuần đầu để đo hiệu quả nhanh trong vòng 7 ngày"
+  ],
+  "e": "Mục 19 FAQ và mục 11 (pilot agent 50–100 máy, chọn bản LTS cho máy quan trọng)."
+ },
+ {
+  "t": "Triển khai giải pháp",
+  "q": "Trước khi bật ITM với ảnh chụp màn hình, khách cần làm gì?",
+  "o": [
+   "Thống nhất HR/pháp chế, cập nhật nội quy, thông báo nhân viên; có thể chỉ chụp cửa sổ đang dùng, ẩn danh khi điều tra",
+   "Bật bí mật để nhân viên không thay đổi hành vi và dữ liệu thu được phản ánh đúng thực tế công việc",
+   "Không cần gì thêm vì ITM chỉ là công cụ nội bộ của phòng IT và không liên quan tới nhân sự",
+   "Chỉ cần trưởng phòng IT phê duyệt là đủ; thông báo nhân viên sẽ làm giảm hiệu quả giám sát"
+  ],
+  "e": "Mục 11 (mẹo triển khai) và FAQ về ITM: tập trung rủi ro dữ liệu, tuân thủ Luật BVDLCN về dữ liệu người lao động."
+ },
+ {
+  "t": "Khung pháp lý",
+  "q": "Mức phạt tối đa cho hành vi chuyển dữ liệu cá nhân xuyên biên giới sai quy định theo Luật BVDLCN 2025 là bao nhiêu?",
+  "o": [
+   "Tối đa 5% doanh thu năm liền trước của tổ chức",
+   "Tối đa 10 lần khoản thu có được từ hành vi vi phạm",
+   "Tối đa 3 tỷ đồng đối với tổ chức",
+   "Chỉ cảnh cáo, không phạt tiền"
+  ],
+  "e": "10 lần khoản thu áp dụng cho mua bán DLCN; 3 tỷ cho vi phạm khác. Đây là khung tối đa, cần kiểm tra nghị định xử phạt (mục 2.2)."
+ },
+ {
+  "t": "Khung pháp lý",
+  "q": "Luật nào quy định phân loại dữ liệu cốt lõi, dữ liệu quan trọng và có hiệu lực từ 01/07/2025?",
+  "o": [
+   "Luật Dữ liệu số 60/2024/QH15",
+   "Luật Bảo vệ dữ liệu cá nhân số 91/2025/QH15",
+   "Luật Trí tuệ nhân tạo số 134/2025/QH15",
+   "Luật An ninh mạng số 116/2025/QH15"
+  ],
+  "e": "Luật BVDLCN có hiệu lực 01/01/2026, Luật AI 01/03/2026, Luật ANM 2025 là 01/07/2026 (mục 2.1)."
+ },
+ {
+  "t": "Khung pháp lý",
+  "q": "Văn bản nào hợp nhất và thay thế Luật An toàn thông tin mạng 2015 và Luật An ninh mạng 2018?",
+  "o": [
+   "Luật An ninh mạng 2025 số 116/2025/QH15",
+   "Luật Dữ liệu số 60/2024/QH15 (hiệu lực 01/07/2025)",
+   "Nghị định 356/2025/NĐ-CP hướng dẫn Luật BVDLCN",
+   "Luật Bảo vệ bí mật nhà nước 2025 (hiệu lực 01/03/2026)"
+  ],
+  "e": "Mục 2.1."
+ },
+ {
+  "t": "Khung pháp lý",
+  "q": "Khách hỏi 'dùng SaaS của Proofpoint có vi phạm Luật BVDLCN không'. Cách tư vấn đúng là?",
+  "o": [
+   "Luật không cấm mà yêu cầu đúng quy định: hồ sơ đánh giá tác động chuyển DLCN ra nước ngoài, DPA; bắt buộc trong nước → ITM On-Prem",
+   "Cấm tuyệt đối việc chuyển DLCN ra nước ngoài nên SaaS của Proofpoint không thể dùng được tại Việt Nam",
+   "Không cần làm gì vì Proofpoint chỉ xử lý metadata nên không được coi là dữ liệu cá nhân",
+   "Chỉ cần Proofpoint có data center tại Việt Nam là đủ, không cần hồ sơ hay hợp đồng nào khác"
+  ],
+  "e": "Mục 2.3 và 16.1. Hiện Proofpoint chưa có data center tại Việt Nam (có India, Singapore dự kiến)."
+ },
+ {
+  "t": "Framework",
+  "q": "Control nào của ISO/IEC 27001:2022 (Annex A) nói trực tiếp về ngăn chặn rò rỉ dữ liệu (DLP)?",
+  "o": [
+   "8.12 Data leakage prevention",
+   "5.12 Phân loại thông tin",
+   "8.16 Giám sát hoạt động",
+   "5.14 Truyền tải thông tin"
+  ],
+  "e": "5.12 phân loại, 5.13 gắn nhãn, 5.14 truyền tải, 8.12 DLP, 8.16 giám sát (mục 3.3, 3.4)."
+ },
+ {
+  "t": "Framework",
+  "q": "NIST CSF 2.0 ID.AM-07 (kiểm kê dữ liệu và metadata) tương ứng nhất với năng lực nào?",
+  "o": [
+   "Khám phá và phân loại dữ liệu của DSPM",
+   "Sao lưu và khôi phục sau sự cố (Recover)",
+   "Đào tạo nhận thức người dùng (PR.AT)",
+   "Phân tích sự cố bằng timeline người dùng (RS.AN)"
+  ],
+  "e": "Mục 3.2: ID.AM-07 → DSPM discovery/phân loại; PR.DS → DLP; DE.CM → ITM/Endpoint DLP. Recover nằm ngoài trọng tâm Proofpoint."
+ },
+ {
+  "t": "Framework",
+  "q": "Chuẩn nào sau đây là hệ thống quản lý AI (AIMS) có thể được chứng nhận?",
+  "o": [
+   "ISO/IEC 42001:2023",
+   "NIST AI RMF 1.0",
+   "OWASP Top 10 for LLM Applications",
+   "ISO/IEC 27701"
+  ],
+  "e": "NIST AI RMF và OWASP là best practice/mô hình mối đe dọa, không chứng nhận; 27701 là quyền riêng tư (mục 3.1, 3.3)."
+ }
+];
+
+var REF={"Khái niệm":"mục 1","Use case chọn giải pháp":"mục 17, 9","Loại license":"mục 12","Cơ chế & luồng làm việc":"mục 10.3","Vendor & đối thủ":"mục 14–15","Key selling point":"mục 16","Tính năng Proofpoint":"mục 6–7","Yêu cầu phần cứng":"mục 13","Triển khai giải pháp":"mục 10–11","Khung pháp lý":"mục 2","Framework":"mục 3"};
+var TOPICS=[];Q.forEach(function(x){if(TOPICS.indexOf(x.t)<0)TOPICS.push(x.t)});
+
+var store={get:function(k){try{return localStorage.getItem(k)}catch(e){return null}},set:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+var root=document.documentElement,app=document.getElementById('app');
+var th=store.get('ppq_theme');if(th)root.setAttribute('data-theme',th);
+document.getElementById('themeBtn').onclick=function(){
+  var c=root.getAttribute('data-theme');if(!c)c=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+  var n=c==='dark'?'light':'dark';root.setAttribute('data-theme',n);store.set('ppq_theme',n);
+};
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function cnt(t){return Q.filter(function(x){return x.t===t}).length}
+
+var cfg={shuffleQ:false,fb:true,topics:{}};TOPICS.forEach(function(t){cfg.topics[t]=true});
+var S=null;
+
+function home(){
+  S=null;
+  var last=null;try{last=JSON.parse(store.get('ppq_last')||'null')}catch(e){}
+  var chips=TOPICS.map(function(t){return '<button class="chip'+(cfg.topics[t]?' on':'')+'" data-t="'+esc(t)+'">'+esc(t)+'<small>'+cnt(t)+'</small></button>'}).join('');
+  var sel=Q.filter(function(x){return cfg.topics[x.t]}).length;
+  app.innerHTML='<div class="card"><h2>Rà soát kiến thức Proofpoint &amp; Data Security</h2>'+
+  '<p class="lead">Bộ câu hỏi bám theo Cẩm nang Proofpoint Data Security (cập nhật 19/10/2026): khái niệm, use case theo khối khách hàng, license, cơ chế hoạt động, đối thủ, selling point, tính năng, phần cứng, triển khai, pháp lý Việt Nam và framework.</p>'+
+  '<div class="kpis"><div class="kpi"><b>50</b><span>câu trắc nghiệm</span></div><div class="kpi"><b>11</b><span>chủ đề</span></div><div class="kpi"><b>8</b><span>use case theo khối khách hàng</span></div><div class="kpi"><b>'+(last?last.s+'/'+last.n:'—')+'</b><span>'+(last?'lần làm gần nhất':'chưa làm bài')+'</span></div></div>'+
+  '<h3 style="margin:14px 0 4px;font-size:15px">Chọn chủ đề</h3><div class="chips" id="chips">'+chips+'</div>'+
+  '<div class="row"><label><input type="checkbox" id="oQ"'+(cfg.shuffleQ?' checked':'')+'> Trộn thứ tự câu hỏi</label><label><input type="checkbox" id="oF"'+(cfg.fb?' checked':'')+'> Hiện đáp án và giải thích ngay sau mỗi câu</label></div>'+
+  '<div class="note">Thứ tự đáp án A–D được xáo ngẫu nhiên mỗi lượt. Bỏ tick “hiện ngay” nếu muốn làm như bài thi thật và xem kết quả ở cuối.</div>'+
+  '<button class="btn pri" id="go"'+(sel?'':' disabled')+'>Bắt đầu ('+sel+' câu)</button></div>';
+  [].forEach.call(document.querySelectorAll('#chips .chip'),function(b){b.onclick=function(){var t=b.getAttribute('data-t');cfg.topics[t]=!cfg.topics[t];home()}});
+  document.getElementById('oQ').onchange=function(){cfg.shuffleQ=this.checked};
+  document.getElementById('oF').onchange=function(){cfg.fb=this.checked};
+  document.getElementById('go').onclick=function(){start(Q.filter(function(x){return cfg.topics[x.t]}))};
+}
+
+function start(list){
+  if(cfg.shuffleQ)list=shuffle(list);
+  S={i:0,items:list.map(function(x){
+    return {t:x.t,seg:x.seg,q:x.q,e:x.e,picked:-1,opts:shuffle(x.o.map(function(s,k){return {t:s,ok:k===0}}))};
+  })};
+  quiz();window.scrollTo(0,0);
+}
+
+function quiz(){
+  var it=S.items[S.i],n=S.items.length;
+  app.innerHTML='<div class="prog"><div class="bar"><i style="width:'+(S.i/n*100)+'%"></i></div><span>Câu '+(S.i+1)+'/'+n+'</span></div>'+
+  '<div class="card"><div class="tags"><span class="tag">'+esc(it.t)+'</span>'+(it.seg?'<span class="tag seg">Khách hàng: '+esc(it.seg)+'</span>':'')+'</div>'+
+  '<h2 class="q">'+esc(it.q)+'</h2><div class="opts">'+it.opts.map(function(o,k){return '<button class="opt" data-k="'+k+'"><b>'+'ABCD'.charAt(k)+'</b><span>'+esc(o.t)+'</span></button>'}).join('')+'</div>'+
+  '<div id="fb"></div><div class="nav"><button class="btn" id="quit">Thoát</button><button class="btn pri" id="next" disabled>'+(S.i===n-1?'Xem kết quả':'Câu tiếp theo')+'</button></div></div>';
+  var btns=[].slice.call(document.querySelectorAll('.opt'));
+  function paint(){
+    var locked=cfg.fb&&it.picked>=0;
+    btns.forEach(function(b,k){
+      b.className='opt';b.disabled=locked;
+      if(locked){if(it.opts[k].ok)b.classList.add('ok');else if(k===it.picked)b.classList.add('bad')}
+      else if(k===it.picked)b.classList.add('sel');
+    });
+    document.getElementById('next').disabled=it.picked<0;
+    var fb=document.getElementById('fb');
+    if(locked){var good=it.opts[it.picked].ok;
+      fb.innerHTML='<div class="fb '+(good?'ok':'bad')+'"><b>'+(good?'Chính xác.':'Chưa đúng.')+'</b> '+esc(it.e)+'</div>'}
+    else fb.innerHTML='';
+  }
+  btns.forEach(function(b,k){b.onclick=function(){pick(k)}});
+  function pick(k){if(cfg.fb&&it.picked>=0)return;it.picked=k;paint()}
+  paint();
+  document.getElementById('next').onclick=next;
+  document.getElementById('quit').onclick=function(){if(confirm('Thoát bài làm hiện tại?'))home()};
+  function next(){if(it.picked<0)return;if(S.i<n-1){S.i++;quiz();window.scrollTo(0,0)}else result()}
+  S.key=function(e){
+    var m={'1':0,'2':1,'3':2,'4':3,'a':0,'b':1,'c':2,'d':3}[e.key.toLowerCase()];
+    if(m!==undefined&&m<btns.length){pick(m)}
+    else if(e.key==='Enter'){next()}
+  };
+}
+document.addEventListener('keydown',function(e){if(S&&S.key&&!S.done&&!e.ctrlKey&&!e.metaKey)S.key(e)});
+
+function result(){
+  S.done=true;
+  var n=S.items.length,ok=S.items.filter(function(x){return x.picked>=0&&x.opts[x.picked].ok}).length;
+  var pct=Math.round(ok/n*100);
+  store.set('ppq_last',JSON.stringify({s:ok,n:n}));
+  var msg=pct>=90?'Xuất sắc — sẵn sàng tư vấn sâu cho khách.':pct>=75?'Tốt — nắm chắc phần lớn, ôn lại các chủ đề còn yếu.':pct>=60?'Đạt — cần rà soát lại cẩm nang ở các chủ đề bên dưới.':'Cần ôn lại — đọc lại cẩm nang theo mục gợi ý rồi làm lại.';
+  var by={};S.items.forEach(function(x){var b=by[x.t]||(by[x.t]={ok:0,n:0});b.n++;if(x.picked>=0&&x.opts[x.picked].ok)b.ok++});
+  var tbs=TOPICS.filter(function(t){return by[t]}).map(function(t){
+    var b=by[t],p=Math.round(b.ok/b.n*100),c=p<60?'lo':p<80?'mid':'';
+    return '<div class="tb"><div class="l"><span>'+esc(t)+' <small style="color:var(--muted)">('+esc(REF[t])+')</small></span><b>'+b.ok+'/'+b.n+'</b></div><div class="bar"><i class="'+c+'" style="width:'+p+'%"></i></div></div>';
+  }).join('');
+  var weak=TOPICS.filter(function(t){return by[t]&&by[t].ok/by[t].n<0.7});
+  var wrong=S.items.filter(function(x){return !(x.picked>=0&&x.opts[x.picked].ok)});
+  app.innerHTML='<div class="card"><div class="score"><div class="big">'+ok+'<small>/'+n+'</small></div><div><h2 style="margin:0">'+pct+'% — '+esc(msg)+'</h2>'+
+  (weak.length?'<p class="lead" style="margin:6px 0 0">Nên đọc lại: '+weak.map(function(t){return esc(t)+' ('+esc(REF[t])+')'}).join('; ')+'.</p>':'<p class="lead" style="margin:6px 0 0">Không có chủ đề nào dưới 70%.</p>')+'</div></div>'+
+  '<h3 style="margin:18px 0 4px;font-size:15px">Điểm theo chủ đề</h3>'+tbs+
+  '<div class="row" style="margin-top:16px"><button class="btn pri" id="again">Làm lại từ đầu</button>'+(wrong.length?'<button class="btn" id="redo">Chỉ làm lại '+wrong.length+' câu sai</button>':'')+'<button class="btn" id="hm">Về trang chủ</button></div></div>'+
+  '<div class="card"><h2>Xem lại bài làm</h2><div class="row"><label><input type="checkbox" id="onlyW"'+(wrong.length?' checked':'')+'> Chỉ hiện câu sai</label></div><div id="rv"></div></div>';
+  function rv(){
+    var only=document.getElementById('onlyW').checked;
+    document.getElementById('rv').innerHTML=S.items.map(function(x,i){
+      var good=x.picked>=0&&x.opts[x.picked].ok;if(only&&good)return '';
+      var cor=x.opts.filter(function(o){return o.ok})[0].t;
+      return '<div class="rev '+(good?'r':'w')+'"><div class="tags"><span class="tag">'+esc(x.t)+'</span>'+(x.seg?'<span class="tag seg">'+esc(x.seg)+'</span>':'')+'</div><p><b>'+(i+1)+'. '+esc(x.q)+'</b></p>'+
+      (good?'':'<p class="a"><span class="yb">Bạn chọn:</span> '+(x.picked>=0?esc(x.opts[x.picked].t):'(chưa chọn)')+'</p>')+
+      '<p class="a"><span class="ya">Đáp án đúng:</span> '+esc(cor)+'</p><p class="a" style="color:var(--muted)">'+esc(x.e)+'</p></div>';
+    }).join('')||'<p class="lead">Không có câu nào để hiển thị.</p>';
+  }
+  document.getElementById('onlyW').onchange=rv;rv();
+  document.getElementById('again').onclick=function(){start(S.items.map(function(x){return Q.filter(function(q){return q.q===x.q})[0]}))};
+  var rd=document.getElementById('redo');
+  if(rd)rd.onclick=function(){var qs=wrong.map(function(x){return Q.filter(function(q){return q.q===x.q})[0]});start(qs)};
+  document.getElementById('hm').onclick=home;
+  window.scrollTo(0,0);
+}
+home();
+</script>
+</body>
+</html>

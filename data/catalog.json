@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-28T02:21:09.031Z",
+ "generatedAt": "2026-10-28T11:11:56.485Z",
  "sections": [
   {
    "id": "bom",
@@ -1104,6 +1104,39 @@
     "Open XDR",
     "Quiz"
    ]
+  },
+  {
+   "id": "sg-proofpoint-data-security-cam-nang-proofpoint-data-security",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Cẩm nang Proofpoint Data Security",
+   "src": "content/sale-guide-extra/proofpoint/data-security/cam-nang-proofpoint-data-security.html",
+   "vendor": "Proofpoint",
+   "product": null,
+   "solution": "Data Security_Proofpoint",
+   "cat": "data",
+   "type": "Cẩm nang bán hàng",
+   "tags": [
+    "Data Security",
+    "DSPM",
+    "DLP"
+   ]
+  },
+  {
+   "id": "sg-proofpoint-data-security-trac-nghiem-proofpoint-data-security",
+   "section": "sale-guide",
+   "kind": "html",
+   "title": "Trắc nghiệm Proofpoint Data Security",
+   "src": "content/sale-guide-extra/proofpoint/data-security/trac-nghiem-proofpoint-data-security.html",
+   "vendor": "Proofpoint",
+   "product": null,
+   "solution": "Data Security_Proofpoint",
+   "cat": "data",
+   "type": "Bài kiểm tra",
+   "tags": [
+    "Data Security",
+    "Quiz"
+   ]
   }
  ],
  "vendors": [
@@ -1215,14 +1248,16 @@
    "solutions": [
     "Human-Centric Security — Platform",
     "Email Security",
-    "ITM & DLP — Insider Threat"
+    "ITM & DLP — Insider Threat",
+    "Data Security_Proofpoint"
    ],
    "cats": [
     "platform",
     "email",
-    "itm"
+    "itm",
+    "data"
    ],
-   "count": 7
+   "count": 9
   },
   {
    "id": "qualys",
