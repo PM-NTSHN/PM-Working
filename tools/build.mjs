@@ -155,7 +155,9 @@ const index = [];
 for (const it of items) {
   let text = { h: '', b: '' };
   if (it.kind === 'html') {
-    text = extract(fs.readFileSync(path.join(ROOT, it.src), 'utf8'));
+    const file = path.join(ROOT, it.src);
+    if (fs.existsSync(file)) text = extract(fs.readFileSync(file, 'utf8'));
+    else console.warn(`  ! thiếu file ${it.src} (mục ${it.id})`);
   } else if (it.kind === 'external' && it.repo) {
     const dir = repoDir(it.repo);
     const file = dir && path.join(dir, 'index.html');

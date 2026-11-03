@@ -1,0 +1,328 @@
+{
+  "_readme": "Cấu trúc Hub. Bản đầy đủ đang chạy của PM-Working xem hub.example.json. Thêm mục vào items, rồi chạy node tools/build.mjs.",
+  "sections": [
+    {
+      "id": "bom",
+      "title": "Tool chạy BOM",
+      "short": "BOM",
+      "icon": "calculator",
+      "kind": "collection",
+      "locked": true,
+      "desc": "Bộ công cụ lên cấu hình & báo giá cho từng giải pháp. Nội dung được mã hóa AES-256, cần mở khóa bằng tài khoản PM."
+    },
+    {
+      "id": "dealreg",
+      "persist": {
+        "input": "#file-input",
+        "mode": "append",
+        "search": "#q"
+      },
+      "group": "Tổng hợp & Báo cáo",
+      "title": "Tổng hợp Dealreg",
+      "short": "Dealreg",
+      "icon": "handshake",
+      "kind": "app",
+      "src": "https://pm-ntshn.github.io/Tools-Dealreg/",
+      "repo": "Tools-Dealreg",
+      "desc": "Tổng hợp & phân tích Deal Registration (Base service) từ file Excel export.",
+      "tags": [
+        "Dealreg",
+        "Deal registration",
+        "Base",
+        "Đăng ký cơ hội"
+      ]
+    },
+    {
+      "id": "po",
+      "persist": {
+        "input": "#fileInput",
+        "mode": "replace",
+        "search": "#q"
+      },
+      "group": "Tổng hợp & Báo cáo",
+      "title": "Tổng hợp yêu cầu đặt hàng",
+      "short": "Đặt hàng (PO)",
+      "icon": "cart",
+      "kind": "app",
+      "src": "https://pm-ntshn.github.io/Tool_tonghop_PO/",
+      "repo": "Tool_tonghop_PO",
+      "desc": "Tổng hợp yêu cầu đặt hàng / PO, theo dõi trạng thái và xuất báo cáo Excel.",
+      "tags": [
+        "PO",
+        "Đặt hàng",
+        "Purchase order",
+        "Đơn hàng"
+      ]
+    },
+    {
+      "id": "crm",
+      "persist": {
+        "input": "#fileInput",
+        "mode": "replace",
+        "search": "#q"
+      },
+      "group": "Tổng hợp & Báo cáo",
+      "title": "Tổng hợp CRM",
+      "short": "CRM",
+      "icon": "chart",
+      "kind": "app",
+      "src": "https://pm-ntshn.github.io/Tool_CRM_v2/",
+      "repo": "Tool_CRM_v2",
+      "desc": "Tổng hợp cơ hội kinh doanh từ CRM: pipeline, dashboard và báo cáo.",
+      "tags": [
+        "CRM",
+        "Pipeline",
+        "Cơ hội",
+        "Deal",
+        "Khách hàng"
+      ]
+    },
+    {
+      "id": "kpi",
+      "persist": {
+        "input": "#fileInput",
+        "mode": "append"
+      },
+      "group": "Tổng hợp & Báo cáo",
+      "title": "Tổng hợp KPI (HR)",
+      "short": "KPI",
+      "icon": "target",
+      "kind": "app",
+      "src": "https://pm-ntshn.github.io/HCNS-KPI/",
+      "repo": "HCNS-KPI",
+      "desc": "Tổng hợp & đánh giá KPI nhân sự (HCNS) từ file Excel.",
+      "tags": [
+        "KPI",
+        "HR",
+        "HCNS",
+        "Nhân sự",
+        "Đánh giá"
+      ]
+    },
+    {
+      "id": "sale-guide",
+      "group": "Kiến thức",
+      "title": "Sale Guide",
+      "short": "Sale Guide",
+      "icon": "book",
+      "kind": "sale-guide",
+      "desc": "Cẩm nang bán hàng, tài liệu nghiên cứu và bài kiểm tra theo hãng & dòng giải pháp."
+    },
+    {
+      "id": "update-solution",
+      "group": "Kiến thức",
+      "title": "Update Solution",
+      "short": "Update Solution",
+      "icon": "sparkles",
+      "kind": "collection",
+      "desc": "Cập nhật giải pháp, khung pháp lý và tiêu chuẩn kỹ thuật phục vụ tư vấn."
+    },
+    {
+      "id": "learning",
+      "group": "Kiến thức",
+      "title": "Learning Center",
+      "short": "Learning",
+      "icon": "graduation",
+      "kind": "collection",
+      "desc": "Các khóa học nội bộ: quản lý cấp trung, kỹ năng bán hàng B2B."
+    }
+  ],
+  "items": [],
+  "saleGuide": {
+    "source": "PM-Knowledge-Hub",
+    "vendorOrder": [
+      "Progress",
+      "OpenText",
+      "NETSCOUT",
+      "Delinea",
+      "InfoExpress",
+      "GTB",
+      "OPSWAT",
+      "Pentera",
+      "Proofpoint",
+      "Qualys",
+      "Safetica",
+      "SecPod",
+      "Stellar Cyber"
+    ],
+    "vendorRename": {
+      "Easy NAC": "InfoExpress"
+    },
+    "productBySolution": {
+      "Kemp LoadMaster — ADC": "kemp",
+      "WhatsUp Gold — NPM": "wug",
+      "Sightline / TMS — DDoS": "netscout-ddos",
+      "Sightline Insight — DDoS": "netscout-ddos",
+      "DLP — Data Loss Prevention@GTB": "gtb",
+      "NAC — Network Access Control": "easynac"
+    },
+    "_extraDocs": "Tài liệu sale guide bổ sung ngoài PM-Knowledge-Hub; file đặt trong content/sale-guide-extra/",
+    "extraDocs": []
+  },
+  "synonyms": [
+    [
+      "dlp",
+      "chống thất thoát dữ liệu",
+      "rò rỉ dữ liệu",
+      "data loss prevention",
+      "gtb",
+      "safetica"
+    ],
+    [
+      "nac",
+      "kiểm soát truy cập mạng",
+      "network access control",
+      "easy nac",
+      "infoexpress"
+    ],
+    [
+      "pam",
+      "quản trị đặc quyền",
+      "privileged access",
+      "secret server",
+      "delinea"
+    ],
+    [
+      "ddos",
+      "tấn công từ chối dịch vụ",
+      "sightline",
+      "arbor",
+      "tms"
+    ],
+    [
+      "npm",
+      "giám sát mạng",
+      "network monitoring",
+      "whatsup gold",
+      "wug"
+    ],
+    [
+      "adc",
+      "cân bằng tải",
+      "load balancer",
+      "kemp",
+      "loadmaster"
+    ],
+    [
+      "siem",
+      "soc",
+      "xdr",
+      "giám sát an ninh",
+      "arcsight",
+      "stellar"
+    ],
+    [
+      "bom",
+      "báo giá",
+      "cấu hình",
+      "bill of materials",
+      "sizing"
+    ],
+    [
+      "dealreg",
+      "deal registration",
+      "đăng ký cơ hội",
+      "base"
+    ],
+    [
+      "po",
+      "đặt hàng",
+      "đơn hàng",
+      "purchase order"
+    ],
+    [
+      "crm",
+      "cơ hội",
+      "pipeline",
+      "khách hàng"
+    ],
+    [
+      "kpi",
+      "đánh giá",
+      "hiệu suất",
+      "nhân sự",
+      "hr",
+      "hcns"
+    ],
+    [
+      "quiz",
+      "bài kiểm tra",
+      "trắc nghiệm",
+      "test"
+    ],
+    [
+      "appsec",
+      "bảo mật ứng dụng",
+      "sast",
+      "dast",
+      "fortify"
+    ],
+    [
+      "lỗ hổng",
+      "vulnerability",
+      "vmdr",
+      "qualys",
+      "secpod",
+      "sanernow"
+    ],
+    [
+      "backup",
+      "sao lưu",
+      "phục hồi",
+      "data protector"
+    ],
+    [
+      "email",
+      "thư điện tử",
+      "phishing",
+      "lừa đảo",
+      "proofpoint"
+    ],
+    [
+      "ot",
+      "data diode",
+      "công nghiệp",
+      "opswat"
+    ],
+    [
+      "cdr",
+      "mã độc",
+      "metadefender",
+      "file"
+    ],
+    [
+      "attt",
+      "an toàn thông tin",
+      "cấp độ",
+      "nghị định 85",
+      "thông tư 12",
+      "tcvn 11930"
+    ],
+    [
+      "bán hàng",
+      "sales",
+      "kỹ năng bán hàng",
+      "b2b",
+      "playbook",
+      "cẩm nang"
+    ],
+    [
+      "quản lý",
+      "lãnh đạo",
+      "quản lý cấp trung",
+      "mmm"
+    ],
+    [
+      "pentest",
+      "kiểm thử xâm nhập",
+      "pentera",
+      "security validation"
+    ],
+    [
+      "itm",
+      "insider threat",
+      "nội gián",
+      "zenguide"
+    ]
+  ]
+}

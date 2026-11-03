@@ -1,0 +1,8 @@
+# Repo nguồn clone tạm khi build
+.cache/
+# File BOM gốc CHƯA mã hóa, danh sách user — tuyệt đối không commit
+bom-src/
+*_source.html
+users.csv
+node_modules/
+_site/
