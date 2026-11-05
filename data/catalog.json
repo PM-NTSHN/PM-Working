@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-04T03:01:58.575Z",
+ "generatedAt": "2026-11-05T02:59:50.096Z",
  "sections": [
   {
    "id": "bom",
@@ -207,6 +207,29 @@
     "NAC",
     "InfoExpress",
     "BOM"
+   ]
+  },
+  {
+   "id": "us-tong-hop-giai-phap-anm",
+   "section": "update-solution",
+   "title": "Tổng hợp giải pháp An ninh mạng (Cyber Security Hub)",
+   "kind": "html",
+   "src": "content/update-solution/tong-hop-giai-phap-an-ninh-mang.html",
+   "icon": "shield",
+   "type": "Bản đồ giải pháp",
+   "desc": "Bản đồ 36 giải pháp An ninh mạng – ATTT – BVDLCN theo lớp (mạng, ứng dụng & API, định danh, SOC, mật mã, IT/OT…), ma trận tổng hợp và thư viện tài liệu tham khảo.",
+   "tags": [
+    "An ninh mạng",
+    "ATTT",
+    "BVDLCN",
+    "Bản đồ giải pháp",
+    "SOC",
+    "NGFW",
+    "WAF",
+    "PAM",
+    "DLP",
+    "SIEM",
+    "Data diode"
    ]
   },
   {

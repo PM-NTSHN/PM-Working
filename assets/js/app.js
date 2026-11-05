@@ -33,6 +33,7 @@ const TYPE = {
   'Presales': { c: '#7c3aed', ic: 'presentation' },
   'Khóa học': { c: '#db2777', ic: 'graduation' },
   'Infographic': { c: '#0891b2', ic: 'layers' },
+  'Bản đồ giải pháp': { c: '#0b5cad', ic: 'grid' },
 };
 const MAX_FRAMES = 6;
 

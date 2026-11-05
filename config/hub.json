@@ -52,6 +52,8 @@
       "vendor": "InfoExpress", "product": "easynac", "icon": "network",
       "desc": "Lên cấu hình & báo giá Easy NAC (InfoExpress).", "tags": ["Easy NAC", "NAC", "InfoExpress", "BOM"] },
 
+    {"id": "us-tong-hop-giai-phap-anm", "section": "update-solution", "title": "Tổng hợp giải pháp An ninh mạng (Cyber Security Hub)", "kind": "html", "src": "content/update-solution/tong-hop-giai-phap-an-ninh-mang.html", "icon": "shield", "type": "Bản đồ giải pháp", "desc": "Bản đồ 36 giải pháp An ninh mạng – ATTT – BVDLCN theo lớp (mạng, ứng dụng & API, định danh, SOC, mật mã, IT/OT…), ma trận tổng hợp và thư viện tài liệu tham khảo.", "tags": ["An ninh mạng", "ATTT", "BVDLCN", "Bản đồ giải pháp", "SOC", "NGFW", "WAF", "PAM", "DLP", "SIEM", "Data diode"]},
+
     { "id": "us-khung-phap-ly-attt", "section": "update-solution", "title": "Khung pháp lý & tiêu chuẩn ATTT theo cấp độ", "kind": "html",
       "src": "content/update-solution/khung-phap-ly-attt.html", "icon": "scale", "type": "Infographic",
       "desc": "Luật 86/2015, NĐ 85/2016, TT 12/2022, TCVN 11930:2017, CV 708 — mối quan hệ phân cấp và mốc thời gian.",
