@@ -6,3 +6,8 @@ bom-src/
 users.csv
 node_modules/
 _site/
+
+# App Android: sản phẩm build và khoá ký
+android/out/
+android/dist/
+*.jks

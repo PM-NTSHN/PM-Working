@@ -11,8 +11,9 @@ Một đường link duy nhất cho toàn bộ công cụ của PM: lên BOM, t�
 | 1. Tool chạy BOM 🔒 | `content/bom/*.bin` (đã mã hóa AES-256) | Giải mã trên trình duyệt sau khi nhập tài khoản lần 2 |
 | 2–5. Tổng hợp Dealreg / Đặt hàng / CRM / KPI | Repo `Tools-Dealreg`, `Tool_tonghop_PO`, `Tool_CRM_v2`, `HCNS-KPI` | Nhúng nguyên trang đang chạy, tự cập nhật theo repo gốc |
 | 6. Sale Guide | Repo `PM-Knowledge-Hub` | Đồng bộ tự động vào `content/sale-guide/` |
-| 7. Update Solution | `content/update-solution/` | Trang HTML |
-| 8. Learning Center | `MMM-course` (nhúng) + `content/learning/` | Trang HTML |
+| 7. Mindmap giải pháp & hãng | `content/mindmap/` (đọc `data/catalog.json` + `framework.json`) | Sơ đồ đóng/mở nhánh, tìm nhanh, hỏi nhanh, chụp ảnh |
+| 8. Update Solution | `content/update-solution/` (gồm **Thư viện giải pháp Cyber Security**) | Trang HTML |
+| 9. Learning Center | `MMM-course` (nhúng) + `content/learning/` | Trang HTML |
 
 ```
 index.html              Khung Hub: login, sidebar, tìm kiếm, vùng nội dung
@@ -76,3 +77,9 @@ Mọi xử lý đều trên trình duyệt, dữ liệu không gửi đi đâu.
 ## Phím tắt
 
 `Ctrl/⌘ K` hoặc `/`: đưa con trỏ vào ô tìm kiếm (gõ trực tiếp, kết quả hiện ngay bên dưới) · `↑ ↓ Enter`: chọn kết quả · `Tab`: nhận gợi ý · `Esc`: đóng.
+
+## Thư viện giải pháp Cyber Security & Mindmap
+
+- `content/update-solution/thu-vien-giai-phap-cyber-security.html`: file HTML tự chứa (mở được trực tiếp trên máy tính / điện thoại, không cần mạng). Gồm 69 nhóm giải pháp, mindmap, hỏi nhanh, thẻ ghi nhớ và mục **Trắc nghiệm** (mục 15 của từng giải pháp, 20–26 câu: câu chuyên sâu nằm trong biến `QZ` của file, phần còn lại tự sinh từ dữ liệu thư viện). Tiến độ làm bài lưu trên trình duyệt (`localStorage`).
+- `content/mindmap/index.html`: mindmap của Hub. Lấy danh sách hãng / tài liệu từ `data/catalog.json` nên tự cập nhật khi thêm Sale guide; khung NIST CSF, lớp kỹ thuật, hãng – nhà phân phối lấy từ `content/mindmap/framework.json` (trích từ Thư viện giải pháp — cần sinh lại khi thư viện đổi danh mục giải pháp/hãng).
+- `android/`: mã nguồn app Android (WebView) đóng gói Thư viện giải pháp để dùng ngoại tuyến; xem `android/README.md`.
