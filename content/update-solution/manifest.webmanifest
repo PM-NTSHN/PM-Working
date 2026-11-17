@@ -1,0 +1,17 @@
+{
+  "name": "Thư viện giải pháp Cyber Security",
+  "short_name": "CS Library",
+  "description": "69 nhóm giải pháp An ninh mạng: mindmap, hỏi nhanh, trắc nghiệm, product mapping hãng – nhà phân phối. NTS Hà Nội.",
+  "lang": "vi",
+  "start_url": "./thu-vien-giai-phap-cyber-security.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#06204a",
+  "theme_color": "#06204a",
+  "icons": [
+    { "src": "app/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "app/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "app/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

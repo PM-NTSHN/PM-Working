@@ -1,0 +1,49 @@
+name: Build app Android
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'android/**'
+      - 'content/update-solution/thu-vien-giai-phap-cyber-security.html'
+      - '.github/workflows/android.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: android-app
+  cancel-in-progress: true
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Build APK
+        env:
+          ANDROID_KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_B64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          VERSION_CODE: ${{ github.run_number }}
+        run: bash android/build.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ThuVienCyberSecurity-apk
+          path: android/dist/ThuVienCyberSecurity.apk
+
+      - name: Cập nhật bản phát hành app-latest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete app-latest --yes --cleanup-tag || true
+          gh release create app-latest android/dist/ThuVienCyberSecurity.apk \
+            --title "App Android · Thư viện giải pháp Cyber Security" \
+            --notes "Bản build tự động từ commit ${GITHUB_SHA::8}. Tải ThuVienCyberSecurity.apk về điện thoại Android để cài."
