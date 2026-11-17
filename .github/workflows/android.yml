@@ -2,7 +2,7 @@ name: Build app Android
 
 on:
   push:
-    branches: [main]
+    branches: [main, claude/dazzling-ritchie-f99mv9]
     paths:
       - 'android/**'
       - 'content/update-solution/thu-vien-giai-phap-cyber-security.html'

@@ -6,7 +6,7 @@ App là một WebView mở file `content/update-solution/thu-vien-giai-phap-cybe
 ## Lấy file APK
 
 Workflow **Build app Android** (`.github/workflows/android.yml`) tự build mỗi khi file thư viện hoặc thư mục `android/`
-thay đổi trên nhánh `main` (hoặc bấm **Actions → Build app Android → Run workflow**). Kết quả:
+thay đổi trên nhánh triển khai (nhánh mặc định của repo) (hoặc bấm **Actions → Build app Android → Run workflow**). Kết quả:
 
 - Bản phát hành **app-latest** trong mục *Releases* của repo: tải `ThuVienCyberSecurity.apk` thẳng về điện thoại.
 - Artifact `ThuVienCyberSecurity-apk` trong lần chạy workflow.
