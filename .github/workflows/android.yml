@@ -5,7 +5,10 @@ on:
     branches: [main, claude/dazzling-ritchie-f99mv9]
     paths:
       - 'android/**'
-      - 'content/update-solution/thu-vien-giai-phap-cyber-security.html'
+      - 'index.html'
+      - 'assets/**'
+      - 'content/**'
+      - 'data/**'
       - '.github/workflows/android.yml'
   workflow_dispatch:
 
@@ -36,14 +39,14 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ThuVienCyberSecurity-apk
-          path: android/dist/ThuVienCyberSecurity.apk
+          name: PMHub-apk
+          path: android/dist/PMHub.apk
 
       - name: Cập nhật bản phát hành app-latest
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release delete app-latest --yes --cleanup-tag || true
-          gh release create app-latest android/dist/ThuVienCyberSecurity.apk \
-            --title "App Android · Thư viện giải pháp Cyber Security" \
-            --notes "Bản build tự động từ commit ${GITHUB_SHA::8}. Tải ThuVienCyberSecurity.apk về điện thoại Android để cài."
+          gh release create app-latest android/dist/PMHub.apk \
+            --title "App Android · PM Hub" \
+            --notes "Bản build tự động từ commit ${GITHUB_SHA::8}. Tải PMHub.apk về điện thoại Android để cài."

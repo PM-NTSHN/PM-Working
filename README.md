@@ -82,4 +82,4 @@ Mọi xử lý đều trên trình duyệt, dữ liệu không gửi đi đâu.
 
 - `content/update-solution/thu-vien-giai-phap-cyber-security.html`: file HTML tự chứa (mở được trực tiếp trên máy tính / điện thoại, không cần mạng). Gồm 69 nhóm giải pháp, mindmap, hỏi nhanh, thẻ ghi nhớ và mục **Trắc nghiệm** (mục 15 của từng giải pháp, 20–26 câu: câu chuyên sâu nằm trong biến `QZ` của file, phần còn lại tự sinh từ dữ liệu thư viện). Tiến độ làm bài lưu trên trình duyệt (`localStorage`).
 - `content/mindmap/index.html`: mindmap của Hub. Lấy danh sách hãng / tài liệu từ `data/catalog.json` nên tự cập nhật khi thêm Sale guide; khung NIST CSF, lớp kỹ thuật, hãng – nhà phân phối lấy từ `content/mindmap/framework.json` (trích từ Thư viện giải pháp — cần sinh lại khi thư viện đổi danh mục giải pháp/hãng).
-- `android/`: mã nguồn app Android (WebView) đóng gói Thư viện giải pháp để dùng ngoại tuyến; xem `android/README.md`.
+- `android/`: mã nguồn app Android "PM Hub" (WebView mở toàn bộ Hub, kèm bản ngoại tuyến); xem `android/README.md`.

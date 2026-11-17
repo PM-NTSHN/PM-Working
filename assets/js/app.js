@@ -59,6 +59,52 @@ const vendorColor = (v) => CAT.cats[v.cats[0]]?.color || '#0b5cad';
 const isBomUnlocked = () => !!store.get(K.bom, null, sessionStorage);
 
 // ---------------------------------------------------------------- khởi động
+// ---------------------------------------------------------------- chạy trong app Android (WebView)
+// WebView không tự tải được tệp tạo bằng blob/data (Excel xuất từ tool, ảnh chụp…). Khi có cầu nối AndroidBridge,
+// bắt các lượt tải `a[download]` trong Hub và trong từng khung nội dung rồi chuyển cho app lưu vào máy.
+function installAppShim(win) {
+  const bridge = window.AndroidBridge;
+  if (!bridge || !bridge.saveFile) return;
+  try {
+    if (!win || win.__pmhubShim) return;
+    win.__pmhubShim = true;
+    const blobs = new Map();
+    const create = win.URL.createObjectURL.bind(win.URL);
+    win.URL.createObjectURL = (obj) => {
+      const url = create(obj);
+      if (obj && typeof obj.size === 'number' && typeof obj.slice === 'function') {
+        blobs.set(url, obj);
+        if (blobs.size > 20) blobs.delete(blobs.keys().next().value);
+      }
+      return url;
+    };
+    const save = (a) => {
+      const href = a.href || '';
+      if (!/^(blob|data):/.test(href)) return false;
+      const name = a.getAttribute('download') || 'tai-ve';
+      const send = (blob) => {
+        const fr = new FileReader();
+        fr.onload = () => bridge.saveFile(String(fr.result).split(',')[1] || '', name, blob.type || 'application/octet-stream');
+        fr.readAsDataURL(blob);
+      };
+      const known = blobs.get(href);
+      if (known) send(known);
+      else win.fetch(href).then((r) => r.blob()).then(send).catch(() => {});
+      return true;
+    };
+    const proto = win.HTMLAnchorElement.prototype;
+    const click = proto.click;
+    proto.click = function () { if (this.hasAttribute('download') && save(this)) return undefined; return click.call(this); };
+    const dispatch = proto.dispatchEvent;
+    proto.dispatchEvent = function (ev) { if (ev && ev.type === 'click' && this.hasAttribute('download') && save(this)) return true; return dispatch.call(this, ev); };
+    win.document.addEventListener('click', (e) => {
+      const a = e.target && e.target.closest && e.target.closest('a[download]');
+      if (a && save(a)) e.preventDefault();
+    }, true);
+  } catch { /* khung khác origin: bỏ qua */ }
+}
+installAppShim(window);
+
 async function boot() {
   fillIcons();
   try {
@@ -380,6 +426,7 @@ async function openItem(it, q, find) {
     f.el.title = it.title;
     f.el.allow = 'clipboard-read; clipboard-write; fullscreen';
     f.el.addEventListener('load', () => {
+      installAppShim(f.el.contentWindow);
       f.loaded = true;
       if (it.persist) hookPersist(it, f);
       if (current?.id === it.id) $('#frameLoading')?.remove();
