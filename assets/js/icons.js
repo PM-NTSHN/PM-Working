@@ -44,6 +44,7 @@ const P = {
   layers: '<path d="m12 2.5 9.5 5L12 12.5 2.5 7.5z"/><path d="m2.5 12 9.5 5 9.5-5M2.5 16.5l9.5 5 9.5-5"/>',
   link: '<path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7"/><path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7"/>',
   sidebar: '<rect x="3" y="3.5" width="18" height="17" rx="2.5"/><path d="M9 3.5v17"/>',
+  mind: '<circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="5" r="2.5"/><circle cx="19" cy="12" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M7.5 12h9M7.2 11c3-1 5-5 9.3-6M7.2 13c3 1 5 5 9.3 6"/>',
   refresh: '<path d="M20.5 12a8.5 8.5 0 0 1-15 5.5M3.5 12a8.5 8.5 0 0 1 15-5.5"/><path d="M18.5 2.5v4h-4M5.5 21.5v-4h4"/>',
   tag: '<path d="M2.5 12V3.5a1 1 0 0 1 1-1H12l9.5 9.5-9 9z"/><circle cx="7.5" cy="7.5" r="1.5"/>',
   enter: '<path d="M20 4v7a4 4 0 0 1-4 4H4"/><path d="m9 10-5 5 5 5"/>',

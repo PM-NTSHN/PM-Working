@@ -28,6 +28,11 @@
     { "id": "sale-guide", "group": "Kiến thức", "title": "Sale Guide", "short": "Sale Guide", "icon": "book", "kind": "sale-guide",
       "desc": "Cẩm nang bán hàng, tài liệu nghiên cứu và bài kiểm tra theo hãng & dòng giải pháp." },
 
+    { "id": "mindmap", "group": "Kiến thức", "title": "Mindmap giải pháp & hãng", "short": "Mindmap", "icon": "mind", "kind": "app",
+      "src": "content/mindmap/index.html",
+      "desc": "Sơ đồ mindmap toàn bộ giải pháp, hãng, nhà phân phối theo khung NIST CSF 2.0 và lớp kỹ thuật; nối tới Sale guide, quiz, BOM trong Hub. Đóng/mở nhánh, tìm nhanh, hỏi nhanh, chụp ảnh sơ đồ.",
+      "tags": ["Mindmap", "Sơ đồ", "NIST CSF", "Framework", "Hãng", "Nhà phân phối", "Vị trí giải pháp"] },
+
     { "id": "update-solution", "group": "Kiến thức", "title": "Update Solution", "short": "Update Solution", "icon": "sparkles", "kind": "collection",
       "desc": "Cập nhật giải pháp, khung pháp lý và tiêu chuẩn kỹ thuật phục vụ tư vấn." },
 
@@ -52,7 +57,10 @@
       "vendor": "InfoExpress", "product": "easynac", "icon": "network",
       "desc": "Lên cấu hình & báo giá Easy NAC (InfoExpress).", "tags": ["Easy NAC", "NAC", "InfoExpress", "BOM"] },
 
-    {"id": "us-tong-hop-giai-phap-anm", "section": "update-solution", "title": "Tổng hợp giải pháp An ninh mạng (Cyber Security Hub)", "kind": "html", "src": "content/update-solution/tong-hop-giai-phap-an-ninh-mang.html", "icon": "shield", "type": "Bản đồ giải pháp", "desc": "Bản đồ 36 giải pháp An ninh mạng – ATTT – BVDLCN theo lớp (mạng, ứng dụng & API, định danh, SOC, mật mã, IT/OT…), ma trận tổng hợp và thư viện tài liệu tham khảo.", "tags": ["An ninh mạng", "ATTT", "BVDLCN", "Bản đồ giải pháp", "SOC", "NGFW", "WAF", "PAM", "DLP", "SIEM", "Data diode"]},
+    { "id": "us-thu-vien-cyber-security", "section": "update-solution", "title": "Thư viện giải pháp Cyber Security", "kind": "html",
+      "src": "content/update-solution/thu-vien-giai-phap-cyber-security.html", "icon": "shield", "type": "Bản đồ giải pháp",
+      "desc": "69 nhóm giải pháp An ninh mạng theo NIST CSF 2.0: tính năng, mô hình triển khai, license, thị trường, product mapping hãng – nhà phân phối, mapping cấp độ NĐ 331; kèm mindmap, hỏi nhanh, thẻ ghi nhớ và 1.600+ câu trắc nghiệm theo từng giải pháp.",
+      "tags": ["An ninh mạng", "Cyber Security", "Thư viện giải pháp", "Product mapping", "NIST CSF", "Trắc nghiệm", "Mindmap", "License", "Nhà phân phối", "NĐ 331", "TCVN 14423", "SOC", "NGFW", "WAF", "PAM", "DLP", "SIEM", "Data diode"] },
 
     { "id": "us-khung-phap-ly-attt", "section": "update-solution", "title": "Khung pháp lý & tiêu chuẩn ATTT theo cấp độ", "kind": "html",
       "src": "content/update-solution/khung-phap-ly-attt.html", "icon": "scale", "type": "Infographic",
@@ -112,6 +120,7 @@
     ["bán hàng", "sales", "kỹ năng bán hàng", "b2b", "playbook", "cẩm nang"],
     ["quản lý", "lãnh đạo", "quản lý cấp trung", "mmm"],
     ["pentest", "kiểm thử xâm nhập", "pentera", "security validation"],
-    ["itm", "insider threat", "nội gián", "zenguide"]
+    ["itm", "insider threat", "nội gián", "zenguide"],
+    ["mindmap", "sơ đồ tư duy", "bản đồ giải pháp", "framework", "nist csf", "thư viện giải pháp"]
   ]
 }
